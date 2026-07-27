@@ -1,0 +1,339 @@
+/* settings.css - Modern SaaS-style Settings Panel and Left Drawer Styling (RTL) */
+
+/* 1. Custom Variables & Root Utilities */
+:root {
+    --futh-primary: #2563EB;
+    --futh-primary-hover: #1D4ED8;
+    --futh-success: #10B981;
+    --futh-warning: #F59E0B;
+    --futh-danger: #EF4444;
+    --futh-muted: #64748B;
+    --futh-border: #E8EDF5;
+    --futh-bg-card: #FFFFFF;
+    --futh-bg-page: #F8FAFC;
+}
+
+/* 2. Page & Card Grid Layout */
+.settings-container {
+    background-color: var(--futh-bg-page);
+    min-height: 100%;
+}
+
+/* Single large white container for Settings */
+.settings-large-wrapper {
+    background: var(--futh-bg-card);
+    border: 1px solid var(--futh-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.01), 0 2px 8px -1px rgba(0, 0, 0, 0.01);
+}
+
+.settings-card {
+    background: var(--futh-bg-card);
+    border: 1px solid var(--futh-border);
+    border-radius: 16px;
+    box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 185px; /* Fixed height between 175-190px */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.settings-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.04), 0 4px 6px -2px rgba(37, 99, 235, 0.02);
+    border-color: rgba(37, 99, 235, 0.25);
+}
+
+/* Circular large icons inside cards */
+.settings-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Service colors */
+.settings-card-icon.whatsapp { background-color: #25D366; }
+.settings-card-icon.telegram { background-color: #0088cc; }
+.settings-card-icon.knowledge { background-color: #8B5CF6; }
+.settings-card-icon.ai { background-color: #06B6D4; }
+.settings-card-icon.messenger { background: linear-gradient(135deg, #006AFF, #00E4FF); }
+.settings-card-icon.instagram { background: linear-gradient(135deg, #833AB4, #FD1D1D, #F56040); }
+.settings-card-icon.meta { background-color: #0064E0; }
+.settings-card-icon.general { background-color: #64748B; }
+
+/* 3. Badges */
+.badge-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.badge-status.active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--futh-success);
+}
+.badge-status.warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--futh-warning);
+}
+.badge-status.danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--futh-danger);
+}
+.badge-status.offline {
+    background-color: #F1F5F9;
+    color: var(--futh-muted);
+}
+
+/* Dot indicator */
+.badge-status::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: currentColor;
+    display: inline-block;
+}
+
+/* 4. Left Settings Drawer Container (RTL Slide-In) */
+.settings-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-drawer-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.settings-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -580px; /* Hidden offscreen on the left */
+    width: 100%;
+    max-width: 540px;
+    background-color: var(--futh-bg-card);
+    box-shadow: 20px 0 25px -5px rgba(0, 0, 0, 0.05), 10px 0 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-drawer.active {
+    left: 0; /* Slides in to the left edge of RTL page */
+}
+
+@media (max-width: 640px) {
+    .settings-drawer {
+        max-width: 100%;
+        left: -100%;
+    }
+    .settings-drawer.active {
+        left: 0;
+    }
+}
+
+/* Drawer Footer Fixed */
+.drawer-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--futh-border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    z-index: 10;
+}
+
+/* Buttons */
+.btn-manage-settings {
+    width: 100%;
+    padding: 7px 12px;
+    background-color: #FFFFFF;
+    color: var(--futh-muted);
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid var(--futh-border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-manage-settings:hover {
+    border-color: var(--futh-primary);
+    background-color: rgba(37, 99, 235, 0.03);
+    color: var(--futh-primary);
+}
+
+/* 5. Top-Center Toast Notifications */
+.futh-toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.futh-toast {
+    background-color: var(--futh-bg-card);
+    border: 1px solid var(--futh-border);
+    border-radius: 16px;
+    padding: 14px 24px;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 340px;
+    max-width: 460px;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.futh-toast.active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.futh-toast.success {
+    border-right: 4px solid var(--futh-success);
+}
+
+.futh-toast.error {
+    border-right: 4px solid var(--futh-danger);
+}
+
+/* 6. Form Fields & Sections inside Drawer */
+.drawer-section {
+    background: #FFFFFF;
+    border: 1px solid var(--futh-border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.drawer-section:last-child {
+    margin-bottom: 0;
+}
+
+.futh-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--futh-border);
+    border-radius: 10px;
+    font-size: 13px;
+    background-color: var(--futh-bg-page);
+    transition: all 0.2s ease;
+}
+
+.futh-input:focus {
+    border-color: var(--futh-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background-color: #FFFFFF;
+    outline: none;
+}
+
+/* Spinner Loader for Save Button */
+.futh-spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Unsaved Confirmation Modal Backdrop */
+.unsaved-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unsaved-modal-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.unsaved-modal {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 28px;
+    max-width: 410px;
+    width: 90%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unsaved-modal-backdrop.active .unsaved-modal {
+    transform: scale(1);
+}
+
+/* Helper to lock body scroll when drawer/modal is open */
+.overflow-hidden-drawer {
+    overflow: hidden !important;
+}
+
+/* Character limit counter */
+.char-counter {
+    font-size: 11px;
+    color: var(--futh-muted);
+    text-align: left;
+    margin-top: 4px;
+}
+
+/* Skeletons */
+.futh-skeleton {
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background-size: 200% 100%;
+    animation: loading-skeleton 1.5s infinite;
+}
+
+@keyframes loading-skeleton {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

@@ -1,0 +1,10 @@
+body { font-family: 'Cairo', 'Inter', sans-serif; }
+.brand-title { font-family: 'Poppins', sans-serif; font-weight: 750; }
+.tech-grid {
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+/* اخفاء السكرول بار للمظهر المينيمال المتناسق مع البراند */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }

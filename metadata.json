@@ -1,0 +1,6 @@
+{
+  "name": "Smart Telegram Bot Dashboard",
+  "description": "Smart Telegram Bot with a unified multi-provider WhatsApp/Telegram dashboard and real-time event updates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

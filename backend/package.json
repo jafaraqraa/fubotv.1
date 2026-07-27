@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend services for FUThing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/database.test.js && node test/pipeline.test.js && node test/auth.test.js && node test/dashboard.test.js && node test/realtime.test.js && node test/phase10_separation.test.js && node test/settings.test.js && node test/rag.test.js && node test/rag_documents.test.js && node test/ai_pipeline.test.js && node test/intent_detector.test.js && node test/query_decomposer.test.js && node test/intent_retriever.test.js && node test/retrieval_planner.test.js && node test/citation_grounding.test.js && node test/answer_validator.test.js && node test/answer_validator_policy.test.js && node test/contradiction_policy.test.js && node test/ai_task_routing.test.js && node test/vision_pipeline.test.js && node test/stt_pipeline.test.js && node test/whatsapp_multi_provider.test.js && node test/analytics_rebuild.test.js && node test/budget_service.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.11.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.19.0",
+    "mammoth": "1.12.0",
+    "multer": "1.4.5-lts.1",
+    "pdf-parse": "^2.4.5",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.3",
+    "telegraf": "^4.16.3",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}

@@ -1,0 +1,130 @@
+const { Telegraf } = require('telegraf');
+const { addLog, reportError, setTelegramNotifier } = require('../services/logger');
+const { downloadRemoteFile } = require('../utils/helpers');
+const { normalizeTelegramMessage } = require('../messaging/normalizers/telegramNormalizer');
+const { processIncomingMessage } = require('../messaging/messageProcessor');
+
+let bot;
+let botToken = process.env.BOT_TOKEN;
+let isValidToken = botToken && /^[0-9]+:[a-zA-Z0-9_-]+$/.test(botToken);
+
+// Register the notifier inside logger so reportError can alert the admin
+setTelegramNotifier(async (type, date, time, message) => {
+    const adminId = process.env.ADMIN_TELEGRAM_ID;
+    if (adminId && bot && isValidToken) {
+        await bot.telegram.sendMessage(adminId, `⚠️ تنبيه عاجل من خادم البوت:\n\nحدث عطل فني في النظام:\n\n• النوع: ${type}\n• التاريخ: ${date} ${time}\n• التفاصيل البرمجية: ${message}\n\nيرجى مراجعة لوحة التحكم لحل المشكلة.`);
+    }
+});
+
+function startBot(token) {
+    try {
+        if (bot) {
+            try { bot.stop('RESTART'); } catch (e) {}
+        }
+        bot = new Telegraf(token);
+
+        bot.start(async (ctx) => {
+            const normalized = normalizeTelegramMessage(ctx);
+            // Replace user command specifically for /start normalization mapping
+            normalized.content = '/start';
+            normalized.messageType = 'text';
+
+            await processIncomingMessage(normalized);
+
+            const welcomeText = `أهلاً بك يا ${ctx.from.first_name}! 👋\nتم ربط حسابك بالمنصة بنجاح.`;
+            ctx.reply(welcomeText);
+
+            // Persist the welcome reply
+            const { saveMessage } = require('../database/repositories/messageRepository');
+            saveMessage(ctx.from.id, 'admin', welcomeText, 'text');
+        });
+
+        // الاستماع لجميع أنواع الرسائل (صوت، فيديو، صور، نصوص) من تيليجرام
+        bot.on('message', async (ctx) => {
+            let userText = ctx.message.text || ctx.message.caption || '';
+            let fileId = null;
+            let fileExt = '';
+            let mediaType = 'text';
+
+            // الكشف عن نوع الوسائط وتحديد الامتداد المناسب
+            if (ctx.message.photo) {
+                fileId = ctx.message.photo[ctx.message.photo.length - 1].file_id;
+                fileExt = 'jpg';
+                mediaType = 'image';
+            } else if (ctx.message.voice) {
+                fileId = ctx.message.voice.file_id;
+                fileExt = 'ogg';
+                mediaType = 'audio';
+            } else if (ctx.message.video) {
+                fileId = ctx.message.video.file_id;
+                fileExt = 'mp4';
+                mediaType = 'video';
+            } else if (ctx.message.document) {
+                fileId = ctx.message.document.file_id;
+                fileExt = ctx.message.document.file_name ? ctx.message.document.file_name.split('.').pop() : 'bin';
+                mediaType = 'document';
+            }
+
+            // إذا كانت الرسالة تحتوي على وسائط، نقوم بتحميلها محلياً في السيرفر لضمان الأمان والاستقرار
+            if (fileId) {
+                try {
+                    addLog(`جاري معالجة وتحميل ملف وسائط من تيليجرام...`);
+                    const fileLinkObj = await ctx.telegram.getFileLink(fileId);
+                    const fileLink = typeof fileLinkObj === 'object' ? fileLinkObj.href : fileLinkObj;
+                    const fileName = `${Date.now()}_telegram.${fileExt}`;
+                    const localPath = await downloadRemoteFile(fileLink, fileName);
+
+                    // تحويل نص الرسالة إلى رابط الملف المحلي لتقوم شاشة الـ Frontend بعرضه فوراً
+                    userText = localPath;
+                } catch (err) {
+                    reportError("تحميل وسائط تيليجرام", err.message);
+                }
+            }
+
+            // Route strictly through unified normalizer and central incoming message processor (Task 9)
+            const normalized = normalizeTelegramMessage(ctx, fileId ? userText : null, mediaType, fileExt);
+            await processIncomingMessage(normalized);
+        });
+
+        bot.launch()
+            .then(() => {
+                console.log("🤖 تم تشغيل البوت بنجاح.");
+                addLog("تم تشغيل البوت بنجاح");
+                isValidToken = true;
+
+                const { listErrors, solveError } = require('../database/repositories/logRepository');
+                const tokenError = listErrors().find(e => e.type === "توكن تيليجرام مفقود" && !e.solved);
+                if (tokenError) {
+                    solveError(tokenError.id);
+                    addLog("✅ تم حل عطل توكن تيليجرام تلقائياً!");
+                }
+            })
+            .catch(err => {
+                reportError("اتصال خادم تيليجرام", err.message);
+                isValidToken = false;
+            });
+        return true;
+    } catch (e) {
+        reportError("إقلاع البوت الداخلي", e.message);
+        isValidToken = false;
+        return false;
+    }
+}
+
+// initialize bot on start if token is valid
+function initializeTelegramOnStartup() {
+    if (isValidToken) {
+        startBot(botToken);
+    } else {
+        reportError("توكن تيليجرام مفقود", "لا يوجد توكن تيليجرام صالح حالياً في لوحة التحكم أو ملف .env للسيرفر.");
+        console.warn("⚠️ تنبيه: لا يوجد توكن صالح حالياً، يمكنك إضافته من الإعدادات في لوحة التحكم.");
+    }
+}
+
+module.exports = {
+    getBot: () => bot,
+    getIsValidToken: () => isValidToken,
+    setIsValidToken: (val) => { isValidToken = val; },
+    startBot,
+    initializeTelegramOnStartup
+};

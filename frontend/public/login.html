@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول — FUThing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@750&display=swap" rel="stylesheet">
+    <script src="/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        futh_navy: '#0F172A',
+                        futh_blue: '#2563EB',
+                        futh_bg: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .brand-title { font-family: 'Poppins', sans-serif; font-weight: 750; }
+    </style>
+</head>
+<body class="bg-futh_bg text-slate-800 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-md w-full bg-white rounded-2xl border border-slate-200/80 shadow-xl shadow-slate-100 p-8 space-y-6">
+
+        <!-- Logo and Brand -->
+        <div class="flex flex-col items-center text-center space-y-2">
+            <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 brand-title text-xl">F</div>
+            <div class="flex flex-col">
+                <span class="brand-title text-2xl tracking-wide text-slate-900">FUThing</span>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Secure Access Gateway</span>
+            </div>
+        </div>
+
+        <h2 class="text-center text-sm font-bold text-slate-800 border-b border-slate-100 pb-4">تسجيل الدخول للوحة التحكم</h2>
+
+        <!-- Error Alerts -->
+        <div id="error-alert" class="hidden bg-red-55/70 border border-red-200 text-red-600 text-xs font-semibold p-4 rounded-xl text-center leading-relaxed">
+            اسم المستخدم أو كلمة المرور غير صحيحة.
+        </div>
+
+        <!-- Login Form -->
+        <div class="space-y-4" onkeyup="handleKeyPress(event)">
+            <div>
+                <label for="username" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">اسم المستخدم</label>
+                <input id="username" type="text" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="admin">
+            </div>
+
+            <div>
+                <label for="password" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">كلمة المرور</label>
+                <input id="password" type="password" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="••••••••">
+            </div>
+
+            <button onclick="submitLogin()" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-2">
+                <span>دخول الآمن</span>
+            </button>
+        </div>
+
+        <div class="text-center text-[10px] text-slate-400">
+            FUThing Corporation &copy; 2026. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        async function submitLogin() {
+            const userIn = document.getElementById('username');
+            const passIn = document.getElementById('password');
+            const alertBox = document.getElementById('error-alert');
+            const btn = document.getElementById('login-btn');
+
+            const username = userIn.value.trim();
+            const password = passIn.value;
+
+            if (!username || !password) {
+                alertBox.innerText = 'الرجاء ملء جميع الحقول المطلوبة.';
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            // Show loading state
+            btn.setAttribute('disabled', 'true');
+            btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> جاري التحقق...';
+            alertBox.classList.add('hidden');
+
+            try {
+                const baseUrl = window.ENV ? window.ENV.API_BASE_URL : '/api/v1';
+                const response = await fetch(`${baseUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    if (result.sessionId) {
+                        localStorage.setItem('futh_session_id', result.sessionId);
+                    }
+                    // Redirect to dashboard on successful authentication
+                    window.location.href = '/dashboard';
+                } else {
+                    alertBox.innerText = result.error || 'فشل تسجيل الدخول. الرجاء التحقق من المدخلات.';
+                    alertBox.classList.remove('hidden');
+                    btn.removeAttribute('disabled');
+                    btn.innerHTML = '<span>دخول الآمن</span>';
+                }
+            } catch (err) {
+                alertBox.innerText = 'حدث خطأ في الاتصال بالخادم. الرجاء المحاولة لاحقاً.';
+                alertBox.classList.remove('hidden');
+                btn.removeAttribute('disabled');
+                btn.innerHTML = '<span>دخول الآمن</span>';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                submitLogin();
+            }
+        }
+    </script>
+</body>
+</html>
