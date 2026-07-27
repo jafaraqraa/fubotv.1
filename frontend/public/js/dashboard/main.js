@@ -8,6 +8,11 @@ window.Dashboard.main = {
         // 1. Initial state pull via authoritative REST endpoints (Task 15)
         window.Dashboard.analytics.fetchStatsAndUsers();
 
+        // Initialize redesigned API keys limits dashboard and management list
+        if (window.Dashboard.apiKeys && typeof window.Dashboard.apiKeys.init === 'function') {
+            window.Dashboard.apiKeys.init();
+        }
+
         // Initialize empty registry for tracking active interval IDs
         window.Dashboard.state.pollingIntervals = {
             stats: null,

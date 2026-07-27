@@ -70,6 +70,11 @@ window.Dashboard.analyticsDashboard = (function() {
                 }
             }
 
+            // Refresh redesigned API keys limits and management list
+            if (window.Dashboard.apiKeys && typeof window.Dashboard.apiKeys.loadApiKeys === 'function') {
+                window.Dashboard.apiKeys.loadApiKeys();
+            }
+
         } catch (err) {
             console.error('❌ Failed to refresh Analytics Dashboard:', err.message);
             if (window.Dashboard.settings && typeof window.Dashboard.settings.showToast === 'function') {

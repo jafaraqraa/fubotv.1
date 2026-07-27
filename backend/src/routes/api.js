@@ -440,6 +440,11 @@ router.post('/config/settings', async (req, res) => {
             addRAGAuditLog('المشرف', 'تعديل إعدادات المعرفة', updatedRAGKeys.join('، '), 'نجاح');
         }
 
+        // Trigger background sync of API keys after setting update asynchronously
+        budgetService.syncAllConfiguredApiKeys().catch(err => {
+            console.error('⚠️ Failed to sync API keys on settings update:', err.message);
+        });
+
         res.json({ success: true, message: 'تم حفظ وتحديث كافة الإعدادات والموديل والتعليمات وقنوات ميتّا بنجاح واشتغال البوت بالخلفية!' });
     } catch (err) {
         reportError("حفظ الإعدادات العامة", err.message);
@@ -476,10 +481,10 @@ router.get('/stats', (req, res) => {
         waAutoReply: process.env.WA_AUTO_REPLY !== 'false',
 
         // Budgets
-        budgetOpenrouter: parseFloat(getSetting('BUDGET_OPENROUTER') || '100'),
-        budgetOpenai: parseFloat(getSetting('BUDGET_OPENAI') || '100'),
-        budgetGemini: parseFloat(getSetting('BUDGET_GEMINI') || '100'),
-        budgetOllama: parseFloat(getSetting('BUDGET_OLLAMA') || '100'),
+        budgetOpenrouter: budgetService.getProviderBudget('openrouter').limit || 100.0,
+        budgetOpenai: budgetService.getProviderBudget('openai').limit || 100.0,
+        budgetGemini: budgetService.getProviderBudget('gemini').limit || 100.0,
+        budgetOllama: budgetService.getProviderBudget('ollama').limit || 100.0,
 
         // RAG Settings
         ragChunkSize: parseInt(getConfig('RAG_CHUNK_SIZE') || '800', 10),
@@ -1369,6 +1374,97 @@ router.delete('/rag/documents/:documentId', async (req, res) => {
 
         await kbDocService.deleteDocument(req.params.documentId);
         res.json({ success: true, message: 'تم حذف المستند والمتجهات المرافقة بنجاح.' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// Redesigned AI Provider API Key Management & Usage Limits APIs
+router.get('/providers/api-keys', (req, res) => {
+    try {
+        const grouped = budgetService.getApiKeysGrouped();
+        res.json({ success: true, apiKeys: grouped });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/providers/api-keys', async (req, res) => {
+    const { friendlyName, provider, apiKey, enabled } = req.body;
+    try {
+        const id = await budgetService.addApiKey(friendlyName, provider, apiKey, enabled !== false);
+        res.json({ success: true, id, message: 'تم تسجيل المفتاح البرمجي والتحقق من كفاءته بنجاح!' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.put('/providers/api-keys/:id', async (req, res) => {
+    const id = req.params.id;
+    const { friendlyName, enabled } = req.body;
+    try {
+        const db = require('../database/connection');
+        if (friendlyName !== undefined) {
+            db.prepare('UPDATE api_keys SET friendly_name = ? WHERE id = ?').run(friendlyName, id);
+        }
+        if (enabled !== undefined) {
+            db.prepare('UPDATE api_keys SET enabled = ? WHERE id = ?').run(enabled ? 1 : 0, id);
+        }
+
+        // Sync right after toggling on
+        if (enabled) {
+            await budgetService.syncApiKey(id);
+        } else {
+            const row = db.prepare('SELECT provider FROM api_keys WHERE id = ?').get(id);
+            if (row) {
+                budgetService.broadcastProviderBudget(row.provider.toLowerCase());
+            }
+        }
+        res.json({ success: true, message: 'تم تحديث حالة المفتاح بنجاح!' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.delete('/providers/api-keys/:id', (req, res) => {
+    const id = req.params.id;
+    try {
+        const db = require('../database/connection');
+        const row = db.prepare('SELECT provider FROM api_keys WHERE id = ?').get(id);
+
+        db.prepare('DELETE FROM api_keys WHERE id = ?').run(id);
+
+        if (row) {
+            budgetService.broadcastProviderBudget(row.provider.toLowerCase());
+        }
+        res.json({ success: true, message: 'تم حذف المفتاح البرمجي بنجاح.' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/providers/api-keys/:id/refresh', async (req, res) => {
+    const id = req.params.id;
+    try {
+        await budgetService.syncApiKey(id);
+        res.json({ success: true, message: 'تمت المزامنة وتحديث البيانات من المزود بنجاح!' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.get('/providers/usage-limits', (req, res) => {
+    try {
+        res.json({ success: true, limits: budgetService.getAllProviderBudgets() });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/providers/usage-limits/refresh', async (req, res) => {
+    try {
+        await budgetService.syncAllConfiguredApiKeys();
+        res.json({ success: true, limits: budgetService.getAllProviderBudgets() });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }

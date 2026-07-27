@@ -646,228 +646,52 @@
                     </div>
                 </div>
 
-                <!-- 2. Provider Cards Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <!-- OpenRouter -->
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
-                            <span class="font-bold text-sm text-slate-800">OpenRouter</span>
-                            <span class="px-2.5 py-0.5 text-[9px] font-bold rounded bg-indigo-50 text-indigo-600">نشط تلقائي</span>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الرصيد الحالي:</span>
-                                <strong id="balance-openrouter-current" class="text-slate-900 font-mono">-</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">المتبقي:</span>
-                                <strong id="balance-openrouter-remaining" class="text-blue-600 font-mono">-</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">تكلفة اليوم:</span>
-                                <strong id="balance-openrouter-today" class="text-green-600 font-mono">$0.00</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">تكلفة الشهر:</span>
-                                <strong id="balance-openrouter-month" class="text-slate-700 font-mono">$0.00</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الطلبات الكلية:</span>
-                                <strong id="balance-openrouter-reqs" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tokens:</span>
-                                <strong id="balance-openrouter-tokens" class="text-slate-800 font-mono">I: 0 | O: 0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">متوسط الكمون:</span>
-                                <strong id="balance-openrouter-latency" class="text-slate-800 font-mono">0 ms</strong>
-                            </div>
-                            <div id="balance-openrouter-error" class="hidden text-[9px] text-red-600 bg-red-50 p-2 rounded border border-red-150 text-right leading-relaxed font-arabic"></div>
+                <!-- Redesigned AI Provider Usage Limits Dashboard grouped by provider -->
+                <div id="api-keys-container" class="grid grid-cols-1 gap-6">
+                    <!-- Grouped keys loaded dynamically by apiKeys.js -->
+                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                        <span class="futh-spinner inline-block"></span>
+                        <p class="text-xs text-slate-400 font-arabic mt-2">جاري مزامنة رصيد وحدود استخدام الـ API من المزودين تلقائياً...</p>
+                    </div>
+                </div>
 
-                            <!-- Real-time Budget Info -->
-                            <div class="border-t border-slate-100 pt-3.5 space-y-2" id="budget-openrouter-container">
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">ميزانية الشهر:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-openrouter-val">$100.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المستهلك:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-openrouter-used">$0.0000</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المتبقي:</span>
-                                    <span class="text-blue-600 font-bold font-mono" id="budget-openrouter-remaining">$100.0000</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                                        <span>الاستهلاك:</span>
-                                        <span id="budget-openrouter-pct">0%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div id="budget-openrouter-progress" class="bg-blue-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- API Keys Management Panel -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-800 font-arabic">إدارة مفاتيح الـ API (API Keys Management)</h3>
+                            <p class="text-[10px] text-slate-450 mt-0.5">أضف، عطل، أو امسح مفاتيح مزودي الخدمة دلالياً ومزامنة أرصدتها تلقائياً.</p>
                         </div>
                     </div>
-
-                    <!-- OpenAI -->
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
-                            <span class="font-bold text-sm text-slate-800">OpenAI</span>
-                            <span class="px-2.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 text-slate-650">مدفوع</span>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                        <!-- Left side: Add Key Form -->
+                        <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-150">
+                            <h4 class="text-xs font-bold text-slate-700 font-arabic">إضافة مفتاح API جديد</h4>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 mb-1">الاسم الودي (Friendly Name)</label>
+                                <input type="text" id="new-key-name" class="futh-input bg-white text-xs" placeholder="مثال: مبيعات المتجر الرئيسي">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 mb-1">المزود (Provider)</label>
+                                <select id="new-key-provider" class="futh-input bg-white text-xs">
+                                    <option value="openrouter">OpenRouter</option>
+                                    <option value="openai">OpenAI</option>
+                                    <option value="gemini">Google Gemini</option>
+                                    <option value="anthropic">Anthropic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 mb-1">مفتاح API (API Key)</label>
+                                <input type="password" id="new-key-value" class="futh-input bg-white text-xs" placeholder="sk-...">
+                            </div>
+                            <button onclick="window.Dashboard.apiKeys.addKey()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow-sm font-arabic">إضافة ومزامنة المفتاح</button>
                         </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الرصيد الحالي:</span>
-                                <strong class="text-slate-400 font-semibold">غير متوفر عبر API</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">تكلفة اليوم:</span>
-                                <strong id="balance-openai-today" class="text-green-600 font-mono">$0.00</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">تكلفة الشهر:</span>
-                                <strong id="balance-openai-month" class="text-slate-700 font-mono">$0.00</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الطلبات الكلية:</span>
-                                <strong id="balance-openai-reqs" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tokens:</span>
-                                <strong id="balance-openai-tokens" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <p class="text-[9px] text-slate-400 font-arabic text-right pt-2 border-t border-slate-50 leading-relaxed">Balance information is unavailable for this provider.</p>
 
-                            <!-- Real-time Budget Info -->
-                            <div class="border-t border-slate-100 pt-3.5 space-y-2" id="budget-openai-container">
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">ميزانية الشهر:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-openai-val">$100.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المستهلك:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-openai-used">$0.0000</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المتبقي:</span>
-                                    <span class="text-blue-600 font-bold font-mono" id="budget-openai-remaining">$100.0000</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                                        <span>الاستهلاك:</span>
-                                        <span id="budget-openai-pct">0%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div id="budget-openai-progress" class="bg-blue-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Gemini -->
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
-                            <span class="font-bold text-sm text-slate-800">Google Gemini</span>
-                            <span class="px-2.5 py-0.5 text-[9px] font-bold rounded bg-blue-50 text-blue-600">مجاني / كوتا</span>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الرصيد الحالي:</span>
-                                <strong class="text-slate-400 font-semibold">غير متوفر عبر API</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الطلبات الكلية:</span>
-                                <strong id="balance-gemini-reqs" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tokens:</span>
-                                <strong id="balance-gemini-tokens" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">حصة اليوم (Quota):</span>
-                                <strong class="text-indigo-600 font-mono">1500 request/day</strong>
-                            </div>
-                            <p class="text-[9px] text-slate-400 font-arabic text-right pt-2 border-t border-slate-50 leading-relaxed">Balance information is unavailable for this provider.</p>
-
-                            <!-- Real-time Budget Info -->
-                            <div class="border-t border-slate-100 pt-3.5 space-y-2" id="budget-gemini-container">
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">ميزانية الشهر:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-gemini-val">$100.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المستهلك:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-gemini-used">$0.0000</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المتبقي:</span>
-                                    <span class="text-blue-600 font-bold font-mono" id="budget-gemini-remaining">$100.0000</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                                        <span>الاستهلاك:</span>
-                                        <span id="budget-gemini-pct">0%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div id="budget-gemini-progress" class="bg-blue-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Ollama -->
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
-                            <span class="font-bold text-sm text-slate-800">Ollama (مستضيف محلي)</span>
-                            <span class="px-2.5 py-0.5 text-[9px] font-bold rounded bg-green-50 text-green-600">مجاني بالكامل</span>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">التكلفة الإجمالية:</span>
-                                <strong class="text-green-600 font-mono">$0.00</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">الطلبات الكلية:</span>
-                                <strong id="balance-ollama-reqs" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tokens:</span>
-                                <strong id="balance-ollama-tokens" class="text-slate-800 font-mono">0</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">متوسط الكمون:</span>
-                                <strong id="balance-ollama-latency" class="text-slate-800 font-mono">0 ms</strong>
-                            </div>
-                            <p class="text-[9px] text-slate-400 font-arabic text-right pt-2 border-t border-slate-50 leading-relaxed">Balance information is unavailable for this provider.</p>
-
-                            <!-- Real-time Budget Info -->
-                            <div class="border-t border-slate-100 pt-3.5 space-y-2" id="budget-ollama-container">
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">ميزانية الشهر:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-ollama-val">$100.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المستهلك:</span>
-                                    <span class="text-slate-900 font-bold font-mono" id="budget-ollama-used">$0.0000</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-slate-500 font-semibold font-arabic">المتبقي:</span>
-                                    <span class="text-blue-600 font-bold font-mono" id="budget-ollama-remaining">$100.0000</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                                        <span>الاستهلاك:</span>
-                                        <span id="budget-ollama-pct">0%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                        <div id="budget-ollama-progress" class="bg-blue-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
-                                    </div>
-                                </div>
+                        <!-- Right side: Keys List -->
+                        <div class="lg:col-span-2 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-700 font-arabic">المفاتيح المسجلة حالياً</h4>
+                            <div id="api-keys-management-list" class="space-y-2.5 max-h-60 overflow-y-auto">
+                                <!-- Loaded dynamically by apiKeys.js -->
                             </div>
                         </div>
                     </div>
@@ -1871,7 +1695,7 @@
                                 <textarea id="prompt-input" rows="5" class="futh-input focus:ring-1 focus:ring-blue-600" placeholder="Define the AI persona behavior..."></textarea>
                             </div>
                         </div>
-                        <div class="drawer-section space-y-4">
+                        <div class="drawer-section space-y-4" style="display: none !important;">
                             <h4 class="text-xs font-bold text-slate-850">ميزانيات مزودي الخدمة ($) (Provider Budgets)</h4>
                             <p class="text-[10px] text-slate-400 font-arabic">حدد الميزانية الشهرية المقدرة لكل مزود خدمة ذكاء اصطناعي للتحكم بمعدل الاستهلاك.</p>
                             <div class="grid grid-cols-2 gap-3 text-xs">
@@ -2343,6 +2167,7 @@
     <script src="/js/dashboard/analyticsDashboard.js"></script>
     <script src="/js/dashboard/errors.js"></script>
     <script src="/js/dashboard/whatsapp.js"></script>
+    <script src="/js/dashboard/apiKeys.js"></script>
     <script src="/js/dashboard/settings.js"></script>
     <script src="/js/dashboard/rag.js"></script>
     <script src="/js/dashboard/aimodels.js"></script>
