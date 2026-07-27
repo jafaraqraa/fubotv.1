@@ -43,7 +43,16 @@ class OpenRouterProvider extends AIProvider {
             const model = this.model || "openrouter/free";
             const temp = parseFloat(process.env.AI_TEMPERATURE || "0.2");
 
-            console.log(`🤖 [OpenRouterProvider] Requesting completions using model: [${model}]...`);
+            // Logging and assertion before every request
+            console.log(`[AI Request Prep]
+Selected Provider: openrouter
+Selected Model: ${model}
+HTTP Endpoint: ${url}
+Adapter Used: OpenRouterProvider`);
+
+            if (this.constructor.name !== 'OpenRouterProvider') {
+                throw new Error(`Configuration Error: Adapter mismatch inside OpenRouterProvider. Found: ${this.constructor.name}`);
+            }
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -153,7 +162,16 @@ class OpenAIProvider extends AIProvider {
             const model = this.model || "gpt-4o-mini";
             const temp = parseFloat(process.env.AI_TEMPERATURE || "0.2");
 
-            console.log(`🤖 [OpenAIProvider] Requesting completions using model: [${model}]...`);
+            // Logging and assertion before every request
+            console.log(`[AI Request Prep]
+Selected Provider: openai
+Selected Model: ${model}
+HTTP Endpoint: ${url}
+Adapter Used: OpenAIProvider`);
+
+            if (this.constructor.name !== 'OpenAIProvider') {
+                throw new Error(`Configuration Error: Adapter mismatch inside OpenAIProvider. Found: ${this.constructor.name}`);
+            }
 
             let finalMessages = [...messages];
             if (options.media) {
@@ -278,7 +296,16 @@ class GeminiProvider extends AIProvider {
             const model = this.model || "gemini-2.5-flash";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
 
-            console.log(`🤖 [GeminiProvider] Requesting generation using model: [${model}]...`);
+            // Logging and assertion before every request
+            console.log(`[AI Request Prep]
+Selected Provider: gemini
+Selected Model: ${model}
+HTTP Endpoint: ${url}
+Adapter Used: GeminiProvider`);
+
+            if (this.constructor.name !== 'GeminiProvider') {
+                throw new Error(`Configuration Error: Adapter mismatch inside GeminiProvider. Found: ${this.constructor.name}`);
+            }
 
             const systemMsg = messages.find(m => m.role === 'system');
             const otherMsgs = messages.filter(m => m.role !== 'system');
@@ -372,7 +399,16 @@ class OllamaProvider extends AIProvider {
             const model = this.model || "llama3";
             const temp = parseFloat(process.env.AI_TEMPERATURE || "0.2");
 
-            console.log(`🤖 [OllamaProvider] Requesting local chat using model: [${model}]...`);
+            // Logging and assertion before every request
+            console.log(`[AI Request Prep]
+Selected Provider: ollama
+Selected Model: ${model}
+HTTP Endpoint: ${url}
+Adapter Used: OllamaProvider`);
+
+            if (this.constructor.name !== 'OllamaProvider') {
+                throw new Error(`Configuration Error: Adapter mismatch inside OllamaProvider. Found: ${this.constructor.name}`);
+            }
 
             let finalMessages = [...messages];
             if (options.media) {
@@ -440,6 +476,37 @@ class OllamaProvider extends AIProvider {
 }
 
 /**
+ * Helper to validate provider and model combinations.
+ */
+function validateProviderModelCombination(provider, model) {
+    if (!provider || !model) return;
+    const prov = provider.toLowerCase().trim();
+    const mdl = model.toLowerCase().trim();
+
+    if (prov === 'gemini') {
+        // Gemini: Allowed models: gemini-2.5-flash, gemini-2.5-pro, gemini-2.0-flash, gemini-1.5-flash, etc.
+        if (mdl.includes('/') || !mdl.startsWith('gemini-')) {
+            throw new Error(`Configuration Error: Model "${model}" is invalid for provider "gemini". Gemini models must start with "gemini-" and must not contain any slashes.`);
+        }
+    } else if (prov === 'openai') {
+        // OpenAI: Allowed models: gpt-*, o1-*, whisper-*, tts-*, text-*
+        if (mdl.includes('/') || (!mdl.startsWith('gpt-') && !mdl.startsWith('o1-') && !mdl.startsWith('whisper-') && !mdl.startsWith('tts-') && !mdl.startsWith('text-'))) {
+            throw new Error(`Configuration Error: Model "${model}" is invalid for provider "openai". OpenAI models must start with gpt-, o1-, whisper-, tts-, etc., and must not contain any slashes.`);
+        }
+    } else if (prov === 'openrouter') {
+        // OpenRouter: Must contain a slash indicating author/namespace, e.g., deepseek/deepseek-chat
+        if (!mdl.includes('/')) {
+            throw new Error(`Configuration Error: Model "${model}" is invalid for provider "openrouter". OpenRouter models must contain a slash (e.g. "deepseek/deepseek-chat").`);
+        }
+    } else if (prov === 'anthropic') {
+        // Anthropic: Must start with claude- and not contain any slash
+        if (mdl.includes('/') || !mdl.startsWith('claude-')) {
+            throw new Error(`Configuration Error: Model "${model}" is invalid for provider "anthropic". Anthropic models must start with "claude-" and must not contain any slashes.`);
+        }
+    }
+}
+
+/**
  * Factory resolver for resolving configured AI Provider.
  * Safely falls back to current OpenRouter setup for 100% backward compatibility.
  */
@@ -449,17 +516,36 @@ function getAIProvider() {
     const apiKey = process.env.AI_API_KEY || process.env.OPENROUTER_API_KEY;
     const baseUrl = process.env.AI_BASE_URL;
 
+    // Enforce combination validation
+    validateProviderModelCombination(providerKey, model);
+
+    let providerInstance;
     switch (providerKey) {
         case 'openai':
-            return new OpenAIProvider(model, apiKey, baseUrl);
+            providerInstance = new OpenAIProvider(model, apiKey, baseUrl);
+            break;
         case 'gemini':
-            return new GeminiProvider(model, apiKey, baseUrl);
+            providerInstance = new GeminiProvider(model, apiKey, baseUrl);
+            break;
         case 'ollama':
-            return new OllamaProvider(model, apiKey, baseUrl || "http://127.0.0.1:11434");
+            providerInstance = new OllamaProvider(model, apiKey, baseUrl || "http://127.0.0.1:11434");
+            break;
         case 'openrouter':
         default:
-            return new OpenRouterProvider(model, apiKey, baseUrl || "https://openrouter.ai/v1");
+            providerInstance = new OpenRouterProvider(model, apiKey, baseUrl || "https://openrouter.ai/v1");
+            break;
     }
+
+    // Verify that the adapter matches the selected provider
+    const expectedAdapterName = providerKey === 'openai' ? 'OpenAIProvider' :
+                                providerKey === 'gemini' ? 'GeminiProvider' :
+                                providerKey === 'ollama' ? 'OllamaProvider' :
+                                'OpenRouterProvider';
+    if (providerInstance.constructor.name !== expectedAdapterName) {
+        throw new Error(`Configuration Error: Adapter mismatch. Expected "${expectedAdapterName}" but got "${providerInstance.constructor.name}"`);
+    }
+
+    return providerInstance;
 }
 
 /**
@@ -514,6 +600,9 @@ function getAIProviderForTask(taskName) {
         const providerKey = config.provider.toLowerCase().trim();
         const model = config.model;
 
+        // Enforce combination validation
+        validateProviderModelCombination(providerKey, model);
+
         // Resolve API key reference
         let apiKey = '';
         if (config.api_key_ref) {
@@ -527,21 +616,37 @@ function getAIProviderForTask(taskName) {
 
         const baseUrl = process.env.AI_BASE_URL;
 
+        let providerInstance;
         switch (providerKey) {
             case 'openai':
-                return new OpenAIProvider(model, apiKey, baseUrl);
+                providerInstance = new OpenAIProvider(model, apiKey, baseUrl);
+                break;
             case 'gemini':
-                return new GeminiProvider(model, apiKey, baseUrl);
+                providerInstance = new GeminiProvider(model, apiKey, baseUrl);
+                break;
             case 'ollama':
                 const ollamaBaseUrl = settingsRepository.getSetting('OLLAMA_BASE_URL') || process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
-                return new OllamaProvider(model, apiKey, ollamaBaseUrl);
+                providerInstance = new OllamaProvider(model, apiKey, ollamaBaseUrl);
+                break;
             case 'openrouter':
             default:
-                return new OpenRouterProvider(model, apiKey, baseUrl || "https://openrouter.ai/api/v1");
+                providerInstance = new OpenRouterProvider(model, apiKey, baseUrl || "https://openrouter.ai/api/v1");
+                break;
         }
+
+        // Verify that the adapter matches the selected provider
+        const expectedAdapterName = providerKey === 'openai' ? 'OpenAIProvider' :
+                                    providerKey === 'gemini' ? 'GeminiProvider' :
+                                    providerKey === 'ollama' ? 'OllamaProvider' :
+                                    'OpenRouterProvider';
+        if (providerInstance.constructor.name !== expectedAdapterName) {
+            throw new Error(`Configuration Error: Adapter mismatch. Expected "${expectedAdapterName}" but got "${providerInstance.constructor.name}"`);
+        }
+
+        return providerInstance;
     } catch (err) {
         console.error(`Error resolving provider for task ${taskName}:`, err.message);
-        return getAIProvider(); // Graceful fallback
+        throw err; // Propagate validation/configuration errors cleanly
     }
 }
 
