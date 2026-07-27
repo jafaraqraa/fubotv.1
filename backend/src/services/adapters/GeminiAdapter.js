@@ -27,7 +27,7 @@ class GeminiAdapter extends ProviderAdapter {
             resetDate: null,
             source: {},
             rawResponse: null,
-            errorMessage: 'Automatic limits are unavailable for Gemini.'
+            errorMessage: 'API Key usage information is not available from this provider.'
         };
     }
 }

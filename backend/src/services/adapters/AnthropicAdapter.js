@@ -27,7 +27,7 @@ class AnthropicAdapter extends ProviderAdapter {
             resetDate: null,
             source: {},
             rawResponse: null,
-            errorMessage: 'Automatic limits are unavailable for Anthropic.'
+            errorMessage: 'API Key usage information is not available from this provider.'
         };
     }
 }

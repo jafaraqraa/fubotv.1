@@ -646,54 +646,12 @@
                     </div>
                 </div>
 
-                <!-- Redesigned AI Provider Usage Limits Dashboard grouped by provider -->
-                <div id="api-keys-container" class="grid grid-cols-1 gap-6">
-                    <!-- Grouped keys loaded dynamically by apiKeys.js -->
-                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200">
+                <!-- Redesigned AI Provider Usage Limits Dashboard - One premium card per provider -->
+                <div id="api-keys-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Loaded dynamically by apiKeys.js -->
+                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 col-span-2">
                         <span class="futh-spinner inline-block"></span>
                         <p class="text-xs text-slate-400 font-arabic mt-2">جاري مزامنة رصيد وحدود استخدام الـ API من المزودين تلقائياً...</p>
-                    </div>
-                </div>
-
-                <!-- API Keys Management Panel -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                        <div>
-                            <h3 class="text-xs font-bold text-slate-800 font-arabic">إدارة مفاتيح الـ API (API Keys Management)</h3>
-                            <p class="text-[10px] text-slate-450 mt-0.5">أضف، عطل، أو امسح مفاتيح مزودي الخدمة دلالياً ومزامنة أرصدتها تلقائياً.</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                        <!-- Left side: Add Key Form -->
-                        <div class="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-150">
-                            <h4 class="text-xs font-bold text-slate-700 font-arabic">إضافة مفتاح API جديد</h4>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1">الاسم الودي (Friendly Name)</label>
-                                <input type="text" id="new-key-name" class="futh-input bg-white text-xs" placeholder="مثال: مبيعات المتجر الرئيسي">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1">المزود (Provider)</label>
-                                <select id="new-key-provider" class="futh-input bg-white text-xs">
-                                    <option value="openrouter">OpenRouter</option>
-                                    <option value="openai">OpenAI</option>
-                                    <option value="gemini">Google Gemini</option>
-                                    <option value="anthropic">Anthropic</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1">مفتاح API (API Key)</label>
-                                <input type="password" id="new-key-value" class="futh-input bg-white text-xs" placeholder="sk-...">
-                            </div>
-                            <button onclick="window.Dashboard.apiKeys.addKey()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow-sm font-arabic">إضافة ومزامنة المفتاح</button>
-                        </div>
-
-                        <!-- Right side: Keys List -->
-                        <div class="lg:col-span-2 space-y-3">
-                            <h4 class="text-xs font-bold text-slate-700 font-arabic">المفاتيح المسجلة حالياً</h4>
-                            <div id="api-keys-management-list" class="space-y-2.5 max-h-60 overflow-y-auto">
-                                <!-- Loaded dynamically by apiKeys.js -->
-                            </div>
-                        </div>
                     </div>
                 </div>
 
