@@ -13,41 +13,110 @@ if (fs.existsSync(testDbPath + '-shm')) fs.unlinkSync(testDbPath + '-shm');
 
 const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
-const { getProviderBudget, getAllProviderBudgets, updateProviderBudget } = require('../src/services/budgetService');
+const budgetService = require('../src/services/budgetService');
 
-test('Budget and Real-time Usage tracking Suite', async (t) => {
+test('Redesigned AI Provider Budget System Suite', async (t) => {
 
-    // Bootstrap database schema
+    // Bootstrap database schema & migrations
     initializeDatabase();
 
-    await t.test('1. Default budget loading and remaining calculation', () => {
-        // Clear any previous settings to verify default fallback
-        db.prepare("DELETE FROM settings WHERE key = 'BUDGET_OPENAI'").run();
+    await t.test('1. Database migration and seeding of existing keys', () => {
+        // Run seeding
+        budgetService.seedExistingKeysOnStartup();
 
-        const stats = getProviderBudget('openai');
-        assert.strictEqual(stats.provider, 'openai');
-        assert.strictEqual(stats.budget, 100.0);
+        // Query api_keys table to make sure it exists and seeds gracefully
+        const keys = db.prepare('SELECT * FROM api_keys').all();
+        assert.ok(Array.isArray(keys));
+    });
+
+    await t.test('2. Retrieve grouped API Keys from database', () => {
+        const grouped = budgetService.getApiKeysGrouped();
+        assert.ok(typeof grouped === 'object');
+    });
+
+    await t.test('3. Register/Add a mock API Key and verify automatic synchronization', async () => {
+        // We use a mock key prefix: mock-openrouter-limit-500-used-100-capabilities-supportsBalance-supportsResetDate
+        const id = await budgetService.addApiKey(
+            'أحمد - مبيعات المتجر',
+            'openrouter',
+            'mock-openrouter-limit-500-used-100-capabilities-supportsBalance-supportsResetDate'
+        );
+
+        assert.ok(id > 0);
+
+        // Fetch the synced key info from DB
+        const keyRow = db.prepare('SELECT * FROM api_keys WHERE id = ?').get(id);
+        assert.strictEqual(keyRow.limits_available, 1);
+        assert.strictEqual(keyRow.limit_val, 500.0);
+        assert.strictEqual(keyRow.usage_val, 100.0);
+        assert.strictEqual(keyRow.remaining_balance, 400.0);
+        assert.strictEqual(keyRow.billing_period, 'Monthly');
+        assert.strictEqual(keyRow.reset_date, '2026-04-01');
+
+        const caps = JSON.parse(keyRow.capabilities);
+        assert.strictEqual(caps.supportsBalance, true);
+        assert.strictEqual(caps.supportsResetDate, true);
+        assert.strictEqual(caps.supportsUsage, true);
+
+        const source = JSON.parse(keyRow.source);
+        assert.strictEqual(source.limit, 'provider');
+        assert.strictEqual(source.usage, 'provider');
+    });
+
+    await t.test('4. Verify fallback and local tracking when provider does not expose limits', async () => {
+        // OpenAI standard key (no mock prefix)
+        const id = await budgetService.addApiKey(
+            'سارة - خدمة العملاء',
+            'openai',
+            'sk-proj-openai-key-does-not-expose-limits'
+        );
+
+        assert.ok(id > 0);
+
+        // Fetch from DB
+        const keyRow = db.prepare('SELECT * FROM api_keys WHERE id = ?').get(id);
+        assert.strictEqual(keyRow.limits_available, 0); // No limits exposed!
+
+        // Query provider budget details
+        const stats = budgetService.getProviderBudget('openai');
+        assert.strictEqual(stats.limitsAvailable, false);
+        assert.strictEqual(stats.limit, null); // Never invent limits!
+        assert.strictEqual(stats.remaining, null);
+        assert.strictEqual(stats.percentage, null);
         assert.strictEqual(typeof stats.used, 'number');
-        assert.strictEqual(stats.remaining >= 0, true);
     });
 
-    await t.test('2. Budget update and persistence', () => {
-        const updated = updateProviderBudget('openai', 150.0);
-        assert.strictEqual(updated.provider, 'openai');
-        assert.strictEqual(updated.budget, 150.0);
+    await t.test('5. Verify immediate balance decrement after request completes', () => {
+        const apiKey = 'mock-openrouter-limit-500-used-100-capabilities-supportsBalance-supportsResetDate';
+        const keyHash = budgetService.hashApiKey(apiKey);
 
-        // Verify loaded again matches
-        const stats = getProviderBudget('openai');
-        assert.strictEqual(stats.budget, 150.0);
+        // Perform decrement
+        budgetService.decrementBalanceAfterRequest(apiKey, 2.5);
+
+        // Verify updated cache values
+        const row = db.prepare('SELECT remaining_balance, usage_val, source FROM api_keys WHERE api_key_hash = ?').get(keyHash);
+        assert.strictEqual(row.remaining_balance, 397.5);
+        assert.strictEqual(row.usage_val, 102.5);
+
+        const source = JSON.parse(row.source);
+        assert.strictEqual(source.usage, 'estimated');
+        assert.strictEqual(source.remaining, 'estimated');
     });
 
-    await t.test('3. Retrive all budgets', () => {
-        const all = getAllProviderBudgets();
+    await t.test('6. Retrieve all provider budgets with redesign structure', () => {
+        const all = budgetService.getAllProviderBudgets();
         assert.ok(all.openrouter);
         assert.ok(all.openai);
         assert.ok(all.gemini);
         assert.ok(all.ollama);
-        assert.strictEqual(all.openai.budget, 150.0);
+
+        // OpenRouter uses our mock synced limits
+        assert.strictEqual(all.openrouter.limitsAvailable, true);
+        assert.strictEqual(all.openrouter.limit, 500.0);
+
+        // OpenAI handles standard fallback elegantly
+        assert.strictEqual(all.openai.limitsAvailable, false);
+        assert.strictEqual(all.openai.limit, null);
     });
 
     // Cleanup files safely after test suite finishes

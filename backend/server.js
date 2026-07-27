@@ -32,6 +32,17 @@ const PORT = process.env.PORT || 3000;
 initializeTelegramOnStartup();
 startWhatsApp();
 
+// Run initial background API usage limits sync on startup
+const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
+try {
+    seedExistingKeysOnStartup();
+} catch (e) {
+    console.error('⚠️ [Startup] Seeding existing keys failed:', e.message);
+}
+syncAllConfiguredApiKeys().catch(err => {
+    console.error('⚠️ [Startup] Initial API Key sync failed:', err.message);
+});
+
 // حماية السيرفر من الانهيار عند حدوث أخطاء غير متوقعة بالخلفية
 process.on('uncaughtException', (err) => {
     reportError("خطأ داخلي غير متوقع بالخلفية", err.message);

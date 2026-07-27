@@ -370,7 +370,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             cost: finalCost,
             success: trackSuccess,
             error_message: trackErrorMessage,
-            generation_id: generationId
+            generation_id: generationId,
+            apiKey: taskProvider ? taskProvider.apiKey : null
         });
 
         // Temporary tracking log requested by user

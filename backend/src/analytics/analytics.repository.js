@@ -42,8 +42,13 @@ function recordUsage(data) {
         cost = 0.0,
         success = 1,
         error_message = null,
-        generation_id = null
+        generation_id = null,
+        apiKey = null,
+        api_key_hash = null
     } = data;
+
+    const budgetService = require('../services/budgetService');
+    const computedKeyHash = apiKey ? budgetService.hashApiKey(apiKey) : (api_key_hash || null);
 
     // Map input/prompt tokens correctly to allow zero-downtime transition
     const pTokens = prompt_tokens || input_tokens || 0;
@@ -56,8 +61,8 @@ function recordUsage(data) {
     const query = `
         INSERT INTO ai_usage (
             provider, model, task, tenant_id, request_time, response_time,
-            duration, input_tokens, output_tokens, total_tokens, cost, success, error_message, generation_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            duration, input_tokens, output_tokens, total_tokens, cost, success, error_message, generation_id, api_key_hash
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     try {
@@ -76,9 +81,16 @@ function recordUsage(data) {
             cost,
             success ? 1 : 0,
             error_message,
-            generation_id
+            generation_id,
+            computedKeyHash
         );
         console.log(`[AnalyticsRepository] Saved record ID: ${info.lastInsertRowid}`);
+
+        // Update balance cache / tracking locally
+        if (apiKey) {
+            budgetService.decrementBalanceAfterRequest(apiKey, cost);
+        }
+
         return {
             success: true,
             id: info.lastInsertRowid
