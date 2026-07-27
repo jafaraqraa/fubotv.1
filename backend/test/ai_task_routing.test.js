@@ -129,6 +129,47 @@ test('AI Task-Based Configuration and Routing Suite', async (t) => {
         assert.strictEqual(provider.apiKey, 'legacy_mock_key', "Should fall back to environment API Key configuration");
     });
 
+    await t.test('6. Validate Provider/Model Combinations', () => {
+        // Gemini provider with deepseek model should throw Configuration Error
+        saveTaskConfig({
+            task: 'text_generation',
+            provider: 'gemini',
+            model: 'deepseek/deepseek-chat',
+            api_key_ref: 'GEMINI_API_KEY',
+            enabled: 1
+        });
+
+        assert.throws(() => {
+            getAIProviderForTask('text_generation');
+        }, /Configuration Error/, "Invalid gemini/deepseek combination should be rejected");
+
+        // OpenAI provider with slash model should throw Configuration Error
+        saveTaskConfig({
+            task: 'text_generation',
+            provider: 'openai',
+            model: 'deepseek/deepseek-chat',
+            api_key_ref: 'OPENAI_API_KEY',
+            enabled: 1
+        });
+
+        assert.throws(() => {
+            getAIProviderForTask('text_generation');
+        }, /Configuration Error/, "Invalid openai/deepseek combination should be rejected");
+
+        // OpenRouter provider with simple model name should throw Configuration Error
+        saveTaskConfig({
+            task: 'text_generation',
+            provider: 'openrouter',
+            model: 'gpt-4o-mini',
+            api_key_ref: 'OPENROUTER_API_KEY',
+            enabled: 1
+        });
+
+        assert.throws(() => {
+            getAIProviderForTask('text_generation');
+        }, /Configuration Error/, "Invalid openrouter simple model name should be rejected");
+    });
+
     t.after(() => {
         db.close();
         if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
