@@ -5,8 +5,8 @@ class OpenRouterAdapter extends ProviderAdapter {
         return {
             supportsBalance: true,
             supportsUsage: true,
-            supportsQuota: false,
-            supportsResetDate: false,
+            supportsQuota: true,
+            supportsResetDate: true,
             supportsRateLimits: false
         };
     }
@@ -24,7 +24,7 @@ class OpenRouterAdapter extends ProviderAdapter {
             };
         }
 
-        const targetUrl = this.baseUrl || 'https://openrouter.ai/api/v1/credits';
+        const targetUrl = this.baseUrl || 'https://openrouter.ai/api/v1/key';
         try {
             console.log(`🌐 [OpenRouterAdapter] Requesting URL: ${targetUrl}`);
             const response = await fetch(targetUrl, {
@@ -40,27 +40,28 @@ class OpenRouterAdapter extends ProviderAdapter {
             }
 
             const payload = await response.json();
-            if (!payload.data) {
-                throw new Error('Invalid response format from OpenRouter credits API.');
+            if (!payload || !payload.data) {
+                throw new Error('Invalid response format from OpenRouter key API.');
             }
 
-            const {
-                total_credits = 0,
-                total_usage = 0
-            } = payload.data;
+            const keyData = payload.data;
 
-            const remainingBalance = Math.max(0, total_credits - total_usage);
+            // Specific key metadata only
+            const limit = keyData.limit !== undefined ? keyData.limit : null;
+            const remaining = keyData.limit_remaining !== undefined ? keyData.limit_remaining : null;
+            const usage = keyData.usage !== undefined ? keyData.usage : 0.0;
+            const resetDate = keyData.limit_reset || null;
 
             return {
                 success: true,
                 limitsAvailable: true,
                 capabilities: this.getCapabilities(),
-                balance: total_credits,
-                limit: total_credits,
-                usage: total_usage,
-                remaining: remainingBalance,
-                billingPeriod: 'Pay-as-you-go',
-                resetDate: null,
+                balance: remaining, // Use key-specific remaining credits
+                limit: limit,
+                usage: usage,
+                remaining: remaining,
+                billingPeriod: resetDate ? `Reset: ${resetDate}` : 'No Reset',
+                resetDate: resetDate,
                 source: {
                     balance: 'provider',
                     limit: 'provider',

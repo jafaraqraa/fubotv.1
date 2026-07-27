@@ -50,8 +50,11 @@ function seedExistingKeysOnStartup() {
 
                 const hash = hashApiKey(val);
                 try {
+                    // Enforce exactly ONE API Key per provider
+                    db.prepare('DELETE FROM api_keys WHERE LOWER(provider) = ?').run(provider.toLowerCase());
+
                     db.prepare(`
-                        INSERT OR IGNORE INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
+                        INSERT INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
                         VALUES (?, ?, ?, ?, 1)
                     `).run(item.name, provider, val, hash);
                     console.log(`✅ [BudgetService] Seeded existing key [${item.key}] as [${item.name}]`);
@@ -142,6 +145,7 @@ function getLocalMonthlyUsage(providerName, keyHash) {
 
 /**
  * Registers/Adds a new API Key and triggers its initial sync
+ * Strictly enforces ONE API Key per provider.
  */
 async function addApiKey(friendlyName, provider, apiKey, enabled = 1) {
     if (!friendlyName || !provider || !apiKey) {
@@ -149,16 +153,20 @@ async function addApiKey(friendlyName, provider, apiKey, enabled = 1) {
     }
     const hash = hashApiKey(apiKey);
     const masked = maskApiKey(apiKey);
+    const provLower = provider.toLowerCase();
+
+    // Delete any existing API Key for this provider to guarantee exactly ONE API Key
+    db.prepare('DELETE FROM api_keys WHERE LOWER(provider) = ?').run(provLower);
 
     db.prepare(`
         INSERT INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
         VALUES (?, ?, ?, ?, ?)
-    `).run(friendlyName, provider.toLowerCase(), apiKey, hash, enabled ? 1 : 0);
+    `).run(friendlyName, provLower, apiKey, hash, enabled ? 1 : 0);
 
     const row = db.prepare('SELECT id FROM api_keys WHERE api_key_hash = ?').get(hash);
     const id = row.id;
 
-    console.log(`✅ [BudgetService] Registered key [${friendlyName}] for [${provider}]. Triggering initial sync...`);
+    console.log(`✅ [BudgetService] Registered unique key [${friendlyName}] for [${provLower}]. Triggering initial sync...`);
     await syncApiKey(id);
 
     return id;
@@ -371,7 +379,7 @@ function getProviderBudget(providerName) {
  * Retrieves budgets for all supported AI providers.
  */
 function getAllProviderBudgets() {
-    const providers = ['openrouter', 'openai', 'gemini', 'ollama'];
+    const providers = ['openrouter', 'openai', 'gemini', 'anthropic', 'ollama'];
     const results = {};
     for (const prov of providers) {
         results[prov] = getProviderBudget(prov);

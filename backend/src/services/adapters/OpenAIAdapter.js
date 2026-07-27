@@ -27,7 +27,7 @@ class OpenAIAdapter extends ProviderAdapter {
             resetDate: null,
             source: {},
             rawResponse: null,
-            errorMessage: 'Automatic limits are unavailable for OpenAI.'
+            errorMessage: 'API Key usage information is not available from this provider.'
         };
     }
 }
