@@ -1,20 +1,24 @@
 const db = require('../connection');
+const { requireTenantId } = require('../../rag/security/tenantContext');
 
 /**
  * Inserts a new knowledge document metadata record into SQLite.
  */
 function insertDocument(doc) {
+    const tenantId = requireTenantId(doc.tenant_id, 'repository-insert-document');
     const stmt = db.prepare(`
         INSERT INTO knowledge_documents (
             document_key, original_name, display_name, source_type, mime_type,
             storage_name, storage_path, file_size, content_hash, extracted_text_hash,
             language, status, is_enabled, chunk_count, vector_count, index_fingerprint,
-            version, created_at, updated_at
+            version, tenant_id, logical_document_id, version_id, is_active,
+            embedding_model, vector_dimension, cleanup_error, tenant_ownership_status,
+            created_at, updated_at
         ) VALUES (
             ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
-            ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
         )
     `);
 
@@ -35,7 +39,15 @@ function insertDocument(doc) {
         doc.chunk_count || 0,
         doc.vector_count || 0,
         doc.index_fingerprint || null,
-        doc.version !== undefined ? doc.version : 1
+        doc.version !== undefined ? doc.version : 1,
+        tenantId,
+        doc.logical_document_id || doc.document_key,
+        doc.version_id || `${doc.document_key}:v${doc.version || 1}`,
+        doc.is_active !== undefined ? doc.is_active : 1,
+        doc.embedding_model || null,
+        doc.vector_dimension || null,
+        doc.cleanup_error || null,
+        'verified'
     );
 
     return result.lastInsertRowid;
@@ -44,25 +56,31 @@ function insertDocument(doc) {
 /**
  * Retrieves a document record by its original file name.
  */
-function getDocumentByOriginalName(name) {
-    return db.prepare("SELECT * FROM knowledge_documents WHERE original_name = ? AND status != 'deleted' LIMIT 1").get(name);
+function getDocumentByOriginalName(tenantId, name) {
+    tenantId = requireTenantId(tenantId, 'repository-get-document-name');
+    return db.prepare(`
+        SELECT * FROM knowledge_documents
+        WHERE original_name = ? AND tenant_id = ? AND is_active = 1 AND status != 'deleted'
+        ORDER BY version DESC LIMIT 1
+    `).get(name, tenantId);
 }
 
 /**
  * Updates an existing knowledge document metadata record.
  */
-function updateDocument(id, updates) {
+function updateDocument(tenantId, id, updates) {
+    tenantId = requireTenantId(tenantId, 'repository-update-document');
     const keys = Object.keys(updates);
     if (keys.length === 0) return false;
 
     const setClauses = keys.map(k => `${k} = ?`).join(', ');
     const values = keys.map(k => updates[k]);
-    values.push(id); // for WHERE clause
+    values.push(tenantId, id);
 
     const stmt = db.prepare(`
         UPDATE knowledge_documents
         SET ${setClauses}, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
+        WHERE tenant_id = ? AND id = ?
     `);
 
     const result = stmt.run(...values);
@@ -72,36 +90,41 @@ function updateDocument(id, updates) {
 /**
  * Retrieves a document record by ID.
  */
-function getDocumentById(id) {
-    return db.prepare('SELECT * FROM knowledge_documents WHERE id = ?').get(id);
+function getDocumentById(tenantId, id) {
+    tenantId = requireTenantId(tenantId, 'repository-get-document-id');
+    return db.prepare('SELECT * FROM knowledge_documents WHERE tenant_id = ? AND id = ?').get(tenantId, id);
 }
 
 /**
  * Retrieves a document record by its unique key.
  */
-function getDocumentByKey(key) {
-    return db.prepare('SELECT * FROM knowledge_documents WHERE document_key = ?').get(key);
+function getDocumentByKey(tenantId, key) {
+    tenantId = requireTenantId(tenantId, 'repository-get-document-key');
+    return db.prepare('SELECT * FROM knowledge_documents WHERE tenant_id = ? AND document_key = ?').get(tenantId, key);
 }
 
 /**
  * Retrieves a document record by its original file bytes hash (content_hash).
  */
-function getDocumentByContentHash(hash) {
-    return db.prepare('SELECT * FROM knowledge_documents WHERE content_hash = ?').get(hash);
+function getDocumentByContentHash(tenantId, hash) {
+    tenantId = requireTenantId(tenantId, 'repository-get-content-hash');
+    return db.prepare('SELECT * FROM knowledge_documents WHERE tenant_id = ? AND content_hash = ?').get(tenantId, hash);
 }
 
 /**
  * Retrieves a document record by its extracted text hash.
  */
-function getDocumentByExtractedTextHash(hash) {
-    return db.prepare('SELECT * FROM knowledge_documents WHERE extracted_text_hash = ?').get(hash);
+function getDocumentByExtractedTextHash(tenantId, hash) {
+    tenantId = requireTenantId(tenantId, 'repository-get-text-hash');
+    return db.prepare('SELECT * FROM knowledge_documents WHERE tenant_id = ? AND extracted_text_hash = ?').get(tenantId, hash);
 }
 
 /**
  * Deletes a document record from SQLite by ID.
  */
-function deleteDocument(id) {
-    const result = db.prepare('DELETE FROM knowledge_documents WHERE id = ?').run(id);
+function deleteDocument(tenantId, id) {
+    tenantId = requireTenantId(tenantId, 'repository-delete-document');
+    const result = db.prepare('DELETE FROM knowledge_documents WHERE tenant_id = ? AND id = ?').run(tenantId, id);
     return result.changes > 0;
 }
 
@@ -109,8 +132,9 @@ function deleteDocument(id) {
  * Helper to build filter criteria dynamically.
  */
 function buildFilterQuery(filters) {
-    const clauses = [];
-    const values = [];
+    const tenantId = requireTenantId(filters.tenantId, 'repository-list-documents');
+    const clauses = ['tenant_id = ?'];
+    const values = [tenantId];
 
     if (filters.search) {
         clauses.push('(display_name LIKE ? OR original_name LIKE ?)');
@@ -174,7 +198,25 @@ function countDocuments(filters = {}) {
  * Lists all active (enabled and successfully indexed) documents for query retrieval.
  */
 function listAllEnabledDocuments() {
-    return db.prepare("SELECT * FROM knowledge_documents WHERE is_enabled = 1 AND status = 'indexed'").all();
+    throw new Error('tenantId is required; use listAllEnabledDocumentsForTenant().');
+}
+
+function listAllEnabledDocumentsForTenant(tenantId) {
+    tenantId = requireTenantId(tenantId, 'repository-list-enabled-documents');
+    return db.prepare(`
+        SELECT * FROM knowledge_documents
+        WHERE tenant_id = ? AND is_enabled = 1 AND is_active = 1
+          AND status IN ('indexed', 'active', 'cleanup_pending')
+    `).all(tenantId);
+}
+
+function listDocumentVersions(tenantId, logicalDocumentId) {
+    tenantId = requireTenantId(tenantId, 'repository-list-document-versions');
+    return db.prepare(`
+        SELECT * FROM knowledge_documents
+        WHERE tenant_id = ? AND logical_document_id = ?
+        ORDER BY version DESC
+    `).all(tenantId, logicalDocumentId);
 }
 
 module.exports = {
@@ -188,5 +230,7 @@ module.exports = {
     listDocuments,
     countDocuments,
     listAllEnabledDocuments,
-    getDocumentByOriginalName
+    listAllEnabledDocumentsForTenant,
+    getDocumentByOriginalName,
+    listDocumentVersions
 };

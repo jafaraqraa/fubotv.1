@@ -2,6 +2,7 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.aimodels = {
+    activeModelTests: new Map(),
     tasksMetadata: {
         'text_generation': { title: "توليد النصوص (Text Generation)", icon: "📝", desc: "نموذج توليد وتطوير الردود النصية وإجراء المحادثات الذكية." },
         'vision': { title: "الرؤية البصرية (Vision - Images)", icon: "👁️", desc: "تحليل وفهم الصور والمستندات المصورة (مستقبلي)." },
@@ -215,22 +216,30 @@ window.Dashboard.aimodels = {
                 className: 'ai-model-test-result',
                 attributes: { role: 'status', 'aria-live': 'polite' }
             });
-            testButton.addEventListener('click', () => this.testTaskModel(task.task, testButton, testResult));
+            testButton.addEventListener('click', () => this.testTaskModel(task, testButton, testResult));
             actions.append(changeButton, testButton, customButton);
             card.append(summary, details, actions, testResult);
             grid.appendChild(card);
         });
     },
 
-    testTaskModel: async function(taskId, button, resultElement) {
+    testTaskModel: async function(task, button, resultElement) {
         if (!button || button.disabled) return;
+        const taskId = String(task?.task || task || '').trim();
+        const provider = String(task?.provider || '').trim().toLowerCase();
+        const model = String(task?.model || '').trim();
+        const testKey = `${provider}:${taskId}:${model}`;
+        if (this.activeModelTests.has(testKey)) return this.activeModelTests.get(testKey);
+
         const originalText = button.textContent;
         button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
         button.textContent = 'جاري الاختبار…';
         resultElement.className = 'ai-model-test-result is-testing';
         resultElement.textContent = 'يتم التحقق من اتصال المزوّد وتوفر الموديل…';
 
-        try {
+        const pending = (async () => {
+          try {
             const response = await window.Dashboard.api.request('/api/ai-tasks/test', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -245,8 +254,13 @@ window.Dashboard.aimodels = {
             resultElement.textContent = error.message || 'تعذر اختبار الموديل.';
         } finally {
             button.disabled = false;
+            button.removeAttribute('aria-busy');
             button.textContent = originalText;
+            this.activeModelTests.delete(testKey);
         }
+        })();
+        this.activeModelTests.set(testKey, pending);
+        return pending;
     },
 
     openChangeModelModal: async function(taskId, provider, model) {

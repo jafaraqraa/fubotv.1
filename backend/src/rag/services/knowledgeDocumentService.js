@@ -16,6 +16,343 @@ const { cleanText } = require('../processing/textCleaner');
 const { chunkDocument } = require('../processing/documentChunker');
 const { generateEmbeddings, checkModelAvailability } = require('../embeddings/ollamaEmbeddingProvider');
 const { initCollection, upsertVectors, deleteVectorsByDocument, checkQdrantReady } = require('../vector/qdrantVectorStore');
+const retrievalCache = require('../cache/retrievalCache');
+const {
+    getPointsByDocument,
+    setDocumentVectorsLifecycle
+} = require('../vector/qdrantVectorStore');
+const { registerOperation } = require('../runtime/operationRegistry');
+const { asStageError, RollbackError } = require('../indexing/indexingErrors');
+const { createLifecycle, assertActiveDocument } = require('../indexing/indexingLifecycle');
+const { scanText } = require('../security/promptInjectionGuard');
+const { acquireLease } = require('../runtime/distributedLockService');
+
+function annotateInjectionRisk(chunks, tenantId, documentId) {
+    if (String(getConfig('RAG_INJECTION_SCAN_ON_INGEST')).toLowerCase() === 'false') return chunks;
+    return chunks.map(item => {
+        const guard = scanText(item.text, { tenantId, documentId, chunkId: item.chunkId });
+        return {
+            ...item,
+            injectionRisk: guard.riskLevel,
+            injectionSignals: guard.signals,
+            injectionScannedAt: guard.scannedAt,
+            injectionScannerVersion: guard.scannerVersion
+        };
+    });
+}
+
+function replacementError(error, stage) {
+    error.stage = error.stage || stage;
+    error.previousVersionPreserved = true;
+    return error;
+}
+
+async function replaceDocumentAtomically(existing, originalName, mimeType, buffer, ext, options) {
+    const { requireTenantId } = require('../security/tenantContext');
+    const tenantId = requireTenantId(options.tenantId, 'document-replace');
+    const logicalDocumentId = existing.logical_document_id || existing.document_key;
+    let lease;
+    try {
+        lease = await acquireLease({
+            tenantId, resourceType: 'document', resourceId: logicalDocumentId,
+            operation: 'document_replace', signal: options.signal,
+            failFast: options.failFast !== false, idempotencyKey: options.idempotencyKey
+        });
+    } catch (error) {
+        if (error.code === 'RAG_OPERATION_IN_PROGRESS') {
+            error.canonicalCode = error.code;
+            error.code = 'RAG_REPLACE_LOCKED';
+        }
+        throw error;
+    }
+    if (lease.duplicate) {
+        if (lease.operation.status === 'completed' && lease.operation.result_json) {
+            return JSON.parse(lease.operation.result_json);
+        }
+        throw Object.assign(new Error('A matching document replacement is already in progress.'), {
+            code: 'RAG_OPERATION_IN_PROGRESS', retryable: true, stage: 'lock'
+        });
+    }
+    const operation = registerOperation('document_replace', lease.signal);
+    const signal = operation.signal;
+    const versionNumber = (existing.version || 1) + 1;
+    const versionId = `ver_${crypto.randomUUID().replace(/-/g, '')}`;
+    const temporaryDocumentId = `staging_${versionId}`;
+    const stagingName = `${versionId}.staging.${ext}`;
+    const stagingPath = path.join(docsDir, stagingName);
+    const finalName = `${versionId}.${ext}`;
+    const finalPath = path.join(docsDir, finalName);
+    const contentHash = computeSHA256(buffer);
+    const dependencies = options._testDependencies || {};
+    const extract = dependencies.extractTextFromBuffer || extractTextFromBuffer;
+    const chunk = dependencies.chunkDocument || chunkDocument;
+    const embed = dependencies.generateEmbeddings || generateEmbeddings;
+    const qdrantReady = dependencies.checkQdrantReady || checkQdrantReady;
+    const modelAvailable = dependencies.checkModelAvailability || checkModelAvailability;
+    const initializeCollection = dependencies.initCollection || initCollection;
+    const uploadVectors = dependencies.upsertVectors || upsertVectors;
+    const readPoints = dependencies.getPointsByDocument || getPointsByDocument;
+    const countVersionPoints = dependencies.countDocumentVersionPoints
+        || (dependencies.getPointsByDocument
+            ? async () => (await readPoints(tenantId, temporaryDocumentId, { signal })).length
+            : require('../vector/qdrantVectorStore').countDocumentVersionPoints);
+    const removeVectors = dependencies.deleteVectorsByDocument || deleteVectorsByDocument;
+    const activateVectors = dependencies.setDocumentVectorsLifecycle || setDocumentVectorsLifecycle;
+    const invalidateCache = dependencies.invalidateCache || retrievalCache.invalidate;
+    const renameFile = dependencies.renameFile || fs.renameSync;
+    let stagingRowId = null;
+    let temporaryVectorsUploaded = false;
+    let committed = false;
+    let currentStage = 'staging';
+    let operationError = null;
+    let operationResult = null;
+
+    try {
+        console.log(`[RAG Replace] Staging new version tenant=${tenantId} document=${logicalDocumentId} version=${versionNumber}`);
+        fs.writeFileSync(stagingPath, buffer);
+        stagingRowId = docRepo.insertDocument({
+            document_key: temporaryDocumentId,
+            original_name: originalName,
+            display_name: originalName,
+            source_type: ext,
+            mime_type: mimeType,
+            storage_name: stagingName,
+            storage_path: stagingPath,
+            file_size: buffer.length,
+            content_hash: contentHash,
+            extracted_text_hash: '',
+            status: 'staging',
+            is_enabled: 0,
+            is_active: 0,
+            version: versionNumber,
+            tenant_id: tenantId,
+            logical_document_id: logicalDocumentId,
+            version_id: versionId
+        });
+
+        currentStage = 'extraction';
+        const text = await extract(ext, buffer);
+        if (!text || !text.trim()) throw new Error('المحتوى المستخرج فارغ.');
+        const maxTextLength = Number(getConfig('RAG_MAX_EXTRACTED_TEXT_LENGTH')) || 10000000;
+        if (text.length > maxTextLength) {
+            const error = new Error(`النص المستخرج يتجاوز الحد المسموح ${maxTextLength}.`);
+            error.code = 'RAG_MAX_TEXT_LENGTH_EXCEEDED';
+            throw error;
+        }
+        const extractedTextHash = computeNormalizedTextHash(text);
+        console.log(`[RAG Replace] Extraction completed tenant=${tenantId} document=${logicalDocumentId} version=${versionNumber}`);
+
+        const chunkSize = parseInt(getConfig('RAG_CHUNK_SIZE'), 10) || 800;
+        const chunkOverlap = parseInt(getConfig('RAG_CHUNK_OVERLAP'), 10) || 120;
+        const embeddingModel = getConfig('RAG_EMBEDDING_MODEL');
+        const collectionName = getConfig('QDRANT_COLLECTION');
+
+        currentStage = 'infrastructure';
+        if (!await qdrantReady({ signal })) throw new Error('تعذر الاتصال بقاعدة البيانات المتجهية Qdrant.');
+        if (!await modelAvailable({ signal })) throw new Error(`نموذج التضمين (${embeddingModel}) غير متوفر.`);
+
+        currentStage = 'chunking';
+        const chunks = annotateInjectionRisk(chunk({
+            documentId: temporaryDocumentId,
+            source: originalName,
+            sourceType: 'uploaded_document',
+            originalText: cleanText(text),
+            documentHash: contentHash
+        }, chunkSize, chunkOverlap).map(item => ({
+            ...item,
+            tenantId,
+            logicalDocumentId,
+            documentVersionId: versionId,
+            indexVersionId: versionId,
+            versionNumber,
+            lifecycle: 'staging'
+        })), tenantId, logicalDocumentId);
+        if (!chunks.length) throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');
+        const maxChunks = Number(getConfig('RAG_MAX_CHUNKS_PER_DOCUMENT')) || 5000;
+        if (chunks.length > maxChunks) {
+            const error = new Error(`عدد المقاطع ${chunks.length} يتجاوز الحد المسموح ${maxChunks}.`);
+            error.code = 'RAG_MAX_CHUNKS_EXCEEDED';
+            throw error;
+        }
+
+        currentStage = 'embeddings';
+        const vectors = await embed(chunks.map(item => item.text), null, {
+            concurrency: parseInt(getConfig('RAG_EMBEDDING_CONCURRENCY'), 10) || 4,
+            signal, tenantId, documentId: logicalDocumentId, indexVersionId: versionId
+        });
+        if (!Array.isArray(vectors) || vectors.length !== chunks.length) {
+            throw new Error('عدد متجهات التضمين لا يطابق عدد المقاطع.');
+        }
+        const vectorDimension = vectors[0]?.length || 0;
+        if (!vectorDimension || vectors.some(vector => !Array.isArray(vector) || vector.length !== vectorDimension)) {
+            throw new Error('أبعاد متجهات التضمين غير متطابقة.');
+        }
+        console.log(`[RAG Replace] Embeddings completed tenant=${tenantId} document=${logicalDocumentId} chunks=${chunks.length}`);
+
+        currentStage = 'qdrant_upload';
+        await initializeCollection(vectorDimension, { signal });
+        // Mark before the request: Qdrant may have accepted only part of a timed-out batch.
+        temporaryVectorsUploaded = true;
+        await uploadVectors(chunks, vectors, { signal });
+
+        currentStage = 'qdrant_verify';
+        db.prepare(`
+            UPDATE knowledge_documents SET chunk_count = ?, vector_count = ?,
+                embedding_model = ?, vector_dimension = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE tenant_id = ? AND id = ? AND status = 'staging'
+        `).run(chunks.length, chunks.length, embeddingModel, vectorDimension, tenantId, stagingRowId);
+        const expectedChunkCount = db.prepare(`
+            SELECT chunk_count FROM knowledge_documents WHERE tenant_id = ? AND id = ?
+        `).get(tenantId, stagingRowId)?.chunk_count;
+        const verifiedPointCount = await countVersionPoints({
+            tenantId,
+            documentId: temporaryDocumentId,
+            documentVersionId: versionId,
+            indexVersionId: versionId,
+            lifecycle: 'staging'
+        }, { signal });
+        if (verifiedPointCount !== expectedChunkCount) {
+            throw new Error(
+                `فشل التحقق من العدد الدقيق: المتوقع ${expectedChunkCount} والموجود ${verifiedPointCount}.`
+            );
+        }
+        const uploadedPoints = await readPoints(tenantId, temporaryDocumentId, { signal });
+        if (uploadedPoints.length !== verifiedPointCount) {
+            throw new Error(`فشل التحقق من المتجهات المؤقتة: المتوقع ${chunks.length} والموجود ${uploadedPoints.length}.`);
+        }
+        for (const point of uploadedPoints) {
+            if (!Array.isArray(point.vector) || point.vector.length !== vectorDimension
+                || point.payload?.tenantId !== tenantId
+                || point.payload?.documentVersionId !== versionId
+                || point.payload?.indexVersionId !== versionId
+                || point.payload?.documentId !== temporaryDocumentId
+                || point.payload?.lifecycle !== 'staging') {
+                throw new Error('بيانات أو أبعاد أحد المتجهات المؤقتة غير صالحة.');
+            }
+        }
+        console.log(`[RAG Replace] Temporary vectors verified tenant=${tenantId} document=${logicalDocumentId} count=${uploadedPoints.length}`);
+
+        currentStage = 'filesystem_commit';
+        lease.assertOwnership();
+        renameFile(stagingPath, finalPath);
+
+        currentStage = 'database_commit';
+        const fingerprint = computeDocumentFingerprint(
+            extractedTextHash, chunkSize, chunkOverlap, embeddingModel, collectionName
+        );
+        db.transaction(() => {
+            lease.assertOwnership();
+            if (dependencies.beforeDatabaseCommit) dependencies.beforeDatabaseCommit();
+            const archived = db.prepare(`
+                UPDATE knowledge_documents
+                SET is_active = 0, status = 'archived', updated_at = CURRENT_TIMESTAMP
+                WHERE tenant_id = ? AND id = ? AND is_active = 1
+            `).run(tenantId, existing.id);
+            if (archived.changes !== 1) throw new Error('تغيرت النسخة النشطة أثناء الاستبدال.');
+            const activatedRow = db.prepare(`
+                UPDATE knowledge_documents SET
+                    document_key = ?, storage_name = ?, storage_path = ?,
+                    extracted_text_hash = ?, status = 'active',
+                    is_enabled = 1, is_active = 1, chunk_count = ?, vector_count = ?,
+                    index_fingerprint = ?, embedding_model = ?, vector_dimension = ?,
+                    fencing_token = ?, operation_id = ?,
+                    indexed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+                WHERE tenant_id = ? AND id = ? AND status = 'staging' AND is_active = 0
+            `).run(
+                temporaryDocumentId, finalName, finalPath, extractedTextHash,
+                chunks.length, chunks.length, fingerprint, embeddingModel,
+                vectorDimension, lease.fencingToken, lease.operationId, tenantId, stagingRowId
+            );
+            if (activatedRow.changes !== 1) throw new Error('فشل تفعيل نسخة المستند الجديدة في SQLite.');
+        })();
+        currentStage = 'vector_activation';
+        try {
+            lease.assertOwnership();
+            await activateVectors(tenantId, temporaryDocumentId, 'active', { signal });
+        } catch (activationError) {
+            db.transaction(() => {
+                db.prepare(`
+                    UPDATE knowledge_documents
+                    SET is_active = 0, status = 'staging', updated_at = CURRENT_TIMESTAMP
+                    WHERE tenant_id = ? AND id = ?
+                `).run(tenantId, stagingRowId);
+                db.prepare(`
+                    UPDATE knowledge_documents
+                    SET is_active = 1, status = 'active', updated_at = CURRENT_TIMESTAMP
+                    WHERE tenant_id = ? AND id = ?
+                `).run(tenantId, existing.id);
+            })();
+            throw activationError;
+        }
+        committed = true;
+        console.log(`[RAG Replace] New version committed tenant=${tenantId} document=${logicalDocumentId} version=${versionNumber}`);
+
+        let oldVersionCleanup = 'completed';
+        const cleanupErrors = [];
+        currentStage = 'old_cleanup';
+        try {
+            lease.assertOwnership();
+            await removeVectors(tenantId, existing.document_key);
+        } catch (error) {
+            cleanupErrors.push(`vectors:${error.message}`);
+        }
+        try {
+            if (existing.storage_path && fs.existsSync(existing.storage_path)) fs.unlinkSync(existing.storage_path);
+        } catch (error) {
+            cleanupErrors.push(`file:${error.message}`);
+        }
+
+        if (cleanupErrors.length) {
+            oldVersionCleanup = 'pending';
+            docRepo.updateDocument(tenantId, stagingRowId, {
+                cleanup_error: cleanupErrors.join('; ')
+            });
+            console.error(`[RAG Replace] Old cleanup pending tenant=${tenantId} document=${logicalDocumentId} resources=${cleanupErrors.length}`);
+        } else {
+            console.log(`[RAG Replace] Old version cleanup completed tenant=${tenantId} document=${logicalDocumentId}`);
+        }
+
+        currentStage = 'cache_invalidation';
+        try {
+            lease.assertOwnership();
+            invalidateCache({ tenantId, collection: collectionName, reason: 'document-replaced' });
+        } catch (error) {
+            oldVersionCleanup = 'pending';
+            docRepo.updateDocument(tenantId, stagingRowId, {
+                cleanup_error: `cache:${error.message}`
+            });
+            console.error(`[RAG Replace] Cache invalidation pending tenant=${tenantId} document=${logicalDocumentId}`);
+        }
+
+        const active = assertActiveDocument(docRepo.getDocumentById(tenantId, stagingRowId));
+        operationResult = { ...active, oldVersionCleanup };
+        return operationResult;
+    } catch (error) {
+        operationError = error;
+        if (!committed) {
+            try {
+                lease.assertOwnership();
+                if (temporaryVectorsUploaded) await removeVectors(tenantId, temporaryDocumentId);
+                if (fs.existsSync(stagingPath)) fs.unlinkSync(stagingPath);
+                if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
+                if (stagingRowId) docRepo.deleteDocument(tenantId, stagingRowId);
+                console.log(`[RAG Replace] Rollback completed tenant=${tenantId} document=${logicalDocumentId} stage=${currentStage}`);
+            } catch (rollbackError) {
+                error.rollbackError = rollbackError.message;
+                if (stagingRowId) {
+                    docRepo.updateDocument(tenantId, stagingRowId, {
+                        status: 'rollback_pending',
+                        cleanup_error: `qdrant_delete tenantId=${tenantId} documentId=${temporaryDocumentId}: ${rollbackError.message}`
+                    });
+                }
+            }
+        }
+        throw replacementError(error, currentStage);
+    } finally {
+        await lease.release({ error: operationError, result: operationResult });
+        operation.done();
+    }
+}
 
 // Safe Socket.IO event publishing helper
 function emitDocumentEvent(eventName, docData) {
@@ -52,6 +389,8 @@ function computeDocumentFingerprint(extractedTextHash, chunkSize, chunkOverlap, 
  */
 async function uploadAndRegisterDocument(originalName, mimeType, buffer, options = {}) {
     const overwriteAction = options.overwriteAction;
+    const { requireTenantId } = require('../security/tenantContext');
+    const tenantId = requireTenantId(options.tenantId, 'document-upload');
 
     // 1. Run strict security validations
     const ext = validateFilenameSecurity(originalName);
@@ -62,15 +401,13 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     }
 
     // A. Duplicate Original Name & Version Detection
-    const existingByName = docRepo.getDocumentByOriginalName(originalName);
+    const existingByName = docRepo.getDocumentByOriginalName(tenantId, originalName);
     let nextVersion = 1;
 
     if (existingByName && existingByName.status !== 'deleted') {
         if (overwriteAction === 'replace') {
             console.log(`[RAG Upload] Overwrite replace requested for existing document: ${originalName}`);
-            nextVersion = (existingByName.version || 1) + 1;
-            // Safely delete the old document vectors and filesystem record
-            await deleteDocument(existingByName.document_key);
+            return replaceDocumentAtomically(existingByName, originalName, mimeType, buffer, ext, options);
         } else if (overwriteAction === 'keep_both') {
             console.log(`[RAG Upload] Overwrite keep both requested for: ${originalName}`);
             nextVersion = 1;
@@ -91,7 +428,7 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     const contentHash = computeSHA256(buffer);
 
     // 2. Duplicate Content Detection
-    const existingByHash = docRepo.getDocumentByContentHash(contentHash);
+    const existingByHash = docRepo.getDocumentByContentHash(tenantId, contentHash);
     if (existingByHash && existingByHash.status !== 'deleted' && overwriteAction !== 'replace') {
         const err = new Error('هذا المستند موجود مسبقاً في قاعدة المعرفة.');
         err.code = 'DUPLICATE_DOCUMENT';
@@ -120,25 +457,23 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
         language: 'ar',
         status: 'uploaded',
         is_enabled: 1,
+        is_active: 0,
         chunk_count: 0,
         vector_count: 0,
         index_fingerprint: null,
-        version: nextVersion
+        version: nextVersion,
+        tenant_id: tenantId
     });
 
     emitDocumentEvent('rag:document-uploaded', { documentId: docKey, originalFilename: originalName, status: 'uploaded' });
 
     // 5. Parse and Index the document
     try {
-        await parseAndIndexDocumentPipeline(docKey);
-        const updatedDoc = docRepo.getDocumentByKey(docKey);
+        await parseAndIndexDocumentPipeline(docKey, options);
+        const updatedDoc = docRepo.getDocumentByKey(tenantId, docKey);
         return updatedDoc;
     } catch (pipelineErr) {
         console.error(`Pipeline failed for document ${docKey}:`, pipelineErr.message);
-        const currentDoc = docRepo.getDocumentByKey(docKey) || docRepo.getDocumentById(parseInt(docKey, 10));
-        if (currentDoc) {
-            return currentDoc;
-        }
         throw pipelineErr;
     }
 }
@@ -147,49 +482,108 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
  * Robust helper running the document extraction, chunking, embedding, and vector upsert pipeline.
  * Completely transactional: preserves the previous index if anything fails before successful upserting.
  */
-async function parseAndIndexDocumentPipeline(docKey) {
-    let doc = docRepo.getDocumentByKey(docKey);
+async function parseAndIndexDocumentPipeline(docKey, options = {}) {
+    const { requireTenantId } = require('../security/tenantContext');
+    const tenantId = requireTenantId(options.tenantId, 'document-index');
+    const dependencies = options._testDependencies || {};
+    const extract = dependencies.extractTextFromBuffer || extractTextFromBuffer;
+    const chunk = dependencies.chunkDocument || chunkDocument;
+    const embed = dependencies.generateEmbeddings || generateEmbeddings;
+    const qdrantReady = dependencies.checkQdrantReady || checkQdrantReady;
+    const modelAvailable = dependencies.checkModelAvailability || checkModelAvailability;
+    const initializeCollection = dependencies.initCollection || initCollection;
+    const uploadVectors = dependencies.upsertVectors || upsertVectors;
+    const readPoints = dependencies.getPointsByDocument || getPointsByDocument;
+    const removeVectors = dependencies.deleteVectorsByDocument || deleteVectorsByDocument;
+    const restore = dependencies.restoreVectors
+        || require('../vector/qdrantVectorStore').restoreVectors;
+    const invalidateCache = dependencies.invalidateCache || retrievalCache.invalidate;
+    let doc = docRepo.getDocumentByKey(tenantId, docKey);
     if (!doc) {
         const numericId = parseInt(docKey, 10);
         if (!isNaN(numericId)) {
-            doc = docRepo.getDocumentById(numericId);
+            doc = docRepo.getDocumentById(tenantId, numericId);
         }
     }
 
-    if (!doc) throw new Error('المستند غير موجود في قاعدة البيانات.');
+    if (!doc) {
+        throw new Error('المستند غير موجود في قاعدة البيانات.');
+    }
+    const logicalDocumentId = doc.logical_document_id || doc.document_key;
+    const lease = await acquireLease({
+        tenantId, resourceType: 'document', resourceId: logicalDocumentId,
+        operation: options.operationType || 'document_index',
+        signal: options.signal, failFast: options.failFast !== false,
+        idempotencyKey: options.idempotencyKey
+    });
+    if (lease.duplicate) {
+        if (lease.operation.status === 'completed' && lease.operation.result_json) {
+            return JSON.parse(lease.operation.result_json);
+        }
+        throw Object.assign(new Error('A matching document indexing operation is already in progress.'), {
+            code: 'RAG_OPERATION_IN_PROGRESS', retryable: true, stage: 'lock'
+        });
+    }
+    const operation = registerOperation('document_index', lease.signal);
+    const signal = operation.signal;
 
-    const fileBuffer = fs.readFileSync(doc.storage_path);
-
+    let fileBuffer;
     try {
-        // A. Extract text (status: parsing)
-        docRepo.updateDocument(doc.id, { status: 'parsing' });
-        emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'parsing' });
+        fileBuffer = fs.readFileSync(doc.storage_path);
+    } catch (error) {
+        await lease.release({ error });
+        operation.done();
+        throw error;
+    }
+
+    const versionId = doc.version_id || `${doc.document_key}:v${doc.version || 1}`;
+    const lifecycle = createLifecycle({
+        tenantId, documentId: doc.document_key, versionId,
+        initialState: doc.status === 'failed' ? 'failed' : 'uploaded',
+        persist: status => {
+            if (!docRepo.updateDocument(tenantId, doc.id, { status })) {
+                throw new Error('فشل حفظ حالة فهرسة المستند.');
+            }
+            emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status });
+        }
+    });
+    let stage = 'extraction';
+    let writeAttempted = false;
+    let backupPoints = [];
+    let operationError = null;
+    let operationResult = null;
+    try {
+        lifecycle.transition('extracting', 'extraction');
 
         const ext = doc.source_type;
         let text = '';
         try {
-            text = await extractTextFromBuffer(ext, fileBuffer);
+            text = await extract(ext, fileBuffer);
         } catch (extractErr) {
             let errorMsg = extractErr.message;
             if (ext === 'pdf' && errorMsg.includes('extract text')) {
                 errorMsg = 'تعذر استخراج نص من الملف. قد يكون ملف PDF ممسوحاً ضوئياً ويحتاج إلى OCR.';
             }
-            throw new Error(errorMsg);
+            throw asStageError(new Error(errorMsg), 'extraction');
         }
 
+        const maxTextLength = Number(getConfig('RAG_MAX_EXTRACTED_TEXT_LENGTH')) || 10000000;
+        if (text.length > maxTextLength) {
+            const error = new Error(`النص المستخرج يتجاوز الحد المسموح ${maxTextLength}.`);
+            error.code = 'RAG_MAX_TEXT_LENGTH_EXCEEDED';
+            throw error;
+        }
         const extractedTextHash = computeNormalizedTextHash(text);
 
         // Check if normalized text is duplicate
-        const existingByTextHash = docRepo.getDocumentByExtractedTextHash(extractedTextHash);
+        const existingByTextHash = docRepo.getDocumentByExtractedTextHash(tenantId, extractedTextHash);
         if (existingByTextHash && existingByTextHash.document_key !== doc.document_key && existingByTextHash.status !== 'deleted') {
             throw new Error('هذا المستند موجود مسبقاً في قاعدة المعرفة محتوياً على نفس النصوص تماماً.');
         }
 
-        docRepo.updateDocument(doc.id, {
-            status: 'parsed',
-            extracted_text_hash: extractedTextHash
-        });
-        emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'parsed' });
+        if (!docRepo.updateDocument(tenantId, doc.id, { extracted_text_hash: extractedTextHash })) {
+            throw new Error('فشل حفظ بصمة النص المستخرج.');
+        }
 
         // B. Indexing & Vector generation
         // Always dynamically read latest live settings from SQLite
@@ -201,14 +595,14 @@ async function parseAndIndexDocumentPipeline(docKey) {
         console.log(`[RAG Pipeline] Starting parse/index with chunkSize=${chunkSize}, chunkOverlap=${chunkOverlap}, collection=${collectionName}`);
 
         // Check infrastructure health
-        const qdrantOk = await checkQdrantReady();
+        const qdrantOk = await qdrantReady({ signal });
         if (!qdrantOk) throw new Error('تعذر الاتصال بقاعدة البيانات المتجهية Qdrant.');
 
-        const ollamaOk = await checkModelAvailability();
+        const ollamaOk = await modelAvailable({ signal });
         if (!ollamaOk) throw new Error(`تعذر الاتصال بخدمة Ollama أو النموذج (${modelName}) غير متوفر.`);
 
-        docRepo.updateDocument(doc.id, { status: 'indexing' });
-        emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'indexing' });
+        stage = 'chunking';
+        lifecycle.transition('chunking');
 
         // Create virtual chunking document model
         const virtualDoc = {
@@ -216,79 +610,167 @@ async function parseAndIndexDocumentPipeline(docKey) {
             source: doc.original_name,
             sourceType: 'uploaded_document',
             originalText: text,
-            documentHash: doc.content_hash
+            documentHash: doc.content_hash,
+            tenantId
         };
 
-        const richChunks = chunkDocument(virtualDoc, chunkSize, chunkOverlap);
+        const richChunks = annotateInjectionRisk(chunk(virtualDoc, chunkSize, chunkOverlap)
+            .map((chunk, index) => ({
+                ...chunk,
+                tenantId,
+                documentId: doc.document_key,
+                documentVersionId: doc.version_id,
+                indexVersionId: doc.version_id,
+                sourceType: 'uploaded_document',
+                chunkIndex: index,
+                contentHash: chunk.contentHash || extractedTextHash,
+                embeddingModel: modelName,
+                createdAt: new Date().toISOString()
+            })), tenantId, doc.document_key);
         if (richChunks.length === 0) {
             throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');
+        }
+        const maxChunks = Number(getConfig('RAG_MAX_CHUNKS_PER_DOCUMENT')) || 5000;
+        if (richChunks.length > maxChunks) {
+            const error = new Error(`عدد المقاطع ${richChunks.length} يتجاوز الحد المسموح ${maxChunks}.`);
+            error.code = 'RAG_MAX_CHUNKS_EXCEEDED';
+            throw error;
         }
 
         // Generate embeddings in Ollama
         const chunkTexts = richChunks.map(c => c.text);
-        const vectors = await generateEmbeddings(chunkTexts);
-        if (!vectors || vectors.length === 0) {
-            throw new Error('فشل إنشاء المتجهات لمقاطع قاعدة المعرفة.');
+        stage = 'embedding';
+        lifecycle.transition('embedding');
+        const vectors = await embed(chunkTexts, null, {
+            signal, tenantId, documentId: doc.document_key,
+            concurrency: Number(getConfig('RAG_EMBEDDING_CONCURRENCY')) || 4
+        });
+        if (!Array.isArray(vectors) || vectors.length !== richChunks.length) {
+            throw new Error('عدد متجهات التضمين لا يطابق عدد المقاطع.');
         }
 
-        const dimension = vectors[0].length;
-        await initCollection(dimension);
+        const dimension = vectors[0]?.length || 0;
+        if (!dimension || vectors.some(vector =>
+            !Array.isArray(vector) || vector.length !== dimension
+            || vector.some(value => !Number.isFinite(value))
+        )) throw new Error('متجهات التضمين غير صالحة أو ذات أبعاد غير متطابقة.');
+        richChunks.forEach(chunk => { chunk.vectorDimension = dimension; });
+        await initializeCollection(dimension, { signal });
 
         // Transactional write sequence: Only delete old vectors and write new ones after successful generation
-        const { getPointsByDocument, restoreVectors } = require('../vector/qdrantVectorStore');
-        const backupPoints = await getPointsByDocument(doc.document_key);
+        backupPoints = await readPoints(tenantId, doc.document_key, { signal });
         console.log(`[RAG Transactional] Backed up ${backupPoints.length} old vectors for rollback.`);
 
+        stage = 'qdrant_upload';
+        lifecycle.transition('uploading_vectors');
         try {
-            await deleteVectorsByDocument(doc.document_key);
-            await upsertVectors(richChunks, vectors);
+            lease.assertOwnership();
+            writeAttempted = true;
+            await removeVectors(tenantId, doc.document_key, { signal });
+            await uploadVectors(richChunks, vectors, { signal });
         } catch (writeErr) {
             console.error('[RAG Transactional] Write failed. Restoring previous index...', writeErr.message);
-            if (backupPoints.length > 0) {
-                try {
-                    await restoreVectors(backupPoints);
-                    console.log('[RAG Transactional] Successfully restored previous index.');
-                } catch (restoreErr) {
-                    console.error('[RAG Transactional] Critical: Failed to restore backup points!', restoreErr.message);
-                }
-            }
             throw writeErr;
+        }
+
+        stage = 'verification';
+        lifecycle.transition('verifying');
+        const uploadedPoints = await readPoints(tenantId, doc.document_key, { signal });
+        if (uploadedPoints.length !== richChunks.length) {
+            throw new Error(`Qdrant point count mismatch (${uploadedPoints.length}/${richChunks.length}).`);
+        }
+        for (const point of uploadedPoints) {
+            if (!Array.isArray(point.vector) || point.vector.length !== dimension
+                || point.payload?.tenantId !== tenantId
+                || point.payload?.documentId !== doc.document_key
+                || point.payload?.sourceType !== 'uploaded_document') {
+                throw new Error('Qdrant verification found an invalid vector or payload.');
+            }
         }
 
         // Compute indexing fingerprint
         const fingerprint = computeDocumentFingerprint(extractedTextHash, chunkSize, chunkOverlap, modelName, collectionName);
 
         // Update database record with final successful indexing metadata
-        docRepo.updateDocument(doc.id, {
-            status: 'indexed',
+        stage = 'activation';
+        lifecycle.transition('activating');
+        lease.assertOwnership();
+        if (dependencies.beforeActivationCommit) dependencies.beforeActivationCommit();
+        const committed = docRepo.updateDocument(tenantId, doc.id, {
+            status: 'active',
+            is_active: 1,
             chunk_count: richChunks.length,
             vector_count: richChunks.length,
             index_fingerprint: fingerprint,
+            fencing_token: lease.fencingToken,
+            operation_id: lease.operationId,
             indexed_at: new Date().toISOString()
+        });
+        if (!committed) throw new Error('لم يتم تثبيت حالة المستند النشطة في SQLite.');
+
+        lease.assertOwnership();
+        invalidateCache({
+            tenantId,
+            collection: collectionName,
+            reason: options.reason || 'document-indexed'
         });
 
         emitDocumentEvent('rag:document-indexed', {
             documentId: doc.document_key,
-            status: 'indexed',
+            status: 'active',
             chunkCount: richChunks.length
         });
+        lifecycle.transition('active');
+        const activeDoc = assertActiveDocument(docRepo.getDocumentByKey(tenantId, doc.document_key));
+        console.log('[Index] Response ready', {
+            tenantId, documentId: doc.document_key, versionId,
+            stage: 'active', durationMs: 0
+        });
+        operationResult = activeDoc;
+        return activeDoc;
 
     } catch (err) {
-        console.error('Failure in indexing pipeline:', err);
-
-        docRepo.updateDocument(doc.id, {
-            status: 'failed',
-            indexing_status: 'failed',
-            indexing_error: err.message
-        });
+        operationError = err;
+        let finalError = asStageError(err, stage);
+        if (writeAttempted) {
+            try {
+                lease.assertOwnership();
+                await removeVectors(tenantId, doc.document_key, { signal });
+                if (backupPoints.length) await restore(tenantId, backupPoints, { signal });
+            } catch (rollbackCause) {
+                finalError = new RollbackError('فشل التراجع عن فهرسة المستند.', {
+                    stage: 'rollback',
+                    code: 'RAG_ROLLBACK_FAILED',
+                    retryable: true,
+                    cause: rollbackCause
+                });
+                finalError.originalError = err.message;
+                docRepo.updateDocument(tenantId, doc.id, {
+                    status: 'cleanup_pending',
+                    indexing_status: 'failed',
+                    indexing_error: `${err.message}; rollback: ${rollbackCause.message}`
+                });
+            }
+        }
+        if (finalError.stage !== 'rollback') {
+            docRepo.updateDocument(tenantId, doc.id, {
+                status: 'failed',
+                indexing_status: 'failed',
+                indexing_error: finalError.message
+            });
+        }
+        lifecycle.fail(finalError);
 
         emitDocumentEvent('rag:document-failed', {
             documentId: doc.document_key,
-            status: 'failed',
-            error: err.message
+            status: finalError.stage === 'rollback' ? 'cleanup_pending' : 'failed',
+            error: finalError.message
         });
 
-        throw err;
+        throw finalError;
+    } finally {
+        await lease.release({ error: operationError, result: operationResult });
+        operation.done();
     }
 }
 
@@ -310,63 +792,85 @@ function countDocuments(filters = {}) {
  * Re-parses, re-chunks, and re-indexes an existing document using the latest RAG settings.
  * Manual reindexing always bypasses index fingerprint optimization.
  */
-async function reindexDocument(docKey) {
-    let doc = docRepo.getDocumentByKey(docKey);
+async function reindexDocument(docKey, options = {}) {
+    const { requireTenantId } = require('../security/tenantContext');
+    const tenantId = requireTenantId(options.tenantId, 'document-reindex');
+    let doc = docRepo.getDocumentByKey(tenantId, docKey);
     if (!doc) {
         const numericId = parseInt(docKey, 10);
         if (!isNaN(numericId)) {
-            doc = docRepo.getDocumentById(numericId);
+            doc = docRepo.getDocumentById(tenantId, numericId);
         }
     }
 
     if (!doc) throw new Error('المستند غير موجود في قاعدة البيانات.');
 
-    try {
-        await parseAndIndexDocumentPipeline(doc.document_key);
-        return docRepo.getDocumentByKey(doc.document_key);
-    } catch (err) {
-        throw new Error(`تعذر إعادة فهرسة المستند. تم الحفاظ على آخر فهرس صالح أو تنظيف المتجهات الجزئية. الخطأ: ${err.message}`);
-    }
+    return parseAndIndexDocumentPipeline(doc.document_key, {
+        ...options,
+        reason: 'document-reindexed'
+    });
 }
 
 /**
  * Retries parsing and indexing a failed document.
  */
-async function retryFailedDocument(docKey) {
-    return reindexDocument(docKey);
+async function retryFailedDocument(docKey, options = {}) {
+    return reindexDocument(docKey, options);
 }
 
 /**
  * Safely deletes a document, its original file, and all corresponding Qdrant points.
  * Features lookups by either document_key or numerical id and proceeds safely.
  */
-async function deleteDocument(docKey) {
-    let doc = docRepo.getDocumentByKey(docKey);
+async function deleteDocument(docKey, options = {}) {
+    const { requireTenantId } = require('../security/tenantContext');
+    const tenantId = requireTenantId(options.tenantId, 'document-delete');
+    let doc = docRepo.getDocumentByKey(tenantId, docKey);
     if (!doc) {
         const numericId = parseInt(docKey, 10);
         if (!isNaN(numericId)) {
-            doc = docRepo.getDocumentById(numericId);
+            doc = docRepo.getDocumentById(tenantId, numericId);
         }
     }
+
+    const logicalDocumentId = doc?.logical_document_id || doc?.document_key || String(docKey);
+    const lease = await acquireLease({
+        tenantId, resourceType: 'document', resourceId: logicalDocumentId,
+        operation: 'document_delete', signal: options.signal,
+        failFast: options.failFast !== false, idempotencyKey: options.idempotencyKey
+    });
+    if (lease.duplicate) {
+        if (lease.operation.status === 'completed') return true;
+        throw Object.assign(new Error('A matching document deletion is already in progress.'), {
+            code: 'RAG_OPERATION_IN_PROGRESS', retryable: true, stage: 'lock'
+        });
+    }
+    let operationError = null;
+    let operationResult;
 
     if (!doc) {
         // Repair lookup logic: if document exists in Qdrant but is missing in SQLite, delete vectors to keep environment clean
         console.warn(`⚠️ Proceeding to clean orphaned vectors for missing SQLite document key: ${docKey}`);
         try {
-            await deleteVectorsByDocument(docKey);
+            lease.assertOwnership();
+            await deleteVectorsByDocument(tenantId, docKey);
         } catch (qErr) {
             console.error('Failed to delete orphaned vectors from Qdrant:', qErr.message);
         }
-        throw new Error('المستند غير موجود في قاعدة البيانات.');
+        const error = new Error('المستند غير موجود في قاعدة البيانات.');
+        await lease.release({ error });
+        throw error;
     }
 
     try {
+        lease.assertOwnership();
         // 1. Mark as deleting
-        docRepo.updateDocument(doc.id, { status: 'deleting' });
+        docRepo.updateDocument(tenantId, doc.id, { status: 'deleting' });
         emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'deleting' });
 
         // 2. Delete from Qdrant
-        await deleteVectorsByDocument(doc.document_key);
+        lease.assertOwnership();
+        await deleteVectorsByDocument(tenantId, doc.document_key);
 
         // 3. Delete from private filesystem
         if (doc.storage_path && fs.existsSync(doc.storage_path)) {
@@ -378,16 +882,30 @@ async function deleteDocument(docKey) {
         }
 
         // 4. Delete SQLite record
-        docRepo.deleteDocument(doc.id);
+        lease.assertOwnership();
+        docRepo.deleteDocument(tenantId, doc.id);
+
+        lease.assertOwnership();
+        retrievalCache.invalidate({
+            tenantId,
+            collection: getConfig('QDRANT_COLLECTION'),
+            reason: 'document-deleted'
+        });
 
         emitDocumentEvent('rag:document-deleted', { documentId: doc.document_key, status: 'deleted' });
+        operationResult = { success: true, documentId: doc.document_key };
         return true;
     } catch (err) {
-        docRepo.updateDocument(doc.id, {
-            status: 'failed',
-            indexing_error: `فشل الحذف: ${err.message}`
-        });
+        operationError = err;
+        if (lease.owns()) {
+            docRepo.updateDocument(tenantId, doc.id, {
+                status: 'failed',
+                indexing_error: `فشل الحذف: ${err.message}`
+            });
+        }
         throw err;
+    } finally {
+        await lease.release({ error: operationError, result: operationResult });
     }
 }
 
@@ -398,5 +916,7 @@ module.exports = {
     reindexDocument,
     retryFailedDocument,
     deleteDocument,
-    computeDocumentFingerprint
+    computeDocumentFingerprint,
+    replaceDocumentAtomically,
+    parseAndIndexDocumentPipeline
 };

@@ -869,7 +869,6 @@ window.Dashboard.settings = {
         const qdrantUrl = document.getElementById('qdrant-url-input').value.trim();
         const ollamaBaseUrl = document.getElementById('ollama-url-input').value.trim();
         const ragIndexOnStartup = document.getElementById('rag-index-startup-select').value === 'true';
-        const ragLegacyFallback = document.getElementById('rag-legacy-fallback-select').value === 'true';
 
         const ragNeighborExpansion = document.getElementById('rag-neighbor-expansion-select').value === 'true';
         const ragContextBudget = parseInt(document.getElementById('rag-context-budget-input').value, 10);
@@ -907,7 +906,7 @@ window.Dashboard.settings = {
             'rag-settings',
             {
                 ragChunkSize, ragChunkOverlap, ragEmbeddingModel, qdrantCollection,
-                ragIndexOnStartup, ragLegacyFallback, qdrantUrl, ollamaBaseUrl,
+                ragIndexOnStartup, qdrantUrl, ollamaBaseUrl,
                 ragNeighborExpansion, ragContextBudget, ragMinTopK, ragDefaultTopK,
                 ragMaxTopK, ragCandidateMultiplier, ragSemanticWeight, ragKeywordWeight,
                 ragSimilarityThreshold

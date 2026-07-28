@@ -230,8 +230,25 @@ test('Vision Routing Layer - Image vs Text messages', async (t) => {
             return {
                 ok: true,
                 json: async () => ({
-                    embedding: Array(768).fill(0),
+                    embedding: [1, ...Array(767).fill(0)],
                     models: []
+                })
+            };
+        }
+        if (urlStr.includes('/points/search')) {
+            return {
+                ok: true,
+                json: async () => ({
+                    result: [{
+                        id: 'vision-evidence',
+                        score: 0.95,
+                        payload: {
+                            tenantId: 'default',
+                            chunkId: 'vision-evidence',
+                            text: 'The assistant may analyze supported customer images.',
+                            sourceType: 'uploaded_document'
+                        }
+                    }]
                 })
             };
         }
@@ -252,7 +269,7 @@ test('Vision Routing Layer - Image vs Text messages', async (t) => {
 
     try {
         // 1. Text message query -> should use text_generation task (gpt-test-text-model)
-        await getAIResponse('test_user_vision_1', 'Hello RAG', 'text');
+        await getAIResponse('test_user_vision_1', 'Hello RAG', 'text', null, { tenantId: 'default' });
         assert.strictEqual(lastModelRequested, 'gpt-test-text-model');
 
         // 2. Image message query -> should use vision task (gpt-test-vision-model)
@@ -261,7 +278,7 @@ test('Vision Routing Layer - Image vs Text messages', async (t) => {
             mimeType: 'image/jpeg',
             caption: 'What is this?'
         };
-        await getAIResponse('test_user_vision_1', '', 'image', mediaObj);
+        await getAIResponse('test_user_vision_1', '', 'image', mediaObj, { tenantId: 'default' });
         assert.strictEqual(lastModelRequested, 'gpt-test-vision-model');
     } finally {
         global.fetch = originalFetch;

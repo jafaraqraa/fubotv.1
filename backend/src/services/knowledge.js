@@ -1,14 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const knowledgePath = path.join(__dirname, '..', '..', 'knowledge.txt');
 const promptPath = path.join(__dirname, '..', '..', 'system_prompt.txt');
 
-const { addLog } = require('./logger');
 const { getConfig } = require('../rag/config/ragConfig');
 const { retrieveHybridContext } = require('../rag/services/hybridRetrievalService');
 const { getPointsByIds } = require('../rag/vector/qdrantVectorStore');
 const { performance } = require('perf_hooks');
+const { requireTenantId } = require('../rag/security/tenantContext');
+const {
+    filterRetrievedChunks
+} = require('../rag/security/promptInjectionGuard');
 
 // Import new Phase 11 retrieval intelligence sub-modules
 const { normalizeArabic, normalizeQueryTokens } = require('../rag/processing/arabicNormalizer');
@@ -21,15 +23,31 @@ const { optimizeContext } = require('../rag/intelligence/contextOptimizer');
 const { generateMultiQueries } = require('../rag/intelligence/multiQueryGenerator');
 const { generateHypotheticalAnswer } = require('../rag/intelligence/hydeRetriever');
 const { reciprocalRankFusion } = require('../rag/intelligence/rrfScorer');
-const { rerankWithCrossEncoder } = require('../rag/intelligence/crossEncoderReranker');
+const { rerankWithCrossEncoderDetailed } = require('../rag/intelligence/crossEncoderReranker');
 const { decomposeQuery } = require('../rag/intelligence/queryDecomposer');
 const { retrieveIntentAwareContext } = require('../rag/intelligence/intentRetriever');
 const { getRetrievalPlan } = require('../rag/intelligence/retrievalPlanner');
 const { EvidenceMetadata, EvidenceIndex, EvidenceBuilder, GroundingValidator } = require('../rag/intelligence/citationGrounding');
+const {
+    RETRIEVAL_MODE,
+    RagFallbackError,
+    assertPromptGuardAvailable,
+    createMetadata,
+    recordFallback
+} = require('../rag/runtime/fallbackPolicy');
 
 // Global tracker of last retrieval mode for stats/debug purposes
 let lastRetrievalMode = 'unavailable';
 let lastRetrievalProfiling = null;
+let lastRetrievalMetadata = createMetadata({ retrievalMode: RETRIEVAL_MODE.FAILED });
+
+function publishRequestTelemetry(retrievalContext, { mode, profiling, metadata }) {
+    const target = retrievalContext && retrievalContext.telemetry;
+    if (!target || typeof target !== 'object') return;
+    target.mode = mode;
+    target.profiling = profiling;
+    target.metadata = metadata ? { ...metadata } : null;
+}
 
 function getLastRetrievalMode() {
     return lastRetrievalMode;
@@ -39,36 +57,8 @@ function getLastRetrievalProfiling() {
     return lastRetrievalProfiling;
 }
 
-/**
- * Legacy keyword-overlap retrieval mechanism (retained as robust fallback).
- */
-function retrieveLegacyFallback(query) {
-    if (!fs.existsSync(knowledgePath)) return "";
-
-    const text = fs.readFileSync(knowledgePath, 'utf8');
-    const chunks = text.split('\n\n').map(c => c.trim()).filter(c => c.length > 0);
-
-    const queryWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 2);
-    if (queryWords.length === 0) return "";
-
-    const scoredChunks = chunks.map(chunk => {
-        let score = 0;
-        const chunkTextLower = chunk.toLowerCase();
-        queryWords.forEach(word => {
-            if (chunkTextLower.includes(word)) {
-                score += 1;
-            }
-        });
-        return { chunk, score };
-    });
-
-    const topChunks = scoredChunks
-        .filter(item => item.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 3)
-        .map(item => item.chunk);
-
-    return topChunks.join('\n\n');
+function getLastRetrievalMetadata() {
+    return { ...lastRetrievalMetadata };
 }
 
 /**
@@ -79,13 +69,22 @@ function retrieveLegacyFallback(query) {
  * Context Diversification, Pre-retrieval Planning Routing, Grounded Citations Evidence Tracking,
  * and failure fallback.
  */
-async function retrieveContextAsync(query, profiler = null) {
+async function retrieveContextAsync(query, profiler = null, retrievalContext = {}) {
     if (!query || typeof query !== 'string' || query.trim() === '') {
         lastRetrievalMode = 'unavailable';
+        lastRetrievalProfiling = null;
+        lastRetrievalMetadata = createMetadata({ retrievalMode: RETRIEVAL_MODE.FAILED });
+        publishRequestTelemetry(retrievalContext, {
+            mode: lastRetrievalMode,
+            profiling: null,
+            metadata: lastRetrievalMetadata
+        });
         return "";
     }
 
-    const legacyFallbackEnabled = getConfig('RAG_LEGACY_FALLBACK') === 'true';
+    const tenantId = requireTenantId(retrievalContext.tenantId, 'context-retrieval');
+    const tenantContext = { ...retrievalContext, tenantId };
+    assertPromptGuardAvailable();
     const profiling = {
         startTime: Date.now(),
         stages: {}
@@ -121,7 +120,7 @@ async function retrieveContextAsync(query, profiler = null) {
             // Stage 1.5: Input Preprocessing (Arabic Normalization & Tokenization)
             if (profiler) profiler.startStage('Normalization');
             t0 = Date.now();
-            const normalizedQuery = normalizeArabic(query);
+            normalizeArabic(query);
             const tokens = normalizeQueryTokens(query);
             profiling.stages.preprocessing = Date.now() - t0;
             if (profiler) profiler.endStage('Normalization');
@@ -134,7 +133,7 @@ async function retrieveContextAsync(query, profiler = null) {
             // Stage 3: Synonym Expansion
             if (profiler) profiler.startStage('Synonym Expansion');
             t0 = Date.now();
-            const expandedTokens = expandSynonyms(tokens);
+            expandSynonyms(tokens);
             profiling.stages.synonyms = Date.now() - t0;
             if (profiler) profiler.endStage('Synonym Expansion');
 
@@ -162,10 +161,10 @@ async function retrieveContextAsync(query, profiler = null) {
                 try {
                     // If HyDE is enabled, we append hypothetical doc
                     const searchQuery = hydeDoc ? `${vQuery} ${hydeDoc}` : vQuery;
-                    const result = await retrieveHybridContext(searchQuery);
+                    const result = await retrieveHybridContext(searchQuery, null, tenantContext);
                     return result;
                 } catch (err) {
-                    return { candidates: [], timings: { embeddings: 0, vectorSearch: 0, keywordSearch: 0 } };
+                    throw err;
                 }
             });
 
@@ -200,7 +199,8 @@ async function retrieveContextAsync(query, profiler = null) {
             if (profiler) profiler.startStage('Cross Encoder');
             t0 = Date.now();
             let reranked = influenceRetrieval(fusedCandidates, intent);
-            reranked = await rerankWithCrossEncoder(query, reranked);
+            const rerankResult = await rerankWithCrossEncoderDetailed(query, reranked, { tenantId });
+            reranked = rerankResult.candidates;
             profiling.stages.reranking = Date.now() - t0;
             if (profiler) profiler.endStage('Cross Encoder');
 
@@ -231,7 +231,7 @@ async function retrieveContextAsync(query, profiler = null) {
                 });
 
                 if (adjacentIds.length > 0) {
-                    const neighbors = await getPointsByIds(adjacentIds);
+                    const neighbors = await getPointsByIds(tenantId, adjacentIds);
                     const neighborMap = new Map();
                     neighbors.forEach(n => {
                         if (n.payload && n.payload.chunkId) {
@@ -256,7 +256,14 @@ async function retrieveContextAsync(query, profiler = null) {
                 }
             }
 
-            // Track active & discarded evidence (using expanded text for full context availability)
+            // Security filtering is authoritative and runs after neighbor expansion so
+            // malicious adjacent text cannot bypass scanning.
+            const securityFiltered = filterRetrievedChunks(expandedChunks);
+            expandedChunks = securityFiltered.allowed;
+            securityFiltered.excluded.forEach(c => {
+                const meta = EvidenceMetadata.map(c, intent, query);
+                evidenceIndex.registerDiscarded(meta, c.text, 'Prompt injection guard exclusion.');
+            });
             expandedChunks.forEach(c => {
                 const meta = EvidenceMetadata.map(c, intent, query);
                 evidenceIndex.registerActive(meta, c.text);
@@ -287,10 +294,24 @@ async function retrieveContextAsync(query, profiler = null) {
             profiling.selectedTopK = dynamicTopK;
             profiling.similarityThreshold = similarityThreshold;
             profiling.optimizedContext = optimizedContext;
-            profiling.topChunks = topChunks;
+            profiling.topChunks = expandedChunks;
 
             lastRetrievalProfiling = profiling;
-            lastRetrievalMode = topChunks.length === 0 ? 'hybrid-no-results' : 'hybrid';
+            const cacheWasUsed = listsOfResults.some(item => item.metadata?.cacheHit);
+            lastRetrievalMetadata = createMetadata({
+                ...rerankResult.metadata,
+                retrievalMode: rerankResult.metadata.degraded
+                    ? rerankResult.metadata.retrievalMode
+                    : cacheWasUsed ? RETRIEVAL_MODE.CACHE_ONLY : RETRIEVAL_MODE.NORMAL,
+                cacheHit: cacheWasUsed
+            });
+            lastRetrievalMode = expandedChunks.length === 0
+                ? 'hybrid-no-results' : lastRetrievalMetadata.retrievalMode;
+            publishRequestTelemetry(retrievalContext, {
+                mode: lastRetrievalMode,
+                profiling,
+                metadata: lastRetrievalMetadata
+            });
             return optimizedContext;
 
         } else {
@@ -301,7 +322,7 @@ async function retrieveContextAsync(query, profiler = null) {
 
             // 1. Independent Intent-Aware retrieval with adaptive allocation, deduplication, and context diversifier
             const tRetAwareStart = performance.now();
-            const { diversified, rawChunks } = await retrieveIntentAwareContext(decomposedQueries, similarityThreshold);
+            const { diversified } = await retrieveIntentAwareContext(decomposedQueries, similarityThreshold, tenantContext);
             const durationRetAware = performance.now() - tRetAwareStart;
 
             if (profiler) {
@@ -313,7 +334,10 @@ async function retrieveContextAsync(query, profiler = null) {
             // 2. Cross Encoder reranking on the ORIGINAL query
             if (profiler) profiler.startStage('Cross Encoder');
             t0 = Date.now();
-            const reranked = await rerankWithCrossEncoder(query, diversified);
+            const rerankResult = await rerankWithCrossEncoderDetailed(
+                query, diversified, { tenantId }
+            );
+            const reranked = rerankResult.candidates;
             profiling.stages.reranking = Date.now() - t0;
             if (profiler) profiler.endStage('Cross Encoder');
 
@@ -323,8 +347,10 @@ async function retrieveContextAsync(query, profiler = null) {
             const dynamicTopK = determineSmarterTopK(query, tokens, "General", reranked);
 
             // Limit to dynamicTopK
-            const topChunks = reranked.slice(0, dynamicTopK);
+            const selectedChunks = reranked.slice(0, dynamicTopK);
             const discardedChunks = reranked.slice(dynamicTopK);
+            const securityFiltered = filterRetrievedChunks(selectedChunks);
+            const topChunks = securityFiltered.allowed;
 
             // Track active & discarded evidence
             topChunks.forEach(c => {
@@ -334,6 +360,10 @@ async function retrieveContextAsync(query, profiler = null) {
             discardedChunks.forEach(c => {
                 const meta = EvidenceMetadata.map(c, c.intentLabel || 'General', query);
                 evidenceIndex.registerDiscarded(meta, c.text, "Capped by dynamic top-k.");
+            });
+            securityFiltered.excluded.forEach(c => {
+                const meta = EvidenceMetadata.map(c, c.intentLabel || 'General', query);
+                evidenceIndex.registerDiscarded(meta, c.text, 'Prompt injection guard exclusion.');
             });
 
             // 4. Build final merged metadata-rich context
@@ -360,38 +390,57 @@ async function retrieveContextAsync(query, profiler = null) {
             profiling.topChunks = topChunks;
 
             lastRetrievalProfiling = profiling;
-            lastRetrievalMode = topChunks.length === 0 ? 'hybrid-no-results' : 'hybrid';
+            lastRetrievalMetadata = createMetadata(rerankResult.metadata);
+            lastRetrievalMode = topChunks.length === 0
+                ? 'hybrid-no-results' : lastRetrievalMetadata.retrievalMode;
+            publishRequestTelemetry(retrievalContext, {
+                mode: lastRetrievalMode,
+                profiling,
+                metadata: lastRetrievalMetadata
+            });
             return optimizedContext;
         }
 
     } catch (e) {
         console.error(`[RAG Mode] hybrid-failed - Error: ${e.message}`);
-
-        if (legacyFallbackEnabled) {
-            console.log('[RAG Fallback] Activating legacy keyword retrieval');
-            lastRetrievalMode = 'legacy-fallback';
-            try {
-                return retrieveLegacyFallback(query);
-            } catch (err) {
-                lastRetrievalMode = 'unavailable';
-                return "";
-            }
-        } else {
-            lastRetrievalMode = 'unavailable';
-            return "";
-        }
+        lastRetrievalMode = RETRIEVAL_MODE.FAILED;
+        lastRetrievalProfiling = profiling;
+        lastRetrievalMetadata = createMetadata({ retrievalMode: RETRIEVAL_MODE.FAILED });
+        publishRequestTelemetry(retrievalContext, {
+            mode: lastRetrievalMode,
+            profiling,
+            metadata: lastRetrievalMetadata
+        });
+        recordFallback({
+            reason: e.code || 'retrieval_failure',
+            dependency: String(e.code || '').includes('OLLAMA') ? 'embedding'
+                : String(e.code || '').includes('QDRANT') ? 'qdrant' : 'retrieval',
+            tenantId,
+            mode: RETRIEVAL_MODE.FAILED,
+            success: false,
+            durationMs: Date.now() - profiling.startTime
+        });
+        if (e instanceof RagFallbackError) throw e;
+        throw new RagFallbackError('RAG retrieval dependency failed.', {
+            code: e.code || 'RAG_RETRIEVAL_FAILED',
+            dependency: String(e.code || '').includes('OLLAMA') ? 'embedding'
+                : String(e.code || '').includes('QDRANT') ? 'qdrant' : 'retrieval',
+            retryable: e.retryable === true,
+            cause: e
+        });
     }
 }
 
 /**
- * Synchronous wrapper for backward compatibility with existing message loops.
- * Falls back safely to legacy retrieveContext if called synchronously.
+ * Synchronous retrieval was the last legacy path and is intentionally disabled.
+ * Callers must use the canonical asynchronous pipeline.
  */
-function retrieveContext(query) {
-    const legacyFallbackEnabled = getConfig('RAG_LEGACY_FALLBACK') === 'true';
-    const retrievalMode = legacyFallbackEnabled ? 'legacy-fallback' : 'unavailable';
-    console.log(`[RAG Mode] ${retrievalMode} - Executing legacy keyword-overlap scoring.`);
-    return retrieveLegacyFallback(query);
+function retrieveContext(query, retrievalContext = {}) {
+    requireTenantId(retrievalContext.tenantId, 'context-retrieval-sync');
+    throw new RagFallbackError(
+        'Legacy synchronous retrieval is disabled. Use retrieveContextAsync().',
+        { code: 'RAG_LEGACY_PATH_DISABLED', dependency: 'legacy_retrieval' }
+    );
 }
 
 function getSystemPrompt() {
@@ -410,5 +459,6 @@ module.exports = {
     retrieveContextAsync,
     getLastRetrievalMode,
     getLastRetrievalProfiling,
+    getLastRetrievalMetadata,
     getSystemPrompt
 };

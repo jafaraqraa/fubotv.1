@@ -1,295 +1,434 @@
+const { performance } = require('perf_hooks');
+const {
+    RISK,
+    scanText,
+    parseSerializedChunks,
+    redactSecrets
+} = require('../security/promptInjectionGuard');
+
+const STATUS = Object.freeze({
+    SUPPORTED: 'SUPPORTED',
+    PARTIAL: 'PARTIALLY_SUPPORTED',
+    UNSUPPORTED: 'UNSUPPORTED',
+    CONTRADICTED: 'CONTRADICTED',
+    UNKNOWN: 'UNKNOWN',
+    INSUFFICIENT: 'INSUFFICIENT_CONTEXT'
+});
+const UNVERIFIED_MESSAGE = "I couldn't verify this information from the available knowledge.";
+const ARABIC_UNVERIFIED_MESSAGE = 'لم أتمكن من التحقق من هذه المعلومة من المعرفة المتاحة.';
+const INJECTION_PATTERNS = [
+    /ignore\s+(all\s+)?previous\s+instructions?/i,
+    /disregard\s+(all\s+)?previous/i,
+    /you\s+are\s+(chatgpt|an?\s+ai|the\s+assistant)/i,
+    /system\s*prompt/i,
+    /answer\s+only\s+with/i,
+    /do\s+not\s+follow/i,
+    /تجاهل\s+(كل\s+)?(التعليمات|الأوامر)/i,
+    /أنت\s+(شات\s*جي\s*بي\s*تي|مساعد)/i,
+    /أجب\s+فقط/i
+];
+const STOP_WORDS = new Set([
+    'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'to', 'of', 'and', 'or',
+    'our', 'we', 'it', 'this', 'that', 'for', 'in', 'on', 'at', 'with', 'from',
+    'من', 'في', 'على', 'الى', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'ذلك',
+    'تلك', 'و', 'او', 'أو', 'لدينا', 'يتم', 'يمكن', 'أن', 'ان', 'ما'
+]);
+
 let lastValidationMetadata = null;
 
-/**
- * Standard utility to score text overlaps and coverage.
- */
-class EvidenceScorer {
-    /**
-     * Extracts digits/numbers from a string.
-     */
-    static extractNumbers(text) {
-        if (!text) return [];
-        // Strip leading list indices at the start of any line or block (e.g., "1. ", "2. ")
-        let cleaned = text.replace(/(?:^|\n)\s*\d+\.\s+/g, '\n');
-        // Strip standard bullet list indices
-        cleaned = cleaned.replace(/(?:^|\n)\s*[-*+]\s+/g, '\n');
+function clamp(value, min = 0, max = 1) {
+    return Math.max(min, Math.min(max, value));
+}
 
-        const matches = cleaned.match(/\d+/g);
-        return matches ? matches : [];
+function normalizeText(text) {
+    return String(text || '')
+        .normalize('NFKC')
+        .toLowerCase()
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+        .replace(/[إأآٱ]/g, 'ا')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/[^\p{L}\p{N}%@+:/.-]+/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function tokenize(text) {
+    return normalizeText(text)
+        .split(/\s+/)
+        .map(token => token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}%]+$/gu, ''))
+        .filter(token => token.length > 1 && !STOP_WORDS.has(token));
+}
+
+function extractNumbers(text) {
+    if (!text) return [];
+    const cleaned = String(text)
+        .replace(/(?:^|\n)\s*\d+[.)]\s+/g, '\n')
+        .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)));
+    return cleaned.match(/(?:\+?\d[\d\s().-]{1,}\d|\d+(?:[.,]\d+)?%?)/g)
+        ?.map(value => value.replace(/[\s(),.-]/g, '').replace(',', '.')) || [];
+}
+
+function trigrams(text) {
+    const normalized = normalizeText(text).replace(/\s+/g, ' ');
+    if (normalized.length < 3) return new Set(normalized ? [normalized] : []);
+    const result = new Set();
+    for (let index = 0; index <= normalized.length - 3; index++) {
+        result.add(normalized.slice(index, index + 3));
     }
+    return result;
+}
 
-    /**
-     * Calculates coverage ratio.
-     */
-    static getCoverageRatio(answer, context) {
-        if (!answer) return 0.0;
-        if (!context) return 0.0;
+function setSimilarity(left, right) {
+    if (!left.size || !right.size) return 0;
+    let intersection = 0;
+    for (const value of left) if (right.has(value)) intersection++;
+    return intersection / (left.size + right.size - intersection);
+}
 
-        const contextWords = new Set(context.toLowerCase().split(/\s+/).filter(w => w.length > 2));
-        const answerWords = answer.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+function keywordCoverage(claim, evidence) {
+    const claimTokens = new Set(tokenize(claim));
+    const evidenceTokens = new Set(tokenize(evidence));
+    if (!claimTokens.size) return 0;
+    let matched = 0;
+    for (const token of claimTokens) if (evidenceTokens.has(token)) matched++;
+    return matched / claimTokens.size;
+}
 
-        if (answerWords.length === 0) return 1.0;
+function semanticSimilarity(claim, evidence) {
+    const keyword = setSimilarity(new Set(tokenize(claim)), new Set(tokenize(evidence)));
+    const character = setSimilarity(trigrams(claim), trigrams(evidence));
+    return clamp((keyword * 0.65) + (character * 0.35));
+}
 
-        let overlapCount = 0;
-        answerWords.forEach(w => {
-            if (contextWords.has(w)) {
-                overlapCount++;
-            }
+function containsInjection(text) {
+    return INJECTION_PATTERNS.some(pattern => pattern.test(String(text || '')));
+}
+
+function sanitizeEvidence(text) {
+    return String(text || '')
+        .split(/\n|(?<=[.!؟])\s+/)
+        .filter(segment => {
+            if (containsInjection(segment)) return false;
+            const risk = scanText(segment).riskLevel;
+            return risk === RISK.SAFE;
+        })
+        .join(' ')
+        .trim();
+}
+
+function normalizeChunks(retrievedContext) {
+    if (!retrievedContext) return [];
+    let input = Array.isArray(retrievedContext) ? retrievedContext : [retrievedContext];
+    if (typeof retrievedContext === 'string' && /(?:^|\n)Chunk #[^\n]+/.test(retrievedContext)) {
+        input = retrievedContext
+            .split(/\n\n=+\n\n/)
+            .map((block, index) => {
+                const id = block.match(/(?:^|\n)Chunk #([^\n]+)/)?.[1]?.trim() || `context-${index + 1}`;
+                const content = block.match(/(?:^|\n)Content:\s*\n([\s\S]*)$/)?.[1] || block;
+                return { id, text: content };
+            });
+    } else if (typeof retrievedContext === 'string'
+        && retrievedContext.includes('<untrusted_document ')) {
+        input = (parseSerializedChunks(retrievedContext) || []).map((chunk, index) => ({
+            ...chunk,
+            id: chunk.chunkId || `context-${index + 1}`,
+            retrievalScore: chunk.retrievalScore || 0.5
+        }));
+    }
+    const chunks = [];
+    const ignoredPromptInjectionChunks = [];
+    input.forEach((item, index) => {
+        const rawText = typeof item === 'string'
+            ? item
+            : item?.text || item?.content || item?.pageContent || item?.payload?.text || '';
+        const text = sanitizeEvidence(rawText);
+        const id = String(item?.chunkId || item?.id || item?.payload?.chunkId || `context-${index + 1}`);
+        const guard = item?.injectionGuard || scanText(rawText, {
+            chunkId: id,
+            tenantId: item?.tenantId || item?.payload?.tenantId,
+            documentId: item?.documentId || item?.payload?.documentId
         });
-
-        return overlapCount / answerWords.length;
-    }
+        if ([RISK.HIGH, RISK.BLOCKED].includes(guard.riskLevel)) {
+            ignoredPromptInjectionChunks.push(id);
+            return;
+        }
+        if (!text) {
+            if (containsInjection(rawText)) ignoredPromptInjectionChunks.push(id);
+            return;
+        }
+        chunks.push({
+            id,
+            text,
+            retrievalScore: clamp(Number(item?.retrievalScore ?? item?.score ?? item?.semanticScore ?? 0.5)),
+            rerankerScore: clamp(Number(item?.rerankerScore ?? item?.rerankScore ?? item?.finalScore ?? 0.5)),
+            injectionRemoved: text !== String(rawText).trim()
+        });
+    });
+    const seen = new Set();
+    const unique = chunks.filter(chunk => {
+        const fingerprint = normalizeText(chunk.text);
+        if (!fingerprint || seen.has(fingerprint)) return false;
+        seen.add(fingerprint);
+        return true;
+    });
+    unique.ignoredPromptInjectionChunks = ignoredPromptInjectionChunks;
+    return unique;
 }
 
-/**
- * Classifies claims as SUPPORTED, UNSUPPORTED, or CONTRADICTING.
- */
-class HallucinationClassifier {
-    /**
-     * Determines whether numbers in the claim directly contradict known numbers in context.
-     * Contradiction exists only when the claim and context refer to the same topic domain but have different numbers.
-     *
-     * @param {string} claim - Individual claim.
-     * @param {string} context - Retrieved context.
-     * @param {Set<string>} contextNumbers - Numbers present in the retrieved context.
-     * @returns {string} SUPPORTED, UNSUPPORTED, or CONTRADICTING.
-     */
-    static classify(claim, context, contextNumbers) {
-        const claimLower = claim.toLowerCase();
-        const contextLower = (context || '').toLowerCase();
-
-        // 1. Semantic negation check: if context explicitly denies or has no information, any assertion is UNSUPPORTED
-        const hasNegation = /no information|لا معلومات|غير متوفر|لا يمكن/i.test(contextLower);
-        if (hasNegation) {
-            if (/possible|يمكن|متاح|مسموح/i.test(claimLower)) {
-                return "UNSUPPORTED";
-            }
-        }
-
-        const claimNumbers = EvidenceScorer.extractNumbers(claim);
-        if (claimNumbers.length === 0) {
-            return "SUPPORTED"; // No factual numbers means no objective contradiction
-        }
-
-        const missing = claimNumbers.filter(num => !contextNumbers.has(num));
-
-        if (missing.length > 0) {
-            // Contradiction requires positive conflicting evidence on the same topic domain
-            // Domain Topics List
-            const topics = [
-                { keywords: ["fee", "cost", "شحن", "توصيل", "سعر", "رسوم"], alternativeKeywords: ["fee", "cost", "شحن", "توصيل", "سعر", "رسوم"] },
-                { keywords: ["day", "days", "يوم", "ايام"], alternativeKeywords: ["day", "days", "يوم", "ايام"] }
-            ];
-
-            let matchesSameTopic = false;
-            for (const topic of topics) {
-                const claimHasTopic = topic.keywords.some(k => claimLower.includes(k));
-                const contextHasTopic = topic.alternativeKeywords.some(k => contextLower.includes(k));
-                if (claimHasTopic && contextHasTopic) {
-                    matchesSameTopic = true;
-                    break;
-                }
-            }
-
-            // We only fail if we have positive conflicting evidence on the exact same topic domain
-            if (matchesSameTopic && contextNumbers.size > 0) {
-                return "CONTRADICTING";
-            }
-            return "UNSUPPORTED";
-        }
-
-        return "SUPPORTED";
-    }
-}
-
-/**
- * Implements the enterprise conservative decision policy.
- */
-class DecisionPolicy {
-    /**
-     * Determines validation state based on coverage and claims classification.
-     */
-    static decide(coverageRatio, claimsList) {
-        const hasContradicting = claimsList.some(c => c.classification === "CONTRADICTING");
-        const allUnsupported = claimsList.length > 0 && claimsList.every(c => c.classification === "UNSUPPORTED");
-        const hasUnsupported = claimsList.some(c => c.classification === "UNSUPPORTED");
-
-        if (hasContradicting) {
-            return "FAIL";
-        }
-
-        if (allUnsupported) {
-            return "UNSUPPORTED";
-        }
-
-        if (hasUnsupported) {
-            // Incomplete evidence (some supported, some unsupported) -> WARN
-            return "WARN";
-        }
-
-        if (coverageRatio >= 1.0) {
-            return "PASS";
-        }
-
-        if (coverageRatio >= 0.70) {
-            return "PASS";
-        }
-
-        if (coverageRatio >= 0.40) {
-            return "WARN";
-        }
-
-        return "UNSUPPORTED";
-    }
-}
-
-/**
- * Surgical correction engine that only edits objective contradictions.
- */
-class MinimalCorrectionEngine {
-    static correct(answer, claimsList) {
-        if (!answer) return '';
-
-        // Surgical claim-level replacement preserving all valid and unsupported structures
-        const parts = answer.split(/(\s+and\s+|\s+و\s+|[,،\n]+)/i);
-        const correctedParts = [];
-
-        for (const part of parts) {
-            if (!part || part.trim() === '') {
-                correctedParts.push(part);
-                continue;
-            }
-
-            if (/^(\s+and\s+|\s+و\s+|[,،\n]+)$/i.test(part)) {
-                correctedParts.push(part);
-                continue;
-            }
-
-            // Find matching claim in our evaluated list
-            const matchedClaim = claimsList.find(c => c.text === part);
-            if (matchedClaim && matchedClaim.classification === "CONTRADICTING") {
-                // Replace ONLY the contradicting segment surgically
-                correctedParts.push('[تفاصيل لم يتم تأكيدها بموجب مستندات السياق المتوفرة]');
-            } else {
-                correctedParts.push(part);
-            }
-        }
-
-        return correctedParts.join('');
-    }
-}
-
-/**
- * Builds metadata rich contract representing the validation outcomes.
- */
-class ResponseMetadataBuilder {
-    static build(state, ratio, claimsList) {
-        const unsupported = claimsList.filter(c => c.classification === "UNSUPPORTED").map(c => c.text);
-        const contradicted = claimsList.filter(c => c.classification === "CONTRADICTING").map(c => c.text);
-
-        return {
-            validationState: state,
-            evidenceCoverage: ratio,
-            unsupportedClaims: unsupported,
-            contradictedClaims: contradicted,
-            confidence: ratio >= 0.70 ? "High" : (ratio >= 0.40 ? "Medium" : "Low")
-        };
-    }
-}
-
-/**
- * Enterprise-grade, conservative Validation Decision Engine.
- */
-class ValidationDecisionEngine {
-    /**
-     * Executes the modern non-destructive conservative decision pipeline.
-     *
-     * @param {string} originalResponse - Raw LLM answer.
-     * @param {string} context - Retrieved context.
-     * @returns {string} Exact original response (unless FAIL matches contradiction).
-     */
-    static validate(originalResponse, context) {
-        const startTime = Date.now();
-
-        if (!originalResponse || typeof originalResponse !== 'string' || originalResponse.trim() === '') {
-            return '';
-        }
-
-        if (!context) {
-            // Conservative fallback: untouched original response returned
-            lastValidationMetadata = ResponseMetadataBuilder.build("PASS", 1.0, []);
-            return originalResponse;
-        }
-
-        const coverageRatio = EvidenceScorer.getCoverageRatio(originalResponse, context);
-        const contextNumbers = new Set(EvidenceScorer.extractNumbers(context));
-
-        // Segment response into clauses/claims
-        const clauses = originalResponse.split(/(\s+and\s+|\s+و\s+|[,،\n]+)/i);
-        const claimsList = [];
-
-        for (const c of clauses) {
-            if (c && c.trim() !== '' && !/^(\s+and\s+|\s+و\s+|[,،\n]+)$/i.test(c)) {
-                const classification = HallucinationClassifier.classify(c, context, contextNumbers);
-                claimsList.push({
-                    text: c,
-                    classification
-                });
-            }
-        }
-
-        // Decide validation state based on conservative evidence-aware policy
-        const state = DecisionPolicy.decide(coverageRatio, claimsList);
-
-        let finalAnswer = originalResponse;
-        let modifiedCount = 0;
-
-        if (state === "FAIL") {
-            finalAnswer = MinimalCorrectionEngine.correct(originalResponse, claimsList);
-            modifiedCount = Math.abs(originalResponse.length - finalAnswer.length);
-        }
-
-        const durationMs = Date.now() - startTime;
-        lastValidationMetadata = ResponseMetadataBuilder.build(state, coverageRatio, claimsList);
-
-        // Developer logging
-        console.log(`\n% [Conservative Answer Validation Decision Report]`);
-        console.log(`• Validation State: ${state}`);
-        console.log(`• Reason: "${state === "FAIL" ? "Direct factual contradiction detected." : "Conservative policy preserve original text."}"`);
-        console.log(`• Evidence Coverage: ${(coverageRatio * 100).toFixed(1)}%`);
-        console.log(`• Contradicted Claims Count: ${lastValidationMetadata.contradictedClaims.length}`);
-        console.log(`• Unsupported Claims Count: ${lastValidationMetadata.unsupportedClaims.length}`);
-        console.log(`• Modified Claims Count: ${modifiedCount}`);
-        console.log(`• Correction Applied: ${state === "FAIL" ? "Yes" : "No"}`);
-        console.log(`• Execution Time: ${durationMs} ms\n`);
-
-        return finalAnswer;
-    }
-}
-
-/**
- * Splits text into sentences/clauses based on common Arabic and Latin delimiters.
- * Kept for backward compatibility.
- */
 function splitIntoSentences(text) {
     if (!text) return [];
-    return text.split(/[.،,;\n]+/).map(s => s.trim()).filter(Boolean);
+    return String(text)
+        .replace(/```[\s\S]*?```/g, ' ')
+        .split(/(?<=[.!?؟؛])\s+|\n+|(?<=\S)[؛;]+/)
+        .map(value => value.replace(/^\s*(?:[-*+]|\d+[.)])\s*/, '').trim())
+        .filter(Boolean);
 }
 
-/**
- * Extracts digits/numbers from a string.
- * Kept for backward compatibility.
- */
-function extractNumbers(text) {
-    return EvidenceScorer.extractNumbers(text);
+function isNonFactual(claim) {
+    const normalized = normalizeText(claim);
+    if (!normalized) return true;
+    if (/^\s*(?:#{1,6}|\|?[-:| ]+\|?)\s*/.test(claim)) return true;
+    if (/^\s*\|.*\|\s*$/.test(claim) && !extractNumbers(claim).length) return true;
+    if (/^(thanks?|thank you|hello|hi|مرحبا|اهلا|شكرا|يسعدني)/i.test(normalized)) return true;
+    if (/[?؟]$/.test(claim.trim())) return true;
+    return tokenize(claim).length < 2;
 }
 
-/**
- * Validates an AI-generated response against the retrieved source context to prevent hallucinations.
- * Adheres to strict conservative evidence-aware decision policies.
- */
+function extractClaims(answer) {
+    const clauses = splitIntoSentences(answer).flatMap(sentence =>
+        sentence.split(/\s+\band\b\s+|\s+و\s+/i).map(value => value.trim()).filter(Boolean)
+    );
+    return clauses.map((text, index) => ({
+        id: `claim-${index + 1}`,
+        text,
+        factual: !isNonFactual(text)
+    }));
+}
+
+function hasNegation(text) {
+    return /(?:\b(?:not|never|no|cannot|can't|doesn't|isn't|without)\b|(?:لا|ليس|غير|لن|بدون))/i
+        .test(normalizeText(text));
+}
+
+function topicSimilarity(claim, evidence) {
+    const claimTokens = new Set(tokenize(claim).filter(token => !extractNumbers(token).length));
+    const evidenceTokens = new Set(tokenize(evidence).filter(token => !extractNumbers(token).length));
+    return setSimilarity(claimTokens, evidenceTokens);
+}
+
+function contradictionScore(claim, evidence) {
+    const topic = topicSimilarity(claim, evidence);
+    if (topic < 0.18) return 0;
+    const claimNumbers = extractNumbers(claim);
+    const evidenceNumbers = extractNumbers(evidence);
+    if (claimNumbers.length && evidenceNumbers.length) {
+        const exact = claimNumbers.every(number => evidenceNumbers.includes(number));
+        if (!exact) return clamp(0.72 + topic * 0.28);
+    }
+    if (hasNegation(claim) !== hasNegation(evidence) && topic >= 0.35) {
+        return clamp(0.65 + topic * 0.25);
+    }
+    return 0;
+}
+
+function scoreEvidence(claim, chunk) {
+    const absenceEvidence = /(?:no information|not documented|unknown|لا معلومات|لا توجد معلومات|غير موثق)/i
+        .test(chunk.text);
+    const keyword = keywordCoverage(claim, chunk.text);
+    const semantic = semanticSimilarity(claim, chunk.text);
+    const contradiction = absenceEvidence ? 0 : contradictionScore(claim, chunk.text);
+    const claimNumbers = extractNumbers(claim);
+    const evidenceNumbers = extractNumbers(chunk.text);
+    const numericExact = !claimNumbers.length
+        || claimNumbers.every(number => evidenceNumbers.includes(number));
+    const agreement = absenceEvidence ? 0 : clamp(
+        semantic * 0.45
+        + keyword * 0.35
+        + chunk.retrievalScore * 0.10
+        + chunk.rerankerScore * 0.10
+    );
+    return {
+        chunk, keyword, semantic, contradiction, numericExact, agreement, absenceEvidence,
+        evidenceHasNumbers: evidenceNumbers.length > 0
+    };
+}
+
+function classifyClaim(claim, chunks) {
+    if (!claim.factual) {
+        return {
+            ...claim, classification: STATUS.UNKNOWN, confidence: 0.5,
+            evidenceChunkIds: [], similarity: 0, keywordOverlap: 0,
+            citationCoverage: 0, missingEvidence: false, contradictionScore: 0
+        };
+    }
+    const matches = chunks.map(chunk => scoreEvidence(claim.text, chunk))
+        .sort((left, right) => Math.max(right.agreement, right.contradiction)
+            - Math.max(left.agreement, left.contradiction));
+    const best = matches[0];
+    if (!best) {
+        return {
+            ...claim, classification: STATUS.UNSUPPORTED, confidence: 0,
+            evidenceChunkIds: [], similarity: 0, keywordOverlap: 0,
+            citationCoverage: 0, missingEvidence: true, contradictionScore: 0
+        };
+    }
+
+    let classification;
+    if (best.absenceEvidence) {
+        classification = STATUS.UNSUPPORTED;
+    } else if (best.contradiction >= 0.72) {
+        classification = STATUS.CONTRADICTED;
+    } else if (!best.numericExact && extractNumbers(claim.text).length) {
+        classification = best.evidenceHasNumbers && (best.semantic >= 0.22 || best.keyword >= 0.22)
+            ? STATUS.CONTRADICTED : STATUS.UNSUPPORTED;
+    } else if ((best.agreement >= 0.62 && best.keyword >= 0.45) || best.keyword >= 0.72) {
+        classification = STATUS.SUPPORTED;
+    } else if (best.agreement >= 0.42 && (best.keyword >= 0.28 || best.semantic >= 0.34)) {
+        classification = STATUS.PARTIAL;
+    } else {
+        classification = STATUS.UNSUPPORTED;
+    }
+
+    const supporting = matches
+        .filter(match => match.contradiction < 0.72
+            && !match.absenceEvidence
+            && match.numericExact
+            && (match.agreement >= 0.42 || match.keyword >= 0.35))
+        .slice(0, 3);
+    const evidenceChunkIds = supporting.map(match => match.chunk.id);
+    const confidence = classification === STATUS.CONTRADICTED
+        ? best.contradiction
+        : classification === STATUS.UNSUPPORTED
+            ? clamp(1 - best.agreement)
+            : best.agreement;
+    return {
+        ...claim,
+        classification,
+        confidence: Number(confidence.toFixed(4)),
+        evidenceChunkIds,
+        similarity: Number(best.semantic.toFixed(4)),
+        keywordOverlap: Number(best.keyword.toFixed(4)),
+        citationCoverage: evidenceChunkIds.length ? 1 : 0,
+        missingEvidence: evidenceChunkIds.length === 0,
+        contradictionScore: Number(best.contradiction.toFixed(4)),
+        numericExact: best.numericExact
+    };
+}
+
+function overallStatus(claims, hasContext) {
+    if (!hasContext) return STATUS.INSUFFICIENT;
+    const factual = claims.filter(claim => claim.factual);
+    if (!factual.length) return STATUS.UNKNOWN;
+    if (factual.some(claim => claim.classification === STATUS.CONTRADICTED)) return STATUS.CONTRADICTED;
+    if (factual.every(claim => claim.classification === STATUS.SUPPORTED)) return STATUS.SUPPORTED;
+    if (factual.every(claim => claim.classification === STATUS.UNSUPPORTED)) return STATUS.UNSUPPORTED;
+    if (factual.some(claim => claim.classification === STATUS.UNSUPPORTED
+        || claim.classification === STATUS.PARTIAL)) return STATUS.PARTIAL;
+    return STATUS.UNKNOWN;
+}
+
+function calculateConfidence(claims, chunks, status) {
+    const factual = claims.filter(claim => claim.factual);
+    if (!chunks.length || !factual.length) return status === STATUS.UNKNOWN ? 0.5 : 0;
+    const weights = {
+        [STATUS.SUPPORTED]: 1,
+        [STATUS.PARTIAL]: 0.55,
+        [STATUS.UNKNOWN]: 0.25,
+        [STATUS.UNSUPPORTED]: 0,
+        [STATUS.CONTRADICTED]: 0
+    };
+    const claimSupport = factual.reduce((sum, claim) => sum + weights[claim.classification], 0) / factual.length;
+    const evidenceCoverage = factual.filter(claim => claim.evidenceChunkIds.length).length / factual.length;
+    const semanticAgreement = factual.reduce((sum, claim) => sum + claim.similarity, 0) / factual.length;
+    const retrievalQuality = chunks.reduce((sum, chunk) => sum + chunk.retrievalScore, 0) / chunks.length;
+    const rerankerQuality = chunks.reduce((sum, chunk) => sum + chunk.rerankerScore, 0) / chunks.length;
+    const contradictionPenalty = factual.filter(claim => claim.classification === STATUS.CONTRADICTED).length / factual.length;
+    return clamp(
+        claimSupport * 0.35
+        + evidenceCoverage * 0.25
+        + semanticAgreement * 0.15
+        + retrievalQuality * 0.10
+        + rerankerQuality * 0.10
+        + (1 - contradictionPenalty) * 0.05
+        - contradictionPenalty * 0.30
+    );
+}
+
+function confidenceLabel(score) {
+    if (score >= 0.85) return 'High';
+    if (score >= 0.65) return 'Medium';
+    if (score >= 0.40) return 'Low';
+    return 'Reject';
+}
+
+function safeReplacement(answer) {
+    return /[\u0600-\u06FF]/.test(answer) ? ARABIC_UNVERIFIED_MESSAGE : UNVERIFIED_MESSAGE;
+}
+
+function rewriteUnsafeClaims(answer, claims, status) {
+    if (status === STATUS.INSUFFICIENT) return safeReplacement(answer);
+    let output = answer;
+    for (const claim of claims) {
+        if (claim.classification !== STATUS.UNSUPPORTED
+            && claim.classification !== STATUS.CONTRADICTED) continue;
+        output = output.replace(claim.text, safeReplacement(claim.text));
+    }
+    return output;
+}
+
+function validateDetailed(answer, retrievedContext) {
+    const startedAt = performance.now();
+    if (!answer || typeof answer !== 'string' || !answer.trim()) {
+        return {
+            finalAnswer: '', overallStatus: STATUS.UNKNOWN, confidenceScore: 0,
+            confidenceLabel: 'Reject', claims: [], evidenceCoverage: 0,
+            durationMs: performance.now() - startedAt
+        };
+    }
+    const chunks = normalizeChunks(retrievedContext);
+    const extracted = extractClaims(answer);
+    const claims = extracted.map(claim => classifyClaim(claim, chunks));
+    const status = overallStatus(claims, chunks.length > 0);
+    const confidenceScore = calculateConfidence(claims, chunks, status);
+    const factual = claims.filter(claim => claim.factual);
+    const evidenceCoverage = factual.length
+        ? factual.filter(claim => claim.evidenceChunkIds.length).length / factual.length : 0;
+    const result = {
+        finalAnswer: redactSecrets(rewriteUnsafeClaims(answer, claims, status)),
+        overallStatus: status,
+        validationState: status,
+        confidenceScore: Number(confidenceScore.toFixed(4)),
+        confidenceLabel: confidenceLabel(confidenceScore),
+        evidenceCoverage: Number(evidenceCoverage.toFixed(4)),
+        claims,
+        supportedClaims: claims.filter(c => c.classification === STATUS.SUPPORTED).map(c => c.text),
+        partiallySupportedClaims: claims.filter(c => c.classification === STATUS.PARTIAL).map(c => c.text),
+        unsupportedClaims: claims.filter(c => c.classification === STATUS.UNSUPPORTED).map(c => c.text),
+        contradictedClaims: claims.filter(c => c.classification === STATUS.CONTRADICTED).map(c => c.text),
+        ignoredPromptInjectionChunks: [
+            ...(chunks.ignoredPromptInjectionChunks || []),
+            ...chunks.filter(chunk => chunk.injectionRemoved).map(chunk => chunk.id)
+        ],
+        uniqueEvidenceChunks: chunks.length,
+        durationMs: Number((performance.now() - startedAt).toFixed(3))
+    };
+    return result;
+}
+
 function validateAnswer(answer, retrievedContext) {
-    return ValidationDecisionEngine.validate(answer, retrievedContext);
+    const result = validateDetailed(answer, retrievedContext);
+    lastValidationMetadata = result;
+    const counts = classification => result.claims.filter(claim => claim.classification === classification).length;
+    console.log('[AnswerValidator]');
+    console.log(`Claims: ${result.claims.length}`);
+    console.log(`Supported: ${counts(STATUS.SUPPORTED)}`);
+    console.log(`Partial: ${counts(STATUS.PARTIAL)}`);
+    console.log(`Unsupported: ${counts(STATUS.UNSUPPORTED)}`);
+    console.log(`Contradicted: ${counts(STATUS.CONTRADICTED)}`);
+    console.log(`Overall: ${result.overallStatus}`);
+    console.log(`Confidence: ${result.confidenceScore.toFixed(2)} (${result.confidenceLabel})`);
+    return result.finalAnswer;
 }
 
 function getLastValidationMetadata() {
@@ -297,14 +436,15 @@ function getLastValidationMetadata() {
 }
 
 module.exports = {
+    STATUS,
     splitIntoSentences,
     extractNumbers,
+    extractClaims,
+    normalizeChunks,
+    semanticSimilarity,
+    keywordCoverage,
+    contradictionScore,
+    validateDetailed,
     validateAnswer,
-    getLastValidationMetadata,
-    EvidenceScorer,
-    HallucinationClassifier,
-    DecisionPolicy,
-    MinimalCorrectionEngine,
-    ResponseMetadataBuilder,
-    ValidationDecisionEngine
+    getLastValidationMetadata
 };

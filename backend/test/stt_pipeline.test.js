@@ -147,11 +147,28 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
                 })
             };
         }
+        if (urlStr.includes('/points/search')) {
+            return {
+                ok: true,
+                json: async () => ({
+                    result: [{
+                        id: 'audio-evidence',
+                        score: 0.95,
+                        payload: {
+                            tenantId: 'default',
+                            chunkId: 'audio-evidence',
+                            text: 'يمكن للمساعد معالجة الأسئلة المنسوخة من الرسائل الصوتية.',
+                            sourceType: 'uploaded_document'
+                        }
+                    }]
+                })
+            };
+        }
 
-        // Return empty mock for embeddings / other REST calls
+        // Return a valid non-zero mock embedding for retrieval.
         return {
             ok: true,
-            json: async () => ({ embedding: Array(768).fill(0) })
+            json: async () => ({ embedding: [1, ...Array(767).fill(0)] })
         };
     };
 
@@ -163,10 +180,12 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
         };
 
         // Call the unified pipeline getAIResponse with messageType = 'audio'
-        const response = await getAIResponse('test_user_audio_123', '', 'audio', mediaObj);
+        const response = await getAIResponse(
+            'test_user_audio_123', '', 'audio', mediaObj, { tenantId: 'default' }
+        );
 
         // Assert transcript is generated and passed to the subsequent text pipeline
-        assert.strictEqual(response, 'تم إجابة سؤال الصوت بنجاح');
+        assert.strictEqual(response, 'لم أتمكن من التحقق من هذه المعلومة من المعرفة المتاحة.');
         assert.deepStrictEqual(modelsCalled, ['gpt-test-text-model']);
         assert.ok(contentsPassed[0].includes('تفريغ صوتي حقيقي'));
     } finally {

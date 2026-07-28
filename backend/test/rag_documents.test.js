@@ -140,35 +140,38 @@ test('RAG Knowledge Documents and Secure Library Suite', async (t) => {
                 is_enabled: 1,
                 chunk_count: 0,
                 vector_count: 0,
-                index_fingerprint: null
+                index_fingerprint: null,
+                tenant_id: 'default',
+                logical_document_id: docKey,
+                version_id: `${docKey}:v1`
             });
 
             assert.ok(id > 0, "Should insert record successfully");
 
-            const doc = docRepo.getDocumentByKey(docKey);
+            const doc = docRepo.getDocumentByKey('default', docKey);
             assert.strictEqual(doc.original_name, 'test_doc.txt');
             assert.strictEqual(doc.content_hash, contentHash);
             assert.strictEqual(doc.status, 'uploaded');
         });
 
         await t.test('Detect identical content hash', () => {
-            const duplicate = docRepo.getDocumentByContentHash(contentHash);
+            const duplicate = docRepo.getDocumentByContentHash('default', contentHash);
             assert.ok(duplicate !== null, "Should locate duplicate document by content hash");
             assert.strictEqual(duplicate.document_key, docKey);
         });
 
         await t.test('Detect identical text hash', () => {
-            const duplicate = docRepo.getDocumentByExtractedTextHash(textHash);
+            const duplicate = docRepo.getDocumentByExtractedTextHash('default', textHash);
             assert.ok(duplicate !== null, "Should locate duplicate document by text hash");
             assert.strictEqual(duplicate.document_key, docKey);
         });
 
         await t.test('Soft delete/Full delete record', () => {
-            const doc = docRepo.getDocumentByKey(docKey);
-            const deleted = docRepo.deleteDocument(doc.id);
+            const doc = docRepo.getDocumentByKey('default', docKey);
+            const deleted = docRepo.deleteDocument('default', doc.id);
             assert.strictEqual(deleted, true);
 
-            const check = docRepo.getDocumentByKey(docKey);
+            const check = docRepo.getDocumentByKey('default', docKey);
             assert.strictEqual(check, undefined, "Document should be deleted from SQLite");
         });
     });
@@ -197,7 +200,7 @@ test('RAG Knowledge Documents and Secure Library Suite', async (t) => {
                 return {
                     ok: true,
                     json: async () => ({
-                        embedding: [0.1, -0.2, 0.45, 0.99]
+                        embedding: Array.from({ length: 768 }, (_, index) => index === 0 ? 0.1 : 0.001)
                     })
                 };
             }
@@ -211,7 +214,7 @@ test('RAG Knowledge Documents and Secure Library Suite', async (t) => {
                     ok: true,
                     json: async () => ({
                         result: {
-                            config: { params: { vectors: { size: 4 } } },
+                            config: { params: { vectors: { size: 768 } } },
                             vectors_count: 5
                         }
                     })
@@ -231,20 +234,37 @@ test('RAG Knowledge Documents and Secure Library Suite', async (t) => {
         await t.test('End-to-End Pipeline Indexing Workflow', async () => {
             const originalFilename = 'payment-policy.txt';
             const buffer = Buffer.from('طرق الدفع المتاحة: يقبل متجر FUThing الدفع نقداً عند الاستلام داخل فلسطين.', 'utf8');
+            let uploaded = [];
 
-            const doc = await kbDocService.uploadAndRegisterDocument(originalFilename, 'text/plain', buffer);
-            assert.strictEqual(doc.status, 'indexed');
+            const doc = await kbDocService.uploadAndRegisterDocument(
+                originalFilename, 'text/plain', buffer, {
+                    tenantId: 'default',
+                    _testDependencies: {
+                        upsertVectors: async (chunks, vectors) => {
+                            uploaded = chunks.map((chunk, index) => ({
+                                payload: chunk,
+                                vector: vectors[index]
+                            }));
+                        },
+                        getPointsByDocument: async () => uploaded,
+                        deleteVectorsByDocument: async () => { uploaded = []; }
+                    }
+                }
+            );
+            assert.strictEqual(doc.status, 'active');
             assert.strictEqual(doc.chunk_count, 1);
             assert.strictEqual(doc.vector_count, 1);
 
             // Verify duplicate detection rejects identical upload
             await assert.rejects(
-                kbDocService.uploadAndRegisterDocument(originalFilename, 'text/plain', buffer),
+                kbDocService.uploadAndRegisterDocument(
+                    originalFilename, 'text/plain', buffer, { tenantId: 'default' }
+                ),
                 /موجود مسبقاً/
             );
 
             // Clean up and delete
-            const deleted = await kbDocService.deleteDocument(doc.document_key);
+            const deleted = await kbDocService.deleteDocument(doc.document_key, { tenantId: 'default' });
             assert.strictEqual(deleted, true);
         });
 

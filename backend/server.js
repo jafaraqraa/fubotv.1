@@ -9,6 +9,8 @@ initializeDatabase();
 
 // Load persistent SQLite settings into process.env before starting other services
 loadSettingsOnStartup();
+require('./src/rag/config/ragConfig').validateRuntimeConfig();
+require('./src/rag/runtime/distributedLockService').startStaleLeaseRecovery();
 
 // 2. Idempotently bootstrap initial administrator account (Task 6)
 bootstrapAdminAccount();
@@ -47,6 +49,7 @@ async function startBackgroundServices() {
     await syncAllConfiguredApiKeys().catch(err => {
         console.error('⚠️ [Startup] Initial API Key sync failed:', err.message);
     });
+    require('./src/rag/services/ragReconciliationScheduler').startReconciliationScheduler();
 }
 
 // حماية السيرفر من الانهيار عند حدوث أخطاء غير متوقعة بالخلفية
@@ -63,6 +66,14 @@ async function gracefulShutdown(signal, exitCode = 0) {
     if (isShuttingDown) return;
     isShuttingDown = true;
     console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
+    try {
+        const { getConfig } = require('./src/rag/config/ragConfig');
+        const graceMs = Number(getConfig('RAG_SHUTDOWN_GRACE_MS')) || 15000;
+        console.log(`🔌 Draining active RAG operations (graceMs=${graceMs})...`);
+        await require('./src/rag/runtime/operationRegistry').beginShutdown(graceMs);
+    } catch (e) {
+        console.error('Failed to drain active RAG operations:', e.message);
+    }
 
     // 1. Stop Telegram Bot if active
     const bot = getBot();
@@ -86,6 +97,8 @@ async function gracefulShutdown(signal, exitCode = 0) {
     // 3. Close SQLite Connection safely
     try {
         console.log('🔌 Closing SQLite database connection...');
+        require('./src/rag/services/ragReconciliationScheduler').stopReconciliationScheduler();
+        require('./src/rag/runtime/distributedLockService').stopStaleLeaseRecovery();
         db.close();
     } catch (e) {
         console.error('Failed to close database:', e.message);
@@ -107,9 +120,18 @@ httpServer.on('error', (err) => {
     gracefulShutdown('HTTP_SERVER_ERROR', 1);
 });
 
-httpServer.listen(PORT, () => {
-    console.log(`🌐 السيرفر يعمل على: http://localhost:${PORT}`);
-    startBackgroundServices().catch(err => {
-        reportError('تشغيل خدمات الخلفية بعد بدء HTTP', err.message);
+async function startServer() {
+    const { assertQdrantTenantOwnershipSafe } = require('./src/rag/security/legacyTenantMigration');
+    await assertQdrantTenantOwnershipSafe();
+    httpServer.listen(PORT, () => {
+        console.log(`🌐 السيرفر يعمل على: http://localhost:${PORT}`);
+        startBackgroundServices().catch(err => {
+            reportError('تشغيل خدمات الخلفية بعد بدء HTTP', err.message);
+        });
     });
+}
+
+startServer().catch(error => {
+    console.error(`❌ Startup blocked: ${error.message}`);
+    gracefulShutdown('RAG_TENANT_AUDIT_FAILED', 1);
 });

@@ -1,18 +1,21 @@
-const { checkQdrantReady, getCollectionVectorCount } = require('../vector/qdrantVectorStore');
+const { checkQdrantReady, getCollectionStats } = require('../vector/qdrantVectorStore');
 const { checkModelAvailability } = require('../embeddings/ollamaEmbeddingProvider');
 const { isIndexingRunning, getIndexingState } = require('../indexing/knowledgeIndexingService');
 const { getConfig } = require('../config/ragConfig');
+const { getMetrics: getFallbackMetrics } = require('../runtime/fallbackPolicy');
 
-async function getRAGSystemStatus() {
+async function getRAGSystemStatus(tenantId) {
+    const { requireTenantId } = require('../security/tenantContext');
+    tenantId = requireTenantId(tenantId, 'rag-health-status');
     const modelName = getConfig('RAG_EMBEDDING_MODEL');
     const collectionName = getConfig('QDRANT_COLLECTION');
-    const legacyFallbackEnabled = getConfig('RAG_LEGACY_FALLBACK') === 'true';
 
     let qdrantReachable = false;
     let ollamaReachable = false;
     let modelAvailable = false;
     let collectionAvailable = false;
-    let vectorCount = 0;
+    let collectionStats = null;
+    let tenantStatistics = null;
     let errorSummary = null;
 
     try {
@@ -32,18 +35,10 @@ async function getRAGSystemStatus() {
 
     if (qdrantReachable) {
         try {
-            const qdrantUrl = getConfig('QDRANT_URL');
-            const apiKey = getConfig('QDRANT_API_KEY');
-            const headers = {};
-            if (apiKey) {
-                headers['api-key'] = apiKey;
-            }
-
-            const res = await fetch(`${qdrantUrl}/collections/${collectionName}`, { headers });
-            collectionAvailable = res.ok;
-            if (collectionAvailable) {
-                vectorCount = await getCollectionVectorCount();
-            }
+            collectionStats = await getCollectionStats();
+            collectionAvailable = true;
+            tenantStatistics = await require('./ragObservabilityService')
+                .getTenantRagStatistics(tenantId);
         } catch (e) {
             // Ignore collection fetch error
         }
@@ -56,7 +51,7 @@ async function getRAGSystemStatus() {
     let lastChunkCount = 0;
 
     try {
-        const indexState = getIndexingState('knowledge.txt');
+        const indexState = getIndexingState(tenantId, 'knowledge.txt');
         if (indexState) {
             lastStatus = indexState.last_status;
             lastSuccessAt = indexState.last_success_at;
@@ -71,50 +66,19 @@ async function getRAGSystemStatus() {
     }
 
     // Determine retrieval and infrastructure modes
-    let retrievalMode = 'unavailable';
+    let retrievalMode = 'FAILED';
     let infrastructureMode = 'unhealthy';
 
     if (qdrantReachable && ollamaReachable && collectionAvailable) {
-        retrievalMode = 'vector-ready';
+        retrievalMode = 'NORMAL';
         infrastructureMode = 'healthy';
-    } else if (legacyFallbackEnabled) {
-        retrievalMode = 'legacy-fallback';
-        infrastructureMode = qdrantReachable || ollamaReachable ? 'degraded' : 'unhealthy';
     }
 
-    // Add document counts from SQLite
-    let documentCount = 0;
-    let indexedDocumentCount = 0;
-    let failedDocumentCount = 0;
-    let totalIndexedChunks = 0;
-    try {
-        const db = require('../../database/connection');
-        const counts = db.prepare(`
-            SELECT
-                COUNT(*) as total,
-                SUM(CASE WHEN status = 'indexed' THEN 1 ELSE 0 END) as indexed,
-                SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
-                SUM(chunk_count) as total_chunks
-            FROM knowledge_documents
-        `).get();
-        if (counts) {
-            documentCount = counts.total || 0;
-            indexedDocumentCount = counts.indexed || 0;
-            failedDocumentCount = counts.failed || 0;
-            totalIndexedChunks = counts.total_chunks || 0;
-        }
-    } catch (e) {
-        // Ignore
-    }
-
-    // Live statistics calculation
+    const logical = require('./ragObservabilityService').logicalStatistics(tenantId);
     const chunkSize = parseInt(getConfig('RAG_CHUNK_SIZE'), 10) || 800;
     const chunkOverlap = parseInt(getConfig('RAG_CHUNK_OVERLAP'), 10) || 120;
-    const avgChunkSize = Math.max(100, Math.round(chunkSize - (chunkOverlap / 2)));
-    const vectorDimension = modelName.includes('nomic') ? 768 : 1536;
-    const collectionSize = `${(vectorCount * vectorDimension * 4 / (1024 * 1024)).toFixed(2)} MB`;
-    const storageUsage = `${(documentCount * 1.2 + vectorCount * 0.1).toFixed(1)} MB`;
-    const avgRetrievalLatency = '38 ms';
+    const runtime = require('../runtime/ragMetrics').snapshot();
+    const retrievalTiming = runtime.metrics?.qdrantRequestDurationMs || null;
 
     return {
         qdrantReachable,
@@ -123,7 +87,8 @@ async function getRAGSystemStatus() {
         collectionAvailable,
         collectionName,
         embeddingModelName: modelName,
-        indexedVectorCount: vectorCount,
+        statistics: tenantStatistics,
+        collectionStatistics: collectionStats,
         retrievalMode,
         infrastructureMode,
         lastSuccessfulIndexingTime: lastSuccessAt,
@@ -132,16 +97,21 @@ async function getRAGSystemStatus() {
         lastIndexingChunkCount: lastChunkCount,
         isReindexingActive: isIndexingRunning(),
         errorSummary,
-        documentCount,
-        indexedDocumentCount,
-        failedDocumentCount,
-        totalIndexedChunks,
+        documentCount: logical.activeDocuments,
+        indexedDocumentCount: logical.activeDocuments,
+        failedDocumentCount: logical.failedVersions,
+        totalIndexedChunks: logical.activeChunks,
         supportedFileTypes: ['pdf', 'txt', 'docx', 'md'],
-        avgChunkSize,
-        vectorDimension,
-        collectionSize,
-        storageUsage,
-        avgRetrievalLatency
+        configuredChunkSize: chunkSize,
+        configuredChunkOverlap: chunkOverlap,
+        embeddingDimension: collectionStats?.embeddingDimension ?? null,
+        avgRetrievalLatencyMs: retrievalTiming?.averageMs ?? null,
+        metricAvailability: {
+            collectionSizeBytes: 'unavailable',
+            storageUsageBytes: 'unavailable',
+            retrievalPercentiles: retrievalTiming?.sampleStatus || 'insufficient_samples'
+        },
+        fallbackMetrics: getFallbackMetrics()
     };
 }
 

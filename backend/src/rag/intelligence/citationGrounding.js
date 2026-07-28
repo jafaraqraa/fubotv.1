@@ -27,6 +27,11 @@ class EvidenceMetadata {
             keywordScore: chunk.keywordScore || 0.0,
             rerankScore: chunk.rerankScore || chunk.score || 0.0,
             finalScore: chunk.finalScore || chunk.score || 0.0,
+            tenantId: payload.tenantId || chunk.tenantId || '',
+            documentVersionId: payload.documentVersionId || chunk.documentVersionId || '',
+            sourceType: payload.sourceType || chunk.sourceType || '',
+            indexVersionId: payload.indexVersionId || chunk.indexVersionId || '',
+            injectionGuard: chunk.injectionGuard || null,
             intent,
             query: subQuery || chunk.query || ''
         };
@@ -85,17 +90,29 @@ class EvidenceBuilder {
     static buildGroundingContext(activeRefs) {
         if (!activeRefs || activeRefs.length === 0) return '';
 
-        return activeRefs.map((ref, idx) => {
+        const escapeLabel = value => String(value || '')
+            .replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char]);
+        return activeRefs.map(ref => {
             const m = ref.metadata;
-            let block = `Chunk #${m.chunkId}\n`;
-            block += `Document: ${m.title} (${m.sourceName})\n`;
-            if (m.section && m.section !== 'General Content') {
-                block += `Section: ${m.section}\n`;
-            }
-            block += `Intent: ${m.intent}\n`;
-            block += `Content:\n${ref.text.trim()}`;
-            return block;
-        }).join('\n\n====================\n\n');
+            const labels = [
+                `Chunk #${escapeLabel(m.chunkId)}`,
+                `Document: ${escapeLabel(m.title || m.sourceName)}`,
+                m.section ? `Section: ${escapeLabel(m.section)}` : '',
+                m.intent ? `Intent: ${escapeLabel(m.intent)}` : ''
+            ].filter(Boolean).join('\n');
+            return `${labels}\n${serializeChunks([{
+                text: ref.text,
+                injectionGuard: m.injectionGuard,
+                tenantId: m.tenantId,
+                documentId: m.documentId,
+                documentVersionId: m.documentVersionId,
+                chunkId: m.chunkId,
+                sourceType: m.sourceType,
+                sourceName: m.sourceName,
+                retrievalScore: m.finalScore,
+                indexVersionId: m.indexVersionId
+            }])}`;
+        }).join('\n\n');
     }
 }
 
@@ -167,3 +184,4 @@ module.exports = {
     CitationMapper,
     GroundingValidator
 };
+const { serializeChunks } = require('../security/promptInjectionGuard');

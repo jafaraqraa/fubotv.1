@@ -4,6 +4,20 @@ window.Dashboard = window.Dashboard || {};
 window.Dashboard.api = {
     csrfToken: null,
 
+    resolveUrl: function(url) {
+        const baseUrl = (window.ENV ? window.ENV.API_BASE_URL : '/api/v1').replace(/\/+$/, '');
+        if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+        // Callers historically use both /api/... and /api/v1/... while API_BASE_URL
+        // already contains /api/v1. Normalize both forms to prevent URLs such as
+        // /api/v1/v1/rag/chunks.
+        let relative = String(url || '');
+        if (relative.startsWith('/api/v1/')) relative = relative.substring('/api/v1'.length);
+        else if (relative.startsWith('/api/')) relative = relative.substring('/api'.length);
+        if (!relative.startsWith('/')) relative = `/${relative}`;
+        return `${baseUrl}${relative}`;
+    },
+
     // Fetches the session-bound CSRF token from the server
     fetchCsrfToken: async function() {
         try {
@@ -33,15 +47,7 @@ window.Dashboard.api = {
 
     // Intercepts and executes all fetch calls to centralize same-origin requests and handle 401 Unauthorized redirects
     request: async function(url, options = {}) {
-        const baseUrl = window.ENV ? window.ENV.API_BASE_URL : '/api/v1';
-
-        let targetUrl = url;
-        if (url.startsWith('/api/')) {
-            // Map legacy /api paths to the versioned API baseUrl
-            targetUrl = `${baseUrl}${url.substring(4)}`;
-        } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            targetUrl = `${baseUrl}${url}`;
-        }
+        const targetUrl = this.resolveUrl(url);
 
         const method = (options.method || 'GET').toUpperCase();
         const isStateChanging = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);

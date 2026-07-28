@@ -300,6 +300,15 @@ window.Dashboard.rag = {
         const fDocs = document.getElementById('rag-overview-failed-docs');
         const tChunks = document.getElementById('rag-overview-total-chunks');
         const lIndexTime = document.getElementById('rag-overview-last-index-time');
+        const orStatus = document.getElementById('rag-overview-openrouter-status');
+
+        const settleStatus = (element, healthy, healthyText = 'متصل', failedText = 'غير متصل') => {
+            if (!element) return;
+            element.textContent = healthy ? healthyText : failedText;
+            element.className = healthy
+                ? 'text-xs font-bold text-green-600'
+                : 'text-xs font-bold text-red-500';
+        };
 
         try {
             const statusRes = await window.Dashboard.api.request('/api/rag/status');
@@ -308,24 +317,18 @@ window.Dashboard.rag = {
             if (statusData.success && statusData.status) {
                 const s = statusData.status;
 
-                if (qStatus) {
-                    qStatus.innerText = s.qdrantReachable ? 'متصل' : 'غير متصل';
-                    qStatus.className = s.qdrantReachable ? 'text-xs font-bold text-green-500' : 'text-xs font-bold text-red-500';
-                }
-                if (oStatus) {
-                    oStatus.innerText = s.ollamaReachable ? 'متصل' : 'غير متصل';
-                    oStatus.className = s.ollamaReachable ? 'text-xs font-bold text-green-500' : 'text-xs font-bold text-red-500';
-                }
+                settleStatus(qStatus, s.qdrantReachable);
+                settleStatus(oStatus, s.ollamaReachable);
                 if (hMode) {
-                    hMode.innerText = (s.retrievalMode === 'vector-ready') ? 'هجين متكامل' : 'بحث احتياطي';
-                    hMode.className = (s.retrievalMode === 'vector-ready') ? 'text-xs font-bold text-green-600' : 'text-xs font-bold text-yellow-600';
+                    hMode.innerText = (s.retrievalMode === 'NORMAL') ? 'هجين متكامل' : 'غير جاهز';
+                    hMode.className = (s.retrievalMode === 'NORMAL') ? 'text-xs font-bold text-green-600' : 'text-xs font-bold text-yellow-600';
                 }
                 if (eModel) {
                     eModel.innerText = s.embeddingModelName || 'nomic-embed-text';
                     eModel.title = s.embeddingModelName || 'nomic-embed-text';
                 }
                 if (tChunks) {
-                    tChunks.innerText = s.indexedVectorCount || '0';
+                    tChunks.innerText = s.statistics?.logical?.activeChunks?.value ?? '—';
                 }
                 if (lIndexTime) {
                     const idxDate = s.lastSuccessfulIndexingTime ? new Date(s.lastSuccessfulIndexingTime) : null;
@@ -339,14 +342,31 @@ window.Dashboard.rag = {
                 const statStorage = document.getElementById('rag-stat-storage');
                 const statLatency = document.getElementById('rag-stat-latency');
 
-                if (statAvgChunk) statAvgChunk.innerText = `${s.avgChunkSize || 740} حرف`;
-                if (statDimension) statDimension.innerText = `${s.vectorDimension || 768} د`;
-                if (statColSize) statColSize.innerText = s.collectionSize || '0.00 MB';
-                if (statStorage) statStorage.innerText = s.storageUsage || '1.2 MB';
-                if (statLatency) statLatency.innerText = s.avgRetrievalLatency || '38 ms';
+                if (statAvgChunk) statAvgChunk.innerText = s.configuredChunkSize != null
+                    ? `${s.configuredChunkSize} حرف (إعداد)` : '—';
+                if (statDimension) statDimension.innerText = s.embeddingDimension != null
+                    ? `${s.embeddingDimension} بُعد` : '—';
+                if (statColSize) statColSize.innerText = '—';
+                if (statStorage) statStorage.innerText = '—';
+                if (statLatency) statLatency.innerText = s.avgRetrievalLatencyMs != null
+                    ? `${s.avgRetrievalLatencyMs.toFixed(1)} ms` : 'عينات غير كافية';
+            } else {
+                throw new Error(statusData.error || 'تعذر قراءة حالة RAG.');
             }
         } catch (e) {
             console.error('Failed to load RAG connection statuses:', e);
+            settleStatus(qStatus, false, 'متصل', 'تعذر الفحص');
+            settleStatus(oStatus, false, 'متصل', 'تعذر الفحص');
+        }
+
+        try {
+            const statsRes = await window.Dashboard.api.request('/api/stats');
+            const stats = await statsRes.json();
+            settleStatus(orStatus, stats.isOpenRouterConfigured,
+                'متصل', stats.isOpenRouterConfigured === false ? 'غير مهيأ' : 'تعذر الفحص');
+        } catch (error) {
+            console.error('Failed to load OpenRouter status:', error);
+            settleStatus(orStatus, false, 'متصل', 'تعذر الفحص');
         }
 
         // Fetch documents
@@ -368,6 +388,16 @@ window.Dashboard.rag = {
             }
         } catch (err) {
             console.error('Failed to load RAG documents library:', err);
+            const tbody = document.getElementById('rag-doc-table-body');
+            if (tbody) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 12;
+                cell.className = 'text-red-500 text-center p-8 font-arabic text-[11px]';
+                cell.textContent = 'تعذر تحميل مستودع المستندات. أعد المحاولة أو راجع حالة الخادم.';
+                row.appendChild(cell);
+                tbody.replaceChildren(row);
+            }
         }
     },
 
@@ -1130,8 +1160,25 @@ window.Dashboard.rag = {
             const result = await response.json();
 
             if (result.success) {
-                window.Dashboard.settings.showToast('تم تحديث وحفظ النص المعرفي اليدوي بنجاح.');
-                window.Dashboard.rag.addTimelineLog('تحديث النص المعرفي', `تم تعديل وتحديث الملف knowledge.txt بنجاح.`);
+                const reindexResponse = await window.Dashboard.api.request('/api/rag/reindex', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ force: true })
+                });
+                const reindexResult = await reindexResponse.json();
+                if (!reindexResponse.ok || !reindexResult.success || reindexResult.status !== 'active') {
+                    window.Dashboard.settings.showToast(
+                        'تم حفظ النص، لكن تعذر تفعيل الفهرس الجديد: '
+                        + (reindexResult.error || reindexResult.message || 'حالة الفهرسة غير صالحة.'),
+                        'error'
+                    );
+                    window.Dashboard.rag.addTimelineLog(
+                        'تعذر تفعيل النص المعرفي',
+                        'تم حفظ المصدر وبقي الإصدار السابق فعالاً لأن إعادة الفهرسة فشلت.'
+                    );
+                    await window.Dashboard.rag.fetchOverviewAndDocuments();
+                    return false;
+                }
 
                 window.Dashboard.state.ragOriginalValues['knowledge-input'] = textarea.value;
                 window.Dashboard.state.ragCurrentValues['knowledge-input'] = textarea.value;
@@ -1140,12 +1187,20 @@ window.Dashboard.rag = {
                 window.Dashboard.state.activeDirtySection = null;
                 window.Dashboard.rag.hideFloatingBar();
 
+                window.Dashboard.settings.showToast('تم حفظ النص المعرفي وفهرسته وتفعيله بنجاح.');
+                window.Dashboard.rag.addTimelineLog(
+                    'تحديث النص المعرفي',
+                    `تم حفظ knowledge.txt وتفعيل الإصدار ${reindexResult.indexVersionId || 'الجديد'}.`
+                );
                 await window.Dashboard.rag.fetchOverviewAndDocuments();
+                return true;
             } else {
                 window.Dashboard.settings.showToast('حدث خطأ: ' + result.error, 'error');
+                return false;
             }
         } catch (err) {
             window.Dashboard.settings.showToast('خطأ في الاتصال بالخادم لحفظ النص المعرفي.', 'error');
+            return false;
         }
     },
 
@@ -1292,9 +1347,34 @@ window.Dashboard.rag = {
         }
     },
 
-    downloadDoc: function(docId) {
+    downloadDoc: async function(docId) {
         window.Dashboard.settings.showToast('جاري بدء تنزيل الملف الأصلي من المستودع...');
-        window.open(`/api/v1/rag/documents/${docId}/download`, '_blank');
+        try {
+            const response = await window.Dashboard.api.request(
+                `/api/v1/rag/documents/${encodeURIComponent(docId)}/download`
+            );
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.error || 'تعذر تحميل الملف.');
+            }
+
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const documentRecord = window.Dashboard.state.ragDocuments
+                .find(item => item.documentId === docId);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = docId === 'manual_text'
+                ? 'knowledge.txt'
+                : (documentRecord?.originalFilename || 'document');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+            window.Dashboard.settings.showToast('تم تحميل الملف بنجاح.');
+        } catch (error) {
+            window.Dashboard.settings.showToast(`فشل تحميل الملف: ${error.message}`, 'error');
+        }
     },
 
     deleteDoc: function(docId, name) {
@@ -1687,6 +1767,10 @@ window.Dashboard.rag = {
 
             if (csrfToken) {
                 xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+            }
+            const sessionId = localStorage.getItem('futh_session_id');
+            if (sessionId) {
+                xhr.setRequestHeader('X-Session-ID', sessionId);
             }
 
             xhr.onload = function() {

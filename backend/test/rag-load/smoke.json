@@ -1,0 +1,10 @@
+{
+  "scenario": "mixed",
+  "concurrency": 10,
+  "requests": 100,
+  "timeoutMs": 30000,
+  "minAvailability": 0.99,
+  "maxErrorRate": 0.01,
+  "maxP95Ms": 5000,
+  "maxP99Ms": 10000
+}

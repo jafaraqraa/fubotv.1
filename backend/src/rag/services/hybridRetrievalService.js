@@ -2,10 +2,16 @@ const { getConfig } = require('../config/ragConfig');
 const { generateEmbeddings } = require('../embeddings/ollamaEmbeddingProvider');
 const { normalizeQueryTokens, normalizeArabic } = require('../processing/arabicNormalizer');
 const { performance } = require('perf_hooks');
+const versionedCache = require('../cache/retrievalCache');
+const db = require('../../database/connection');
+const { requireTenantId } = require('../security/tenantContext');
+const { searchPoints } = require('../vector/qdrantVectorStore');
+const { registerOperation } = require('../runtime/operationRegistry');
+const { RETRIEVAL_MODE, createMetadata } = require('../runtime/fallbackPolicy');
 
 // In-Memory caches to optimize latency and eliminate redundant HTTP requests (Task: Optimizations)
 const embeddingsCache = new Map();
-const retrievalCache = new Map();
+const retrievalCache = versionedCache.entries;
 
 /**
  * Computes a normalized keyword score (0.0 to 1.0) representing the fraction of query tokens matched in the chunk.
@@ -60,17 +66,15 @@ function determineDynamicTopK(query, queryTokens) {
  * Perform hybrid semantic + keyword retrieval using Qdrant and local lexical scoring.
  * Accepts optional profiler parameter for high-resolution timing sub-stage telemetry tracking.
  */
-async function retrieveHybridContext(query, profiler = null) {
-    const cacheKey = String(query).trim().toLowerCase();
-
-    // Check retrieval cache first to avoid duplicate searches
-    if (retrievalCache.has(cacheKey)) {
-        return retrievalCache.get(cacheKey);
-    }
-
-    const qdrantUrl = getConfig('QDRANT_URL');
-    const apiKey = getConfig('QDRANT_API_KEY');
+async function retrieveHybridContextInternal(query, profiler = null, cacheContext = {}) {
+    const retrievalStartedAt = performance.now();
     const collectionName = getConfig('QDRANT_COLLECTION');
+    const tenantId = requireTenantId(cacheContext.tenantId, 'hybrid-retrieval');
+    require('../security/tenantRagSafety').assertTenantRagEnabled(tenantId);
+    const embeddingModel = getConfig('RAG_EMBEDDING_MODEL');
+    const reranker = process.env.RAG_CROSS_ENCODER_MODEL
+        || process.env.RAG_CROSS_ENCODER_URL
+        || 'none';
 
     // Safe load weights
     let semanticWeight = parseFloat(getConfig('RAG_SEMANTIC_WEIGHT'));
@@ -89,16 +93,57 @@ async function retrieveHybridContext(query, profiler = null) {
     const dynamicTopK = determineDynamicTopK(query, queryTokens);
     const candidateMultiplier = parseInt(getConfig('RAG_CANDIDATE_MULTIPLIER'), 10) || 3;
     const candidateCount = Math.min(100, dynamicTopK * candidateMultiplier);
+    let activeKnowledgeVersion = null;
+    try {
+        activeKnowledgeVersion = db.prepare(`
+            SELECT index_version_id FROM rag_index_versions
+            WHERE tenant_id = ? AND source_type = 'knowledge_txt'
+              AND document_id = 'knowledge.txt' AND is_active = 1
+            LIMIT 1
+        `).get(tenantId)?.index_version_id || null;
+    } catch (_) {}
+    const indexVersion = versionedCache.getIndexVersion(tenantId, collectionName);
+    const cacheKey = versionedCache.buildCacheKey({
+        tenantId,
+        collection: collectionName,
+        indexVersion,
+        activeKnowledgeVersion,
+        embeddingModel,
+        reranker,
+        retrievalWeights: { semantic: semanticWeight, keyword: keywordWeight },
+        topK: dynamicTopK,
+        threshold: similarityThreshold,
+        candidateMultiplier,
+        retrievalMode: RETRIEVAL_MODE.NORMAL,
+        query
+    });
+
+    const cachedResult = versionedCache.get(cacheKey, tenantId);
+    if (cachedResult !== undefined) {
+        console.log(`[RAG Retrieval] tenant=${tenantId} operation=hybrid results=${cachedResult.candidates?.length || 0} cache=hit durationMs=${(performance.now() - retrievalStartedAt).toFixed(1)}`);
+        return {
+            ...cachedResult,
+            metadata: createMetadata({
+                ...(cachedResult.metadata || {}),
+                retrievalMode: RETRIEVAL_MODE.CACHE_ONLY,
+                cacheHit: true
+            })
+        };
+    }
 
     // 3. Generate query embedding using Ollama or read from cache
     let queryVector;
     const tEmbedStart = performance.now();
-    if (embeddingsCache.has(cacheKey)) {
-        queryVector = embeddingsCache.get(cacheKey);
+    const embeddingCacheKey = `${embeddingModel}:${versionedCache.normalizeQuery(query)}`;
+    if (embeddingsCache.has(embeddingCacheKey)) {
+        queryVector = embeddingsCache.get(embeddingCacheKey);
     } else {
-        queryVector = await generateEmbeddings(query, profiler);
+        queryVector = await generateEmbeddings(query, profiler, {
+            signal: cacheContext.signal,
+            tenantId
+        });
         if (embeddingsCache.size > 1000) embeddingsCache.clear();
-        embeddingsCache.set(cacheKey, queryVector);
+        embeddingsCache.set(embeddingCacheKey, queryVector);
     }
     const durationEmbeddings = performance.now() - tEmbedStart;
 
@@ -107,49 +152,53 @@ async function retrieveHybridContext(query, profiler = null) {
     }
 
     // 4. Query Qdrant for semantic candidates
-    const headers = { 'Content-Type': 'application/json' };
-    if (apiKey) {
-        headers['api-key'] = apiKey;
-    }
-
     // Sub-stage 1: Request Build
     const tBuildStart = performance.now();
     const qdrantBody = {
         vector: queryVector,
         limit: candidateCount,
+        // Staged replacement vectors must not become searchable before activation.
+        filter: {
+            must: [{ key: 'tenantId', match: { value: tenantId } }],
+            must_not: [
+                { key: 'lifecycle', match: { value: 'staging' } },
+                { key: 'lifecycle', match: { value: 'archived' } }
+            ],
+            should: activeKnowledgeVersion
+                ? [
+                    { key: 'sourceType', match: { value: 'uploaded_document' } },
+                    { key: 'indexVersionId', match: { value: activeKnowledgeVersion } }
+                ]
+                : [
+                    { key: 'sourceType', match: { value: 'uploaded_document' } },
+                    { key: 'sourceType', match: { value: 'text' } }
+                ]
+        },
         // Payload Filtering: retrieve ONLY the required fields to optimize latency and metadata transfer
-        with_payload: ["text", "source", "chunkId", "documentName", "previousChunkId", "nextChunkId"]
+        with_payload: [
+            "text", "source", "chunkId", "documentName", "previousChunkId", "nextChunkId",
+            "tenantId", "documentId", "documentVersionId", "indexVersionId", "sourceType",
+            "chunkIndex", "contentHash", "embeddingModel", "vectorDimension", "createdAt", "lifecycle"
+        ]
     };
     const durationBuild = performance.now() - tBuildStart;
 
     // Sub-stage 2: HTTP Send
     const tSendStart = performance.now();
-    const durationSend = 0.2; // Estimated connection serialization overhead
-
-    const qdrantRes = await fetch(`${qdrantUrl}/collections/${collectionName}/points/search`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(qdrantBody)
-    });
-
-    const tReceiveStart = performance.now();
-    const durationReceive = 0.3; // Estimated connection data receiving overhead
-
-    if (!qdrantRes.ok) {
-        const errText = await qdrantRes.text();
-        throw new Error(`فشل البحث المتجهي في Qdrant: ${qdrantRes.status} - ${errText}`);
-    }
+    const searchResults = await searchPoints(qdrantBody, { signal: cacheContext.signal });
+    const durationQdrantSearch = performance.now() - tSendStart;
 
     // Sub-stage 3: Qdrant Search & Parse
     const tParseStart = performance.now();
-    const data = await qdrantRes.json();
-    const durationQdrantSearch = (tReceiveStart - tSendStart) - durationSend - durationReceive;
-    const searchResults = data.result || [];
 
     // 5. Score fusion & payload validation
     const tKeywordStart = performance.now();
     const candidates = [];
     for (const res of searchResults) {
+        if (res.payload?.tenantId !== tenantId) {
+            console.error(`[RAG Tenant] Qdrant returned mismatched tenant payload. Result discarded. tenant=${tenantId} point=${res.id}`);
+            continue;
+        }
         const chunkText = res.payload?.text ?? res.payload?.content ?? res.payload?.pageContent ?? '';
         if (!chunkText || chunkText.trim() === '') {
             continue;
@@ -175,9 +224,7 @@ async function retrieveHybridContext(query, profiler = null) {
     // Record sub-durations if profiler is passed
     if (profiler) {
         profiler.recordSubDuration('Vector Search (Qdrant)', 'Request Build', durationBuild);
-        profiler.recordSubDuration('Vector Search (Qdrant)', 'HTTP Send', durationSend);
-        profiler.recordSubDuration('Vector Search (Qdrant)', 'Qdrant Search', Math.max(0.1, durationQdrantSearch));
-        profiler.recordSubDuration('Vector Search (Qdrant)', 'Response Receive', durationReceive);
+        profiler.recordSubDuration('Vector Search (Qdrant)', 'Qdrant Search', durationQdrantSearch);
         profiler.recordSubDuration('Vector Search (Qdrant)', 'Result Parsing', durationResultParsing);
     }
 
@@ -187,15 +234,34 @@ async function retrieveHybridContext(query, profiler = null) {
         similarityThreshold,
         timings: {
             embeddings: durationEmbeddings,
-            vectorSearch: durationQdrantSearch + durationBuild + durationSend + durationReceive + durationResultParsing,
+            vectorSearch: durationQdrantSearch + durationBuild + durationResultParsing,
             keywordSearch: performance.now() - tKeywordStart
-        }
+        },
+        metadata: createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL })
     };
 
-    if (retrievalCache.size > 1000) retrievalCache.clear();
-    retrievalCache.set(cacheKey, result);
+    versionedCache.set(cacheKey, result, {
+        tenantId,
+        collection: collectionName,
+        indexVersion
+    }, {
+        ttlMs: parseInt(getConfig('RAG_RETRIEVAL_CACHE_TTL_MS'), 10) || 300000,
+        maxEntries: parseInt(getConfig('RAG_RETRIEVAL_CACHE_MAX_ENTRIES'), 10) || 1000
+    });
 
+    console.log(`[RAG Retrieval] tenant=${tenantId} operation=hybrid results=${candidates.length} cache=miss durationMs=${(performance.now() - retrievalStartedAt).toFixed(1)}`);
     return result;
+}
+
+async function retrieveHybridContext(query, profiler = null, cacheContext = {}) {
+    const operation = registerOperation('hybrid_retrieval', cacheContext.signal);
+    try {
+        return await retrieveHybridContextInternal(query, profiler, {
+            ...cacheContext, signal: operation.signal
+        });
+    } finally {
+        operation.done();
+    }
 }
 
 module.exports = {

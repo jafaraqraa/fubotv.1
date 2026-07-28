@@ -183,7 +183,7 @@ class IntentRetriever {
      * @param {number} similarityThreshold - Minimum threshold.
      * @returns {Promise<Object>} { rawChunks, deduplicated, diversified }
      */
-    static async retrieve(decomposedQueries, similarityThreshold = 0.4) {
+    static async retrieve(decomposedQueries, similarityThreshold = 0.4, retrievalContext = {}) {
         const startTime = Date.now();
         const allocated = RetrievalAllocator.allocate(decomposedQueries);
         const rawChunks = [];
@@ -204,9 +204,12 @@ class IntentRetriever {
             // 3. Fetch hybrid candidate lists
             const retrievalPromises = variations.map(async (vQuery) => {
                 try {
-                    const res = await retrieveHybridContext(vQuery);
+                    const res = await retrieveHybridContext(vQuery, null, retrievalContext);
                     return res.candidates || [];
                 } catch (e) {
+                    if (['RAG_QDRANT_TIMEOUT', 'RAG_OLLAMA_TIMEOUT',
+                        'RAG_DEPENDENCY_TIMEOUT', 'RAG_REQUEST_CANCELLED']
+                        .includes(e.code)) throw e;
                     return [];
                 }
             });
@@ -273,5 +276,5 @@ module.exports = {
     ContextDiversifier,
     MergedContextBuilder,
     IntentRetriever,
-    retrieveIntentAwareContext: (decomposed, threshold) => IntentRetriever.retrieve(decomposed, threshold)
+    retrieveIntentAwareContext: (decomposed, threshold, retrievalContext) => IntentRetriever.retrieve(decomposed, threshold, retrievalContext)
 };

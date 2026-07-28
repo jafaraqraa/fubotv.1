@@ -43,6 +43,11 @@ function initializeDatabase() {
             console.log(`✅ Successfully applied migration: ${file}`);
         }
 
+        // Legacy RAG ownership is never guessed. Production startup fails while
+        // ambiguous rows remain; single-tenant installs must opt in explicitly.
+        const { applyExplicitLegacyTenantMigration } = require('../rag/security/legacyTenantMigration');
+        applyExplicitLegacyTenantMigration();
+
         // Initialize and seed AI tasks configuration
         try {
             const { initializeTasks } = require('./repositories/aiTaskRepository');

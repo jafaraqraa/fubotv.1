@@ -1,0 +1,54 @@
+name: RAG resilience
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '20 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  correctness-and-load-smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run test:rag:resilience
+      - name: Upload load reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-test-reports
+          path: backend/reports/rag
+          if-no-files-found: ignore
+
+  scheduled-stress-gate:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Validate stress and endurance profiles
+        run: |
+          node --check scripts/rag-load-runner.js
+          node --check scripts/rag-fault-proxy.js
+          node -e "JSON.parse(require('fs').readFileSync('test/rag-load/stress.json')); JSON.parse(require('fs').readFileSync('test/rag-load/endurance.json'))"
+      - name: External disposable-environment gate
+        run: echo "Full stress/endurance requires repository environment credentials and disposable services."

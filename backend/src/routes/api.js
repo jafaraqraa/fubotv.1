@@ -6,6 +6,8 @@ const { addLog, reportError, getRecentLogs, listErrors, getActiveErrorsCount, so
 const { getIsValidToken, startBot } = require('../channels/telegram');
 const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUrl } = require('../channels/whatsapp');
 const { updateEnvFile } = require('../utils/helpers');
+const { requireRagTenant } = require('../rag/security/tenantContext');
+const { getManualKnowledgePath } = require('../rag/storage/tenantKnowledgeStorage');
 
 function addRAGAuditLog(user, action, target, result) {
     try {
@@ -142,7 +144,7 @@ router.post('/config/settings', async (req, res) => {
         token, openrouterKey, model, systemPrompt, adminId, waAutoReply,
         messengerToken, instagramToken, metaVerifyToken, messengerAutoReply, instagramAutoReply,
         ragChunkSize, ragChunkOverlap, ragEmbeddingModel, qdrantCollection,
-        ragIndexOnStartup, ragLegacyFallback, qdrantUrl, ollamaBaseUrl,
+        ragIndexOnStartup, qdrantUrl, ollamaBaseUrl,
         ragMinTopK, ragDefaultTopK, ragMaxTopK, ragCandidateMultiplier,
         ragSemanticWeight, ragKeywordWeight, ragSimilarityThreshold,
         ragNeighborExpansion, ragContextBudget,
@@ -223,12 +225,6 @@ router.post('/config/settings', async (req, res) => {
             saveSetting('RAG_INDEX_ON_STARTUP', valStr);
             updateEnvFile('RAG_INDEX_ON_STARTUP', valStr);
             process.env.RAG_INDEX_ON_STARTUP = valStr;
-        }
-        if (ragLegacyFallback !== undefined) {
-            const valStr = String(ragLegacyFallback);
-            saveSetting('RAG_LEGACY_FALLBACK', valStr);
-            updateEnvFile('RAG_LEGACY_FALLBACK', valStr);
-            process.env.RAG_LEGACY_FALLBACK = valStr;
         }
         if (ragMinTopK !== undefined) {
             saveSetting('RAG_MIN_TOP_K', String(ragMinTopK));
@@ -466,9 +462,10 @@ router.post('/config/settings', async (req, res) => {
 // 4. جلب الإحصائيات مع الحماية التامة وحظر إرسال التوكنات كاملة للواجهة لمنع الاختراق
 router.get('/stats', (req, res) => {
     const { getConfig } = require('../rag/config/ragConfig');
+    const { resolveAuthorizedTenant } = require('../rag/security/tenantContext');
     const textGenerationConfig = require('../database/repositories/aiTaskRepository')
         .getTaskConfig('text_generation');
-    const knowledgePath = path.join(__dirname, '..', '..', 'knowledge.txt');
+    const knowledgePath = getManualKnowledgePath(resolveAuthorizedTenant(req));
     const knowledgeText = fs.existsSync(knowledgePath) ? fs.readFileSync(knowledgePath, 'utf8') : '';
 
     const promptPath = path.join(__dirname, '..', '..', 'system_prompt.txt');
@@ -505,7 +502,6 @@ router.get('/stats', (req, res) => {
         ragEmbeddingModel: getConfig('RAG_EMBEDDING_MODEL') || 'nomic-embed-text',
         qdrantCollection: getConfig('QDRANT_COLLECTION') || 'futhing_knowledge',
         ragIndexOnStartup: getConfig('RAG_INDEX_ON_STARTUP') !== 'false',
-        ragLegacyFallback: getConfig('RAG_LEGACY_FALLBACK') !== 'false',
         qdrantUrl: getConfig('QDRANT_URL') || 'http://127.0.0.1:6333',
         ollamaBaseUrl: getConfig('OLLAMA_BASE_URL') || 'http://127.0.0.1:11434',
         ragMinTopK: parseInt(getConfig('RAG_MIN_TOP_K') || '3', 10),
@@ -593,17 +589,37 @@ router.post('/errors/solve', (req, res) => {
     res.json({ success: true });
 });
 
-router.post('/config/knowledge', (req, res) => {
+router.post('/config/knowledge', async (req, res) => {
     const { text } = req.body;
+    let lease;
     try {
-        const filePath = path.join(__dirname, '..', '..', 'knowledge.txt');
+        const { resolveAuthorizedTenant } = require('../rag/security/tenantContext');
+        const tenantId = resolveAuthorizedTenant(req);
+        lease = await require('../rag/runtime/distributedLockService').acquireLease({
+            tenantId, resourceType: 'knowledge_txt', resourceId: 'knowledge.txt',
+            operation: 'knowledge_update', failFast: true,
+            idempotencyKey: req.get('Idempotency-Key') || null
+        });
+        if (lease.duplicate) {
+            return res.json({ success: true, duplicate: true, operationId: lease.operation.operation_id });
+        }
+        lease.assertOwnership();
+        const filePath = getManualKnowledgePath(tenantId);
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
         fs.writeFileSync(filePath, text || '', 'utf8');
         addLog("تحديث قاعدة المعرفة بنجاح");
         addRAGAuditLog('المشرف', 'تحديث النص المعرفي اليدوي', 'knowledge.txt', 'نجاح');
+        await lease.release({ result: { success: true } });
+        lease = null;
         res.json({ success: true, message: 'تم حفظ وتحديث قاعدة المعرفة بنجاح!' });
     } catch (err) {
+        if (lease && !lease.duplicate) await lease.release({ error: err });
         reportError("حفظ قاعدة المعرفة RAG", err.message);
-        res.status(500).json({ success: false, error: err.message });
+        const conflict = err.code === 'RAG_OPERATION_IN_PROGRESS';
+        if (conflict) res.set('Retry-After', '1');
+        res.status(conflict ? 409 : 500).json({
+            success: false, code: err.code, retryable: err.retryable === true, error: err.message
+        });
     }
 });
 
@@ -632,24 +648,215 @@ function rateLimitReindex(req, res, next) {
     next();
 }
 
+function ragMutationError(res, error, fallbackCode = 'RAG_MUTATION_FAILED') {
+    const conflictCodes = new Set([
+        'RAG_OPERATION_IN_PROGRESS', 'RAG_INDEX_ALREADY_RUNNING',
+        'RAG_REPLACE_LOCKED', 'RAG_RECONCILIATION_LOCKED'
+    ]);
+    const conflict = conflictCodes.has(error.code);
+    const unavailable = error.code === 'RAG_LOCK_SERVICE_UNAVAILABLE';
+    if (conflict) res.set('Retry-After', '1');
+    return res.status(conflict ? 409 : (unavailable ? 503 : 500)).json({
+        success: false,
+        code: conflict ? 'RAG_OPERATION_IN_PROGRESS' : (error.code || fallbackCode),
+        operation: error.operation,
+        retryable: error.retryable === true,
+        stage: error.stage || 'unknown',
+        error: error.message
+    });
+}
+
+router.use('/rag', requireRagTenant);
+
+// Authenticated by the parent API router and tenant-authorized here. Values are
+// returned with source/scope/freshness metadata; unavailable metrics remain null.
+router.get('/admin/rag/metrics-summary', requireRagTenant, async (req, res) => {
+    try {
+        const { getMetricsSummary } = require('../rag/services/ragObservabilityService');
+        res.json({
+            success: true,
+            metrics: await getMetricsSummary(req.ragTenantId)
+        });
+    } catch (error) {
+        res.status(503).json({
+            success: false,
+            code: error.code || 'RAG_METRICS_UNAVAILABLE',
+            error: error.message
+        });
+    }
+});
+
 // GET /rag/status -> authenticated, returns RAG system stats
 router.get('/rag/status', async (req, res) => {
     try {
-        const status = await getRAGSystemStatus();
+        const status = await getRAGSystemStatus(req.ragTenantId);
         res.json({ success: true, status });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
+router.get('/rag/cache/metrics', (req, res) => {
+    const retrievalCache = require('../rag/cache/retrievalCache');
+    res.json({ success: true, metrics: retrievalCache.getMetrics(req.ragTenantId) });
+});
+
+router.get('/rag/injection/security-report', (req, res) => {
+    try {
+        const guard = require('../rag/security/promptInjectionGuard');
+        res.json({
+            success: true,
+            scannerVersion: guard.SCANNER_VERSION,
+            metrics: guard.getMetrics(),
+            quarantined: guard.getQuarantineReport({
+                tenantId: req.ragTenantId,
+                isAdmin: true
+            })
+        });
+    } catch (error) {
+        res.status(403).json({ success: false, error: error.message });
+    }
+});
+
+router.post('/rag/injection/override', (req, res) => {
+    try {
+        const guard = require('../rag/security/promptInjectionGuard');
+        const result = guard.applyAdminOverride({
+            quarantineId: req.body?.quarantineId,
+            tenantId: req.ragTenantId,
+            adminId: req.session.userId,
+            reason: req.body?.reason,
+            decision: req.body?.decision,
+            isAdmin: true
+        });
+        addRAGAuditLog(req.session.userId, 'مراجعة تحذير حقن RAG',
+            req.body?.quarantineId || 'unknown', 'نجاح');
+        res.json({ success: true, result });
+    } catch (error) {
+        res.status(error.code === 'RAG_INJECTION_QUARANTINE_NOT_FOUND' ? 404 : 403)
+            .json({ success: false, error: error.message });
+    }
+});
+
+router.get('/rag/runtime/metrics', (req, res) => {
+    const metrics = require('../rag/runtime/ragMetrics');
+    res.json({ success: true, metrics: metrics.snapshot() });
+});
+
+router.get('/rag/reconciliation', (req, res) => {
+    try {
+        const { getReconciliationHistory } = require('../rag/services/ragReconciliationService');
+        res.json({
+            success: true,
+            tenantId: req.ragTenantId,
+            runs: getReconciliationHistory(req.ragTenantId, req.query.limit)
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+router.post('/rag/reconciliation/run', rateLimitReindex, async (req, res) => {
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
+    try {
+        const { reconcileRagIndex } = require('../rag/services/ragReconciliationService');
+        const report = await reconcileRagIndex({
+            tenantId: req.ragTenantId,
+            dryRun: true,
+            includeLegacyAudit: req.body.includeLegacyAudit === true,
+            continuationOffset: req.body.continuationOffset ?? null,
+            signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null,
+            operatorId: req.session?.username || req.session?.userId || 'administrator'
+        });
+        if (!cancellation.signal.aborted) res.json({ success: true, report });
+    } catch (error) {
+        ragMutationError(res, error, 'RAG_RECONCILIATION_FAILED');
+    } finally { cancellation.cleanup(); }
+});
+
+router.post('/rag/reconciliation/cleanup', rateLimitReindex, async (req, res) => {
+    if (req.body.confirmCleanup !== true) {
+        return res.status(400).json({
+            success: false,
+            code: 'RAG_CLEANUP_CONFIRMATION_REQUIRED',
+            error: 'confirmCleanup=true is required for destructive reconciliation cleanup.'
+        });
+    }
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
+    try {
+        const { reconcileRagIndex } = require('../rag/services/ragReconciliationService');
+        const report = await reconcileRagIndex({
+            tenantId: req.ragTenantId,
+            dryRun: false,
+            confirmCleanup: true,
+            includeLegacyAudit: req.body.includeLegacyAudit === true,
+            continuationOffset: req.body.continuationOffset ?? null,
+            signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null,
+            operatorId: req.session?.username || req.session?.userId || 'administrator'
+        });
+        const status = report.cleanup?.success ? 200 : 207;
+        if (!cancellation.signal.aborted) {
+            res.status(status).json({ success: report.cleanup?.success === true, report });
+        }
+    } catch (error) {
+        ragMutationError(res, error, 'RAG_RECONCILIATION_FAILED');
+    } finally { cancellation.cleanup(); }
+});
+
+router.post('/rag/reconciliation/reindex', rateLimitReindex, async (req, res) => {
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
+    try {
+        const result = await reindexKnowledgeBase(true, {
+            tenantId: req.ragTenantId, signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null
+        });
+        if (!['active', 'unchanged'].includes(result.status)) {
+            const error = new Error(`حالة الفهرسة النهائية غير صالحة: ${result.status}`);
+            error.code = 'RAG_FINAL_STATE_INVALID';
+            error.stage = 'activation';
+            throw error;
+        }
+        if (!cancellation.signal.aborted) res.status(200).json({
+            success: true,
+            tenantId: req.ragTenantId,
+            result: {
+                ...result,
+                unchanged: result.status === 'unchanged',
+                status: 'active'
+            }
+        });
+    } catch (error) {
+        ragMutationError(res, error, 'RAG_INDEX_FAILED');
+    } finally { cancellation.cleanup(); }
+});
+
 // POST /rag/reindex -> authenticated, rate-limited, triggers reindexing
 router.post('/rag/reindex', rateLimitReindex, async (req, res) => {
     const force = req.body.force === true;
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
-        const result = await reindexKnowledgeBase(force);
-        res.json({
+        const result = await reindexKnowledgeBase(force, {
+            tenantId: req.ragTenantId, signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null
+        });
+        if (cancellation.signal.aborted) return;
+        if (!['active', 'unchanged'].includes(result.status)) {
+            const error = new Error(`حالة الفهرسة النهائية غير صالحة: ${result.status}`);
+            error.code = 'RAG_FINAL_STATE_INVALID';
+            error.stage = 'activation';
+            throw error;
+        }
+        res.status(200).json({
             success: true,
-            status: result.status,
+            source: result.source || 'knowledge.txt',
+            tenantId: result.tenantId || req.ragTenantId,
+            indexVersionId: result.indexVersionId || null,
+            status: 'active',
+            unchanged: result.status === 'unchanged',
+            chunkCount: result.chunkCount ?? result.totalVectors,
+            previousVersionCleanup: result.previousVersionCleanup || 'completed',
             documentId: result.documentId,
             chunksCreated: result.chunksCreated,
             chunksUpdated: result.chunksUpdated,
@@ -658,38 +865,22 @@ router.post('/rag/reindex', rateLimitReindex, async (req, res) => {
             durationMs: result.durationMs
         });
     } catch (err) {
-        if (err.code === 'RAG_INDEX_ALREADY_RUNNING') {
-            return res.status(409).json({
-                success: false,
-                code: 'RAG_INDEX_ALREADY_RUNNING',
-                message: err.message
-            });
-        }
-        res.status(500).json({ success: false, error: err.message });
-    }
+        ragMutationError(res, err, 'RAG_INDEX_FAILED');
+    } finally { cancellation.cleanup(); }
 });
 
 router.get('/ai/ollama-models', async (req, res) => {
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
-        const { getConfig } = require('../rag/config/ragConfig');
-        const ollamaUrl = getConfig('OLLAMA_BASE_URL') || 'http://127.0.0.1:11434';
-
-        const response = await fetch(`${ollamaUrl}/api/tags`, {
-            signal: AbortSignal.timeout(3000) // 3 seconds timeout
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data && Array.isArray(data.models)) {
-                const models = data.models.map(m => m.name);
-                return res.json({ success: true, models });
-            }
-        }
-        res.json({ success: true, models: [] });
+        const { listModels } = require('../rag/embeddings/ollamaEmbeddingProvider');
+        const models = await listModels({ signal: cancellation.signal });
+        if (!cancellation.signal.aborted) res.json({ success: true, models });
     } catch (err) {
-        // Fall back gracefully with empty list if Ollama is offline or unreachable
-        res.json({ success: true, models: [] });
-    }
+        if (!cancellation.signal.aborted) res.status(503).json({
+            success: false, models: [], code: err.code || 'RAG_OLLAMA_UNAVAILABLE',
+            stage: err.stage || 'ollama_health', retryable: err.retryable === true
+        });
+    } finally { cancellation.cleanup(); }
 });
 
 router.get('/whatsapp/config', async (req, res) => {
@@ -813,14 +1004,20 @@ router.post('/rag/playground', async (req, res) => {
     const startTime = Date.now();
     try {
         const { getAIResponse } = require('../services/ai');
-        const { getLastRetrievalProfiling, getLastRetrievalMode } = require('../services/knowledge');
         const { getConfig } = require('../rag/config/ragConfig');
+        const retrievalTelemetry = {};
 
         // 1. Run the unified response generation pipeline exactly once
         let finalAnswer = 'لم يتم تهيئة مفتاح OpenRouter لتوليد الإجابة النهائية.';
         let aiResp = null;
         try {
-            aiResp = await getAIResponse('playground_temp_user', question);
+            aiResp = await getAIResponse(
+                'playground_temp_user',
+                question,
+                'text',
+                null,
+                { tenantId: req.ragTenantId, channel: 'playground', retrievalTelemetry }
+            );
             if (aiResp) {
                 finalAnswer = aiResp;
             } else if (process.env.OPENROUTER_API_KEY) {
@@ -831,8 +1028,8 @@ router.post('/rag/playground', async (req, res) => {
         }
 
         // 2. Extract single-pass retrieval metadata, profiling, and chunks
-        const rProfiling = getLastRetrievalProfiling();
-        const retrievalMode = getLastRetrievalMode();
+        const rProfiling = retrievalTelemetry.profiling || null;
+        const retrievalMode = retrievalTelemetry.mode || 'unavailable';
 
         // 3. Fallback to reading defaults if retrieval didn't run (unlikely)
         let dynamicTopK = parseInt(getConfig('RAG_DEFAULT_TOP_K'), 10) || 5;
@@ -855,13 +1052,14 @@ router.post('/rag/playground', async (req, res) => {
         if (promptContext) {
             sysPrompt += `\n\nأجب على سؤال المستخدم بناءً على معلومات سياق المعرفة المرفقة بالأسفل فقط...\n\nسياق المعرفة المسترجع:\n${promptContext}`;
         }
-        const promptSent = `[System Instructions]:\n${sysPrompt}\n\n[User Query]:\n${question}`;
+        const { redactSecrets } = require('../rag/security/promptInjectionGuard');
+        const promptSent = redactSecrets(`[System Instructions]:\n${sysPrompt}\n\n[User Query]:\n${question}`);
         const tokensUsed = Math.ceil((promptSent.length + finalAnswer.length) / 4);
 
         res.json({
             success: true,
             retrievedChunks: topChunks.map((c, idx) => ({
-                text: c.text,
+                text: redactSecrets(c.text),
                 similarityScore: c.semanticScore || c.score || c.similarityScore || 0,
                 keywordScore: c.keywordScore || 0,
                 rerankScore: c.rerankScore || c.score || 0,
@@ -871,10 +1069,12 @@ router.post('/rag/playground', async (req, res) => {
             })),
             similarityThreshold,
             selectedTopK: dynamicTopK,
-            promptContext,
+            promptContext: redactSecrets(promptContext),
             finalAnswer,
             executionTime: rProfiling ? rProfiling.totalDuration : executionTime,
-            mode: rProfiling ? (rProfiling.intent !== 'General' ? `Hybrid (${rProfiling.intent})` : 'Hybrid') : (retrievalMode === 'legacy-fallback' ? 'Fallback' : 'Hybrid'),
+            mode: rProfiling
+                ? (rProfiling.intent !== 'General' ? `Hybrid (${rProfiling.intent})` : 'Hybrid')
+                : retrievalMode,
             debug: {
                 promptSent,
                 tokensUsed,
@@ -894,7 +1094,8 @@ const multer = require('multer');
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 10 * 1024 * 1024 // 10MB limit
+        fileSize: Number(require('../rag/config/ragConfig').getConfig('RAG_MAX_FILE_SIZE_BYTES'))
+            || 10 * 1024 * 1024
     }
 });
 const kbDocService = require('../rag/services/knowledgeDocumentService');
@@ -920,9 +1121,11 @@ router.get('/rag/chunks', async (req, res) => {
         const limit = parseInt(req.query.limit || '10', 10);
 
         const db = require('../database/connection');
-        const docs = db.prepare("SELECT * FROM knowledge_documents WHERE status = 'indexed'").all();
+        const docs = db.prepare(
+            "SELECT * FROM knowledge_documents WHERE tenant_id = ? AND status = 'indexed'"
+        ).all(req.ragTenantId);
 
-        const kbPath = path.join(__dirname, '..', '..', 'knowledge.txt');
+        const kbPath = getManualKnowledgePath(req.ragTenantId);
         if (fs.existsSync(kbPath)) {
             const stat = fs.statSync(kbPath);
             docs.push({
@@ -932,6 +1135,7 @@ router.get('/rag/chunks', async (req, res) => {
                 storage_path: kbPath,
                 content_hash: 'manual_hash',
                 status: 'indexed',
+                tenant_id: req.ragTenantId,
                 version: 1,
                 created_at: stat.birthtime || stat.mtime
             });
@@ -963,6 +1167,7 @@ router.get('/rag/chunks', async (req, res) => {
                     sourceType: doc.source_type === 'manual' ? 'manual_knowledge' : 'uploaded_document',
                     originalText: cleaned,
                     documentHash: doc.content_hash
+                    ,tenantId: req.ragTenantId
                 };
 
                 const chunkSize = parseInt(getConfig('RAG_CHUNK_SIZE'), 10) || 800;
@@ -1010,7 +1215,7 @@ router.get('/rag/documents/:documentId/preview', async (req, res) => {
         let contentHash = '';
 
         if (documentId === 'manual_text') {
-            const kbPath = path.join(__dirname, '..', '..', 'knowledge.txt');
+            const kbPath = getManualKnowledgePath(req.ragTenantId);
             if (!fs.existsSync(kbPath)) {
                 return res.status(404).json({ success: false, error: 'الملف اليدوي غير موجود.' });
             }
@@ -1021,7 +1226,9 @@ router.get('/rag/documents/:documentId/preview', async (req, res) => {
             contentHash = 'manual_hash';
         } else {
             const db = require('../database/connection');
-            const d = db.prepare('SELECT * FROM knowledge_documents WHERE document_key = ?').get(documentId);
+            const d = db.prepare(
+                'SELECT * FROM knowledge_documents WHERE tenant_id = ? AND document_key = ?'
+            ).get(req.ragTenantId, documentId);
             if (!d) {
                 return res.status(404).json({ success: false, error: 'المستند غير موجود.' });
             }
@@ -1046,7 +1253,9 @@ router.get('/rag/documents/:documentId/preview', async (req, res) => {
             rawText = fs.readFileSync(storagePath, 'utf8');
         } else {
             const fileBuffer = fs.readFileSync(storagePath);
-            const dRecord = require('../database/connection').prepare('SELECT * FROM knowledge_documents WHERE document_key = ?').get(documentId);
+            const dRecord = require('../database/connection').prepare(
+                'SELECT * FROM knowledge_documents WHERE tenant_id = ? AND document_key = ?'
+            ).get(req.ragTenantId, documentId);
             rawText = await extractTextFromBuffer(dRecord.source_type, fileBuffer);
         }
 
@@ -1058,6 +1267,7 @@ router.get('/rag/documents/:documentId/preview', async (req, res) => {
             sourceType,
             originalText: cleanedText,
             documentHash: contentHash
+            ,tenantId: req.ragTenantId
         };
 
         const chunkSize = parseInt(getConfig('RAG_CHUNK_SIZE'), 10) || 800;
@@ -1088,10 +1298,49 @@ router.get('/rag/documents/:documentId/preview', async (req, res) => {
     }
 });
 
+// GET /rag/documents/:documentId/download -> authenticated original document download
+router.get('/rag/documents/:documentId/download', (req, res) => {
+    try {
+        const documentId = req.params.documentId;
+        let storagePath;
+        let downloadName;
+
+        if (documentId === 'manual_text') {
+            storagePath = getManualKnowledgePath(req.ragTenantId);
+            downloadName = 'knowledge.txt';
+        } else {
+            const db = require('../database/connection');
+            const document = db.prepare(`
+                SELECT storage_path, original_name
+                FROM knowledge_documents
+                WHERE tenant_id = ? AND document_key = ?
+            `).get(req.ragTenantId, documentId);
+            if (!document) {
+                return res.status(404).json({ success: false, error: 'المستند غير موجود.' });
+            }
+            storagePath = document.storage_path;
+            downloadName = document.original_name;
+        }
+
+        if (!storagePath || !fs.existsSync(storagePath)) {
+            return res.status(404).json({ success: false, error: 'ملف المستند غير موجود على السيرفر.' });
+        }
+
+        return res.download(storagePath, downloadName, (error) => {
+            if (error && !res.headersSent) {
+                res.status(500).json({ success: false, error: 'تعذر تحميل ملف المستند.' });
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // GET /rag/documents
 router.get('/rag/documents', async (req, res) => {
     try {
         const filters = {
+            tenantId: req.ragTenantId,
             search: req.query.search,
             type: req.query.type,
             status: req.query.status,
@@ -1118,11 +1367,11 @@ router.get('/rag/documents', async (req, res) => {
         }));
 
         // Include manual knowledge.txt as a native document source for beautiful unified UI rendering
-        const kbPath = path.join(__dirname, '..', '..', 'knowledge.txt');
+        const kbPath = getManualKnowledgePath(req.ragTenantId);
         if (fs.existsSync(kbPath)) {
             const stat = fs.statSync(kbPath);
             const { getIndexingState } = require('../rag/indexing/knowledgeIndexingService');
-            const indexState = getIndexingState('knowledge.txt');
+            const indexState = getIndexingState(req.ragTenantId, 'knowledge.txt');
 
             const manualDoc = {
                 id: 9999,
@@ -1174,7 +1423,9 @@ router.get('/rag/documents', async (req, res) => {
 router.get('/rag/documents/:documentId', async (req, res) => {
     try {
         const db = require('../database/connection');
-        const d = db.prepare('SELECT * FROM knowledge_documents WHERE document_key = ?').get(req.params.documentId);
+        const d = db.prepare(`
+            SELECT * FROM knowledge_documents WHERE tenant_id = ? AND document_key = ?
+        `).get(req.ragTenantId, req.params.documentId);
         if (!d) {
             return res.status(404).json({ success: false, error: 'المستند غير موجود' });
         }
@@ -1207,19 +1458,38 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
         return res.status(400).json({ success: false, error: 'الرجاء إرفاق ملف للرفع.' });
     }
 
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
         const overwriteAction = req.body.overwriteAction || req.query.overwriteAction;
         const doc = await kbDocService.uploadAndRegisterDocument(
             req.file.originalname,
             req.file.mimetype,
             req.file.buffer,
-            { overwriteAction }
+            {
+                overwriteAction, tenantId: req.ragTenantId, signal: cancellation.signal,
+                idempotencyKey: req.get('Idempotency-Key') || null
+            }
         );
+        if (cancellation.signal.aborted) return;
+        const { assertActiveDocument } = require('../rag/indexing/indexingLifecycle');
+        assertActiveDocument(doc);
 
         addRAGAuditLog('المشرف', 'رفع مستند المعرفة', doc.original_name, 'نجاح');
 
-        res.json({
+        console.log('[Index] Response sent', {
+            tenantId: req.ragTenantId,
+            documentId: doc.logical_document_id || doc.document_key,
+            versionId: doc.version_id || null,
+            stage: 'active',
+            durationMs: 0
+        });
+        res.status(200).json({
             success: true,
+            documentId: doc.logical_document_id || doc.document_key,
+            versionId: doc.version_id || null,
+            status: doc.status,
+            chunkCount: doc.chunk_count,
+            oldVersionCleanup: doc.oldVersionCleanup || 'not_applicable',
             document: {
                 id: doc.id,
                 documentId: doc.document_key,
@@ -1235,6 +1505,17 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
             }
         });
     } catch (err) {
+        if (err.code === 'RAG_REPLACE_LOCKED') {
+            return ragMutationError(res, err, 'RAG_REPLACE_FAILED');
+        }
+        if (err.previousVersionPreserved) {
+            return res.status(500).json({
+                success: false,
+                stage: err.stage,
+                error: err.message,
+                previousVersionPreserved: true
+            });
+        }
         if (err.code === 'DUPLICATE_UPLOAD') {
             return res.status(400).json({
                 success: false,
@@ -1246,17 +1527,28 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
         if (err.code === 'DUPLICATE_DOCUMENT' || err.message.includes('موجود مسبقاً')) {
             return res.status(400).json({ success: false, error: err.message });
         }
-        res.status(500).json({ success: false, error: err.message });
-    }
+        if (!cancellation.signal.aborted) ragMutationError(res, err, 'RAG_INDEX_FAILED');
+    } finally { cancellation.cleanup(); }
 });
 
 // POST /rag/documents/:documentId/reindex
 router.post('/rag/documents/:documentId/reindex', async (req, res) => {
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
         if (req.params.documentId === 'manual_text') {
             const { reindexKnowledgeBase } = require('../rag/indexing/knowledgeIndexingService');
-            const result = await reindexKnowledgeBase(true);
-            const stat = fs.statSync(path.join(__dirname, '..', '..', 'knowledge.txt'));
+            const result = await reindexKnowledgeBase(true, {
+                tenantId: req.ragTenantId, signal: cancellation.signal,
+                idempotencyKey: req.get('Idempotency-Key') || null
+            });
+            if (cancellation.signal.aborted) return;
+            if (!['active', 'unchanged'].includes(result.status)) {
+                const error = new Error(`حالة الفهرسة النهائية غير صالحة: ${result.status}`);
+                error.code = 'RAG_FINAL_STATE_INVALID';
+                error.stage = 'activation';
+                throw error;
+            }
+            const stat = fs.statSync(getManualKnowledgePath(req.ragTenantId));
             return res.json({
                 success: true,
                 document: {
@@ -1265,7 +1557,7 @@ router.post('/rag/documents/:documentId/reindex', async (req, res) => {
                     originalFilename: 'النص المعرفي اليدوي (knowledge.txt)',
                     fileType: 'MANUAL',
                     fileSize: stat.size,
-                    status: 'indexed',
+                    status: result.status === 'unchanged' ? 'active' : result.status,
                     chunkCount: result.totalVectors,
                     createdAt: stat.birthtime || stat.mtime,
                     indexedAt: new Date().toISOString()
@@ -1273,7 +1565,13 @@ router.post('/rag/documents/:documentId/reindex', async (req, res) => {
             });
         }
 
-        const doc = await kbDocService.reindexDocument(req.params.documentId);
+        const doc = await kbDocService.reindexDocument(req.params.documentId, {
+            tenantId: req.ragTenantId, signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null,
+            operationType: 'document_reindex'
+        });
+        if (cancellation.signal.aborted) return;
+        require('../rag/indexing/indexingLifecycle').assertActiveDocument(doc);
         res.json({
             success: true,
             document: {
@@ -1289,14 +1587,21 @@ router.post('/rag/documents/:documentId/reindex', async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
+        if (!cancellation.signal.aborted) ragMutationError(res, err, 'RAG_INDEX_FAILED');
+    } finally { cancellation.cleanup(); }
 });
 
 // POST /rag/documents/:documentId/retry
 router.post('/rag/documents/:documentId/retry', async (req, res) => {
+    const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
-        const doc = await kbDocService.retryFailedDocument(req.params.documentId);
+        const doc = await kbDocService.retryFailedDocument(req.params.documentId, {
+            tenantId: req.ragTenantId, signal: cancellation.signal,
+            idempotencyKey: req.get('Idempotency-Key') || null,
+            operationType: 'document_retry'
+        });
+        if (cancellation.signal.aborted) return;
+        require('../rag/indexing/indexingLifecycle').assertActiveDocument(doc);
         res.json({
             success: true,
             document: {
@@ -1312,26 +1617,54 @@ router.post('/rag/documents/:documentId/retry', async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
+        if (!cancellation.signal.aborted) ragMutationError(res, err, 'RAG_INDEX_FAILED');
+    } finally { cancellation.cleanup(); }
 });
 
 // DELETE /rag/documents/:documentId
 router.delete('/rag/documents/:documentId', async (req, res) => {
+    let manualLease;
     try {
         if (req.params.documentId === 'manual_text') {
-            // Delete manual knowledge.txt content safely
-            const kbPath = path.join(__dirname, '..', '..', 'knowledge.txt');
-            if (fs.existsSync(kbPath)) {
-                fs.writeFileSync(kbPath, '', 'utf8');
+            manualLease = await require('../rag/runtime/distributedLockService').acquireLease({
+                tenantId: req.ragTenantId,
+                resourceType: 'knowledge_txt',
+                resourceId: 'knowledge.txt',
+                operation: 'knowledge_delete',
+                signal: req.signal,
+                failFast: true,
+                idempotencyKey: req.get('Idempotency-Key') || null
+            });
+            if (manualLease.duplicate) {
+                return res.json({
+                    success: true, duplicate: true,
+                    operationId: manualLease.operation.operation_id
+                });
             }
-            await deleteVectorsByDocument('knowledge.txt');
+            // Delete manual knowledge.txt content safely
+            const kbPath = getManualKnowledgePath(req.ragTenantId);
+            const { deleteVectorsByDocument } = require('../rag/vector/qdrantVectorStore');
+            manualLease.assertOwnership();
+            await deleteVectorsByDocument(req.ragTenantId, 'knowledge.txt');
+            manualLease.assertOwnership();
+            if (fs.existsSync(kbPath)) fs.writeFileSync(kbPath, '', 'utf8');
+            const retrievalCache = require('../rag/cache/retrievalCache');
+            const { getConfig } = require('../rag/config/ragConfig');
+            manualLease.assertOwnership();
+            retrievalCache.invalidate({
+                tenantId: req.ragTenantId,
+                collection: getConfig('QDRANT_COLLECTION'),
+                reason: 'manual-document-deleted'
+            });
 
             const { getIndexingState } = require('../rag/indexing/knowledgeIndexingService');
-            const state = getIndexingState('knowledge.txt');
+            const state = getIndexingState(req.ragTenantId, 'knowledge.txt');
             if (state) {
+                manualLease.assertOwnership();
                 const db = require('../database/connection');
-                db.prepare("DELETE FROM rag_indexing_state WHERE document_id = 'knowledge.txt'").run();
+                db.prepare(
+                    "DELETE FROM rag_indexing_state WHERE tenant_id = ? AND document_id = 'knowledge.txt'"
+                ).run(req.ragTenantId);
             }
 
             try {
@@ -1339,13 +1672,19 @@ router.delete('/rag/documents/:documentId', async (req, res) => {
                 publish('rag:document-deleted', { documentId: 'manual_text', status: 'deleted' });
             } catch (evErr) {}
 
+            await manualLease.release({ result: { success: true, documentId: 'manual_text' } });
+            manualLease = null;
             return res.json({ success: true, message: 'تم حذف النص المعرفي اليدوي بنجاح.' });
         }
 
-        await kbDocService.deleteDocument(req.params.documentId);
+        await kbDocService.deleteDocument(req.params.documentId, {
+            tenantId: req.ragTenantId,
+            idempotencyKey: req.get('Idempotency-Key') || null
+        });
         res.json({ success: true, message: 'تم حذف المستند والمتجهات المرافقة بنجاح.' });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        if (manualLease && !manualLease.duplicate) await manualLease.release({ error: err });
+        ragMutationError(res, err, 'RAG_DELETE_FAILED');
     }
 });
 
@@ -1467,10 +1806,11 @@ router.post('/ai-tasks/test', async (req, res) => {
         console.log(`[AI Model Test] Success. Task: ${task}, Provider: ${result.provider}, Model: ${result.model}`);
         res.json(result);
     } catch (err) {
-        console.warn(`[AI Model Test] Failed. Task: ${task || 'missing'}, Error: ${err.message}`);
+        console.warn(`[AI Model Test] Failed. Task: ${task || 'missing'}, Code: ${err.code || 'UNKNOWN'}, Error: ${err.message}`);
         res.status(err.statusCode || 500).json({
             success: false,
-            error: err.message || 'فشل اختبار الموديل.'
+            error: err.message || 'فشل اختبار الموديل.',
+            code: err.code || 'MODEL_TEST_FAILED'
         });
     }
 });

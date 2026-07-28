@@ -1,7 +1,16 @@
 const { addLog, reportError } = require('./logger');
-const { retrieveContextAsync, getSystemPrompt } = require('./knowledge');
+const {
+    retrieveContextAsync,
+    getSystemPrompt,
+    getLastRetrievalMetadata
+} = require('./knowledge');
 const { getChatHistoryForAI } = require('../database/repositories/messageRepository');
 const { validateAnswer: runValidation } = require('../rag/intelligence/answerValidator');
+const {
+    shouldBlockOpenDomain,
+    blockOpenDomain,
+    validateWithPolicy
+} = require('../rag/runtime/fallbackPolicy');
 const PromptBuilder = require('./PromptBuilder');
 const OpenRouterService = require('./OpenRouterService');
 const { performance } = require('perf_hooks');
@@ -62,8 +71,8 @@ class PipelineProfiler {
  * 1. retrieveContext()
  * Retrieves context asynchronously using the retrieval engine.
  */
-async function retrieveContext(userText, profiler = null) {
-    return await retrieveContextAsync(userText, profiler);
+async function retrieveContext(userText, profiler = null, retrievalContext = {}) {
+    return await retrieveContextAsync(userText, profiler, retrievalContext);
 }
 
 /**
@@ -107,10 +116,7 @@ async function callOpenRouter(messagesPayload, taskName = 'text_generation', opt
  * Validates raw LLM response against context if context exists.
  */
 function validateAnswer(rawResponse, context) {
-    if (context) {
-        return runValidation(rawResponse, context);
-    }
-    return rawResponse;
+    return runValidation(rawResponse, context);
 }
 
 /**
@@ -145,7 +151,8 @@ async function fetchOpenRouterGenerationDetails(generationId, apiKey) {
  * Now expanded with Task-Based Image Understanding routing support!
  */
 async function getAIResponse(userId, userText, messageType = 'text', mediaObj = null, routing = {}) {
-    const tenantId = routing.tenantId || 'default';
+    const { requireTenantId } = require('../rag/security/tenantContext');
+    const tenantId = requireTenantId(routing.tenantId, 'ai-rag-response');
     const startTime = Date.now();
     const profiler = new PipelineProfiler();
 
@@ -217,7 +224,25 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     // 2. Retrieve Context (RAG)
     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
     const retrievalText = isImage ? (mediaObj.caption || '') : userText;
-    const context = await retrieveContext(retrievalText, profiler);
+    const retrievalTelemetry = routing.retrievalTelemetry
+        && typeof routing.retrievalTelemetry === 'object'
+        ? routing.retrievalTelemetry
+        : {};
+    const context = await retrieveContext(retrievalText, profiler, {
+        tenantId,
+        telemetry: retrievalTelemetry
+    });
+    const retrievalMetadata = retrievalTelemetry.metadata || getLastRetrievalMetadata();
+    if (!String(context || '').trim()
+        && shouldBlockOpenDomain({ knowledgeBaseOnly: routing.knowledgeBaseOnly })) {
+        const blockedAnswer = blockOpenDomain(tenantId, 'insufficient_context');
+        return validateWithPolicy({
+            answer: blockedAnswer,
+            context,
+            validator: validateAnswer,
+            tenantId
+        });
+    }
 
     // 3. Fetch clean conversation history (unmodified)
     const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
@@ -271,7 +296,12 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     let validatedResponse = null;
     if (rawResponse) {
         profiler.startStage('Answer Validation');
-        validatedResponse = validateAnswer(rawResponse, context);
+        validatedResponse = validateWithPolicy({
+            answer: rawResponse,
+            context,
+            validator: validateAnswer,
+            tenantId
+        });
         profiler.endStage('Answer Validation');
     }
 
@@ -480,6 +510,8 @@ Saved: ${result.success ? 'true' : 'false'}`);
     console.log(`  • Completion Token Estimate: ~${completionTokensEstimate} tokens`);
     console.log(`  • Model Used: ${report.apiDetails.model}`);
     console.log(`  • Provider: ${report.apiDetails.provider}`);
+    console.log(`  • Retrieval Mode: ${retrievalMetadata.retrievalMode}`);
+    console.log(`  • Retrieval Degraded: ${retrievalMetadata.degraded ? 'yes' : 'no'}`);
 
     // Bottleneck Detection
     if (slowestName) {

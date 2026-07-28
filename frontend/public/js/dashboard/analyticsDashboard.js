@@ -720,11 +720,6 @@ window.Dashboard.analytics = {
                 if (select) select.value = stats.ragIndexOnStartup ? "true" : "false";
                 window.Dashboard.state.isRagIndexOnStartupLoaded = true;
             }
-            if (stats.ragLegacyFallback !== undefined && !window.Dashboard.state.isRagLegacyFallbackLoaded) {
-                const select = document.getElementById('rag-legacy-fallback-select');
-                if (select) select.value = stats.ragLegacyFallback ? "true" : "false";
-                window.Dashboard.state.isRagLegacyFallbackLoaded = true;
-            }
             if (stats.ragNeighborExpansion !== undefined && !window.Dashboard.state.isRagNeighborExpansionLoaded) {
                 const select = document.getElementById('rag-neighbor-expansion-select');
                 if (select) select.value = stats.ragNeighborExpansion ? "true" : "false";

@@ -14,11 +14,34 @@ const DEFAULTS = {
     RAG_EMBEDDING_MODEL: 'nomic-embed-text',
     QDRANT_COLLECTION: 'futhing_knowledge',
     RAG_INDEX_ON_STARTUP: 'true',
-    RAG_LEGACY_FALLBACK: 'true',
+    RAG_ENABLE_FALLBACK: 'true',
+    RAG_ALLOW_RERANK_FALLBACK: 'true',
+    RAG_ALLOW_EMBEDDING_PROVIDER_SWITCH: 'false',
+    RAG_FAIL_OPEN_ON_VALIDATOR: 'false',
+    RAG_FAIL_OPEN_ON_PROMPT_GUARD: 'false',
+    RAG_ALLOW_OPEN_DOMAIN: 'false',
+    RAG_KNOWLEDGE_BASE_ONLY: 'true',
     QDRANT_URL: 'http://127.0.0.1:6333',
     QDRANT_API_KEY: '',
     OLLAMA_BASE_URL: 'http://127.0.0.1:11434',
     RAG_EMBEDDING_TIMEOUT_MS: 30000,
+    RAG_OLLAMA_EMBED_TIMEOUT_MS: 30000,
+    RAG_OLLAMA_HEALTH_TIMEOUT_MS: 5000,
+    RAG_EMBEDDING_DIMENSION: 768,
+    RAG_QDRANT_SEARCH_TIMEOUT_MS: 10000,
+    RAG_QDRANT_UPLOAD_TIMEOUT_MS: 30000,
+    RAG_QDRANT_DELETE_TIMEOUT_MS: 15000,
+    RAG_QDRANT_COUNT_TIMEOUT_MS: 10000,
+    RAG_QDRANT_SCROLL_TIMEOUT_MS: 15000,
+    RAG_QDRANT_HEALTH_TIMEOUT_MS: 5000,
+    RAG_QDRANT_UPLOAD_BATCH_SIZE: 64,
+    RAG_RETRY_MAX_ATTEMPTS: 3,
+    RAG_RETRY_BASE_DELAY_MS: 300,
+    RAG_RETRY_MAX_DELAY_MS: 3000,
+    RAG_MAX_CHUNKS_PER_DOCUMENT: 5000,
+    RAG_MAX_FILE_SIZE_BYTES: 10485760,
+    RAG_MAX_EXTRACTED_TEXT_LENGTH: 10000000,
+    RAG_SHUTDOWN_GRACE_MS: 15000,
     // Part 2 configurable settings defaults
     RAG_MIN_TOP_K: 3,
     RAG_DEFAULT_TOP_K: 5,
@@ -27,9 +50,64 @@ const DEFAULTS = {
     RAG_SEMANTIC_WEIGHT: 0.80,
     RAG_KEYWORD_WEIGHT: 0.20,
     RAG_SIMILARITY_THRESHOLD: 0.40,
+    RAG_RETRIEVAL_CACHE_TTL_MS: 300000,
+    RAG_RETRIEVAL_CACHE_MAX_ENTRIES: 1000,
+    RAG_EMBEDDING_CONCURRENCY: 4,
+    RAG_QDRANT_TIMEOUT_MS: 30000,
+    RAG_RECONCILIATION_ENABLED: 'false',
+    RAG_RECONCILIATION_INTERVAL_HOURS: 24,
+    RAG_RECONCILIATION_BATCH_SIZE: 100,
+    RAG_RECONCILIATION_MAX_RUNTIME_MS: 30000,
+    RAG_RECONCILIATION_LOCK_TTL_MS: 600000,
+    RAG_ORPHAN_GRACE_PERIOD_HOURS: 24,
     RAG_NEIGHBOR_EXPANSION: 'false',
-    RAG_CONTEXT_BUDGET: 3000
+    RAG_CONTEXT_BUDGET: 3000,
+    RAG_INJECTION_GUARD_ENABLED: 'true',
+    RAG_INJECTION_BLOCK_HIGH_RISK: 'true',
+    RAG_INJECTION_SCAN_ON_INGEST: 'true',
+    RAG_INJECTION_SCAN_ON_RETRIEVAL: 'true',
+    RAG_INJECTION_MAX_SIGNALS: 20
 };
+
+const RUNTIME_LIMITS = {
+    RAG_OLLAMA_EMBED_TIMEOUT_MS: [100, 300000],
+    RAG_OLLAMA_HEALTH_TIMEOUT_MS: [100, 60000],
+    RAG_EMBEDDING_DIMENSION: [1, 65536],
+    RAG_QDRANT_SEARCH_TIMEOUT_MS: [100, 120000],
+    RAG_QDRANT_UPLOAD_TIMEOUT_MS: [100, 300000],
+    RAG_QDRANT_DELETE_TIMEOUT_MS: [100, 300000],
+    RAG_QDRANT_COUNT_TIMEOUT_MS: [100, 120000],
+    RAG_QDRANT_SCROLL_TIMEOUT_MS: [100, 300000],
+    RAG_QDRANT_HEALTH_TIMEOUT_MS: [100, 60000],
+    RAG_EMBEDDING_CONCURRENCY: [1, 32],
+    RAG_QDRANT_UPLOAD_BATCH_SIZE: [1, 512],
+    RAG_RETRY_MAX_ATTEMPTS: [1, 10],
+    RAG_RETRY_BASE_DELAY_MS: [1, 30000],
+    RAG_RETRY_MAX_DELAY_MS: [1, 60000],
+    RAG_MAX_CHUNKS_PER_DOCUMENT: [1, 50000],
+    RAG_MAX_FILE_SIZE_BYTES: [1024, 104857600],
+    RAG_MAX_EXTRACTED_TEXT_LENGTH: [1000, 100000000],
+    RAG_SHUTDOWN_GRACE_MS: [100, 120000]
+};
+
+function validateRuntimeConfig() {
+    const errors = [];
+    for (const [key, [min, max]] of Object.entries(RUNTIME_LIMITS)) {
+        const value = Number(getConfig(key));
+        if (!Number.isFinite(value) || !Number.isInteger(value) || value < min || value > max) {
+            errors.push(`${key} must be an integer between ${min} and ${max}.`);
+        }
+    }
+    const base = Number(getConfig('RAG_RETRY_BASE_DELAY_MS'));
+    const max = Number(getConfig('RAG_RETRY_MAX_DELAY_MS'));
+    if (base > max) errors.push('RAG_RETRY_BASE_DELAY_MS must not exceed RAG_RETRY_MAX_DELAY_MS.');
+    if (errors.length) {
+        const error = new Error(`[RAG Config] Invalid runtime configuration: ${errors.join(' ')}`);
+        error.code = 'RAG_INVALID_RUNTIME_CONFIG';
+        throw error;
+    }
+    return true;
+}
 
 /**
  * Retrieves the effective configuration value based on precedence:
@@ -58,6 +136,18 @@ function getConfig(key) {
  * Returns { valid: boolean, error?: string }
  */
 function validateSetting(key, value) {
+    if (RUNTIME_LIMITS[key]) {
+        const [min, max] = RUNTIME_LIMITS[key];
+        const number = Number(value);
+        if (!Number.isFinite(number) || !Number.isInteger(number)
+            || number < min || number > max) {
+            return {
+                valid: false,
+                error: `${key} must be an integer between ${min} and ${max}.`
+            };
+        }
+        return { valid: true };
+    }
     switch (key) {
         case 'RAG_CHUNK_SIZE': {
             const num = parseInt(value, 10);
@@ -102,11 +192,28 @@ function validateSetting(key, value) {
             break;
         }
         case 'RAG_INDEX_ON_STARTUP':
-        case 'RAG_LEGACY_FALLBACK':
-        case 'RAG_NEIGHBOR_EXPANSION': {
+        case 'RAG_ENABLE_FALLBACK':
+        case 'RAG_ALLOW_RERANK_FALLBACK':
+        case 'RAG_ALLOW_EMBEDDING_PROVIDER_SWITCH':
+        case 'RAG_FAIL_OPEN_ON_VALIDATOR':
+        case 'RAG_FAIL_OPEN_ON_PROMPT_GUARD':
+        case 'RAG_ALLOW_OPEN_DOMAIN':
+        case 'RAG_KNOWLEDGE_BASE_ONLY':
+        case 'RAG_NEIGHBOR_EXPANSION':
+        case 'RAG_INJECTION_GUARD_ENABLED':
+        case 'RAG_INJECTION_BLOCK_HIGH_RISK':
+        case 'RAG_INJECTION_SCAN_ON_INGEST':
+        case 'RAG_INJECTION_SCAN_ON_RETRIEVAL': {
             const str = String(value).toLowerCase();
             if (str !== 'true' && str !== 'false' && str !== '1' && str !== '0') {
                 return { valid: false, error: 'القيمة يجب أن تكون منطقية (مفعل/معطل).' };
+            }
+            break;
+        }
+        case 'RAG_INJECTION_MAX_SIGNALS': {
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 1 || num > 100) {
+                return { valid: false, error: 'RAG_INJECTION_MAX_SIGNALS must be between 1 and 100.' };
             }
             break;
         }
@@ -116,6 +223,34 @@ function validateSetting(key, value) {
             const num = parseInt(value, 10);
             if (isNaN(num) || num < 1 || num > 50) {
                 return { valid: false, error: `${key} يجب أن يكون رقماً صحيحاً بين 1 و 50.` };
+            }
+            break;
+        }
+        case 'RAG_RETRIEVAL_CACHE_TTL_MS': {
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 1000 || num > 86400000) {
+                return { valid: false, error: 'مدة كاش الاسترجاع يجب أن تكون بين ثانية واحدة و24 ساعة.' };
+            }
+            break;
+        }
+        case 'RAG_RETRIEVAL_CACHE_MAX_ENTRIES': {
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 1 || num > 100000) {
+                return { valid: false, error: 'الحد الأقصى لكاش الاسترجاع يجب أن يكون بين 1 و100000.' };
+            }
+            break;
+        }
+        case 'RAG_EMBEDDING_CONCURRENCY': {
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 1 || num > 16) {
+                return { valid: false, error: 'تزامن إنشاء المتجهات يجب أن يكون بين 1 و16.' };
+            }
+            break;
+        }
+        case 'RAG_QDRANT_TIMEOUT_MS': {
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 1000 || num > 120000) {
+                return { valid: false, error: 'مهلة Qdrant يجب أن تكون بين ثانية واحدة ودقيقتين.' };
             }
             break;
         }
@@ -191,5 +326,7 @@ module.exports = {
     DEFAULTS,
     getConfig,
     validateSetting,
-    validateAllSettings
+    validateAllSettings,
+    validateRuntimeConfig,
+    RUNTIME_LIMITS
 };

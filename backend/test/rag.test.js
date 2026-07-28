@@ -279,7 +279,7 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
                 return {
                     ok: true,
                     json: async () => ({
-                        embedding: [0.1, 0.2, -0.5, 0.99] // 4-dimensional vector
+                        embedding: Array.from({ length: 768 }, (_, index) => index === 0 ? 0.1 : 0.001)
                     })
                 };
             }
@@ -297,7 +297,7 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
                         result: {
                             config: {
                                 params: {
-                                    vectors: { size: 4 }
+                                    vectors: { size: 768 }
                                 }
                             },
                             vectors_count: 5
@@ -316,6 +316,7 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
                                 id: stringToDeterministicUUID('test_chunk_1'),
                                 score: 0.85,
                                 payload: {
+                                    tenantId: 'default',
                                     chunkId: 'test_chunk_1',
                                     documentId: 'test_doc',
                                     text: 'هذا مقطع تجريبي عن سياسة الشحن والدفع بالموقع.',
@@ -333,16 +334,17 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
                 return {
                     ok: true,
                     json: async () => ({
-                        result: [
+                        result: { points: [
                             {
                                 id: stringToDeterministicUUID('test_chunk_2'),
                                 payload: {
+                                    tenantId: 'default',
                                     chunkId: 'test_chunk_2',
                                     documentId: 'test_doc',
                                     text: 'هذا مقطع مكمل تالٍ لسياسة الشحن والدفع.'
                                 }
                             }
-                        ]
+                        ] }
                     })
                 };
             }
@@ -364,12 +366,36 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
             fs.writeFileSync(testKbPath, 'س: ما هو سعر الشحن؟\nج: سعر الشحن مجاني.', 'utf8');
             process.env.RAG_TEST_KB_PATH = testKbPath;
 
-            const result = await reindexKnowledgeBase(true);
-            assert.strictEqual(result.status, 'indexed');
+            const indexedPoints = new Map();
+            const atomicDependencies = {
+                checkQdrantReady: async () => true,
+                checkModelAvailability: async () => true,
+                initCollection: async () => true,
+                generateEmbeddings: async texts => texts.map(() => [0.1, -0.2, 0.45, 0.99]),
+                upsertVectors: async (chunks, vectors) => {
+                    indexedPoints.set(chunks[0].indexVersionId, chunks.map((chunk, i) => ({
+                        payload: chunk,
+                        vector: vectors[i]
+                    })));
+                },
+                getPointsByIndexVersion: async (_tenant, id) => indexedPoints.get(id) || [],
+                queryIndexVersion: async (_vector, id) => indexedPoints.has(id) ? [{}] : [],
+                setIndexVersionLifecycle: async () => true,
+                deleteVectorsByIndexVersion: async (_tenant, id) => indexedPoints.delete(id),
+                deleteVectorsByDocument: async () => true,
+                setDocumentVectorsLifecycle: async () => true,
+                invalidateCache: () => true
+            };
+            const result = await reindexKnowledgeBase(true, {
+                tenantId: 'default', _testDependencies: atomicDependencies
+            });
+            assert.strictEqual(result.status, 'active');
             assert.ok(result.totalVectors > 0);
 
             // Unchanged skip indexing check
-            const skipResult = await reindexKnowledgeBase(false);
+            const skipResult = await reindexKnowledgeBase(false, {
+                tenantId: 'default', _testDependencies: atomicDependencies
+            });
             assert.strictEqual(skipResult.status, 'unchanged');
             assert.strictEqual(skipResult.chunksCreated, 0);
 
@@ -379,11 +405,11 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
         });
 
         await t.test('Authenticated status health service returns valid model', async () => {
-            const h = await getRAGSystemStatus();
+            const h = await getRAGSystemStatus('default');
             assert.strictEqual(h.qdrantReachable, true);
             assert.strictEqual(h.ollamaReachable, true);
             assert.strictEqual(h.modelAvailable, true);
-            assert.strictEqual(h.retrievalMode, 'vector-ready');
+            assert.strictEqual(h.retrievalMode, 'NORMAL');
             assert.strictEqual(h.infrastructureMode, 'healthy');
         });
 
@@ -392,7 +418,7 @@ test('RAG Core, Processing, and Vector Infrastructure Suite', async (t) => {
             saveSetting('RAG_NEIGHBOR_EXPANSION', 'true');
 
             // Retrieve context
-            const ctxText = await retrieveContextAsync('ما هو سعر الشحن؟');
+            const ctxText = await retrieveContextAsync('ما هو سعر الشحن؟', null, { tenantId: 'default' });
             assert.ok(ctxText.includes('هذا مقطع تجريبي'));
             assert.ok(ctxText.includes('هذا مقطع مكمل تالٍ')); // verified neighbor expansion
         });

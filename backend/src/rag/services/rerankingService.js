@@ -1,4 +1,5 @@
 const { normalizeArabic } = require('../processing/arabicNormalizer');
+const { RISK, scanText } = require('../security/promptInjectionGuard');
 
 /**
  * Deterministically re-ranks candidate chunks based on final score, exact phrase matching, and token coverage.
@@ -24,11 +25,21 @@ function rerankCandidates(candidates, query, dynamicTopK, similarityThreshold) {
         // Token coverage bonus based on keywordScore
         const coverageBonus = c.keywordScore * 0.10;
 
-        const rerankScore = c.finalScore + phraseMatchBonus + coverageBonus;
+        const injectionGuard = c.injectionGuard || scanText(c.text, {
+            tenantId: c.tenantId || c.payload?.tenantId,
+            documentId: c.documentId || c.payload?.documentId,
+            chunkId: c.chunkId || c.payload?.chunkId
+        });
+        const injectionPenalty = injectionGuard.riskLevel === RISK.SUSPICIOUS ? 0.2
+            : injectionGuard.riskLevel === RISK.HIGH ? 1
+                : injectionGuard.riskLevel === RISK.BLOCKED ? 2 : 0;
+        const rerankScore = c.finalScore + phraseMatchBonus + coverageBonus - injectionPenalty;
 
         return {
             ...c,
             coverageScore: c.keywordScore,
+            injectionGuard,
+            injectionPenalty,
             rerankScore: Math.min(1.5, rerankScore) // Bound gracefully
         };
     });

@@ -1,0 +1,10 @@
+{
+  "scenario": "retrieval",
+  "concurrency": 250,
+  "requests": 5000,
+  "timeoutMs": 30000,
+  "minAvailability": 0.999,
+  "maxErrorRate": 0.001,
+  "maxP95Ms": 3000,
+  "maxP99Ms": 6000
+}
