@@ -89,9 +89,10 @@ async function testAIModel(task, options = {}) {
     if (providerName === 'ollama' || providerName === 'openrouter') {
         const body = await response.json();
         const models = providerName === 'ollama' ? body.models : body.data;
-        const found = Array.isArray(models) && models.some(item =>
-            normalizeModelId(item?.name || item?.id) === normalizeModelId(model)
-        );
+        const found = Array.isArray(models) && models.some(item => {
+            const providerModelId = providerName === 'ollama' ? item?.name : item?.id;
+            return normalizeModelId(providerModelId) === normalizeModelId(model);
+        });
         if (!found) {
             const error = new Error(`الموديل ${model} غير متوفر لدى المزوّد.`);
             error.statusCode = 409;

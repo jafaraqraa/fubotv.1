@@ -24,6 +24,7 @@ window.Dashboard.navigation = {
         });
 
         const titleElement = document.getElementById('page-title');
+        const subtitleElement = document.getElementById('page-subtitle');
 
         ['btn-chat', 'btn-errors', 'btn-settings', 'btn-whatsapp', 'btn-analytics', 'btn-rag', 'btn-aimodels', 'btn-usage'].forEach(id => {
             const btn = document.getElementById(id);
@@ -45,7 +46,11 @@ window.Dashboard.navigation = {
 
         if (sectionId === 'chat-section') {
             if (activeEl) activeEl.classList.add('flex');
-            if (titleElement) titleElement.innerText = "إدارة البوت والمحادثات المباشرة";
+            if (titleElement) titleElement.innerText = "إدارة الدعم والمحادثات المباشرة";
+            if (subtitleElement) {
+                subtitleElement.innerText = "تواصل مع عملائك عبر القنوات المفعّلة في النظام من مكان واحد";
+                subtitleElement.classList.remove('hidden');
+            }
         } else if (sectionId === 'errors-section') {
             if (activeEl) activeEl.classList.add('block');
             if (titleElement) titleElement.innerText = "سجل استقرار النظام";
@@ -85,6 +90,7 @@ window.Dashboard.navigation = {
             if (titleElement) titleElement.innerText = "الإعدادات العامة وقنوات الاتصال";
             window.Dashboard.analytics.fetchStatsAndUsers();
         }
+        if (sectionId !== 'chat-section' && subtitleElement) subtitleElement.classList.add('hidden');
     },
 
     hasUnsavedChanges: function() {

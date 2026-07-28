@@ -37,6 +37,45 @@ window.Dashboard.aimodels = {
         ]
     },
 
+    normalizeCustomModels: function(models) {
+        const unique = new Map();
+        (Array.isArray(models) ? models : []).forEach(model => {
+            const provider = String(model?.provider || '').toLowerCase().trim();
+            const id = String(model?.id || '').trim();
+            const name = String(model?.name || '').trim();
+            if (provider && id && name) unique.set(`${provider}\u0000${id}`, { provider, id, name });
+        });
+        return Array.from(unique.values());
+    },
+
+    validateCustomModel: function(providerValue, nameValue, idValue) {
+        const provider = String(providerValue || '').toLowerCase().trim();
+        const name = String(nameValue || '').trim();
+        const id = String(idValue || '').trim();
+        const supported = new Set(['openrouter', 'openai', 'gemini', 'ollama']);
+        if (!supported.has(provider)) return { valid: false, error: 'مزود الموديل غير مدعوم.' };
+        if (name.length < 2 || name.length > 80) return { valid: false, error: 'اسم العرض يجب أن يكون بين حرفين و80 حرفاً.' };
+        if (/[\u0000-\u001f<>]/.test(name)) return { valid: false, error: 'اسم العرض يحتوي على رموز غير مسموحة.' };
+        if (!id || id.length > 160 || !/^[A-Za-z0-9._:/-]+$/.test(id)) {
+            return { valid: false, error: 'معرّف الموديل غير صالح. استخدم أحرفاً وأرقاماً والرموز . _ : / - فقط.' };
+        }
+        const lowerId = id.toLowerCase();
+        if (provider === 'gemini' && (id.includes('/') || !lowerId.startsWith('gemini-'))) {
+            return { valid: false, error: 'موديلات Gemini يجب أن تبدأ بـ gemini- وألا تحتوي على /.' };
+        }
+        if (provider === 'openai' && (id.includes('/') || !/^(gpt-|o1-|whisper-|tts-|text-)/i.test(id))) {
+            return { valid: false, error: 'معرّف OpenAI يجب أن يبدأ مثل gpt- أو o1- أو whisper- أو tts- ومن دون /.' };
+        }
+        if (provider === 'openrouter' && !id.includes('/')) {
+            return { valid: false, error: 'معرّف OpenRouter يجب أن يحتوي اسم الجهة والموديل، مثل google/gemini-2.5-pro.' };
+        }
+        const allModels = this.normalizeCustomModels(window.Dashboard.state.customModels);
+        const duplicate = allModels.some(model => model.provider === provider && model.id.toLowerCase() === lowerId)
+            || (this.standardModels[provider] || []).some(model => model.id.toLowerCase() === lowerId);
+        if (duplicate) return { valid: false, error: `المعرّف (${id}) موجود مسبقاً لهذا المزوّد.` };
+        return { valid: true, provider, name, id };
+    },
+
     init: async function() {
         console.log("🤖 Initializing AI Models Module...");
         const usageReport = document.getElementById('ai-models-usage-report');
@@ -51,10 +90,10 @@ window.Dashboard.aimodels = {
             try {
                 const parsed = JSON.parse(window.Dashboard.state.settings.aiCustomModels);
                 if (parsed && typeof parsed === 'object' && parsed.models) {
-                    window.Dashboard.state.customModels = parsed.models;
+                    window.Dashboard.state.customModels = this.normalizeCustomModels(parsed.models);
                     window.Dashboard.state.customModelsTimestamp = parsed.updatedAt || 0;
                 } else if (Array.isArray(parsed)) {
-                    window.Dashboard.state.customModels = parsed;
+                    window.Dashboard.state.customModels = this.normalizeCustomModels(parsed);
                     window.Dashboard.state.customModelsTimestamp = 0;
                 }
             } catch (e) {
@@ -62,6 +101,7 @@ window.Dashboard.aimodels = {
                 window.Dashboard.state.customModels = [];
             }
         }
+        window.Dashboard.state.customModels = this.normalizeCustomModels(window.Dashboard.state.customModels);
         await this.loadTasks();
     },
 
@@ -247,7 +287,7 @@ window.Dashboard.aimodels = {
             if (m.provider === provider) {
                 // Avoid duplicates in dropdown
                 if (!models.some(item => item.id === m.id)) {
-                    models.push({ id: m.id, name: `${m.name} (مخصص)` });
+                    models.push({ id: m.id, name: `${m.name} — ${m.id} (مخصص)` });
                 }
             }
         });
@@ -371,13 +411,20 @@ async function deleteCustomModelFlow(modelId, provider) {
         const modal = document.getElementById('delete-custom-model-modal');
         const oldConfirmBtn = document.getElementById('delete-custom-model-confirm-btn');
         if (!modal || !oldConfirmBtn) return;
+        const modelRecord = (window.Dashboard.state.customModels || [])
+            .find(model => model.provider === provider && model.id === modelId);
+        const confirmationText = document.getElementById('delete-custom-model-confirm-text');
+        if (confirmationText) {
+            confirmationText.textContent = `هل أنت متأكد من حذف “${modelRecord?.name || modelId}”؟ لا يمكن التراجع عن هذا الإجراء.`;
+        }
         const confirmBtn = oldConfirmBtn.cloneNode(true);
         oldConfirmBtn.replaceWith(confirmBtn);
 
         modal.classList.remove('hidden');
 
         confirmBtn.addEventListener('click', async function() {
-            window.hideDeleteCustomModelModal();
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'جاري الحذف…';
 
             // Filter only the selected provider/model pair. Different providers
             // are allowed to use the same model identifier.
@@ -405,6 +452,7 @@ async function deleteCustomModelFlow(modelId, provider) {
                 const settingsResult = await settingsResponse.json();
 
                 if (settingsResult.success) {
+                    window.hideDeleteCustomModelModal();
                     // Update selectors on settings drawer & aimodels modal
                     await window.Dashboard.settings.populateModelsDropdown(provider);
                     if (window.Dashboard.aimodels && window.Dashboard.aimodels.populateModelsDropdown) {
@@ -428,10 +476,14 @@ async function deleteCustomModelFlow(modelId, provider) {
                     }
                 } else {
                     window.Dashboard.state.customModels = previousModels;
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'حذف الموديل';
                     alert(`فشل الحفظ بالسيرفر: ${settingsResult.error}`);
                 }
             } catch (err) {
                 window.Dashboard.state.customModels = previousModels;
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'حذف الموديل';
                 alert(`خطأ في الاتصال: ${err.message}`);
             }
         });
@@ -482,7 +534,7 @@ window.saveAIModelCustomModel = async function() {
     window.Dashboard.state.customModelsTimestamp = now;
 
     // Add to global state custom models list
-    window.Dashboard.state.customModels = window.Dashboard.state.customModels || [];
+    window.Dashboard.state.customModels = window.Dashboard.aimodels.normalizeCustomModels(window.Dashboard.state.customModels);
     window.Dashboard.state.customModels.push({ provider, name, id });
 
     // Persist immediately in settings database (prevent duplicate configuration)
@@ -602,6 +654,11 @@ window.Dashboard.aimodels.openAddCustomModelForTask = function(taskId, currentPr
     document.getElementById('aimodels-card-custom-provider').value = currentProvider;
     document.getElementById('aimodels-card-custom-name').value = '';
     document.getElementById('aimodels-card-custom-id').value = '';
+    const errorBox = document.getElementById('aimodels-card-custom-error');
+    if (errorBox) {
+        errorBox.textContent = '';
+        errorBox.classList.add('hidden');
+    }
 
     modal.classList.remove('hidden');
 };
@@ -617,31 +674,29 @@ window.saveAICardCustomModel = async function() {
     const name = document.getElementById('aimodels-card-custom-name').value.trim();
     const id = document.getElementById('aimodels-card-custom-id').value.trim();
 
-    if (!name || !id) {
-        alert('يرجى إدخال اسم العرض ومعرّف النموذج المخصص.');
+    const validation = window.Dashboard.aimodels.validateCustomModel(provider, name, id);
+    const validationBox = document.getElementById('aimodels-card-custom-error');
+    if (!validation.valid) {
+        if (validationBox) {
+            validationBox.textContent = validation.error;
+            validationBox.classList.remove('hidden');
+        }
         return;
     }
-
-    // Prevent duplicate Model IDs for the same provider
-    const isDuplicateCustom = (window.Dashboard.state.customModels || []).some(
-        m => m.provider === provider && m.id === id
-    );
-    const standardForProvider = window.Dashboard.aimodels.standardModels[provider] || [];
-    const isDuplicateStandard = standardForProvider.some(m => m.id === id);
-
-    if (isDuplicateCustom || isDuplicateStandard) {
-        alert(`عذراً، هذا المعرّف (${id}) موجود مسبقاً لهذا المزود (${provider}). يرجى استخدام معرّف فريد.`);
-        return;
-    }
+    if (validationBox) validationBox.classList.add('hidden');
 
     // Create new timestamp
     const now = Date.now();
     window.Dashboard.state.customModelsTimestamp = now;
 
     // Add to state list
-    window.Dashboard.state.customModels = window.Dashboard.state.customModels || [];
+    window.Dashboard.state.customModels = window.Dashboard.aimodels.normalizeCustomModels(window.Dashboard.state.customModels);
     window.Dashboard.state.customModels.push({ provider, name, id });
+    const previousModels = window.Dashboard.state.customModels.filter(
+        model => !(model.provider === provider && model.id === id)
+    );
 
+    let customPersisted = false;
     try {
         // 1. Save the custom model to the database
         const settingsPayload = {
@@ -658,9 +713,11 @@ window.saveAICardCustomModel = async function() {
         const settingsResult = await settingsResponse.json();
 
         if (!settingsResult.success) {
+            window.Dashboard.state.customModels = previousModels;
             alert(`فشل حفظ النموذج المخصص بالسيرفر: ${settingsResult.error}`);
             return;
         }
+        customPersisted = true;
 
         // Fetch updated stats to ensure synchronization with true database state
         const statsResp = await window.Dashboard.api.request('/api/stats');
@@ -721,6 +778,7 @@ window.saveAICardCustomModel = async function() {
             alert(`فشل تعيين النموذج للمهمة: ${taskResult.error}`);
         }
     } catch (err) {
+        if (!customPersisted) window.Dashboard.state.customModels = previousModels;
         console.error("Failed to complete save flow for custom model:", err);
         alert(`خطأ في الاتصال أثناء حفظ الموديل: ${err.message}`);
     }

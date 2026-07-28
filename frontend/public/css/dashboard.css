@@ -308,3 +308,90 @@ body { font-family: 'Cairo', 'Inter', sans-serif; }
     .ai-model-card { min-height: 300px; }
     .ai-models-tip button { width: 100%; }
 }
+
+/* Unified support workspace — uses only configured system channels */
+.dashboard-topbar { min-height: 72px; padding-block: 14px; }
+#chat-section.channel-workspace {
+    direction: rtl; padding: 18px; gap: 16px; background: #f7f9fc;
+}
+.chat-customers-panel {
+    width: 330px; flex: 0 0 330px; border-radius: 15px;
+    border-color: #e3e8ef; box-shadow: 0 4px 16px rgba(15,23,42,.035);
+}
+.chat-customers-panel > div:first-child { padding: 17px 18px; background: #fff; }
+.chat-customers-panel [data-chat-filter] {
+    min-width: max-content; min-height: 32px; padding-inline: 9px;
+    border-radius: 8px; font-size: 8px;
+}
+.chat-customer-search {
+    position: relative; margin: 11px 13px; border: 1px solid #dde4ed;
+    border-radius: 9px; background: #fff;
+}
+.chat-customer-search input {
+    width: 100%; padding: 10px 12px 10px 34px; border: 0; outline: 0;
+    color: #334155; background: transparent; font-size: 9px;
+}
+.chat-customer-search span {
+    position: absolute; left: 11px; top: 50%; color: #8ca0ba;
+    font-size: 16px; transform: translateY(-52%);
+}
+.chat-customer-row { min-height: 78px; gap: 10px; border-inline-start: 0 !important; }
+.chat-customer-row.is-selected {
+    background: linear-gradient(90deg, rgba(37,99,235,.035), rgba(37,99,235,.09));
+    box-shadow: inset -3px 0 #2563eb;
+}
+.chat-customer-avatar {
+    display: grid; place-items: center; width: 39px; height: 39px; flex: 0 0 39px;
+    border-radius: 50%; color: #fff; background: #64748b;
+    font-size: 10px; font-weight: 800;
+}
+.chat-customer-avatar.is-whatsapp { background: linear-gradient(145deg,#22c55e,#078c4d); }
+.chat-customer-avatar.is-telegram { background: linear-gradient(145deg,#55ace3,#168bd0); }
+.chat-customer-avatar.is-messenger { background: linear-gradient(145deg,#5b7cff,#7357e8); }
+.chat-customer-avatar.is-instagram { background: linear-gradient(145deg,#f43f83,#9333ea); }
+#chat-section .channel-conversation-shell {
+    min-width: 410px; border-radius: 15px; border-color: #e3e8ef;
+    box-shadow: 0 4px 18px rgba(15,23,42,.04);
+}
+.chat-insights-panel { width: 300px; flex: 0 0 300px; gap: 15px; }
+.chat-statistics-card, .chat-activity-card {
+    border-radius: 15px; border-color: #e3e8ef;
+    box-shadow: 0 4px 16px rgba(15,23,42,.035);
+}
+.chat-statistics-card > h3 {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; color: #172033; font-size: 11px; font-weight: 800;
+}
+.chat-statistics-card > h3 span { color: #2563eb; font-size: 17px; }
+.chat-statistics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+.chat-statistics-grid div {
+    display: grid; place-items: center; min-height: 75px; padding: 9px;
+    border-radius: 11px; background: linear-gradient(145deg,#f8faff,#f2f6fb);
+}
+.chat-statistics-grid div:nth-child(3) { background: linear-gradient(145deg,#f1fbf5,#edf9f2); }
+.chat-statistics-grid strong { color: #2563eb; font-size: 19px; font-weight: 800; }
+.chat-statistics-grid div:nth-child(3) strong { color: #16a34a; }
+.chat-statistics-grid span { margin-top: 2px; color: #68768b; font-size: 8px; font-weight: 700; }
+.chat-system-state {
+    display: block; width: max-content; margin: 12px auto 0; padding: 4px 9px;
+    border-radius: 999px; color: #159455; background: #eaf9f1;
+    font-size: 8px; font-weight: 800;
+}
+.chat-activity-card { min-height: 285px; height: auto; }
+.chat-activity-card #live-logs-box > div {
+    display: flex; gap: 7px; padding: 7px 2px; border-color: #edf1f5 !important;
+    color: #526177; text-transform: none;
+}
+.chat-activity-card #live-logs-box span:first-child { color: #8da0b8 !important; opacity: 1 !important; }
+.chat-activity-card #live-logs-box span:last-child { color: #425168 !important; }
+
+@media (max-width: 1250px) {
+    .chat-insights-panel { display: none !important; }
+}
+@media (max-width: 767px) {
+    #chat-section.channel-workspace { padding: 0; gap: 0; }
+    .chat-customers-panel { width: 100%; flex-basis: 100%; border-radius: 0; }
+    #chat-section .channel-conversation-shell { min-width: 0; border-radius: 0; }
+    .dashboard-topbar { padding-inline: 16px; }
+    #page-subtitle { display: none; }
+}

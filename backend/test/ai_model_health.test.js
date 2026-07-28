@@ -28,6 +28,24 @@ async function run() {
     assert.strictEqual(localResult.success, true);
     assert.strictEqual(localResult.provider, 'ollama');
 
+    const openrouter = {
+        constructor: { name: 'OpenRouterProvider' },
+        model: 'google/gemini-2.5-pro',
+        apiKey: 'test-secret',
+        baseUrl: 'https://openrouter.ai/api/v1'
+    };
+    const routerResult = await testAIModel('text_generation', {
+        provider: openrouter,
+        fetchImpl: async () => response({
+            data: [{
+                id: 'google/gemini-2.5-pro',
+                name: 'Google: Gemini 2.5 Pro'
+            }]
+        })
+    });
+    assert.strictEqual(routerResult.success, true);
+    assert.strictEqual(routerResult.provider, 'openrouter');
+
     const gemini = {
         constructor: { name: 'GeminiProvider' },
         model: 'gemini-2.5-flash',

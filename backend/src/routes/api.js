@@ -300,9 +300,11 @@ router.post('/config/settings', async (req, res) => {
             process.env.AI_BASE_URL = String(aiBaseUrl);
         }
         if (aiCustomModels !== undefined) {
-            saveSetting('AI_CUSTOM_MODELS', String(aiCustomModels));
-            updateEnvFile('AI_CUSTOM_MODELS', String(aiCustomModels));
-            process.env.AI_CUSTOM_MODELS = String(aiCustomModels);
+            const { validateCustomModelsPayload } = require('../services/customModelValidation');
+            const validatedCustomModels = validateCustomModelsPayload(aiCustomModels);
+            saveSetting('AI_CUSTOM_MODELS', validatedCustomModels);
+            updateEnvFile('AI_CUSTOM_MODELS', validatedCustomModels);
+            process.env.AI_CUSTOM_MODELS = validatedCustomModels;
         }
         if (publicBackendUrl !== undefined) {
             saveSetting('PUBLIC_BACKEND_URL', String(publicBackendUrl));

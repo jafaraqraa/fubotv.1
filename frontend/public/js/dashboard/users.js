@@ -2,12 +2,21 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.users = {
+    searchQuery: '',
+
     init: function() {
         document.querySelectorAll('[data-chat-filter]').forEach(button => {
             button.addEventListener('click', () => this.setChatFilter(button.dataset.chatFilter));
         });
         const unreadToggle = document.getElementById('unread-only-toggle');
         if (unreadToggle) unreadToggle.addEventListener('change', () => this.toggleUnreadFilter());
+        const searchInput = document.getElementById('chat-customer-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                this.searchQuery = searchInput.value.trim().toLowerCase();
+                this.renderUsersList();
+            });
+        }
     },
 
     setChatFilter: function(filter) {
@@ -42,6 +51,12 @@ window.Dashboard.users = {
         if (window.Dashboard.state.showUnreadOnly) {
             filteredUsers = filteredUsers.filter(u => u.unreadCount > 0);
         }
+        if (this.searchQuery) {
+            filteredUsers = filteredUsers.filter(user =>
+                String(user.name || '').toLowerCase().includes(this.searchQuery)
+                || String(user.id || '').toLowerCase().includes(this.searchQuery)
+            );
+        }
 
         const platformColors = {
             telegram: 'bg-blue-400',
@@ -53,10 +68,15 @@ window.Dashboard.users = {
         const dom = window.Dashboard.utils;
         const rows = filteredUsers.map(user => {
             const row = dom.createElement('div', {
-                className: `p-4 hover:bg-slate-50 cursor-pointer transition flex justify-between items-center ${String(window.Dashboard.state.selectedUserId) === String(user.id) ? 'bg-blue-50/50 border-r-2 border-blue-600' : ''}`
+                className: `chat-customer-row p-4 hover:bg-slate-50 cursor-pointer transition flex justify-between items-center ${String(window.Dashboard.state.selectedUserId) === String(user.id) ? 'is-selected bg-blue-50/50 border-r-2 border-blue-600' : ''}`
             });
             row.addEventListener('click', () => window.Dashboard.chat.selectUser(user.id));
 
+            const initials = String(user.name || user.platform || '?').trim().split(/\s+/).slice(0, 2).map(part => part.charAt(0)).join('');
+            const avatar = dom.createElement('span', {
+                className: `chat-customer-avatar is-${user.platform}`,
+                text: initials || '?'
+            });
             const details = dom.createElement('div', { className: 'flex-1 min-w-0 ml-2' });
             const titleRow = dom.createElement('div', { className: 'flex items-center gap-2' });
             titleRow.append(
@@ -87,7 +107,7 @@ window.Dashboard.users = {
                     text: user.unreadCount
                 }));
             }
-            row.append(details, activity);
+            row.append(avatar, details, activity);
             return row;
         });
 
@@ -98,6 +118,15 @@ window.Dashboard.users = {
             }));
         }
         listContainer.replaceChildren(...rows);
+
+        const activeStat = document.getElementById('chat-stat-active');
+        const unreadStat = document.getElementById('chat-stat-unread');
+        if (activeStat) activeStat.textContent = window.Dashboard.state.usersCache.length;
+        if (unreadStat) {
+            unreadStat.textContent = window.Dashboard.state.usersCache.reduce(
+                (sum, user) => sum + Number(user.unreadCount || 0), 0
+            );
+        }
     }
 };
 

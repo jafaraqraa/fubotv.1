@@ -1515,8 +1515,11 @@ window.saveCustomModelUI = async function() {
     const id = document.getElementById('custom-model-id').value.trim();
     const provider = document.getElementById('ai-provider-select').value;
 
-    if (!name || !id) {
-        alert('يرجى إدخال اسم العرض ومعرّف النموذج.');
+    const validation = window.Dashboard.aimodels
+        ? window.Dashboard.aimodels.validateCustomModel(provider, name, id)
+        : { valid: Boolean(name && id), error: 'يرجى إدخال اسم العرض ومعرّف النموذج.' };
+    if (!validation.valid) {
+        alert(validation.error);
         return;
     }
 
@@ -1525,8 +1528,13 @@ window.saveCustomModelUI = async function() {
     window.Dashboard.state.customModelsTimestamp = now;
 
     // Add to state list
-    window.Dashboard.state.customModels = window.Dashboard.state.customModels || [];
+    window.Dashboard.state.customModels = window.Dashboard.aimodels
+        ? window.Dashboard.aimodels.normalizeCustomModels(window.Dashboard.state.customModels)
+        : (window.Dashboard.state.customModels || []);
     window.Dashboard.state.customModels.push({ provider, name, id });
+    const previousModels = window.Dashboard.state.customModels.filter(
+        model => !(model.provider === provider && model.id === id)
+    );
 
     // Persist immediately in settings database
     try {
@@ -1569,9 +1577,11 @@ window.saveCustomModelUI = async function() {
 
             window.Dashboard.settings.showToast('تمت إضافة النموذج المخصص بنجاح وجعله متاحاً فوراً.');
         } else {
+            window.Dashboard.state.customModels = previousModels;
             alert(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
         }
     } catch (err) {
+        window.Dashboard.state.customModels = previousModels;
         console.error("Failed to persist custom model:", err);
         alert(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
     }
