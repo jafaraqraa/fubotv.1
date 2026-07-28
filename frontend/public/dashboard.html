@@ -1619,18 +1619,18 @@
                                         <option value="ollama">Ollama</option>
                                     </select>
                                 </div>
-                                <div id="ai-api-key-container">
+                                <div id="ai-api-key-container" style="display: none !important;">
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">مفتاح واجهة البرمجة (API Key)</label>
                                     <div class="relative">
                                         <input id="openrouter-input" type="password" class="futh-input pe-10" placeholder="Secret Key ID">
                                         <button onclick="togglePasswordVisibility('openrouter-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
                                 </div>
-                                <div id="ai-base-url-container" class="hidden">
+                                <div id="ai-base-url-container" style="display: none !important;">
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">عنوان الاتصال (Base URL - اختياري)</label>
                                     <input id="ai-base-url-input" type="text" class="futh-input" placeholder="http://127.0.0.1:11434">
                                 </div>
-                                <div>
+                                <div style="display: none !important;">
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">AI Intelligence Model</label>
                                     <select id="model-select" class="futh-input bg-white">
                                         <!-- Will be dynamically populated by JS based on selected provider -->
