@@ -1583,6 +1583,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (provSelect) {
         provSelect.addEventListener('change', (e) => {
             const val = e.target.value;
+            window.Dashboard.state.selectedAiProvider = val;
             const keyContainer = document.getElementById('ai-api-key-container');
             const urlContainer = document.getElementById('ai-base-url-container');
 

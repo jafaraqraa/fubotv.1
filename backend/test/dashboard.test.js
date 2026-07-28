@@ -35,7 +35,7 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
             'users.js', 'chat.js', 'composer.js', 'conversationControls.js',
             'analyticsApi.js', 'analyticsStore.js', 'analyticsDashboard.js',
             'errors.js', 'whatsapp.js', 'settings.js',
-            'aimodels.js', 'broadcast.js', 'main.js'
+            'aimodels.js', 'main.js'
         ];
 
         modules.forEach(file => {
@@ -66,7 +66,7 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
             'current-chat-user', 'current-chat-id', 'chat-assignee-select',
             'assignee-container', 'chat-box', 'media-preview-container',
             'media-filename', 'media-upload-input', 'canned-responses-overlay',
-            'direct-msg-input', 'send-btn', 'broadcast-msg', 'stat-users',
+            'direct-msg-input', 'send-btn', 'stat-users',
             'stat-messages', 'stat-status', 'live-logs-box', 'errors-table-body',
             'platformChart', 'messageChart', 'wa-connection-badge', 'wa-qr-container',
             'wa-logout-btn', 'knowledge-input', 'confirm-modal'
@@ -97,7 +97,6 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
             '/js/dashboard/whatsapp.js',
             '/js/dashboard/settings.js',
             '/js/dashboard/aimodels.js',
-            '/js/dashboard/broadcast.js',
             '/js/dashboard/main.js'
         ];
 

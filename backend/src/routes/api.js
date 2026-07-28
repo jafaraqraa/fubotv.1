@@ -3,9 +3,8 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const { addLog, reportError, getRecentLogs, listErrors, getActiveErrorsCount, solveError } = require('../services/logger');
-const { getBot, getIsValidToken, startBot } = require('../channels/telegram');
-const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUrl, startWhatsApp } = require('../channels/whatsapp');
-const { sendMetaMessage } = require('../channels/meta');
+const { getIsValidToken, startBot } = require('../channels/telegram');
+const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUrl } = require('../channels/whatsapp');
 const { updateEnvFile } = require('../utils/helpers');
 
 function addRAGAuditLog(user, action, target, result) {
@@ -455,6 +454,8 @@ router.post('/config/settings', async (req, res) => {
 // 4. جلب الإحصائيات مع الحماية التامة وحظر إرسال التوكنات كاملة للواجهة لمنع الاختراق
 router.get('/stats', (req, res) => {
     const { getConfig } = require('../rag/config/ragConfig');
+    const textGenerationConfig = require('../database/repositories/aiTaskRepository')
+        .getTaskConfig('text_generation');
     const knowledgePath = path.join(__dirname, '..', '..', 'knowledge.txt');
     const knowledgeText = fs.existsSync(knowledgePath) ? fs.readFileSync(knowledgePath, 'utf8') : '';
 
@@ -512,8 +513,8 @@ router.get('/stats', (req, res) => {
         instagramToken: maskSecret(process.env.INSTAGRAM_ACCESS_TOKEN),
         metaVerifyToken: maskSecret(process.env.META_VERIFY_TOKEN),
 
-        aiProvider: process.env.AI_PROVIDER || 'openrouter',
-        aiModel: process.env.AI_MODEL || process.env.OPENROUTER_MODEL || 'openrouter/free',
+        aiProvider: textGenerationConfig?.provider || process.env.AI_PROVIDER || 'openrouter',
+        aiModel: textGenerationConfig?.model || process.env.AI_MODEL || process.env.OPENROUTER_MODEL || 'openrouter/free',
         aiApiKey: maskSecret(process.env.AI_API_KEY || ''),
         aiBaseUrl: process.env.AI_BASE_URL || '',
         aiCustomModels: process.env.AI_CUSTOM_MODELS || '[]',
@@ -570,51 +571,6 @@ router.post('/errors/solve', (req, res) => {
     solveError(id);
     addLog(`تم تعليم العطل كـ 'تم الحل'`);
     res.json({ success: true });
-});
-
-// بث جماعي ذكي ومفلتر يوجه الرسائل تلقائياً لجميع القنوات بدقة متناهية
-router.post('/broadcast', async (req, res) => {
-    const { message } = req.body;
-    const usersArray = listCustomerUsers();
-    if (usersArray.length === 0) return res.json({ success: false, error: 'لا يوجد مستخدمون متصلون بالمنصة حالياً لبث الإعلان.' });
-
-    const broadcastStats = {
-        telegram: { success: 0, fail: 0 },
-        whatsapp: { success: 0, fail: 0 },
-        messenger: { success: 0, fail: 0 },
-        instagram: { success: 0, fail: 0 }
-    };
-
-    addLog(`📢 جاري البدء في بث جماعي ذكي للإعلان لـ ${usersArray.length} مشترك...`);
-
-    for (const user of usersArray) {
-        const userId = user.id;
-        try {
-            if (user.platform === 'telegram' && getBot() && getIsValidToken()) {
-                await getBot().telegram.sendMessage(userId, `📢 إعلان جماعي من الإدارة:\n\n${message}`);
-                broadcastStats.telegram.success++;
-            } else if (user.platform === 'whatsapp' && getWaClient() && getWaStatus() === "متصل") {
-                await getWaClient().sendMessage(userId, `📢 إعلان جماعي من الإدارة:\n\n${message}`);
-                broadcastStats.whatsapp.success++;
-            } else if (user.platform === 'messenger' || user.platform === 'instagram') {
-                await sendMetaMessage(userId, message, user.platform);
-                broadcastStats[user.platform].success++;
-            } else {
-                broadcastStats[user.platform ? user.platform : 'telegram'].fail++;
-            }
-        } catch (e) {
-            const platformName = user.platform ? user.platform : 'telegram';
-            broadcastStats[platformName].fail++;
-            reportError("إرسال بث جماعي", `فشل الإرسال للمستخدم ${userId}: ${e.message}`);
-        }
-    }
-
-    addLog(`✅ اكتمل البث الجماعي للإعلان بنجاح!`);
-    res.json({
-        success: true,
-        message: 'اكتمل إرسال البث الجماعي لكافة القنوات المفعّلة بنجاح!',
-        stats: broadcastStats
-    });
 });
 
 router.post('/config/knowledge', (req, res) => {
@@ -803,28 +759,22 @@ router.post('/whatsapp/logout', async (req, res) => {
     setLastQrCodeUrl("");
 
     try {
-        if (getWaClient()) {
+        const manager = require('../channels/whatsapp-providers/WhatsAppProviderManager');
+        const currentClient = getWaClient();
+        if (currentClient) {
             try {
-                await getWaClient().destroy();
+                // LocalAuth.logout() clears the authenticated session intentionally.
+                await currentClient.logout();
             } catch (e) {
-                console.log("تم تدمير المحرك بنجاح أو كان مغلقاً بالفعل.");
+                console.log("تم تسجيل خروج محرك واتساب أو كانت الجلسة مغلقة بالفعل.");
             }
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        const authPath = path.join(__dirname, '..', '..', '.wwebjs_auth');
-        const cachePath = path.join(__dirname, '..', '..', '.wwebjs_cache');
-
-        if (fs.existsSync(authPath)) {
-            fs.rmSync(authPath, { recursive: true, force: true });
-        }
-        if (fs.existsSync(cachePath)) {
-            fs.rmSync(cachePath, { recursive: true, force: true });
-        }
-
-        addLog("🧼 تم تصفير وحذف ملفات جلسة الواتساب المعلقة بنجاح.");
-        startWhatsApp();
+        const db = require('../database/connection');
+        const row = db.prepare("SELECT provider_type, config_json FROM whatsapp_tenant_configs WHERE tenant_id = 'default'").get();
+        const providerType = row ? row.provider_type : 'web';
+        const config = row ? JSON.parse(row.config_json || '{}') : {};
+        await manager.switchProvider('default', providerType, config);
 
         res.json({ success: true, message: "تم فصل الاتصال بنجاح وتصفير المحادثة، جاري توليد كود QR جديد..." });
     } catch (err) {
@@ -1470,52 +1420,11 @@ router.post('/providers/usage-limits/refresh', async (req, res) => {
     }
 });
 
-// AI Usage & Billing APIs (Obsolete /usage/* routes removed in rebuild)
-const OpenRouterBalanceService = require('../services/OpenRouterBalanceService');
-
-router.get('/providers/openrouter/balance', async (req, res) => {
-    try {
-        const balance = await OpenRouterBalanceService.getBalance(false);
-        if (!balance || !balance.success) {
-            const errBody = {
-                success: false,
-                error: balance ? balance.errorMessage : 'Failed to retrieve balance',
-                balance: null
-            };
-            console.log('📤 [Balance API] Body المرسل إلى الـFrontend:', JSON.stringify(errBody));
-            return res.json(errBody);
-        }
-        const successBody = { success: true, balance };
-        console.log('📤 [Balance API] Body المرسل إلى الـFrontend:', JSON.stringify(successBody));
-        res.json(successBody);
-    } catch (err) {
-        const errBody = { success: false, error: err.message, balance: null };
-        console.log('📤 [Balance API] Exception Body المرسل إلى الـFrontend:', JSON.stringify(errBody));
-        res.status(500).json(errBody);
-    }
-});
-
-router.all('/providers/openrouter/balance/refresh', async (req, res) => {
-    try {
-        const balance = await OpenRouterBalanceService.getBalance(true);
-        if (!balance || !balance.success) {
-            const errBody = {
-                success: false,
-                error: balance ? balance.errorMessage : 'Failed to retrieve balance',
-                balance: null
-            };
-            console.log('📤 [Balance API Refresh] Body المرسل إلى الـFrontend:', JSON.stringify(errBody));
-            return res.json(errBody);
-        }
-        const successBody = { success: true, balance };
-        console.log('📤 [Balance API Refresh] Body المرسل إلى الـFrontend:', JSON.stringify(successBody));
-        res.json(successBody);
-    } catch (err) {
-        const errBody = { success: false, error: err.message, balance: null };
-        console.log('📤 [Balance API Refresh] Exception Body المرسل إلى الـFrontend:', JSON.stringify(errBody));
-        res.status(500).json(errBody);
-    }
-});
+const providerBalanceController = require('../controllers/providerBalanceController');
+router.post('/providers/balance', (req, res, next) => {
+    console.log(`[Balance Route] Incoming provider: ${req.body.provider}`);
+    next();
+}, providerBalanceController.getBalance);
 
 const aiTaskRepository = require('../database/repositories/aiTaskRepository');
 
@@ -1531,14 +1440,47 @@ router.get('/ai-tasks', (req, res) => {
 
 // POST /ai-tasks -> update specific AI task model configuration
 router.post('/ai-tasks', (req, res) => {
-    const { task, provider, model, api_key_ref, enabled } = req.body;
+    const { task, provider, model, enabled } = req.body;
     if (!task || !provider || !model) {
         return res.status(400).json({ success: false, error: 'بيانات ناقصة لإعداد المهمة الذكية.' });
     }
 
     try {
-        aiTaskRepository.saveTaskConfig({ task, provider, model, api_key_ref, enabled });
-        addLog(`[إعدادات AI] تم تحديث إعداد المهمة الذكية [${task}] لـ المزود: [${provider}] والموديل: [${model}]`);
+        const supportedTasks = new Set([
+            'text_generation', 'vision', 'speech_to_text',
+            'text_to_speech', 'embedding', 'reranker'
+        ]);
+        const normalizedProvider = String(provider).toLowerCase().trim();
+        const normalizedModel = String(model).trim();
+        const providerKeyRefs = {
+            openrouter: 'OPENROUTER_API_KEY',
+            openai: 'OPENAI_API_KEY',
+            gemini: 'GEMINI_API_KEY',
+            ollama: ''
+        };
+
+        if (!supportedTasks.has(task)) {
+            return res.status(400).json({ success: false, error: 'مهمة AI غير مدعومة.' });
+        }
+        if (!Object.prototype.hasOwnProperty.call(providerKeyRefs, normalizedProvider)) {
+            return res.status(400).json({ success: false, error: 'مزود AI غير مدعوم.' });
+        }
+        if (!/^[A-Za-z0-9._:/-]+$/.test(normalizedModel)) {
+            return res.status(400).json({ success: false, error: 'معرّف الموديل يحتوي على رموز غير صالحة.' });
+        }
+
+        const { validateProviderModelCombination } = require('../services/aiProviders');
+        validateProviderModelCombination(normalizedProvider, normalizedModel);
+        const api_key_ref = providerKeyRefs[normalizedProvider];
+
+        aiTaskRepository.saveTaskConfig({
+            task,
+            provider: normalizedProvider,
+            model: normalizedModel,
+            api_key_ref,
+            enabled
+        });
+        addLog(`[إعدادات AI] تم تحديث إعداد المهمة الذكية [${task}] لـ المزود: [${normalizedProvider}] والموديل: [${normalizedModel}]`);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });

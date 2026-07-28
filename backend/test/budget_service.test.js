@@ -14,6 +14,10 @@ if (fs.existsSync(testDbPath + '-shm')) fs.unlinkSync(testDbPath + '-shm');
 const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
 const budgetService = require('../src/services/budgetService');
+const ProviderAdapterFactory = require('../src/services/adapters/ProviderAdapterFactory');
+const GeminiAdapter = require('../src/services/adapters/GeminiAdapter');
+const OpenRouterAdapter = require('../src/services/adapters/OpenRouterAdapter');
+const balanceCacheRepo = require('../src/database/repositories/providerBalanceCacheRepository');
 
 test('Redesigned AI Provider Budget System Suite', async (t) => {
 
@@ -117,6 +121,35 @@ test('Redesigned AI Provider Budget System Suite', async (t) => {
         // OpenAI handles standard fallback elegantly
         assert.strictEqual(all.openai.limitsAvailable, false);
         assert.strictEqual(all.openai.limit, null);
+    });
+
+    await t.test('7. Adapter factory selects the requested provider without fallback', () => {
+        assert.ok(ProviderAdapterFactory.getAdapter('gemini', 'gemini-key') instanceof GeminiAdapter);
+        assert.ok(ProviderAdapterFactory.getAdapter('openrouter', 'openrouter-key') instanceof OpenRouterAdapter);
+        assert.strictEqual(ProviderAdapterFactory.getAdapter('', 'key'), null);
+        assert.strictEqual(ProviderAdapterFactory.getAdapter('unsupported', 'key'), null);
+    });
+
+    await t.test('8. Gemini balance routing never executes OpenRouter and caches by provider', async () => {
+        await budgetService.addApiKey('Gemini Test', 'gemini', 'gemini-test-key');
+
+        const geminiBalance = await budgetService.getProviderBalance('gemini', true);
+        assert.strictEqual(geminiBalance.provider, 'gemini');
+        assert.strictEqual(geminiBalance.success, true);
+        assert.strictEqual(geminiBalance.capabilities.supportsBalance, false);
+
+        const openRouterBalance = await budgetService.getProviderBalance('openrouter', true);
+        assert.strictEqual(openRouterBalance.provider, 'openrouter');
+        assert.strictEqual(openRouterBalance.success, true);
+        assert.strictEqual(openRouterBalance.capabilities.supportsBalance, true);
+
+        const geminiCache = balanceCacheRepo.getBalanceCache('gemini');
+        const openRouterCache = balanceCacheRepo.getBalanceCache('openrouter');
+        assert.ok(geminiCache);
+        assert.ok(openRouterCache);
+        assert.strictEqual(geminiCache.provider, 'gemini');
+        assert.strictEqual(openRouterCache.provider, 'openrouter');
+        assert.notStrictEqual(geminiCache.provider, openRouterCache.provider);
     });
 
     // Cleanup files safely after test suite finishes

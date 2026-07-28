@@ -257,7 +257,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     console.log(`🤖 AI Provider API Request completed at: ${new Date(apiEnd).toISOString()}`);
 
     const apiLatency = apiEnd - apiStart;
-    profiler.recordDuration('OpenRouter API', apiLatency);
+    const providerApiStage = `${activeProviderName.charAt(0).toUpperCase()}${activeProviderName.slice(1)} API`;
+    profiler.recordDuration(providerApiStage, apiLatency);
     profiler.setApiDetails({ latency: apiLatency, startedAt: apiStart, completedAt: apiEnd });
 
     if (!rawResponse && trackSuccess === 1) {
@@ -420,7 +421,7 @@ Saved: ${result.success ? 'true' : 'false'}`);
         { key: 'Cross Encoder', label: 'Cross Encoder' },
         { key: 'Context Optimizer', label: 'Context Optimizer' },
         { key: 'Prompt Builder', label: 'Prompt Builder' },
-        { key: 'OpenRouter API', label: 'OpenRouter API' },
+        { key: providerApiStage, label: providerApiStage },
         { key: 'Answer Validation', label: 'Answer Validation' }
     ];
 

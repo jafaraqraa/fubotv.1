@@ -8,7 +8,7 @@ class ProviderAdapterFactory {
      * Instantiates the correct concrete Adapter for a given provider and API Key.
      */
     static getAdapter(providerName, apiKey, baseUrl = '') {
-        const provider = (providerName || 'openrouter').toLowerCase().trim();
+        const provider = String(providerName || '').toLowerCase().trim();
         switch (provider) {
             case 'openrouter':
                 return new OpenRouterAdapter(apiKey, baseUrl);

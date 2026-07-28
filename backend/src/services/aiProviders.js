@@ -300,7 +300,7 @@ class GeminiProvider extends AIProvider {
             console.log(`[AI Request Prep]
 Selected Provider: gemini
 Selected Model: ${model}
-HTTP Endpoint: ${url}
+HTTP Endpoint: https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=[REDACTED]
 Adapter Used: GeminiProvider`);
 
             if (this.constructor.name !== 'GeminiProvider') {
@@ -608,10 +608,11 @@ function getAIProviderForTask(taskName) {
         if (config.api_key_ref) {
             apiKey = process.env[config.api_key_ref] || settingsRepository.getSetting(config.api_key_ref);
         }
-        // Fallbacks if not found
+        // Resolve the active key for this exact provider from the centralized
+        // API-key registry. Never fall back to another provider's credentials.
         if (!apiKey && providerKey !== 'ollama') {
-            apiKey = process.env.AI_API_KEY || settingsRepository.getSetting('AI_API_KEY') ||
-                     process.env.OPENROUTER_API_KEY || settingsRepository.getSetting('OPENROUTER_API_KEY');
+            const { getApiKeyForProvider } = require('./budgetService');
+            apiKey = getApiKeyForProvider(providerKey);
         }
 
         const baseUrl = process.env.AI_BASE_URL;
@@ -658,5 +659,6 @@ module.exports = {
     OllamaProvider,
     getAIProvider,
     getAIProviderForTask,
+    validateProviderModelCombination,
     getLastResponseMetadata
 };

@@ -3,6 +3,10 @@ window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.state = {
     selectedUserId: null,
+    // Authoritative provider loaded from settings or updated by the provider dropdown.
+    // Keep this null during bootstrap so the DOM's first <option> is never mistaken
+    // for the persisted provider.
+    selectedAiProvider: null,
     isModelLoaded: false,
     isKnowledgeLoaded: false,
     isPromptLoaded: false,

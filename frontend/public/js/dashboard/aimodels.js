@@ -239,7 +239,8 @@ window.Dashboard.aimodels = {
         if (deleteContainer) {
             const updateDeleteBtnVisibility = () => {
                 const val = select.value;
-                const isCustom = (window.Dashboard.state.customModels || []).some(m => m.id === val);
+                const isCustom = (window.Dashboard.state.customModels || [])
+                    .some(m => m.provider === provider && m.id === val);
                 if (isCustom) {
                     deleteContainer.classList.remove('hidden');
                 } else {
@@ -276,7 +277,8 @@ async function deleteCustomModelFlow(modelId, provider) {
     if (!modelId) return;
 
     // Check if it's a custom model
-    const isCustom = (window.Dashboard.state.customModels || []).some(m => m.id === modelId);
+    const isCustom = (window.Dashboard.state.customModels || [])
+        .some(m => m.provider === provider && m.id === modelId);
     if (!isCustom) {
         alert('يمكن فقط حذف الموديلات المخصصة المنشأة بواسطة المستخدم.');
         return;
@@ -288,7 +290,9 @@ async function deleteCustomModelFlow(modelId, provider) {
         const data = await response.json();
 
         if (data.success && Array.isArray(data.tasks)) {
-            const assignedTasks = data.tasks.filter(t => t.model === modelId);
+            const assignedTasks = data.tasks.filter(
+                t => t.provider === provider && t.model === modelId
+            );
             if (assignedTasks.length > 0) {
                 const taskTitles = assignedTasks.map(t => {
                     const meta = window.Dashboard.aimodels.tasksMetadata[t.task];
@@ -309,8 +313,12 @@ async function deleteCustomModelFlow(modelId, provider) {
         confirmBtn.onclick = async function() {
             window.hideDeleteCustomModelModal();
 
-            // Filter out model
-            window.Dashboard.state.customModels = (window.Dashboard.state.customModels || []).filter(m => m.id !== modelId);
+            // Filter only the selected provider/model pair. Different providers
+            // are allowed to use the same model identifier.
+            const previousModels = [...(window.Dashboard.state.customModels || [])];
+            window.Dashboard.state.customModels = previousModels.filter(
+                m => !(m.provider === provider && m.id === modelId)
+            );
 
             // Construct payload and save
             const now = Date.now();
@@ -353,9 +361,11 @@ async function deleteCustomModelFlow(modelId, provider) {
                         alert('تم حذف النموذج المخصص بنجاح!');
                     }
                 } else {
+                    window.Dashboard.state.customModels = previousModels;
                     alert(`فشل الحفظ بالسيرفر: ${settingsResult.error}`);
                 }
             } catch (err) {
+                window.Dashboard.state.customModels = previousModels;
                 alert(`خطأ في الاتصال: ${err.message}`);
             }
         };
@@ -389,6 +399,15 @@ window.saveAIModelCustomModel = async function() {
 
     if (!name || !id) {
         alert('يرجى إدخال اسم العرض ومعرّف النموذج المخصص.');
+        return;
+    }
+
+    const isDuplicateCustom = (window.Dashboard.state.customModels || [])
+        .some(m => m.provider === provider && m.id === id);
+    const isDuplicateStandard = (window.Dashboard.aimodels.standardModels[provider] || [])
+        .some(m => m.id === id);
+    if (isDuplicateCustom || isDuplicateStandard) {
+        alert(`عذراً، هذا المعرّف (${id}) موجود مسبقاً لهذا المزود.`);
         return;
     }
 
@@ -442,9 +461,13 @@ window.saveAIModelCustomModel = async function() {
 
             alert('تمت إضافة النموذج المخصص وجعله متاحاً للتحديد فوراً!');
         } else {
+            window.Dashboard.state.customModels = (window.Dashboard.state.customModels || [])
+                .filter(m => !(m.provider === provider && m.id === id));
             alert(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
         }
     } catch (err) {
+        window.Dashboard.state.customModels = (window.Dashboard.state.customModels || [])
+            .filter(m => !(m.provider === provider && m.id === id));
         console.error("Failed to persist custom model:", err);
         alert(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
     }
@@ -487,6 +510,11 @@ window.saveAIModelTaskConfig = async function() {
         const data = await response.json();
 
         if (data.success) {
+            if (task === 'text_generation') {
+                window.Dashboard.state.selectedAiProvider = provider;
+                const providerSelect = document.getElementById('ai-provider-select');
+                if (providerSelect) providerSelect.value = provider;
+            }
             window.hideAIModelModal();
             // Refresh grid
             await window.Dashboard.aimodels.loadTasks();
@@ -605,6 +633,11 @@ window.saveAICardCustomModel = async function() {
         const taskResult = await taskResponse.json();
 
         if (taskResult.success) {
+            if (taskId === 'text_generation') {
+                window.Dashboard.state.selectedAiProvider = provider;
+                const providerSelect = document.getElementById('ai-provider-select');
+                if (providerSelect) providerSelect.value = provider;
+            }
             // Hide the modal
             window.hideAICardCustomModelModal();
 

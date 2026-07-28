@@ -9,7 +9,7 @@ window.Dashboard.analyticsStore = (function() {
         models: [],
         history: [],
         live: [],
-        openRouterBalance: null,
+        providerBalance: null,
         lastUpdated: null,
         listeners: []
     };
@@ -53,8 +53,8 @@ window.Dashboard.analyticsStore = (function() {
         notify();
     }
 
-    function setOpenRouterBalance(balance) {
-        state.openRouterBalance = balance;
+    function setProviderBalance(provider, balance) {
+        state.providerBalance = { provider, balance };
         state.lastUpdated = new Date();
         notify();
     }
@@ -90,7 +90,7 @@ window.Dashboard.analyticsStore = (function() {
         setModels,
         setHistory,
         setLive,
-        setOpenRouterBalance,
+        setProviderBalance,
         subscribe
     };
 })();

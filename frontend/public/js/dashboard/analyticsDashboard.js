@@ -38,6 +38,17 @@ window.Dashboard.analyticsDashboard = (function() {
             const api = window.Dashboard.analyticsApi;
             const store = window.Dashboard.analyticsStore;
             const tenantId = 'default';
+            const selectedProvider = window.Dashboard.state.selectedAiProvider;
+            const balanceRequest = selectedProvider
+                ? api.fetchProviderBalance(selectedProvider, manualTrigger).catch(err => {
+                    console.warn(`Failed to retrieve ${selectedProvider} balance:`, err.message);
+                    return null;
+                })
+                : Promise.resolve(null);
+
+            if (!selectedProvider) {
+                console.log('[Balance Frontend] Provider settings are not loaded yet; skipping balance request.');
+            }
 
             // Fire parallel, non-blocking asynchronous requests
             const [overviewRes, providersRes, modelsRes, historyRes, liveRes, balanceRes] = await Promise.all([
@@ -46,10 +57,7 @@ window.Dashboard.analyticsDashboard = (function() {
                 api.fetchModels(tenantId),
                 api.fetchHistory(tenantId),
                 api.fetchLive(tenantId),
-                api.fetchOpenRouterBalance(manualTrigger).catch(err => {
-                    console.warn('Failed to retrieve OpenRouter balance, fallback cached state used:', err.message);
-                    return null;
-                })
+                balanceRequest
             ]);
 
             // Update store sequentially (which triggers renderUI automatically via subscriptions)
@@ -60,12 +68,12 @@ window.Dashboard.analyticsDashboard = (function() {
             if (liveRes && liveRes.success) store.setLive(liveRes.live);
             if (balanceRes) {
                 if (balanceRes.success && balanceRes.balance) {
-                    store.setOpenRouterBalance(balanceRes.balance);
+                    store.setProviderBalance(balanceRes.provider, balanceRes.balance);
                 } else {
-                    store.setOpenRouterBalance({
+                    store.setProviderBalance(balanceRes.provider || selectedProvider, {
                         currentBalance: null,
                         remainingBalance: null,
-                        errorMessage: balanceRes.error || balanceRes.errorMessage || 'API Key is missing for OpenRouter.'
+                        errorMessage: balanceRes.error || balanceRes.errorMessage || 'Provider balance unavailable.'
                     });
                 }
             }
@@ -209,9 +217,9 @@ window.Dashboard.analyticsDashboard = (function() {
             }
         }
 
-        // 4. Render OpenRouter official developer balance elements
-        if (state.openRouterBalance) {
-            const b = state.openRouterBalance;
+        // 4. Render official balance only when the selected adapter supports it.
+        if (state.providerBalance && state.providerBalance.provider === 'openrouter') {
+            const b = state.providerBalance.balance;
             const errorDiv = document.getElementById('balance-openrouter-error');
             if (errorDiv) errorDiv.classList.add('hidden');
 
@@ -590,10 +598,14 @@ window.Dashboard.analytics = {
             }
 
             if (stats.aiProvider !== undefined && !window.Dashboard.state.isAiProviderLoaded) {
+                const loadedProvider = String(stats.aiProvider || '').toLowerCase().trim();
                 const provSelect = document.getElementById('ai-provider-select');
                 if (provSelect) {
-                    provSelect.value = stats.aiProvider;
+                    provSelect.value = loadedProvider;
+                    window.Dashboard.state.selectedAiProvider = loadedProvider;
                     provSelect.dispatchEvent(new Event('change'));
+                } else {
+                    window.Dashboard.state.selectedAiProvider = loadedProvider;
                 }
                 window.Dashboard.state.isAiProviderLoaded = true;
             }

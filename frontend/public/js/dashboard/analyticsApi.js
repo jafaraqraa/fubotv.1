@@ -35,11 +35,28 @@ window.Dashboard.analyticsApi = {
         return this._request('/live', { tenantId });
     },
 
-    fetchOpenRouterBalance: async function(forceRefresh = false) {
-        const url = forceRefresh ? '/providers/openrouter/balance/refresh' : '/providers/openrouter/balance';
-        const response = await window.Dashboard.api.request(url);
+    fetchProviderBalance: async function(provider, forceRefresh = false) {
+        const url = '/providers/balance';
+        const query = {};
+        const payload = {
+            provider: String(provider || '').toLowerCase().trim(),
+            forceRefresh: forceRefresh === true
+        };
+        const body = payload;
+        console.log("Selected provider:", payload.provider);
+        console.log("Balance request:", {
+            provider: payload.provider,
+            url,
+            body,
+            query
+        });
+        const response = await window.Dashboard.api.request(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
         if (!response.ok) {
-            throw new Error(`OpenRouter balance API error: ${response.statusText}`);
+            throw new Error(`Provider balance API error: ${response.statusText}`);
         }
         return await response.json();
     }

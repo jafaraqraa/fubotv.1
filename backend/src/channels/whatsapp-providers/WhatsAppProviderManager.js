@@ -8,36 +8,63 @@ const { addLog, reportError } = require('../../services/logger');
 class WhatsAppProviderManager {
     constructor() {
         this.providers = new Map();
+        this.providerInitPromises = new Map();
+        this.providerSwitchPromises = new Map();
+        this.initializeAllPromise = null;
+        this.initialized = false;
     }
 
     /**
      * Initializes all active/enabled providers on startup.
      */
-    async initializeAll() {
-        try {
-            console.log("🚀 Initializing WhatsApp multi-tenant providers...");
-
-            // Ensure default tenant exists
-            const defaultExists = db.prepare("SELECT 1 FROM whatsapp_tenant_configs WHERE tenant_id = 'default'").get();
-            if (!defaultExists) {
-                db.prepare(`
-                    INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled)
-                    VALUES ('default', 'web', '{}', 1)
-                `).run();
-            }
-
-            const activeConfigs = db.prepare("SELECT * FROM whatsapp_tenant_configs WHERE enabled = 1").all();
-            for (const row of activeConfigs) {
-                try {
-                    await this.getOrLoadProvider(row.tenant_id, row);
-                } catch (err) {
-                    reportError(`تهيئة مزود واتساب للمستأجر ${row.tenant_id}`, err.message);
-                }
-            }
-            console.log("🎉 All active WhatsApp providers initialized.");
-        } catch (err) {
-            reportError("تجهيز مدير بوابات واتساب", err.message);
+    initializeAll() {
+        if (this.initialized) {
+            console.log('[WhatsApp Init] Already initialized.');
+            return Promise.resolve(this.providers);
         }
+
+        if (this.initializeAllPromise) {
+            console.log('[WhatsApp Init] Already running.');
+            return this.initializeAllPromise;
+        }
+
+        console.log('[WhatsApp Init] Starting...');
+        this.initializeAllPromise = (async () => {
+            try {
+                // Ensure default tenant exists
+                const defaultExists = db.prepare("SELECT 1 FROM whatsapp_tenant_configs WHERE tenant_id = 'default'").get();
+                if (!defaultExists) {
+                    db.prepare(`
+                        INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled)
+                        VALUES ('default', 'web', '{}', 1)
+                    `).run();
+                }
+
+                const activeConfigs = db.prepare("SELECT * FROM whatsapp_tenant_configs WHERE enabled = 1").all();
+                const failures = [];
+                for (const row of activeConfigs) {
+                    try {
+                        await this.getOrLoadProvider(row.tenant_id, row);
+                    } catch (err) {
+                        failures.push({ tenantId: row.tenant_id, error: err });
+                        reportError(`تهيئة مزود واتساب للمستأجر ${row.tenant_id}`, err.message);
+                    }
+                }
+                if (failures.length > 0) {
+                    throw new Error(`WhatsApp initialization failed for tenant(s): ${failures.map(item => item.tenantId).join(', ')}`);
+                }
+                this.initialized = true;
+                console.log('[WhatsApp Init] Completed.');
+                return this.providers;
+            } catch (err) {
+                reportError("تجهيز مدير بوابات واتساب", err.message);
+                throw err;
+            } finally {
+                this.initializeAllPromise = null;
+            }
+        })();
+
+        return this.initializeAllPromise;
     }
 
     /**
@@ -45,42 +72,57 @@ class WhatsAppProviderManager {
      * @param {string} tenantId
      * @param {Object} [dbRow] Optional pre-fetched row for efficiency
      */
-    async getOrLoadProvider(tenantId, dbRow = null) {
+    getOrLoadProvider(tenantId, dbRow = null) {
         if (this.providers.has(tenantId)) {
-            return this.providers.get(tenantId);
+            return Promise.resolve(this.providers.get(tenantId));
         }
 
-        let row = dbRow;
-        if (!row) {
-            row = db.prepare("SELECT * FROM whatsapp_tenant_configs WHERE tenant_id = ?").get(tenantId);
+        if (this.providerInitPromises.has(tenantId)) {
+            return this.providerInitPromises.get(tenantId);
         }
 
-        // If no configuration exists, fallback to a default 'web' configuration for backwards compatibility
-        if (!row) {
-            if (tenantId === 'default') {
-                db.prepare(`
-                    INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled)
-                    VALUES ('default', 'web', '{}', 1)
-                `).run();
-                row = { tenant_id: 'default', provider_type: 'web', config_json: '{}', enabled: 1 };
-            } else {
-                throw new Error(`WhatsApp config not found for tenant: ${tenantId}`);
+        const initPromise = (async () => {
+            let row = dbRow;
+            if (!row) {
+                row = db.prepare("SELECT * FROM whatsapp_tenant_configs WHERE tenant_id = ?").get(tenantId);
             }
-        }
 
-        const config = JSON.parse(row.config_json || '{}');
-        let providerInstance;
+            // If no configuration exists, fallback to a default 'web' configuration for backwards compatibility
+            if (!row) {
+                if (tenantId === 'default') {
+                    db.prepare(`
+                        INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled)
+                        VALUES ('default', 'web', '{}', 1)
+                    `).run();
+                    row = { tenant_id: 'default', provider_type: 'web', config_json: '{}', enabled: 1 };
+                } else {
+                    throw new Error(`WhatsApp config not found for tenant: ${tenantId}`);
+                }
+            }
 
-        if (row.provider_type === 'cloud') {
-            providerInstance = new WhatsAppBusinessCloudProvider(tenantId, config);
-        } else {
-            providerInstance = new WhatsAppWebProvider(tenantId, config);
-        }
+            const config = JSON.parse(row.config_json || '{}');
+            const providerInstance = row.provider_type === 'cloud'
+                ? new WhatsAppBusinessCloudProvider(tenantId, config)
+                : new WhatsAppWebProvider(tenantId, config);
 
-        this.providers.set(tenantId, providerInstance);
-        await providerInstance.initialize();
+            try {
+                await providerInstance.initialize();
+                this.providers.set(tenantId, providerInstance);
+                return providerInstance;
+            } catch (err) {
+                await providerInstance.destroy().catch(() => {});
+                throw err;
+            }
+        })();
 
-        return providerInstance;
+        this.providerInitPromises.set(tenantId, initPromise);
+        initPromise.finally(() => {
+            if (this.providerInitPromises.get(tenantId) === initPromise) {
+                this.providerInitPromises.delete(tenantId);
+            }
+        }).catch(() => {});
+
+        return initPromise;
     }
 
     /**
@@ -97,34 +139,46 @@ class WhatsAppProviderManager {
      * @param {string} providerType - 'web' or 'cloud'
      * @param {Object} config - credentials/settings object
      */
-    async switchProvider(tenantId, providerType, config) {
-        addLog(`🔄 [Tenant: ${tenantId}] جاري تغيير وتحديث مزود بوابة واتساب إلى: [${providerType}]...`);
-
-        // 1. Destroy existing provider instance
-        if (this.providers.has(tenantId)) {
-            try {
-                const oldProvider = this.providers.get(tenantId);
-                await oldProvider.destroy();
-            } catch (err) {
-                console.error(`Failed to destroy old provider for ${tenantId}:`, err.message);
-            }
-            this.providers.delete(tenantId);
+    switchProvider(tenantId, providerType, config) {
+        if (this.providerSwitchPromises.has(tenantId)) {
+            return this.providerSwitchPromises.get(tenantId);
         }
 
-        // 2. Persist new configuration to database
-        const configJson = JSON.stringify(config || {});
-        db.prepare(`
-            INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled, updated_at)
-            VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
-            ON CONFLICT(tenant_id) DO UPDATE SET
-                provider_type = excluded.provider_type,
-                config_json = excluded.config_json,
-                updated_at = CURRENT_TIMESTAMP
-        `).run(tenantId, providerType, configJson);
+        const switchPromise = (async () => {
+            addLog(`🔄 [Tenant: ${tenantId}] جاري تغيير وتحديث مزود بوابة واتساب إلى: [${providerType}]...`);
 
-        // 3. Instantiate and initialize the new provider
-        const newProvider = await this.getOrLoadProvider(tenantId);
-        return newProvider;
+            const pendingInit = this.providerInitPromises.get(tenantId);
+            if (pendingInit) {
+                await pendingInit.catch(() => {});
+            }
+
+            const oldProvider = this.providers.get(tenantId);
+            this.providers.delete(tenantId);
+            if (oldProvider) {
+                await oldProvider.destroy();
+            }
+
+            const configJson = JSON.stringify(config || {});
+            db.prepare(`
+                INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled, updated_at)
+                VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
+                ON CONFLICT(tenant_id) DO UPDATE SET
+                    provider_type = excluded.provider_type,
+                    config_json = excluded.config_json,
+                    updated_at = CURRENT_TIMESTAMP
+            `).run(tenantId, providerType, configJson);
+
+            return this.getOrLoadProvider(tenantId);
+        })();
+
+        this.providerSwitchPromises.set(tenantId, switchPromise);
+        switchPromise.finally(() => {
+            if (this.providerSwitchPromises.get(tenantId) === switchPromise) {
+                this.providerSwitchPromises.delete(tenantId);
+            }
+        }).catch(() => {});
+
+        return switchPromise;
     }
 
     /**
@@ -132,6 +186,11 @@ class WhatsAppProviderManager {
      */
     async destroyAll() {
         console.log("🔌 Stopping all active WhatsApp providers...");
+        if (this.initializeAllPromise) {
+            await this.initializeAllPromise.catch(() => {});
+        }
+        await Promise.allSettled([...this.providerSwitchPromises.values()]);
+        await Promise.allSettled([...this.providerInitPromises.values()]);
         for (const [tenantId, provider] of this.providers.entries()) {
             try {
                 await provider.destroy();
@@ -140,9 +199,14 @@ class WhatsAppProviderManager {
             }
         }
         this.providers.clear();
+        this.providerInitPromises.clear();
+        this.providerSwitchPromises.clear();
+        this.initialized = false;
     }
 }
 
-// Export singleton instance
-const managerInstance = new WhatsAppProviderManager();
+// Preserve one lifecycle manager even if this module is re-evaluated by a hot reloader.
+const managerKey = Symbol.for('futhing.whatsappProviderManager');
+const managerInstance = globalThis[managerKey] || new WhatsAppProviderManager();
+globalThis[managerKey] = managerInstance;
 module.exports = managerInstance;

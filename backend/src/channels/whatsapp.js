@@ -23,7 +23,5 @@ module.exports = {
         const provider = manager.getProvider('default');
         if (provider) provider.lastQrCodeUrl = val;
     },
-    startWhatsApp: () => {
-        manager.initializeAll();
-    }
+    startWhatsApp: () => manager.initializeAll()
 };

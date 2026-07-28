@@ -22,26 +22,31 @@ initializeSocketServer(httpServer);
 
 const { reportError } = require('./src/services/logger');
 const { initializeTelegramOnStartup, getBot } = require('./src/channels/telegram');
-const { startWhatsApp, getWaClient } = require('./src/channels/whatsapp');
+const { startWhatsApp } = require('./src/channels/whatsapp');
 const whatsappManager = require('./src/channels/whatsapp-providers/WhatsAppProviderManager');
+const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
 const db = require('./src/database/connection');
 
 const PORT = process.env.PORT || 3000;
 
-// بدء تشغيل قنوات تيليجرام وواتساب التلقائي بالخلفية
-initializeTelegramOnStartup();
-startWhatsApp();
+async function startBackgroundServices() {
+    // Never initialize external providers until the HTTP port is successfully bound.
+    initializeTelegramOnStartup();
+    try {
+        await startWhatsApp();
+    } catch (err) {
+        reportError("تهيئة بوابات واتساب عند بدء الخادم", err.message);
+    }
 
-// Run initial background API usage limits sync on startup
-const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
-try {
-    seedExistingKeysOnStartup();
-} catch (e) {
-    console.error('⚠️ [Startup] Seeding existing keys failed:', e.message);
+    try {
+        seedExistingKeysOnStartup();
+    } catch (err) {
+        console.error('⚠️ [Startup] Seeding existing keys failed:', err.message);
+    }
+    await syncAllConfiguredApiKeys().catch(err => {
+        console.error('⚠️ [Startup] Initial API Key sync failed:', err.message);
+    });
 }
-syncAllConfiguredApiKeys().catch(err => {
-    console.error('⚠️ [Startup] Initial API Key sync failed:', err.message);
-});
 
 // حماية السيرفر من الانهيار عند حدوث أخطاء غير متوقعة بالخلفية
 process.on('uncaughtException', (err) => {
@@ -53,7 +58,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Graceful Shutdown handling (Task 18)
 let isShuttingDown = false;
-async function gracefulShutdown(signal) {
+async function gracefulShutdown(signal, exitCode = 0) {
     if (isShuttingDown) return;
     isShuttingDown = true;
     console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
@@ -86,10 +91,24 @@ async function gracefulShutdown(signal) {
     }
 
     console.log('👋 Clean exit. Goodbye!');
-    process.exit(0);
+    process.exit(exitCode);
 }
 
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
-httpServer.listen(PORT, () => console.log(`🌐 السيرفر يعمل على: http://localhost:${PORT}`));
+httpServer.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use. Background services were not started.`);
+    } else {
+        console.error('❌ HTTP server failed to start:', err.message);
+    }
+    gracefulShutdown('HTTP_SERVER_ERROR', 1);
+});
+
+httpServer.listen(PORT, () => {
+    console.log(`🌐 السيرفر يعمل على: http://localhost:${PORT}`);
+    startBackgroundServices().catch(err => {
+        reportError('تشغيل خدمات الخلفية بعد بدء HTTP', err.message);
+    });
+});

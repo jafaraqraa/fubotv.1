@@ -2,6 +2,9 @@ const crypto = require('crypto');
 const db = require('../database/connection');
 const { getSetting, saveSetting } = require('../database/repositories/settingsRepository');
 const ProviderAdapterFactory = require('./adapters/ProviderAdapterFactory');
+const providerBalanceCacheRepository = require('../database/repositories/providerBalanceCacheRepository');
+
+const SUPPORTED_PROVIDERS = new Set(['openrouter', 'openai', 'gemini', 'anthropic']);
 
 function hashApiKey(key) {
     if (!key) return '';
@@ -12,6 +15,96 @@ function maskApiKey(key) {
     if (!key) return '';
     if (key.length <= 8) return '••••••••';
     return '••••••••' + key.substring(key.length - 4);
+}
+
+function normalizeProvider(providerName) {
+    const provider = String(providerName || '').toLowerCase().trim();
+    if (!SUPPORTED_PROVIDERS.has(provider)) {
+        throw new Error(`Unsupported provider: ${provider || 'missing'}`);
+    }
+    return provider;
+}
+
+function getApiKeyForProvider(provider) {
+    const normalizedProvider = String(provider || '').toLowerCase().trim();
+    const row = db.prepare(`
+        SELECT api_key FROM api_keys
+        WHERE LOWER(provider) = ? AND enabled = 1
+        ORDER BY created_at DESC LIMIT 1
+    `).get(normalizedProvider);
+    if (row && row.api_key) return row.api_key;
+
+    const providerEnvKey = `${normalizedProvider.toUpperCase()}_API_KEY`;
+    if (process.env[providerEnvKey]) return process.env[providerEnvKey];
+    const savedProviderKey = getSetting(providerEnvKey);
+    if (savedProviderKey) return savedProviderKey;
+
+    const selectedProvider = String(
+        process.env.AI_PROVIDER || getSetting('AI_PROVIDER') || ''
+    ).toLowerCase().trim();
+    return selectedProvider === normalizedProvider
+        ? (process.env.AI_API_KEY || getSetting('AI_API_KEY') || null)
+        : null;
+}
+
+async function getProviderBalance(providerName, forceRefresh = false) {
+    const provider = normalizeProvider(providerName);
+    console.log(`[BudgetService] Requested balance provider: ${provider}`);
+
+    if (!forceRefresh) {
+        const cached = providerBalanceCacheRepository.getBalanceCache(provider);
+        if (cached) {
+            const updatedAt = new Date(`${cached.last_updated} UTC`).getTime();
+            if (Date.now() - updatedAt < 5 * 60 * 1000) {
+                const usageData = JSON.parse(cached.usage_data || '{}');
+                console.log(`[BudgetService] Returning provider-scoped cache: ${provider}`);
+                return {
+                    success: !cached.error_message,
+                    provider,
+                    currentBalance: cached.current_balance,
+                    remainingBalance: cached.remaining_balance,
+                    capabilities: usageData.capabilities || {},
+                    usageData,
+                    errorMessage: cached.error_message,
+                    lastUpdated: cached.last_updated
+                };
+            }
+        }
+    }
+
+    const adapter = ProviderAdapterFactory.getAdapter(provider, getApiKeyForProvider(provider));
+    if (!adapter) throw new Error(`No adapter available for provider: ${provider}`);
+    console.log(`[BudgetService] Selected adapter: ${adapter.constructor.name} for provider: ${provider}`);
+
+    const info = await adapter.fetchUsageInfo();
+    const capabilities = info.capabilities || adapter.getCapabilities();
+    const usageData = {
+        provider,
+        capabilities,
+        limit: info.limit ?? null,
+        usage: info.usage ?? null,
+        billingPeriod: info.billingPeriod ?? null,
+        resetDate: info.resetDate ?? null,
+        source: info.source || {}
+    };
+    providerBalanceCacheRepository.saveBalanceCache({
+        provider,
+        current_balance: info.balance ?? 0,
+        remaining_balance: info.remaining ?? 0,
+        usage_data: JSON.stringify(usageData),
+        error_message: info.success ? null : (info.errorMessage || 'Provider balance unavailable')
+    });
+
+    return {
+        success: info.success === true,
+        provider,
+        currentBalance: info.balance ?? null,
+        remainingBalance: info.remaining ?? null,
+        capabilities,
+        usageData,
+        errorMessage: info.errorMessage || null,
+        lastUpdated: new Date().toISOString()
+    };
 }
 
 function isMaskedPlaceholder(value) {
@@ -452,6 +545,7 @@ function updateProviderBudget(providerName, newBudget) {
 module.exports = {
     hashApiKey,
     maskApiKey,
+    getApiKeyForProvider,
     seedExistingKeysOnStartup,
     getApiKeysGrouped,
     addApiKey,
@@ -461,5 +555,6 @@ module.exports = {
     getAllProviderBudgets,
     decrementBalanceAfterRequest,
     broadcastProviderBudget,
-    updateProviderBudget
+    updateProviderBudget,
+    getProviderBalance
 };
