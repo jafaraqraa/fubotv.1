@@ -108,7 +108,7 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
     saveTaskConfig({
         task: 'text_generation',
         provider: 'openai',
-        model: 'openai/test-text-model',
+        model: 'gpt-test-text-model',
         api_key_ref: 'OPENAI_API_KEY',
         enabled: 1
     });
@@ -167,7 +167,7 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
 
         // Assert transcript is generated and passed to the subsequent text pipeline
         assert.strictEqual(response, 'تم إجابة سؤال الصوت بنجاح');
-        assert.deepStrictEqual(modelsCalled, ['openai/test-text-model']);
+        assert.deepStrictEqual(modelsCalled, ['gpt-test-text-model']);
         assert.ok(contentsPassed[0].includes('تفريغ صوتي حقيقي'));
     } finally {
         global.fetch = originalFetch;
