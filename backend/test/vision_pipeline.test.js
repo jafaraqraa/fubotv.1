@@ -207,14 +207,14 @@ test('Vision Routing Layer - Image vs Text messages', async (t) => {
     saveTaskConfig({
         task: 'text_generation',
         provider: 'openai',
-        model: 'openai/test-text-model',
+        model: 'gpt-test-text-model',
         api_key_ref: 'OPENAI_API_KEY',
         enabled: 1
     });
     saveTaskConfig({
         task: 'vision',
         provider: 'openai',
-        model: 'openai/test-vision-model',
+        model: 'gpt-test-vision-model',
         api_key_ref: 'OPENAI_API_KEY',
         enabled: 1
     });
@@ -251,18 +251,18 @@ test('Vision Routing Layer - Image vs Text messages', async (t) => {
     };
 
     try {
-        // 1. Text message query -> should use text_generation task (openai/test-text-model)
+        // 1. Text message query -> should use text_generation task (gpt-test-text-model)
         await getAIResponse('test_user_vision_1', 'Hello RAG', 'text');
-        assert.strictEqual(lastModelRequested, 'openai/test-text-model');
+        assert.strictEqual(lastModelRequested, 'gpt-test-text-model');
 
-        // 2. Image message query -> should use vision task (openai/test-vision-model)
+        // 2. Image message query -> should use vision task (gpt-test-vision-model)
         const mediaObj = {
             localPath: tempImgPath,
             mimeType: 'image/jpeg',
             caption: 'What is this?'
         };
         await getAIResponse('test_user_vision_1', '', 'image', mediaObj);
-        assert.strictEqual(lastModelRequested, 'openai/test-vision-model');
+        assert.strictEqual(lastModelRequested, 'gpt-test-vision-model');
     } finally {
         global.fetch = originalFetch;
     }

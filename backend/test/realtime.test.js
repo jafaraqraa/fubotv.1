@@ -63,7 +63,10 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
         // A. Log in to retrieve an authentic signed connect.sid session cookie from Express
         const loginRes = await fetch(`${baseUrl}/api/auth/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'x-forwarded-proto': 'https'
+            },
             body: JSON.stringify({ username: 'admin', password: 'Admin@123456' })
         });
         assert.strictEqual(loginRes.status, 200, 'Login should succeed to get session cookie');

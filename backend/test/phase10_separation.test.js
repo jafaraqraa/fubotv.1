@@ -44,12 +44,14 @@ test('Phase 10 Frontend-Backend Separation & Security Suite', async (t) => {
     });
 
     await t.test('3. CORS rejects arbitrary untrusted origins', async () => {
+        process.env.FRONTEND_ORIGIN = 'https://dashboard.example.com';
         const res = await fetch(`${baseUrl}/health`, {
             headers: {
                 'Origin': 'http://untrusted-attacker.com'
             }
         });
         assert.strictEqual(res.headers.get('access-control-allow-origin'), null, 'CORS must not allow untrusted origins');
+        delete process.env.FRONTEND_ORIGIN;
     });
 
     await t.test('4. CORS enforces configured FRONTEND_ORIGIN and blocks localhost fallback in production mode', async () => {
