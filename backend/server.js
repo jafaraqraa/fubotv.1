@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const { initializeDatabase } = require('./src/database/initialize');
 const { loadSettingsOnStartup } = require('./src/services/settingsService');
 const { bootstrapAdminAccount } = require('./src/services/adminBootstrap');

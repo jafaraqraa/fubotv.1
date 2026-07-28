@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="../../public/css/dashboard.css">
+    <style>
+        *{box-sizing:border-box} body{margin:0;background:#eef2f7;color:#0f172a}
+        .fixture{height:100vh;padding:24px;display:grid;grid-template-columns:250px 1fr;gap:18px}
+        .fixture-sidebar{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px}
+        .fixture-brand{font:800 18px Inter;margin-bottom:25px}.fixture-brand b{color:#2563eb}
+        .fixture-contact{padding:12px;border-radius:12px;background:#f8fafc;margin:8px 0;font-size:11px}
+        #conversation-shell{display:flex;flex-direction:column;overflow:hidden;border-radius:16px;box-shadow:0 12px 40px #0f172a14;min-width:0}
+        #chat-header-actions{display:flex;align-items:center;gap:5px}
+        #chat-box{flex:1;min-height:0}
+        .fixture-composer{background:#fff;border-top:1px solid #e2e8f0;padding:12px;display:flex;gap:8px}
+        .fixture-composer input{flex:1;border:1px solid #e2e8f0;border-radius:999px;padding:12px}
+        .fixture-composer button{border:0;border-radius:999px;padding:0 18px;background:var(--channel-accent);color:#fff}
+        @media(max-width:600px){.fixture{padding:0;display:block}.fixture-sidebar{display:none}#conversation-shell{height:100vh;border-radius:0}.channel-mobile-back{display:block}}
+    </style>
+</head>
+<body>
+<main class="fixture">
+    <aside class="fixture-sidebar">
+        <div class="fixture-brand">FU<b>Thing</b></div>
+        <strong>المحادثات</strong>
+        <div class="fixture-contact">عميل المتجر<br><small id="fixture-channel-label"></small></div>
+        <div class="fixture-contact">فريق المبيعات<br><small>متصل الآن</small></div>
+    </aside>
+    <section id="conversation-shell" class="channel-conversation-shell" data-channel="messenger">
+        <header class="channel-conversation-header">
+            <button id="conversation-mobile-back" class="channel-mobile-back">‹</button>
+            <div id="chat-user-header-info" class="channel-header-profile"></div>
+            <div id="chat-header-actions"></div>
+        </header>
+        <p id="current-chat-id" hidden></p>
+        <div id="chat-box" class="channel-message-list"></div>
+        <footer class="fixture-composer">
+            <button type="button">＋</button>
+            <input id="direct-msg-input" type="text">
+            <button type="button">➤</button>
+        </footer>
+    </section>
+</main>
+<script>window.Dashboard={state:{currentMessageType:'reply',usersCache:[]},conversationControls:{openConfirmModal(){}}};</script>
+<script src="../../public/js/dashboard/utils.js"></script>
+<script src="../../public/js/dashboard/chatThemes.js"></script>
+<script src="../../public/js/dashboard/chat.js"></script>
+<script>
+    const params = new URLSearchParams(location.search);
+    const channel = params.get('channel') || 'whatsapp';
+    const names = {whatsapp:'متجر الزيتونة',telegram:'مجموعة فريق المبيعات',messenger:'Lina Haddad',instagram:'lina.studio'};
+    const user = {id:'customer-1042',name:names[channel],platform:channel,isAIEnabled:true};
+    Dashboard.chatThemes.apply(channel);
+    Dashboard.chat.renderConversationHeader(user, Dashboard.chatThemes.get(channel));
+    document.getElementById('fixture-channel-label').textContent=Dashboard.chatThemes.get(channel).label;
+    const now=new Date().toISOString();
+    const messages=[
+      {sender:'user',type:'text',text:'مرحباً، هل المنتج متوفر اليوم؟',time:'10:18',createdAt:now,metadata:{}},
+      {sender:'admin',type:'text',text:'أهلاً بك! نعم، المنتج متوفر ويمكننا تجهيز الطلب فوراً.',time:'10:19',createdAt:now,deliveryStatus:'read',metadata:{reactions:[channel==='instagram'?'♥':'👍']}},
+      {sender:'user',type:'text',text:'ممتاز، أريد النسخة باللون الأزرق.',time:'10:20',createdAt:now,metadata:{reply:{sender:'الدعم',text:'المنتج متوفر ويمكننا تجهيز الطلب'}}},
+      {sender:'admin',type:'document',text:'https://example.com/order-summary.pdf',time:'10:21',createdAt:now,deliveryStatus:'delivered',metadata:{fileName:'order-summary.pdf'}},
+      {sender:'user',type:'text',text:'شكراً لكم ✨',time:'10:22',createdAt:now,metadata:{unreadDivider:true}},
+      {sender:'admin',type:'text',text:'على الرحب والسعة، سنرسل لك تحديث الشحن هنا.',time:'10:23',createdAt:now,deliveryStatus:'sent',metadata:{seen:channel==='instagram'}}
+    ];
+    if(channel==='telegram') messages.splice(2,0,{sender:'user',type:'text',text:'تمت مشاركتها من قناة العروض',time:'10:20',createdAt:now,metadata:{forwarded:true}});
+    if(channel==='instagram') messages.splice(3,0,{sender:'user',type:'text',text:'هذا هو التصميم الذي أعجبني',time:'10:20',createdAt:now,metadata:{sharedPost:{title:'Summer collection',caption:'Blue edition'}}});
+    Dashboard.chat.renderMessageList(messages,channel);
+</script>
+</body>
+</html>

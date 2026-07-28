@@ -2,6 +2,26 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.composer = {
+    init: function() {
+        const bindings = [
+            ['tab-reply', 'click', () => this.setMessageType('reply')],
+            ['tab-note', 'click', () => this.setMessageType('note')],
+            ['media-preview-delete', 'click', () => this.clearMediaUpload()],
+            ['media-upload-btn', 'click', () => this.triggerFileInput()],
+            ['media-upload-input', 'change', () => this.handleFileSelection()],
+            ['send-btn', 'click', () => this.sendDirectMessage()]
+        ];
+        bindings.forEach(([id, eventName, listener]) => {
+            const element = document.getElementById(id);
+            if (element) element.addEventListener(eventName, listener);
+        });
+        const input = document.getElementById('direct-msg-input');
+        if (input) {
+            input.addEventListener('keyup', event => this.handleInputKey(event));
+            input.addEventListener('input', () => this.detectCannedResponseTrigger(input));
+        }
+    },
+
     triggerFileInput: function() {
         const input = document.getElementById('media-upload-input');
         if (input) input.click();
@@ -46,7 +66,12 @@ window.Dashboard.composer = {
         } else {
             if (tabReply) tabReply.className = "text-blue-600 border-b-2 border-blue-600 pb-1.5 transition";
             if (tabNote) tabNote.className = "text-slate-400 hover:text-slate-600 pb-1.5 transition";
-            input.placeholder = "اكتب ردك هنا... اكتب / لعرض الردود الجاهزة";
+            const selectedUser = window.Dashboard.state.usersCache.find(
+                user => String(user.id) === String(window.Dashboard.state.selectedUserId)
+            );
+            input.placeholder = selectedUser
+                ? window.Dashboard.chatThemes.get(selectedUser.platform).composerPlaceholder
+                : "اكتب ردك هنا... اكتب / لعرض الردود الجاهزة";
             input.className = "flex-1 p-3 border border-slate-200 bg-white rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition";
             sendBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm font-cairo";
             sendBtn.innerText = "إرسال";
@@ -63,12 +88,22 @@ window.Dashboard.composer = {
             const matched = window.Dashboard.state.cannedResponses.filter(r => r.trigger.includes(searchTxt));
 
             if (matched.length > 0) {
-                overlay.innerHTML = matched.map(resp => `
-                    <div onclick="selectCannedResponse('${window.Dashboard.utils.escapeHTML(resp.text)}')" class="p-3 hover:bg-slate-50 cursor-pointer text-xs flex justify-between items-center transition">
-                        <span class="font-bold text-slate-800">${window.Dashboard.utils.escapeHTML(resp.text)}</span>
-                        <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono font-bold">/${window.Dashboard.utils.escapeHTML(resp.trigger)}</span>
-                    </div>
-                `).join('');
+                const dom = window.Dashboard.utils;
+                const rows = matched.map(resp => {
+                    const row = dom.createElement('div', {
+                        className: 'p-3 hover:bg-slate-50 cursor-pointer text-xs flex justify-between items-center transition'
+                    });
+                    row.addEventListener('click', () => window.Dashboard.composer.selectCannedResponse(resp.text));
+                    row.append(
+                        dom.createElement('span', { className: 'font-bold text-slate-800', text: resp.text }),
+                        dom.createElement('span', {
+                            className: 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono font-bold',
+                            text: `/${resp.trigger}`
+                        })
+                    );
+                    return row;
+                });
+                overlay.replaceChildren(...rows);
                 overlay.classList.remove('hidden');
             } else {
                 overlay.classList.add('hidden');
@@ -103,7 +138,13 @@ window.Dashboard.composer = {
         if (!message && !window.Dashboard.state.selectedMediaFile) return;
 
         try {
-            let payload = { userId: window.Dashboard.state.selectedUserId };
+            const selectedUser = window.Dashboard.state.usersCache.find(
+                user => String(user.id) === String(window.Dashboard.state.selectedUserId)
+            );
+            let payload = {
+                userId: window.Dashboard.state.selectedUserId,
+                tenantId: selectedUser ? selectedUser.tenantId : undefined
+            };
 
             if (window.Dashboard.state.selectedMediaFile) {
                 // In production build files are transmitted natively; here simulated

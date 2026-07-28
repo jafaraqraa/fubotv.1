@@ -9,25 +9,53 @@ window.Dashboard.errors = {
             const tableBody = document.getElementById('errors-table-body');
             if (!tableBody) return;
 
-            if (errors.length > 0) {
-                tableBody.innerHTML = errors.map(err => `
-                    <tr class="border-b border-slate-100 font-inter text-[10px]">
-                        <td class="p-4 text-slate-400 tracking-tighter uppercase">${err.date} <br> ${err.time}</td>
-                        <td class="p-4 font-bold text-slate-700 uppercase">${window.Dashboard.utils.escapeHTML(err.type)}</td>
-                        <td class="p-4 text-red-500 font-mono tracking-tighter max-w-xs break-words">${window.Dashboard.utils.escapeHTML(err.message)}</td>
-                        <td class="p-4">
-                            <span class="px-2 py-0.5 rounded-full font-bold ${err.solved ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}">
-                                ${err.solved ? 'RESOLVED' : 'PENDING'}
-                            </span>
-                        </td>
-                        <td class="p-4 text-center">
-                            ${err.solved ? '-' : `<button onclick="solveError(${err.id})" class="text-blue-600 font-bold uppercase hover:underline">Mark Solved</button>`}
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                tableBody.innerHTML = '<tr><td colspan="5" class="p-12 text-center text-slate-400 uppercase text-[10px] tracking-widest">No Incidents Reported. System stable.</td></tr>';
+            const dom = window.Dashboard.utils;
+            const rows = errors.map(err => {
+                const row = dom.createElement('tr', { className: 'border-b border-slate-100 font-inter text-[10px]' });
+                const timestamp = dom.createElement('td', {
+                    className: 'p-4 text-slate-400 tracking-tighter uppercase'
+                });
+                timestamp.append(
+                    document.createTextNode(String(err.date || '')),
+                    document.createElement('br'),
+                    document.createTextNode(String(err.time || ''))
+                );
+                const statusCell = dom.createElement('td', { className: 'p-4' });
+                statusCell.appendChild(dom.createElement('span', {
+                    className: `px-2 py-0.5 rounded-full font-bold ${err.solved ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`,
+                    text: err.solved ? 'RESOLVED' : 'PENDING'
+                }));
+                const actionCell = dom.createElement('td', { className: 'p-4 text-center' });
+                if (err.solved) {
+                    actionCell.textContent = '-';
+                } else {
+                    const button = dom.createElement('button', {
+                        className: 'text-blue-600 font-bold uppercase hover:underline',
+                        text: 'Mark Solved'
+                    });
+                    button.type = 'button';
+                    button.addEventListener('click', () => window.Dashboard.errors.solveError(err.id));
+                    actionCell.appendChild(button);
+                }
+                row.append(
+                    timestamp,
+                    dom.createElement('td', { className: 'p-4 font-bold text-slate-700 uppercase', text: err.type }),
+                    dom.createElement('td', { className: 'p-4 text-red-500 font-mono tracking-tighter max-w-xs break-words', text: err.message }),
+                    statusCell,
+                    actionCell
+                );
+                return row;
+            });
+            if (rows.length === 0) {
+                const row = document.createElement('tr');
+                row.appendChild(dom.createElement('td', {
+                    className: 'p-12 text-center text-slate-400 uppercase text-[10px] tracking-widest',
+                    text: 'No Incidents Reported. System stable.',
+                    attributes: { colspan: '5' }
+                }));
+                rows.push(row);
             }
+            tableBody.replaceChildren(...rows);
         } catch (err) {
             console.error(err);
         }

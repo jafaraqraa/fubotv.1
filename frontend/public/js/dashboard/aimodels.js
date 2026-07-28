@@ -39,6 +39,13 @@ window.Dashboard.aimodels = {
 
     init: async function() {
         console.log("🤖 Initializing AI Models Module...");
+        const usageReport = document.getElementById('ai-models-usage-report');
+        if (usageReport && !usageReport.dataset.bound) {
+            usageReport.dataset.bound = 'true';
+            usageReport.addEventListener('click', () => {
+                if (typeof window.showSection === 'function') window.showSection('usage-section');
+            });
+        }
         // Ensure custom models are parsed and loaded if available
         if ((!window.Dashboard.state.customModels || window.Dashboard.state.customModels.length === 0) && window.Dashboard.state.settings && window.Dashboard.state.settings.aiCustomModels) {
             try {
@@ -62,26 +69,34 @@ window.Dashboard.aimodels = {
         const grid = document.getElementById('ai-tasks-grid');
         if (!grid) return;
 
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-12 text-slate-400">
-                <i class="fa fa-spinner fa-spin text-xl mb-2"></i>
-                <p class="text-xs">جاري تحميل مهام وموديلات الذكاء الاصطناعي...</p>
-            </div>
-        `;
+        const loading = window.Dashboard.utils.createElement('div', {
+            className: 'col-span-full text-center py-12 text-slate-400'
+        });
+        loading.append(
+            window.Dashboard.utils.createElement('i', { className: 'fa fa-spinner fa-spin text-xl mb-2' }),
+            window.Dashboard.utils.createElement('p', { className: 'text-xs', text: 'جاري تحميل مهام وموديلات الذكاء الاصطناعي...' })
+        );
+        grid.replaceChildren(loading);
 
         try {
             const response = await window.Dashboard.api.request('/api/ai-tasks');
             const data = await response.json();
 
             if (!data.success) {
-                grid.innerHTML = `<div class="col-span-full text-center py-6 text-red-500 text-xs">فشل تحميل المهام: ${data.error}</div>`;
+                grid.replaceChildren(window.Dashboard.utils.createElement('div', {
+                    className: 'col-span-full text-center py-6 text-red-500 text-xs',
+                    text: `فشل تحميل المهام: ${data.error}`
+                }));
                 return;
             }
 
             this.renderTasks(data.tasks);
         } catch (err) {
             console.error("Failed to load AI tasks:", err);
-            grid.innerHTML = `<div class="col-span-full text-center py-6 text-red-500 text-xs">خطأ في الاتصال بالسيرفر: ${err.message}</div>`;
+            grid.replaceChildren(window.Dashboard.utils.createElement('div', {
+                className: 'col-span-full text-center py-6 text-red-500 text-xs',
+                text: `خطأ في الاتصال بالسيرفر: ${err.message}`
+            }));
         }
     },
 
@@ -90,11 +105,14 @@ window.Dashboard.aimodels = {
         if (!grid) return;
 
         if (!tasks || tasks.length === 0) {
-            grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-xs">لا توجد مهام ذكية مبرمجة حالياً.</div>`;
+            grid.replaceChildren(window.Dashboard.utils.createElement('div', {
+                className: 'col-span-full text-center py-12 text-slate-400 text-xs',
+                text: 'لا توجد مهام ذكية مبرمجة حالياً.'
+            }));
             return;
         }
 
-        grid.innerHTML = '';
+        grid.replaceChildren();
 
         tasks.forEach(task => {
             const meta = this.tasksMetadata[task.task] || { title: task.task, icon: "⚙️", desc: "" };
@@ -105,44 +123,90 @@ window.Dashboard.aimodels = {
             else if (task.provider === 'gemini') providerName = "Google Gemini";
             else if (task.provider === 'ollama') providerName = "Ollama (محلي)";
 
-            const card = document.createElement('div');
-            card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between hover:shadow-md transition duration-200";
+            const isLocal = task.provider === 'ollama';
+            const statusLabel = isLocal ? 'محلي' : 'نشط';
+            const card = document.createElement('article');
+            card.className = `ai-model-card ${isLocal ? 'is-local' : 'is-active'}`;
             card.setAttribute('data-testid', `task-card-${task.task}`);
-            card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">${meta.icon}</span>
-                        <h3 class="font-bold text-slate-800 text-xs">${meta.title}</h3>
-                    </div>
-                    <p class="text-[11px] text-slate-400 leading-relaxed">${meta.desc}</p>
-                </div>
+            const dom = window.Dashboard.utils;
+            const summary = dom.createElement('div', { className: 'ai-model-card-summary' });
+            const top = dom.createElement('div', { className: 'ai-model-card-top' });
+            const status = dom.createElement('span', { className: 'ai-model-status', text: statusLabel });
+            status.prepend(dom.createElement('i'));
+            const more = dom.createElement('span', { className: 'ai-model-more', text: '•••', attributes: { 'aria-hidden': 'true' } });
+            const icon = dom.createElement('span', { className: 'ai-model-task-icon', text: meta.icon });
+            top.append(status, more, icon);
+            summary.append(top, dom.createElement('h3', { text: meta.title }), dom.createElement('p', { text: meta.desc }));
 
-                <div class="pt-4 border-t border-slate-100 space-y-2 text-xs">
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">المزود الحالي:</span>
-                        <span class="font-bold text-slate-700">${providerName}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">الموديل النشط:</span>
-                        <span class="font-bold text-indigo-600 font-mono text-[11px] bg-slate-50 px-2 py-0.5 rounded border border-slate-100">${task.model}</span>
-                    </div>
-                </div>
+            const details = dom.createElement('div', { className: 'ai-model-details' });
+            const providerRow = dom.createElement('div', { className: 'ai-model-provider' });
+            const providerCopy = dom.createElement('div');
+            providerCopy.append(
+                dom.createElement('small', { text: 'المزود الحالي' }),
+                dom.createElement('strong', { text: providerName })
+            );
+            providerRow.append(providerCopy, dom.createElement('span', {
+                className: 'ai-model-provider-mark',
+                text: task.provider === 'openai' ? '◎' : task.provider === 'gemini' ? 'G' : task.provider === 'ollama' ? '◉' : '⌁'
+            }));
+            const modelRow = dom.createElement('div', { className: 'ai-model-current' });
+            modelRow.append(dom.createElement('small', { text: 'الموديل النشط' }), dom.createElement('code', { text: task.model }));
+            details.append(providerRow, modelRow);
 
-                <div class="pt-2 flex gap-2">
-                    <button onclick="window.Dashboard.aimodels.openChangeModelModal('${task.task}', '${task.provider}', '${task.model}')"
-                        data-testid="btn-change-${task.task}"
-                        class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 font-bold py-2 px-3 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1">
-                        <i class="fa fa-exchange-alt text-[10px]"></i> تغيير (Change)
-                    </button>
-                    <button onclick="window.Dashboard.aimodels.openAddCustomModelForTask('${task.task}', '${task.provider}')"
-                        data-testid="btn-add-custom-${task.task}"
-                        class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 border border-indigo-100 font-bold py-2 px-3 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-1">
-                        + مخصص (Add Custom)
-                    </button>
-                </div>
-            `;
+            const actions = dom.createElement('div', { className: 'ai-model-actions' });
+            const changeButton = dom.createElement('button', {
+                className: 'ai-model-primary-action',
+                text: 'تعديل الإعدادات ⚙',
+                attributes: { 'data-testid': `btn-change-${task.task}` }
+            });
+            changeButton.addEventListener('click', () => this.openChangeModelModal(task.task, task.provider, task.model));
+            const customButton = dom.createElement('button', {
+                className: 'ai-model-secondary-action',
+                text: 'موديل مخصص ＋',
+                attributes: { 'data-testid': `btn-add-custom-${task.task}` }
+            });
+            customButton.addEventListener('click', () => this.openAddCustomModelForTask(task.task, task.provider));
+            const testButton = dom.createElement('button', {
+                className: 'ai-model-test-action',
+                text: 'اختبار ♙',
+                attributes: { 'data-testid': `btn-test-${task.task}`, type: 'button' }
+            });
+            const testResult = dom.createElement('div', {
+                className: 'ai-model-test-result',
+                attributes: { role: 'status', 'aria-live': 'polite' }
+            });
+            testButton.addEventListener('click', () => this.testTaskModel(task.task, testButton, testResult));
+            actions.append(changeButton, testButton, customButton);
+            card.append(summary, details, actions, testResult);
             grid.appendChild(card);
         });
+    },
+
+    testTaskModel: async function(taskId, button, resultElement) {
+        if (!button || button.disabled) return;
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'جاري الاختبار…';
+        resultElement.className = 'ai-model-test-result is-testing';
+        resultElement.textContent = 'يتم التحقق من اتصال المزوّد وتوفر الموديل…';
+
+        try {
+            const response = await window.Dashboard.api.request('/api/ai-tasks/test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ task: taskId })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.error || 'فشل اختبار الموديل.');
+            resultElement.className = 'ai-model-test-result is-success';
+            resultElement.textContent = `الموديل متوفر والاتصال مع ${data.provider} ناجح.`;
+        } catch (error) {
+            resultElement.className = 'ai-model-test-result is-error';
+            resultElement.textContent = error.message || 'تعذر اختبار الموديل.';
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
     },
 
     openChangeModelModal: async function(taskId, provider, model) {
@@ -172,7 +236,7 @@ window.Dashboard.aimodels = {
         const select = document.getElementById('aimodels-modal-model');
         if (!select) return;
 
-        select.innerHTML = '';
+        select.replaceChildren();
 
         // Load standard models
         const models = [...(this.standardModels[provider] || [])];
@@ -305,12 +369,14 @@ async function deleteCustomModelFlow(modelId, provider) {
 
         // 2. Show Styled Confirmation Dialog
         const modal = document.getElementById('delete-custom-model-modal');
-        const confirmBtn = document.getElementById('delete-custom-model-confirm-btn');
-        if (!modal || !confirmBtn) return;
+        const oldConfirmBtn = document.getElementById('delete-custom-model-confirm-btn');
+        if (!modal || !oldConfirmBtn) return;
+        const confirmBtn = oldConfirmBtn.cloneNode(true);
+        oldConfirmBtn.replaceWith(confirmBtn);
 
         modal.classList.remove('hidden');
 
-        confirmBtn.onclick = async function() {
+        confirmBtn.addEventListener('click', async function() {
             window.hideDeleteCustomModelModal();
 
             // Filter only the selected provider/model pair. Different providers
@@ -368,7 +434,7 @@ async function deleteCustomModelFlow(modelId, provider) {
                 window.Dashboard.state.customModels = previousModels;
                 alert(`خطأ في الاتصال: ${err.message}`);
             }
-        };
+        });
 
     } catch (err) {
         alert(`حدث خطأ أثناء فحص تعيينات النموذج: ${err.message}`);

@@ -2,6 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert');
 const http = require('http');
 
+process.env.NODE_ENV = 'test';
+process.env.ALLOWED_ORIGINS = 'http://localhost:5173, https://dashboard.example.com/';
+
 // Load App
 const app = require('../src/app');
 
@@ -32,8 +35,6 @@ test('Phase 10 Frontend-Backend Separation & Security Suite', async (t) => {
     });
 
     await t.test('2. CORS accepts trusted frontend origin in development mode', async () => {
-        process.env.NODE_ENV = 'development';
-        delete process.env.FRONTEND_ORIGIN;
         const res = await fetch(`${baseUrl}/health`, {
             headers: {
                 'Origin': 'http://localhost:5173'
@@ -44,20 +45,15 @@ test('Phase 10 Frontend-Backend Separation & Security Suite', async (t) => {
     });
 
     await t.test('3. CORS rejects arbitrary untrusted origins', async () => {
-        process.env.FRONTEND_ORIGIN = 'https://dashboard.example.com';
         const res = await fetch(`${baseUrl}/health`, {
             headers: {
                 'Origin': 'http://untrusted-attacker.com'
             }
         });
         assert.strictEqual(res.headers.get('access-control-allow-origin'), null, 'CORS must not allow untrusted origins');
-        delete process.env.FRONTEND_ORIGIN;
     });
 
-    await t.test('4. CORS enforces configured FRONTEND_ORIGIN and blocks localhost fallback in production mode', async () => {
-        process.env.NODE_ENV = 'production';
-        process.env.FRONTEND_ORIGIN = 'https://dashboard.example.com';
-
+    await t.test('4. CORS enforces only the configured normalized allowlist', async () => {
         // Allowed origin:
         const resAllowed = await fetch(`${baseUrl}/health`, {
             headers: {
@@ -66,17 +62,15 @@ test('Phase 10 Frontend-Backend Separation & Security Suite', async (t) => {
         });
         assert.strictEqual(resAllowed.headers.get('access-control-allow-origin'), 'https://dashboard.example.com', 'CORS must allow explicitly configured FRONTEND_ORIGIN in production');
 
-        // Rejected development origin in production:
+        // A local origin that was not explicitly configured remains rejected:
         const resRejected = await fetch(`${baseUrl}/health`, {
             headers: {
-                'Origin': 'http://localhost:5173'
+                'Origin': 'http://127.0.0.1:5173'
             }
         });
-        assert.strictEqual(resRejected.headers.get('access-control-allow-origin'), null, 'CORS must block localhost fallback in production mode');
+        assert.strictEqual(resRejected.status, 403);
+        assert.strictEqual(resRejected.headers.get('access-control-allow-origin'), null, 'CORS must block unconfigured localhost origins');
 
-        // Clean up env vars
-        process.env.NODE_ENV = 'development';
-        delete process.env.FRONTEND_ORIGIN;
     });
 
     await t.test('5. Versioned and legacy auth routes are registered and return 401 for unauthenticated clients', async () => {

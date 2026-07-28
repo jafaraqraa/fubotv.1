@@ -4,8 +4,8 @@ const path = require('path');
 const app = express();
 
 const PORT = process.env.FRONTEND_PORT || 5173;
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3005/api/v1';
-const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:3005';
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001/api/v1';
+const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:3001';
 
 // Serve config.js dynamically
 app.get('/config.js', (req, res) => {

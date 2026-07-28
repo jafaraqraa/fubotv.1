@@ -120,31 +120,32 @@ window.Dashboard.rag = {
 
                 // Render Table
                 if (data.chunks.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="7" class="text-slate-400 text-center p-8 font-arabic text-[11px]">
-                                ⚠️ لا توجد مقاطع متوفرة مطابقة لخيارات الفلترة الحالية.
-                            </td>
-                        </tr>
-                    `;
+                    const row = document.createElement('tr');
+                    row.appendChild(window.Dashboard.utils.createElement('td', {
+                        className: 'text-slate-400 text-center p-8 font-arabic text-[11px]',
+                        text: '⚠️ لا توجد مقاطع متوفرة مطابقة لخيارات الفلترة الحالية.',
+                        attributes: { colspan: '7' }
+                    }));
+                    tbody.replaceChildren(row);
                 } else {
-                    let html = '';
-                    data.chunks.forEach(c => {
-                        html += `
-                            <tr class="hover:bg-slate-50 transition cursor-pointer" onclick="window.Dashboard.rag.openChunkDetailsModal('${c.chunkId}')">
-                                <td class="p-3 text-slate-800 font-mono text-[10px] break-all">${c.chunkId}</td>
-                                <td class="p-3 text-slate-600 truncate max-w-[150px]" title="${window.Dashboard.utils.escapeHTML(c.source)}">${window.Dashboard.utils.escapeHTML(c.source)}</td>
-                                <td class="p-3 font-semibold text-blue-600">${c.chunkIndex + 1} / ${c.totalChunks}</td>
-                                <td class="p-3 font-mono text-slate-500">${c.text.length}</td>
-                                <td class="p-3 font-mono text-purple-600 font-bold">${Math.ceil(c.text.split(/\s+/).length * 1.3)}</td>
-                                <td class="p-3 text-green-600 font-bold font-arabic text-[10px]">مفهرس</td>
-                                <td class="p-3 text-center">
-                                    <button class="px-2 py-1 bg-slate-100 border border-slate-200 rounded font-bold text-[9px] hover:bg-slate-200">عرض</button>
-                                </td>
-                            </tr>
-                        `;
+                    const dom = window.Dashboard.utils;
+                    const rows = data.chunks.map(c => {
+                        const row = dom.createElement('tr', { className: 'hover:bg-slate-50 transition cursor-pointer' });
+                        row.addEventListener('click', () => window.Dashboard.rag.openChunkDetailsModal(c.chunkId));
+                        const actionCell = dom.createElement('td', { className: 'p-3 text-center' });
+                        actionCell.appendChild(dom.createElement('button', { className: 'px-2 py-1 bg-slate-100 border border-slate-200 rounded font-bold text-[9px] hover:bg-slate-200', text: 'عرض' }));
+                        row.append(
+                            dom.createElement('td', { className: 'p-3 text-slate-800 font-mono text-[10px] break-all', text: c.chunkId }),
+                            dom.createElement('td', { className: 'p-3 text-slate-600 truncate max-w-[150px]', text: c.source, attributes: { title: c.source } }),
+                            dom.createElement('td', { className: 'p-3 font-semibold text-blue-600', text: `${c.chunkIndex + 1} / ${c.totalChunks}` }),
+                            dom.createElement('td', { className: 'p-3 font-mono text-slate-500', text: String(c.text || '').length }),
+                            dom.createElement('td', { className: 'p-3 font-mono text-purple-600 font-bold', text: Math.ceil(String(c.text || '').split(/\s+/).length * 1.3) }),
+                            dom.createElement('td', { className: 'p-3 text-green-600 font-bold font-arabic text-[10px]', text: 'مفهرس' }),
+                            actionCell
+                        );
+                        return row;
                     });
-                    tbody.innerHTML = html;
+                    tbody.replaceChildren(...rows);
                 }
 
                 // Update pagination controls
@@ -161,18 +162,17 @@ window.Dashboard.rag = {
         const select = document.getElementById('rag-inspector-doc-select');
         if (!select) return;
 
-        let options = `<option value="">كل المستندات</option>`;
-
-        // Add manual text
-        options += `<option value="manual_text">النص المعرفي اليدوي (knowledge.txt)</option>`;
-
+        const dom = window.Dashboard.utils;
+        const options = [
+            dom.createElement('option', { text: 'كل المستندات', attributes: { value: '' } }),
+            dom.createElement('option', { text: 'النص المعرفي اليدوي (knowledge.txt)', attributes: { value: 'manual_text' } })
+        ];
         window.Dashboard.state.ragDocuments.forEach(d => {
             if (d.documentId !== 'manual_text') {
-                options += `<option value="${d.documentId}">${window.Dashboard.utils.escapeHTML(d.originalFilename)}</option>`;
+                options.push(dom.createElement('option', { text: d.originalFilename, attributes: { value: d.documentId } }));
             }
         });
-
-        select.innerHTML = options;
+        select.replaceChildren(...options);
         select.value = window.Dashboard.state.inspectorDocFilter;
     },
 
@@ -1589,7 +1589,10 @@ window.Dashboard.rag = {
         });
 
         if (filtered.length === 0) {
-            pChunksList.innerHTML = `<div class="text-[10px] text-slate-400 font-arabic p-2">⚠️ لا توجد مقاطع مسترجعة تطابق الفلاتر النشطة حالياً.</div>`;
+            pChunksList.replaceChildren(window.Dashboard.utils.createElement('div', {
+                className: 'text-[10px] text-slate-400 font-arabic p-2',
+                text: '⚠️ لا توجد مقاطع مسترجعة تطابق الفلاتر النشطة حالياً.'
+            }));
             return;
         }
 
@@ -1598,44 +1601,20 @@ window.Dashboard.rag = {
             .split(/[\s,.\-؛؟?()]+/)
             .filter(term => term.length >= 3);
 
-        const highlightText = function(text, terms) {
-            if (!terms || terms.length === 0) return window.Dashboard.utils.escapeHTML(text);
-
-            // Build regex for safe Arabic/alphanumeric highlighting
-            const escapedTerms = terms.map(t => t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-            const pattern = new RegExp(`(${escapedTerms.join('|')})`, 'gi');
-
-            const escapedText = window.Dashboard.utils.escapeHTML(text);
-            return escapedText.replace(pattern, `<mark class="bg-yellow-200 text-slate-900 font-bold px-0.5 rounded">$1</mark>`);
-        };
-
-        let html = '';
-        filtered.forEach((c, i) => {
-            const scoresBlock = isDebugMode ? `
-                <span class="text-green-600 bg-green-50 px-1.5 py-0.5 rounded">Similarity: ${(c.similarityScore || 0).toFixed(4)}</span>
-                <span class="text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">Keyword: ${(c.keywordScore || 0).toFixed(4)}</span>
-                <span class="text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">Rerank: ${(c.rerankScore || 0).toFixed(4)}</span>
-                <span class="text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">الترتيب النهائي: #${c.finalRankOrder || (i + 1)}</span>
-            ` : `
-                <span class="text-blue-600">درجة التشابه: ${(c.similarityScore || 0).toFixed(4)}</span>
-                <span class="text-purple-600">درجة الترتيب: ${(c.rerankScore || 0).toFixed(4)}</span>
-            `;
-
-            const highlightedContent = highlightText(c.text, queryTerms);
-
-            html += `
-                <div class="p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 font-arabic select-text text-[11px] hover:border-slate-300 transition">
-                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 flex-wrap gap-1 border-b border-slate-100 pb-1 mb-1">
-                        <span>المصدر: ${window.Dashboard.utils.escapeHTML(c.documentName)}</span>
-                        <div class="flex gap-1.5 font-mono text-[9px]">
-                            ${scoresBlock}
-                        </div>
-                    </div>
-                    <div class="text-slate-700 leading-relaxed font-mono whitespace-pre-wrap">${highlightedContent}</div>
-                </div>
-            `;
+        const dom = window.Dashboard.utils;
+        const cards = filtered.map((c, i) => {
+            const card = dom.createElement('div', { className: 'p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 font-arabic select-text text-[11px] hover:border-slate-300 transition' });
+            const header = dom.createElement('div', { className: 'flex justify-between items-center text-[10px] font-bold text-slate-500 flex-wrap gap-1 border-b border-slate-100 pb-1 mb-1' });
+            const scores = dom.createElement('div', { className: 'flex gap-1.5 font-mono text-[9px]' });
+            const scoreValues = isDebugMode
+                ? [`Similarity: ${(c.similarityScore || 0).toFixed(4)}`, `Keyword: ${(c.keywordScore || 0).toFixed(4)}`, `Rerank: ${(c.rerankScore || 0).toFixed(4)}`, `الترتيب النهائي: #${c.finalRankOrder || i + 1}`]
+                : [`درجة التشابه: ${(c.similarityScore || 0).toFixed(4)}`, `درجة الترتيب: ${(c.rerankScore || 0).toFixed(4)}`];
+            scoreValues.forEach(value => scores.appendChild(dom.createElement('span', { className: 'text-blue-600', text: value })));
+            header.append(dom.createElement('span', { text: `المصدر: ${c.documentName}` }), scores);
+            card.append(header, dom.createElement('div', { className: 'text-slate-700 leading-relaxed font-mono whitespace-pre-wrap', text: c.text }));
+            return card;
         });
-        pChunksList.innerHTML = html;
+        pChunksList.replaceChildren(...cards);
     },
 
     renderActivityLogs: function() {
@@ -1647,39 +1626,27 @@ window.Dashboard.rag = {
             { title: 'تحميل المستندات', desc: 'تم الاتصال بنجاح وتنزيل قائمة المستندات المتوفرة.', time: 'INDEX' }
         ];
 
-        let html = '';
-        defaultLogs.forEach(l => {
-            html += `
-                <div class="flex items-start gap-3 border-r-2 border-slate-100 pr-3 pb-3 relative">
-                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 mt-1 relative z-10 -mr-[17px]"></span>
-                    <div>
-                        <div class="font-bold text-slate-850">${l.title}</div>
-                        <div class="text-[10px] text-slate-500 leading-relaxed mt-0.5">${l.desc}</div>
-                        <div class="text-[9px] text-slate-400 font-mono mt-1">${l.time}</div>
-                    </div>
-                </div>
-            `;
-        });
-
-        container.innerHTML = html;
+        container.replaceChildren(...defaultLogs.map(l => this.createTimelineEntry(l.title, l.desc, l.time)));
     },
 
     addTimelineLog: function(title, desc) {
         const container = document.getElementById('rag-activity-logs');
         if (!container) return;
 
-        const logHTML = `
-            <div class="flex items-start gap-3 border-r-2 border-slate-100 pr-3 pb-3 relative">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 mt-1 relative z-10 -mr-[17px]"></span>
-                <div>
-                    <div class="font-bold text-slate-850">${title}</div>
-                    <div class="text-[10px] text-slate-500 leading-relaxed mt-0.5">${desc}</div>
-                    <div class="text-[9px] text-slate-400 font-mono mt-1">${new Date().toLocaleTimeString('ar-EG')}</div>
-                </div>
-            </div>
-        `;
+        container.prepend(this.createTimelineEntry(title, desc, new Date().toLocaleTimeString('ar-EG')));
+    },
 
-        container.insertAdjacentHTML('afterbegin', logHTML);
+    createTimelineEntry: function(title, desc, time) {
+        const dom = window.Dashboard.utils;
+        const row = dom.createElement('div', { className: 'flex items-start gap-3 border-r-2 border-slate-100 pr-3 pb-3 relative' });
+        const content = document.createElement('div');
+        content.append(
+            dom.createElement('div', { className: 'font-bold text-slate-850', text: title }),
+            dom.createElement('div', { className: 'text-[10px] text-slate-500 leading-relaxed mt-0.5', text: desc }),
+            dom.createElement('div', { className: 'text-[9px] text-slate-400 font-mono mt-1', text: time })
+        );
+        row.append(dom.createElement('span', { className: 'w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 mt-1 relative z-10 -mr-[17px]' }), content);
+        return row;
     },
 
     // M. File Upload with Version Conflict Checks (Goal 5 & Goal 7)

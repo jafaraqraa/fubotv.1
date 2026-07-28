@@ -170,14 +170,20 @@ window.Dashboard.realtime = {
             const log = envelope.data;
             const logsBox = document.getElementById('live-logs-box');
             if (log && logsBox) {
-                const newLogHtml = `
-                    <div class="border-b border-slate-800 pb-1 font-inter uppercase flex">
-                        <span class="text-cyan-600 opacity-50">[${log.time}]</span>
-                        <span class="text-cyan-400 mr-2 break-all text-[9px]">${window.Dashboard.utils.escapeHTML(log.action)}</span>
-                    </div>
-                `;
-                // Append log dynamically to log panel safely
-                logsBox.innerHTML = newLogHtml + logsBox.innerHTML;
+                const row = window.Dashboard.utils.createElement('div', {
+                    className: 'border-b border-slate-800 pb-1 font-inter uppercase flex'
+                });
+                row.append(
+                    window.Dashboard.utils.createElement('span', {
+                        className: 'text-cyan-600 opacity-50',
+                        text: `[${log.time}]`
+                    }),
+                    window.Dashboard.utils.createElement('span', {
+                        className: 'text-cyan-400 mr-2 break-all text-[9px]',
+                        text: log.action
+                    })
+                );
+                logsBox.prepend(row);
             }
         });
 

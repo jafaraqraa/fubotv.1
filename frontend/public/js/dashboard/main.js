@@ -7,6 +7,19 @@ window.Dashboard.main = {
 
         // 1. Initial state pull via authoritative REST endpoints (Task 15)
         window.Dashboard.analytics.fetchStatsAndUsers();
+        if (window.Dashboard.users && window.Dashboard.users.init) window.Dashboard.users.init();
+        if (window.Dashboard.chat && window.Dashboard.chat.init) window.Dashboard.chat.init();
+        if (window.Dashboard.composer && window.Dashboard.composer.init) window.Dashboard.composer.init();
+        const assignee = document.getElementById('chat-assignee-select');
+        if (assignee) {
+            assignee.addEventListener('change', () => {
+                window.Dashboard.chat.assignChat(window.Dashboard.state.selectedUserId, assignee.value);
+            });
+        }
+        const search = document.getElementById('conversation-search');
+        if (search) search.addEventListener('input', () => window.Dashboard.chat.filterCurrentConversation(search.value));
+        const mobileBack = document.getElementById('conversation-mobile-back');
+        if (mobileBack) mobileBack.addEventListener('click', () => window.Dashboard.chat.closeConversationOnMobile());
 
         // Initialize redesigned API keys limits dashboard and management list
         if (window.Dashboard.apiKeys && typeof window.Dashboard.apiKeys.init === 'function') {

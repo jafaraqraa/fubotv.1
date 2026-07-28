@@ -50,21 +50,21 @@
         </div>
 
         <!-- Login Form -->
-        <div class="space-y-4" onkeyup="handleKeyPress(event)">
+        <form id="login-form" class="space-y-4" novalidate>
             <div>
                 <label for="username" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">اسم المستخدم</label>
-                <input id="username" type="text" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="admin">
+                <input id="username" name="username" type="text" autocomplete="username" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="admin">
             </div>
 
             <div>
                 <label for="password" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">كلمة المرور</label>
-                <input id="password" type="password" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="••••••••">
+                <input id="password" name="password" type="password" autocomplete="current-password" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="••••••••">
             </div>
 
-            <button onclick="submitLogin()" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-2">
+            <button type="submit" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-2">
                 <span>دخول الآمن</span>
             </button>
-        </div>
+        </form>
 
         <div class="text-center text-[10px] text-slate-400">
             FUThing Corporation &copy; 2026. All rights reserved.
@@ -72,12 +72,17 @@
     </div>
 
     <script>
-        async function submitLogin() {
-            const userIn = document.getElementById('username');
-            const passIn = document.getElementById('password');
+        async function submitLogin(event) {
+            if (event) event.preventDefault();
+            const userIn = document.getElementById('username') || document.querySelector('input[name="username"]');
+            const passIn = document.getElementById('password') || document.querySelector('input[name="password"], input[type="password"]');
             const alertBox = document.getElementById('error-alert');
             const btn = document.getElementById('login-btn');
 
+            if (!userIn || !passIn || !alertBox || !btn) {
+                console.error('[Login] Required form elements are missing.');
+                return;
+            }
             const username = userIn.value.trim();
             const password = passIn.value;
 
@@ -89,7 +94,9 @@
 
             // Show loading state
             btn.setAttribute('disabled', 'true');
-            btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> جاري التحقق...';
+            const spinner = document.createElement('span');
+            spinner.className = 'inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin';
+            btn.replaceChildren(spinner, document.createTextNode(' جاري التحقق...'));
             alertBox.classList.add('hidden');
 
             try {
@@ -113,21 +120,17 @@
                     alertBox.innerText = result.error || 'فشل تسجيل الدخول. الرجاء التحقق من المدخلات.';
                     alertBox.classList.remove('hidden');
                     btn.removeAttribute('disabled');
-                    btn.innerHTML = '<span>دخول الآمن</span>';
+                    btn.textContent = 'دخول الآمن';
                 }
             } catch (err) {
                 alertBox.innerText = 'حدث خطأ في الاتصال بالخادم. الرجاء المحاولة لاحقاً.';
                 alertBox.classList.remove('hidden');
                 btn.removeAttribute('disabled');
-                btn.innerHTML = '<span>دخول الآمن</span>';
+                btn.textContent = 'دخول الآمن';
             }
         }
 
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                submitLogin();
-            }
-        }
+        document.getElementById('login-form').addEventListener('submit', submitLogin);
     </script>
 </body>
 </html>

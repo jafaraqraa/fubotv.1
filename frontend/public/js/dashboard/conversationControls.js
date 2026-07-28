@@ -81,10 +81,16 @@ window.Dashboard.conversationControls = {
         if (!pendingToggleUserId) return;
 
         try {
+            const pendingUser = window.Dashboard.state.usersCache.find(
+                user => String(user.id) === String(pendingToggleUserId)
+            );
             const response = await window.Dashboard.api.request('/api/chat/toggle-ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: pendingToggleUserId })
+                body: JSON.stringify({
+                    userId: pendingToggleUserId,
+                    tenantId: pendingUser ? pendingUser.tenantId : undefined
+                })
             });
             const result = await response.json();
 

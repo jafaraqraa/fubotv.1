@@ -4,8 +4,10 @@ const fs = require('fs');
 const session = require('express-session');
 const SQLiteStore = require('./database/sessionStore');
 const { requireAuth } = require('./middleware/requireAuth');
+const { getOriginPolicy } = require('./security/originPolicy');
 
 const app = express();
+const originPolicy = getOriginPolicy();
 
 // Trust reverse proxy (Cloud Run, Nginx, etc.) to allow secure cookies over HTTPS
 app.set('trust proxy', 1);
@@ -19,41 +21,21 @@ app.use((req, res, next) => {
     next();
 });
 
-// 2. Strict CORS Configuration (Section 8)
+// 2. Shared strict origin policy for HTTP and Socket.IO.
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    const allowedOrigin = process.env.FRONTEND_ORIGIN;
-    const isProd = process.env.NODE_ENV === 'production';
-
-    let isAllowed = false;
-    
-    if (origin) {
-        // Dynamically allow same-origin requests (e.g. if origin host matches current requesting host)
-        try {
-            const originUrl = new URL(origin);
-            const requestHost = req.get('host');
-            if (originUrl.host === requestHost) {
-                isAllowed = true;
-            }
-        } catch (e) {
-            // Invalid origin URL format
-        }
-
-        if (!isAllowed) {
-            if (allowedOrigin) {
-                isAllowed = (origin === allowedOrigin);
-            } else {
-                // In development/preview or dynamic cloud environments, allow origin to ensure dashboard access
-                isAllowed = true;
-            }
-        }
+    const decision = originPolicy.evaluate(origin, 'CORS');
+    if (!decision.allowed) {
+        return res.status(403).json({ success: false, error: 'Origin not allowed' });
     }
 
-    if (isAllowed && origin) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
+    if (origin) {
+        res.setHeader('Vary', 'Origin');
+        res.setHeader('Access-Control-Allow-Origin', decision.normalized);
+        res.setHeader('Access-Control-Allow-Credentials', String(originPolicy.credentials));
+        res.setHeader('Access-Control-Allow-Methods', originPolicy.methods.join(', '));
+        res.setHeader('Access-Control-Allow-Headers', originPolicy.allowedHeaders.join(', '));
+        res.setHeader('Access-Control-Max-Age', '600');
     }
 
     if (req.method === 'OPTIONS') {
@@ -61,6 +43,7 @@ app.use((req, res, next) => {
     }
     next();
 });
+app.originPolicy = originPolicy;
 
 // 3. Configure server-side session authentication with custom SQLite Session Store (Task 8)
 const sessionMiddleware = session({
@@ -177,6 +160,7 @@ app.use(express.static(frontendPublicDir));
 
 // Maintain compatibility and clean routing
 app.get('/login', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
     res.sendFile(path.join(frontendPublicDir, 'login.html'));
 });
 

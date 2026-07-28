@@ -1,20 +1,26 @@
 const telegram = require('../channels/telegram');
 const whatsappManager = require('../channels/whatsapp-providers/WhatsAppProviderManager');
 const { sendMetaMessage } = require('../channels/meta');
-const { saveMessage } = require('../database/repositories/messageRepository');
+const { saveMessage, updateMessageDelivery } = require('../database/repositories/messageRepository');
 const { reportError } = require('../services/logger');
 
 async function sendOutgoingMessage(outgoingMsg) {
     const { channel, externalUserId, senderType, messageType, content, media } = outgoingMsg;
-    const tenantId = outgoingMsg.tenantId || 'default';
+    const tenantId = outgoingMsg.tenantId;
 
+    let persistedMessageId = null;
     try {
+        if (channel === 'whatsapp' && !tenantId) {
+            console.error(`[Outgoing Message] Missing tenantId for WhatsApp message. Sending aborted. messageId=${outgoingMsg.externalMessageId || 'unknown'} channel=${channel}`);
+            throw new Error('Missing tenantId for WhatsApp message');
+        }
+
         let externalMessageId = null;
         let finalPath = media ? media.localPath : null;
 
         // Internal notes do not get dispatched to any external channels
         if (messageType === 'note' || outgoingMsg.isNote) {
-            saveMessage(externalUserId, senderType, content, 'note', true);
+            saveMessage(externalUserId, senderType, content, 'note', true, null, { channel, tenantId });
             return { success: true, status: 'note_saved' };
         }
 
@@ -61,26 +67,78 @@ async function sendOutgoingMessage(outgoingMsg) {
             }
         } else if (channel === 'messenger' || channel === 'instagram') {
             const finalContent = finalPath ? `${content || ''} ${finalPath}`.trim() : content;
-            await sendMetaMessage(externalUserId, finalContent, channel);
-            externalMessageId = `meta_${Date.now()}`;
+            persistedMessageId = saveMessage(
+                externalUserId,
+                senderType,
+                finalPath || content,
+                messageType,
+                false,
+                null,
+                {
+                    channel,
+                    tenantId,
+                    deliveryStatus: 'sending',
+                    metadata: { provider: 'meta' }
+                }
+            );
+            const metaResult = await sendMetaMessage(externalUserId, finalContent, channel);
+            if (!metaResult || !metaResult.success) {
+                const failure = metaResult || {
+                    error: 'Meta sender returned no result',
+                    statusCode: null,
+                    metaErrorCode: null,
+                    rawResponse: null
+                };
+                updateMessageDelivery(persistedMessageId, 'failed', {
+                    provider: 'meta',
+                    httpStatus: failure.statusCode,
+                    metaErrorCode: failure.metaErrorCode,
+                    metaErrorMessage: failure.error,
+                    rawResponse: failure.rawResponse
+                });
+                const error = new Error(failure.error || 'Meta Graph API send failed');
+                error.deliveryDetails = failure;
+                throw error;
+            }
+            externalMessageId = metaResult.messageId || null;
+            updateMessageDelivery(persistedMessageId, 'sent', {
+                provider: 'meta',
+                httpStatus: metaResult.statusCode,
+                externalMessageId,
+                rawResponse: metaResult.rawResponse
+            });
         }
 
         // Save delivery output to SQLite message thread
-        const textToSave = finalPath ? finalPath : content;
-        saveMessage(externalUserId, senderType, textToSave, messageType, false, externalMessageId);
+        if (!persistedMessageId) {
+            const textToSave = finalPath ? finalPath : content;
+            saveMessage(externalUserId, senderType, textToSave, messageType, false, externalMessageId, {
+                channel,
+                tenantId
+            });
+        }
 
         return {
             success: true,
             status: 'sent',
-            externalMessageId
+            externalMessageId,
+            tenantId: tenantId || null
         };
 
     } catch (err) {
+        if (persistedMessageId && !err.deliveryDetails) {
+            updateMessageDelivery(persistedMessageId, 'failed', {
+                error: err.message
+            });
+        }
         reportError(`إرسال رسالة صادرة (${channel})`, err.message);
+        const details = err.deliveryDetails || {};
         return {
             success: false,
             status: 'failed',
-            error: err.message
+            error: err.message,
+            statusCode: details.statusCode === undefined ? null : details.statusCode,
+            metaErrorCode: details.metaErrorCode === undefined ? null : details.metaErrorCode
         };
     }
 }

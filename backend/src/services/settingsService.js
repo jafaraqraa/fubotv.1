@@ -12,7 +12,7 @@ const SENSITIVE_KEYS = [
 ];
 
 function parseEnvFile() {
-    const envPath = path.join(__dirname, '..', '..', '..', '.env');
+    const envPath = path.join(__dirname, '..', '..', '.env');
     const result = {};
     if (fs.existsSync(envPath)) {
         const content = fs.readFileSync(envPath, 'utf8');

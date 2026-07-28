@@ -123,7 +123,7 @@
             </header>
 
             <!-- التبويب الأول: قسم الدعم والدردشة الفورية المشتركة (Chat Section) -->
-            <div id="chat-section" class="flex-1 flex overflow-hidden p-8 gap-6">
+            <div id="chat-section" class="flex-1 flex overflow-hidden p-8 gap-6 channel-workspace">
                 <!-- قائمة المستخدمين النشطين -->
                 <div class="w-72 bg-white rounded-xl shadow-sm border border-slate-200/60 flex flex-col overflow-hidden font-cairo">
                     <div class="p-4 border-b border-slate-100 bg-slate-50/50">
@@ -133,18 +133,18 @@
                     
                     <!-- أزرار الفلترة الأنيقة للمنصات -->
                     <div class="px-4 py-2 bg-slate-50/40 border-b border-slate-100 flex flex-wrap gap-1 justify-center text-[9px] font-bold">
-                        <button onclick="setChatFilter('all')" id="filter-all" class="flex-1 py-1 px-1.5 text-center rounded bg-blue-600 text-white shadow-sm transition">الكل</button>
-                        <button onclick="setChatFilter('telegram')" id="filter-telegram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Telegram</button>
-                        <button onclick="setChatFilter('whatsapp')" id="filter-whatsapp" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">WhatsApp</button>
-                        <button onclick="setChatFilter('messenger')" id="filter-messenger" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Messenger</button>
-                        <button onclick="setChatFilter('instagram')" id="filter-instagram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Instagram</button>
+                        <button data-chat-filter="all" id="filter-all" class="flex-1 py-1 px-1.5 text-center rounded bg-blue-600 text-white shadow-sm transition">الكل</button>
+                        <button data-chat-filter="telegram" id="filter-telegram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Telegram</button>
+                        <button data-chat-filter="whatsapp" id="filter-whatsapp" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">WhatsApp</button>
+                        <button data-chat-filter="messenger" id="filter-messenger" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Messenger</button>
+                        <button data-chat-filter="instagram" id="filter-instagram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Instagram</button>
                     </div>
 
                     <!-- زر التبديل "غير المقروء فقط" -->
                     <div class="px-4 py-3 bg-slate-50/60 border-b border-slate-100 flex items-center justify-between text-[10px] text-slate-650 font-bold select-none">
                         <span>الرسائل غير المقروءة فقط</span>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="unread-only-toggle" onchange="toggleUnreadFilter()" class="sr-only peer">
+                            <input type="checkbox" id="unread-only-toggle" class="sr-only peer">
                             <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200 relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
                         </label>
                     </div>
@@ -154,10 +154,11 @@
                 </div>
 
                 <!-- نافذة المحادثة النشطة -->
-                <div class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200/60 flex flex-col overflow-hidden relative">
+                <div id="conversation-shell" data-channel="messenger" class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200/60 flex flex-col overflow-hidden relative channel-conversation-shell">
                     <!-- ترويسة المحادثة -->
-                    <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center h-16 z-10">
-                        <div id="chat-user-header-info">
+                    <div class="channel-conversation-header">
+                        <button id="conversation-mobile-back" class="channel-mobile-back" type="button" aria-label="العودة للمحادثات">‹</button>
+                        <div id="chat-user-header-info" class="channel-header-profile">
                             <h3 id="current-chat-user" class="font-bold text-xs text-slate-900">بانتظار اختيار عميل</h3>
                             <p id="current-chat-id" class="text-[10px] text-slate-400 mt-0.5 font-inter">Select a chat to begin</p>
                         </div>
@@ -165,7 +166,7 @@
                             <!-- قائمة الموظفين المسندة إليهم المحادثة (Chat Assignment) -->
                             <div id="assignee-container" class="hidden flex items-center gap-1.5 bg-slate-100/80 px-2.5 py-1 rounded-lg border border-slate-200">
                                 <span class="text-[10px] text-slate-500 font-bold">إسناد:</span>
-                                <select id="chat-assignee-select" onchange="assignChat(window.Dashboard.state.selectedUserId, this.value)" class="text-[10px] font-bold bg-transparent border-none text-slate-700 outline-none cursor-pointer focus:ring-0">
+                                <select id="chat-assignee-select" class="text-[10px] font-bold bg-transparent border-none text-slate-700 outline-none cursor-pointer focus:ring-0">
                                     <option value="ai">وكيل الذكاء الاصطناعي</option>
                                     <option value="احمد">أحمد (مبيعات)</option>
                                     <option value="سارة">سارة (الدعم الفني)</option>
@@ -175,9 +176,10 @@
                             <div id="chat-header-actions"></div>
                         </div>
                     </div>
+                    <input id="conversation-search" class="hidden channel-conversation-search" type="search" placeholder="بحث في هذه المحادثة" autocomplete="off">
 
                     <!-- صندوق المحادثة -->
-                    <div id="chat-box" class="flex-1 p-6 overflow-y-auto bg-slate-50/50 space-y-4 flex flex-col">
+                    <div id="chat-box" class="flex-1 overflow-y-auto channel-message-list" aria-live="polite">
                         <p class="text-slate-400 text-center my-auto text-[11px] font-inter uppercase tracking-widest">Select a channel to begin</p>
                     </div>
 
@@ -186,10 +188,10 @@
                         
                         <!-- تبويبات نوع الرد (رد مباشر للعميل / ملاحظة داخلية للموظفين) -->
                         <div class="flex items-center gap-4 text-xs font-bold border-b border-slate-100 pb-2">
-                            <button id="tab-reply" onclick="setMessageType('reply')" class="text-blue-600 border-b-2 border-blue-600 pb-1.5 transition">
+                            <button id="tab-reply" class="text-blue-600 border-b-2 border-blue-600 pb-1.5 transition">
                                 رد مباشر للعميل
                             </button>
-                            <button id="tab-note" onclick="setMessageType('note')" class="text-slate-400 hover:text-slate-600 pb-1.5 transition">
+                            <button id="tab-note" class="text-slate-400 hover:text-slate-600 pb-1.5 transition">
                                 ملاحظة داخلية
                             </button>
                         </div>
@@ -197,7 +199,7 @@
                         <!-- عرض ملفات مجهزة للرفع والارسال الفوري كـ Rich Media -->
                         <div id="media-preview-container" class="hidden flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
                             <span id="media-filename" class="text-slate-700 font-mono text-[11px] truncate">document.pdf</span>
-                            <button onclick="clearMediaUpload()" class="text-red-500 font-bold text-[10px] hover:underline uppercase">Delete</button>
+                            <button id="media-preview-delete" class="text-red-500 font-bold text-[10px] hover:underline uppercase">Delete</button>
                         </div>
 
                         <!-- واجهة الكتابة السريعة للردود الجاهزة (Canned Responses Overlay) -->
@@ -207,15 +209,15 @@
 
                         <div class="flex gap-2 items-center" id="input-wrapper">
                             <!-- حقل رفع ملفات مدمج مخفي -->
-                            <input type="file" id="media-upload-input" onchange="handleFileSelection()" class="hidden" accept="image/*, application/pdf, audio/*, video/*">
+                            <input type="file" id="media-upload-input" class="hidden" accept="image/*, application/pdf, audio/*, video/*">
                             
                             <!-- زر إرفاق وسائط (Rich Media Button) -->
-                            <button onclick="triggerFileInput()" id="media-upload-btn" class="p-2.5 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-lg border border-slate-200/60 hover:bg-slate-100 transition" disabled>
+                            <button id="media-upload-btn" class="p-2.5 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-lg border border-slate-200/60 hover:bg-slate-100 transition" disabled>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                             </button>
 
-                            <input id="direct-msg-input" type="text" onkeyup="handleInputKey(event)" oninput="detectCannedResponseTrigger(this)" class="flex-1 p-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="اكتب ردك هنا... اكتب / لعرض الردود الجاهزة" disabled>
-                            <button onclick="sendDirectMessage()" id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm" disabled>إرسال</button>
+                            <input id="direct-msg-input" type="text" class="flex-1 p-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="اكتب ردك هنا... اكتب / لعرض الردود الجاهزة" disabled>
+                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm" disabled>إرسال</button>
                         </div>
                     </div>
                 </div>
@@ -571,26 +573,34 @@
             </div>
 
             <!-- تبويب إدارة موديلات الذكاء الاصطناعي (AI Models) -->
-            <div id="aimodels-section" data-testid="aimodels-section" class="flex-1 hidden p-8 overflow-y-auto font-cairo space-y-6">
+            <div id="aimodels-section" data-testid="aimodels-section" class="ai-models-page flex-1 hidden overflow-y-auto font-cairo">
 
                 <!-- رأس صفحة الموديلات -->
-                <div class="flex items-center justify-between bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm flex-wrap gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-650 flex items-center justify-center text-xl shadow-inner transition hover:scale-105 duration-200">
+                <div class="ai-models-hero">
+                    <div class="ai-models-title">
+                        <div class="ai-models-title-icon">
                             🤖
                         </div>
                         <div>
-                            <h1 class="text-base font-bold text-slate-900">موديلات الذكاء الاصطناعي (AI Models)</h1>
-                            <p class="text-xs text-slate-500 mt-0.5">تخصيص وتعيين الموديلات الذكية لكل مهمة في المنصة بشكل مستقل ومبسط.</p>
+                            <h1>إدارة موديلات الذكاء الاصطناعي</h1>
+                            <p>تخصيص وتعيين الموديلات الذكية لكل مهمة في المنصة بشكل مستقل ومبسط.</p>
                         </div>
                     </div>
+                    <div class="ai-models-connection"><i></i><span>متصل بنظام FUThing</span></div>
                 </div>
 
                 <!-- شبكة المهام الذكية (AI Tasks Grid) -->
-                <div id="ai-tasks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="ai-tasks-grid" class="ai-models-grid">
                     <!-- يتم بناؤها ديناميكياً بواسطة جافا سكريبت -->
                 </div>
 
+                <div class="ai-models-tip">
+                    <div class="ai-models-tip-copy">
+                        <span class="ai-models-tip-icon">♢</span>
+                        <div><strong>نصيحة</strong><p>اختبر كل موديل بعد تعديله للتأكد من عمله بشكل صحيح. يمكنك أيضاً الاطلاع على تقارير الاستخدام والتكاليف.</p></div>
+                    </div>
+                    <button type="button" id="ai-models-usage-report">عرض تقارير الاستخدام <span>▥</span></button>
+                </div>
             </div>
 
             <!-- تبويب استهلاك واستخدام الذكاء الاصطناعي (AI Usage & Billing) -->
@@ -2110,6 +2120,7 @@
     <script src="/js/dashboard/auth.js"></script>
     <script src="/js/dashboard/navigation.js"></script>
     <script src="/js/dashboard/users.js"></script>
+    <script src="/js/dashboard/chatThemes.js"></script>
     <script src="/js/dashboard/chat.js"></script>
     <script src="/js/dashboard/composer.js"></script>
     <script src="/js/dashboard/conversationControls.js"></script>

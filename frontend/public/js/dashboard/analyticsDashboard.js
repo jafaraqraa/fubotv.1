@@ -187,33 +187,36 @@ window.Dashboard.analyticsDashboard = (function() {
         const tbody = document.getElementById('usage-models-table-body');
         if (tbody) {
             if (state.models && state.models.length > 0) {
-                let html = '';
-                state.models.forEach(m => {
-                    html += `
-                        <tr class="hover:bg-slate-50 transition font-mono">
-                            <td class="p-3 font-semibold text-slate-800 font-sans">${m.model}</td>
-                            <td class="p-3 uppercase text-slate-500 font-sans">${m.provider}</td>
-                            <td class="p-3">${Number(m.requests).toLocaleString()}</td>
-                            <td class="p-3 text-slate-450">${Number(m.inputTokens || m.prompt_tokens || 0).toLocaleString()}</td>
-                            <td class="p-3 text-slate-450">${Number(m.outputTokens || m.completion_tokens || 0).toLocaleString()}</td>
-                            <td class="p-3 font-bold">${Number(m.totalTokens).toLocaleString()}</td>
-                            <td class="p-3 text-green-600 font-bold">$${Number(m.avgCost || 0).toFixed(5)}</td>
-                            <td class="p-3 text-slate-600">${m.avgLatency} ms</td>
-                            <td class="p-3">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${m.successRate >= 95 ? 'bg-green-50 text-green-700' : (m.successRate >= 85 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')}">
-                                    ${m.successRate}%
-                                </span>
-                            </td>
-                        </tr>
-                    `;
+                const dom = window.Dashboard.utils;
+                const rows = state.models.map(m => {
+                    const row = dom.createElement('tr', { className: 'hover:bg-slate-50 transition font-mono' });
+                    const successCell = dom.createElement('td', { className: 'p-3' });
+                    successCell.appendChild(dom.createElement('span', {
+                        className: `px-2 py-0.5 rounded-full text-[10px] font-bold ${m.successRate >= 95 ? 'bg-green-50 text-green-700' : (m.successRate >= 85 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')}`,
+                        text: `${m.successRate}%`
+                    }));
+                    row.append(
+                        dom.createElement('td', { className: 'p-3 font-semibold text-slate-800 font-sans', text: m.model }),
+                        dom.createElement('td', { className: 'p-3 uppercase text-slate-500 font-sans', text: m.provider }),
+                        dom.createElement('td', { className: 'p-3', text: Number(m.requests).toLocaleString() }),
+                        dom.createElement('td', { className: 'p-3 text-slate-450', text: Number(m.inputTokens || m.prompt_tokens || 0).toLocaleString() }),
+                        dom.createElement('td', { className: 'p-3 text-slate-450', text: Number(m.outputTokens || m.completion_tokens || 0).toLocaleString() }),
+                        dom.createElement('td', { className: 'p-3 font-bold', text: Number(m.totalTokens).toLocaleString() }),
+                        dom.createElement('td', { className: 'p-3 text-green-600 font-bold', text: `$${Number(m.avgCost || 0).toFixed(5)}` }),
+                        dom.createElement('td', { className: 'p-3 text-slate-600', text: `${m.avgLatency} ms` }),
+                        successCell
+                    );
+                    return row;
                 });
-                tbody.innerHTML = html;
+                tbody.replaceChildren(...rows);
             } else {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="9" class="text-slate-400 text-center p-8 uppercase font-inter text-[10px] tracking-widest">No model usage statistics found.</td>
-                    </tr>
-                `;
+                const row = document.createElement('tr');
+                row.appendChild(window.Dashboard.utils.createElement('td', {
+                    className: 'text-slate-400 text-center p-8 uppercase font-inter text-[10px] tracking-widest',
+                    text: 'No model usage statistics found.',
+                    attributes: { colspan: '9' }
+                }));
+                tbody.replaceChildren(row);
             }
         }
 
@@ -526,14 +529,22 @@ window.Dashboard.analytics = {
             const logsBox = document.getElementById('live-logs-box');
             if (logsBox) {
                 if (stats.logs && stats.logs.length > 0) {
-                    logsBox.innerHTML = stats.logs.map(log => `
-                        <div class="border-b border-slate-800 pb-1 font-inter uppercase flex">
-                            <span class="text-cyan-600 opacity-50">[${log.time}]</span>
-                            <span class="text-cyan-400 mr-2 break-all text-[9px]">${window.Dashboard.utils.escapeHTML(log.action)}</span>
-                        </div>
-                    `).join('');
+                    const rows = stats.logs.map(log => {
+                        const row = window.Dashboard.utils.createElement('div', {
+                            className: 'border-b border-slate-800 pb-1 font-inter uppercase flex'
+                        });
+                        row.append(
+                            window.Dashboard.utils.createElement('span', { className: 'text-cyan-600 opacity-50', text: `[${log.time}]` }),
+                            window.Dashboard.utils.createElement('span', { className: 'text-cyan-400 mr-2 break-all text-[9px]', text: log.action })
+                        );
+                        return row;
+                    });
+                    logsBox.replaceChildren(...rows);
                 } else {
-                    logsBox.innerHTML = '<div class="text-slate-600 text-center py-16 uppercase">Initializing stream...</div>';
+                    logsBox.replaceChildren(window.Dashboard.utils.createElement('div', {
+                        className: 'text-slate-600 text-center py-16 uppercase',
+                        text: 'Initializing stream...'
+                    }));
                 }
             }
 

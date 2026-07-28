@@ -10,9 +10,15 @@ async function processIncomingMessage(normalizedMsg) {
         validateNormalizedMessage(normalizedMsg);
 
         const { channel, externalMessageId, externalUserId, customer, messageType, content } = normalizedMsg;
+        const tenantId = normalizedMsg.metadata && normalizedMsg.metadata.tenantId;
+
+        if (channel === 'whatsapp' && !tenantId) {
+            console.error(`[Outgoing Message] Missing tenantId for WhatsApp message. Sending aborted. messageId=${externalMessageId || 'unknown'} channel=${channel}`);
+            throw new Error('Missing tenantId for WhatsApp message');
+        }
 
         // 2. Prevent duplicate processing (Task 8)
-        if (externalMessageId && await existsByExternalId(channel, externalMessageId)) {
+        if (externalMessageId && await existsByExternalId(channel, externalMessageId, tenantId)) {
             console.log(`⚠️ Ignored duplicate incoming event: ${externalMessageId} on ${channel}`);
             return {
                 status: 'duplicate',
@@ -23,15 +29,22 @@ async function processIncomingMessage(normalizedMsg) {
         }
 
         // 3. Centralized customer profile lookup and register
-        registerCustomerUser(externalUserId, customer.displayName, channel);
+        registerCustomerUser(externalUserId, customer.displayName, channel, tenantId);
 
         // 4. Inbound persistence in SQLite
-        saveMessage(externalUserId, 'user', content, messageType, false, externalMessageId);
-        incrementUnreadCount(externalUserId);
+        saveMessage(externalUserId, 'user', content, messageType, false, externalMessageId, {
+            channel,
+            tenantId,
+            metadata: {
+                ...(normalizedMsg.metadata || {}),
+                ...(normalizedMsg.media ? { media: normalizedMsg.media } : {})
+            }
+        });
+        incrementUnreadCount(externalUserId, tenantId || 'default');
         addLog(`رسالة جديدة من ${customer.displayName} عبر ${channel}`);
 
         // 5. Check AI automation status (Task 6)
-        const user = findCustomerUser(externalUserId, channel);
+        const user = findCustomerUser(externalUserId, channel, tenantId);
         const isAIEnabled = user ? user.isAIEnabled : true;
         const assignee = user ? user.assignee : 'ai';
 
@@ -52,7 +65,13 @@ async function processIncomingMessage(normalizedMsg) {
         const textToProcess = (messageType !== 'text') ? content : content; // handles attachments captions or paths
 
         if (textToProcess || messageType === 'image' || messageType === 'audio' || messageType === 'voice') {
-            const aiResponse = await getAIResponse(externalUserId, textToProcess || '', messageType, normalizedMsg.media);
+            const aiResponse = await getAIResponse(
+                externalUserId,
+                textToProcess || '',
+                messageType,
+                normalizedMsg.media,
+                { tenantId: tenantId || 'default', channel }
+            );
             replyText = aiResponse || `شكراً لتواصلك معنا. تم استلام رسالتك وجاري مراجعتها قريباً.`;
         } else {
             replyText = `تم استلام الملف بنجاح، جاري المراجعة والرد عليك قريباً.`;
@@ -67,7 +86,8 @@ async function processIncomingMessage(normalizedMsg) {
             senderType: 'ai',
             messageType: 'text',
             content: replyText,
-            media: null
+            media: null,
+            tenantId
         });
 
         return {

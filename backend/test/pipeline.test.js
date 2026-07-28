@@ -128,10 +128,10 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
     await t.test('6. Conversation channel identity isolation', async () => {
         // Create user with same external_user_id 'user_collision' on different channels (Telegram & WhatsApp)
         customerRepo.registerCustomerUser('user_collision', 'Tg Collide', 'telegram');
-        customerRepo.registerCustomerUser('user_collision', 'Wa Collide', 'whatsapp');
+        customerRepo.registerCustomerUser('user_collision', 'Wa Collide', 'whatsapp', 'default');
 
         const tgUser = customerRepo.findCustomerUser('user_collision', 'telegram');
-        const waUser = customerRepo.findCustomerUser('user_collision', 'whatsapp');
+        const waUser = customerRepo.findCustomerUser('user_collision', 'whatsapp', 'default');
 
         assert.ok(tgUser && waUser);
         assert.strictEqual(tgUser.name, 'Tg Collide');

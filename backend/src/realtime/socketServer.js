@@ -3,22 +3,28 @@ const { Server } = require('socket.io');
 const eventPublisher = require('./eventPublisher');
 const { EVENTS } = require('./events');
 const app = require('../app');
+const { getOriginPolicy } = require('../security/originPolicy');
 
 let io = null;
 
 function initializeSocketServer(httpServer) {
     if (io) return io;
 
-    const frontendOrigin = process.env.FRONTEND_ORIGIN;
-    const isProd = process.env.NODE_ENV === 'production';
+    const originPolicy = getOriginPolicy();
 
     io = new Server(httpServer, {
         cors: {
             origin: function (origin, callback) {
-                // Dynamically allow origins to ensure WebSocket works correctly in multi-environment setups
-                callback(null, true);
+                const decision = originPolicy.evaluate(origin, 'Socket.IO');
+                callback(decision.allowed ? null : new Error('Origin not allowed'), decision.allowed);
             },
-            credentials: true
+            credentials: originPolicy.credentials,
+            methods: originPolicy.methods,
+            allowedHeaders: originPolicy.allowedHeaders
+        },
+        allowRequest: (req, callback) => {
+            const decision = originPolicy.evaluate(req.headers.origin, 'Socket.IO');
+            callback(null, decision.allowed);
         }
     });
 

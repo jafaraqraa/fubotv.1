@@ -144,7 +144,8 @@ async function fetchOpenRouterGenerationDetails(generationId, apiKey) {
  * Maintain backward compatibility with: getAIResponse(userId, userText)
  * Now expanded with Task-Based Image Understanding routing support!
  */
-async function getAIResponse(userId, userText, messageType = 'text', mediaObj = null) {
+async function getAIResponse(userId, userText, messageType = 'text', mediaObj = null, routing = {}) {
+    const tenantId = routing.tenantId || 'default';
     const startTime = Date.now();
     const profiler = new PipelineProfiler();
 
@@ -219,7 +220,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     const context = await retrieveContext(retrievalText, profiler);
 
     // 3. Fetch clean conversation history (unmodified)
-    const conversationHistory = getChatHistoryForAI(userId);
+    const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
 
     // 4. Construct messages payload using Prompt Builder
     profiler.startStage('Prompt Builder');
@@ -361,7 +362,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             provider: activeProviderName,
             model: respModel,
             task: activeTask,
-            tenant_id: 'default',
+            tenant_id: tenantId,
             request_time: new Date(apiStart),
             response_time: new Date(apiEnd),
             duration: apiLatency,

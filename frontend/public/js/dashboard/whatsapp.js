@@ -201,38 +201,53 @@ window.Dashboard.whatsapp = {
             if (logoutBtn) logoutBtn.classList.remove('hidden');
 
             if (isCloud) {
-                container.innerHTML = `
-                    <div class="text-center space-y-2">
-                        <div class="font-bold text-green-600 uppercase tracking-widest text-[10px]">Cloud Gateway Active</div>
-                        <p class="text-[9px] text-slate-400 mt-2">WhatsApp Cloud API is configured and ready</p>
-                    </div>
-                `;
+                container.replaceChildren(this.createStatusMessage('Cloud Gateway Active', 'WhatsApp Cloud API is configured and ready'));
             } else {
-                container.innerHTML = `
-                    <div class="text-center space-y-2">
-                        <div class="font-bold text-green-600 uppercase tracking-widest text-[10px]">Web Gateway Active</div>
-                        <p class="text-[9px] text-slate-400 mt-2">Ready for incoming traffic</p>
-                    </div>
-                `;
+                container.replaceChildren(this.createStatusMessage('Web Gateway Active', 'Ready for incoming traffic'));
             }
         } else if (data.status === "انتظار المسح" && !isCloud) {
             badge.className = "text-[10px] px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-yellow-500";
             if (logoutBtn) logoutBtn.classList.add('hidden');
             if (data.qr) {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <img src="${data.qr}" alt="WhatsApp QR Code" class="w-56 h-56 mx-auto border border-slate-200 p-2 bg-white rounded-lg shadow-sm">
-                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Scanning required...</p>
-                    </div>
-                `;
+                const wrapper = window.Dashboard.utils.createElement('div', { className: 'space-y-4' });
+                const image = window.Dashboard.utils.createElement('img', {
+                    className: 'w-56 h-56 mx-auto border border-slate-200 p-2 bg-white rounded-lg shadow-sm',
+                    attributes: { alt: 'WhatsApp QR Code' }
+                });
+                if (/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(String(data.qr))) {
+                    image.src = data.qr;
+                }
+                wrapper.append(image, window.Dashboard.utils.createElement('p', {
+                    className: 'text-[10px] text-slate-400 uppercase tracking-wider font-semibold',
+                    text: 'Scanning required...'
+                }));
+                container.replaceChildren(wrapper);
             }
         } else {
             badge.className = "text-[10px] px-3 py-1 rounded-full font-bold bg-red-100 text-red-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-red-500";
             if (logoutBtn) logoutBtn.classList.add('hidden');
-            container.innerHTML = `<p class="text-[10px] text-red-500 uppercase tracking-wider">Gateway offline...</p>`;
+            container.replaceChildren(window.Dashboard.utils.createElement('p', {
+                className: 'text-[10px] text-red-500 uppercase tracking-wider',
+                text: 'Gateway offline...'
+            }));
         }
+    },
+
+    createStatusMessage: function(title, detail) {
+        const wrapper = window.Dashboard.utils.createElement('div', { className: 'text-center space-y-2' });
+        wrapper.append(
+            window.Dashboard.utils.createElement('div', {
+                className: 'font-bold text-green-600 uppercase tracking-widest text-[10px]',
+                text: title
+            }),
+            window.Dashboard.utils.createElement('p', {
+                className: 'text-[9px] text-slate-400 mt-2',
+                text: detail
+            })
+        );
+        return wrapper;
     },
 
     logoutWhatsApp: async function() {

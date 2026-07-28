@@ -68,6 +68,50 @@ function verifyMetaSignature(req, res, next) {
     next();
 }
 
+// Verify WhatsApp Cloud webhook authenticity using Meta's official
+// X-Hub-Signature-256 HMAC over the exact raw HTTP request body.
+function verifyWhatsAppSignature(req, res, next) {
+    const verificationDisabled =
+        String(process.env.WHATSAPP_VERIFY_SIGNATURE || '').toLowerCase() === 'false';
+
+    if (verificationDisabled) {
+        console.warn('[Webhook] Signature verification disabled.');
+        return next();
+    }
+
+    const signatureHeader = req.headers['x-hub-signature-256'];
+    if (!signatureHeader) {
+        console.warn('[Webhook] Missing signature header.');
+        return res.status(401).json({ success: false, error: 'Signature missing' });
+    }
+
+    const signatureMatch = signatureHeader.match(/^sha256=([A-Fa-f0-9]{64})$/);
+    const appSecret = process.env.WHATSAPP_APP_SECRET || process.env.META_APP_SECRET;
+    const rawBody = req.rawBody;
+
+    if (!signatureMatch || !appSecret || !Buffer.isBuffer(rawBody)) {
+        console.warn('[Webhook] Invalid signature.');
+        return res.status(401).json({ success: false, error: 'Invalid signature' });
+    }
+
+    const receivedSignature = Buffer.from(signatureMatch[1], 'hex');
+    const expectedSignature = crypto
+        .createHmac('sha256', appSecret)
+        .update(rawBody)
+        .digest();
+
+    if (
+        receivedSignature.length !== expectedSignature.length ||
+        !crypto.timingSafeEqual(receivedSignature, expectedSignature)
+    ) {
+        console.warn('[Webhook] Invalid signature.');
+        return res.status(401).json({ success: false, error: 'Invalid signature' });
+    }
+
+    console.log('[Webhook] Signature verified.');
+    return next();
+}
+
 // 1. مسار التحقق من Webhook لفيسبوك وانستجرام (GET)
 router.get('/webhook', (req, res) => {
     const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || "my_secure_token";
@@ -143,7 +187,7 @@ router.get('/whatsapp/:tenantId', async (req, res) => {
 });
 
 // 4. Webhook message receiver endpoint for WhatsApp Cloud API (POST)
-router.post('/whatsapp/:tenantId', async (req, res) => {
+router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, async (req, res) => {
     const { tenantId } = req.params;
     const body = req.body;
 

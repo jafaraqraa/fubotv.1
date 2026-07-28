@@ -38,12 +38,15 @@ const uploadsDir = path.join(__dirname, '..', '..', 'public', 'uploads');
 
 // 1. مسار إسناد المحادثة للموظفين (Chat Assignment Endpoint)
 router.post('/chat/assign', (req, res) => {
-    const { userId, assignee } = req.body;
+    const { userId, assignee, tenantId } = req.body;
     if (!userId || !assignee) return res.status(400).json({ success: false, error: 'بيانات ناقصة' });
 
-    const user = findCustomerUserByIdOnly(userId);
+    const user = findCustomerUserByIdOnly(userId, tenantId || null);
     if (user) {
-        updateAssignee(userId, assignee);
+        if (user.platform === 'whatsapp' && !tenantId) {
+            return res.status(400).json({ success: false, error: 'tenantId مطلوب لعمليات WhatsApp' });
+        }
+        updateAssignee(userId, assignee, user.tenantId);
         const isAI = assignee === 'ai';
         addLog(`تم إسناد محادثة العميل ${user.name} إلى: ${assignee === 'ai' ? 'وكيل الذكاء الاصطناعي' : assignee}`);
         res.json({ success: true, isAIEnabled: isAI });
@@ -54,17 +57,23 @@ router.post('/chat/assign', (req, res) => {
 
 // 2. تحديث وتطوير مسار إرسال الرسائل الفردية والملاحظات والوسائط (Rich Media & Notes Support) - uses outgoingMessageService (Task 14)
 router.post('/send-direct', async (req, res) => {
-    const { userId, message, isNote, mediaData, mediaName, mediaType } = req.body;
+    const { userId, message, isNote, mediaData, mediaName, mediaType, tenantId } = req.body;
     if (!userId) return res.status(400).json({ success: false, error: 'بيانات ناقصة' });
 
-    const user = findCustomerUserByIdOnly(userId);
+    const user = findCustomerUserByIdOnly(userId, tenantId || null);
     if (!user) return res.status(404).json({ success: false, error: 'المستخدم غير موجود' });
+    if (user.platform === 'whatsapp' && !tenantId) {
+        return res.status(400).json({ success: false, error: 'tenantId مطلوب لإرسال WhatsApp' });
+    }
 
     try {
         // If it is a private internal note, delegate to persistence save directly without sending
         if (isNote === true) {
             if (!message) return res.status(400).json({ success: false, error: 'محتوى الملاحظة فارغ' });
-            saveMessage(userId, 'admin', message, 'note', true);
+            saveMessage(userId, 'admin', message, 'note', true, null, {
+                channel: user.platform,
+                tenantId: user.tenantId
+            });
             addLog(`تمت إضافة ملاحظة داخلية سرية على محادثة: ${user.name}`);
             return res.json({ success: true });
         }
@@ -111,7 +120,8 @@ router.post('/send-direct', async (req, res) => {
             senderType: 'agent',
             messageType: actualMediaType,
             content: message || '',
-            media: mediaMetadata
+            media: mediaMetadata,
+            tenantId: user.tenantId
         });
 
         if (outgoingResult.success) {
@@ -544,17 +554,25 @@ router.get('/users', (req, res) => {
 
 router.get('/chat/:userId', (req, res) => {
     const userId = req.params.userId;
-    clearUnreadCount(userId);
-    res.json(listMessages(userId));
+    const user = findCustomerUserByIdOnly(userId, req.query.tenantId || null);
+    if (!user) return res.status(404).json({ success: false, error: 'المستخدم غير موجود' });
+    if (user.platform === 'whatsapp' && !req.query.tenantId) {
+        return res.status(400).json({ success: false, error: 'tenantId مطلوب لمحادثات WhatsApp' });
+    }
+    clearUnreadCount(userId, user.tenantId);
+    res.json(listMessages(userId, user.tenantId, user.platform));
 });
 
 router.post('/chat/toggle-ai', (req, res) => {
-    const { userId } = req.body;
-    const user = findCustomerUserByIdOnly(userId);
+    const { userId, tenantId } = req.body;
+    const user = findCustomerUserByIdOnly(userId, tenantId || null);
 
     if (user) {
+        if (user.platform === 'whatsapp' && !tenantId) {
+            return res.status(400).json({ success: false, error: 'tenantId مطلوب لعمليات WhatsApp' });
+        }
         const nextState = !user.isAIEnabled;
-        updateAIEnabled(userId, nextState);
+        updateAIEnabled(userId, nextState, user.tenantId);
         addLog(`تم ${nextState ? 'تفعيل' : 'إيقاف'} الذكاء الاصطناعي للعميل: ${user.name}`);
         res.json({ success: true, isAIEnabled: nextState });
     } else {
@@ -1435,6 +1453,23 @@ router.get('/ai-tasks', (req, res) => {
         res.json({ success: true, tasks: configs });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// POST /ai-tasks/test -> verify the saved provider/model without changing configuration
+router.post('/ai-tasks/test', async (req, res) => {
+    const task = String(req.body.task || '').trim();
+    try {
+        const { testAIModel } = require('../services/aiModelHealthService');
+        const result = await testAIModel(task);
+        console.log(`[AI Model Test] Success. Task: ${task}, Provider: ${result.provider}, Model: ${result.model}`);
+        res.json(result);
+    } catch (err) {
+        console.warn(`[AI Model Test] Failed. Task: ${task || 'missing'}, Error: ${err.message}`);
+        res.status(err.statusCode || 500).json({
+            success: false,
+            error: err.message || 'فشل اختبار الموديل.'
+        });
     }
 });
 

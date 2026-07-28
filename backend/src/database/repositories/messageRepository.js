@@ -3,24 +3,31 @@ const crypto = require('crypto');
 const { publish, publishStats } = require('../../realtime/eventPublisher');
 const { EVENTS } = require('../../realtime/events');
 
-function getConversationIdByUserId(userId) {
+function getConversationIdByUserId(userId, tenantId = 'default', channel = null) {
     const row = db.prepare(`
         SELECT c.id
         FROM conversations c
         JOIN channel_accounts ca ON ca.id = c.channel_account_id
-        WHERE ca.external_user_id = ?
-    `).get(String(userId));
+        WHERE ca.external_user_id = ? AND c.tenant_id = ?
+          AND (? IS NULL OR ca.channel = ?)
+    `).get(String(userId), tenantId, channel, channel);
     return row ? row.id : null;
 }
 
-function saveMessage(userId, sender, text, type = 'text', isNote = false, externalMsgId = null) {
-    let conversationId = getConversationIdByUserId(userId);
+function saveMessage(userId, sender, text, type = 'text', isNote = false, externalMsgId = null, routing = {}) {
+    const channelHint = routing.channel || null;
+    const tenantId = routing.tenantId || (channelHint === 'whatsapp' ? null : 'default');
+    if (channelHint === 'whatsapp' && !tenantId) {
+        throw new Error('Missing tenantId for WhatsApp message persistence');
+    }
+    let conversationId = getConversationIdByUserId(userId, tenantId || 'default', channelHint);
 
     if (!conversationId) {
         // If conversation is missing, fallback register first
         const { registerCustomerUser } = require('./customerRepository');
-        registerCustomerUser(userId, `User_${userId}`, 'telegram');
-        conversationId = getConversationIdByUserId(userId);
+        const fallbackChannel = channelHint || 'telegram';
+        registerCustomerUser(userId, `User_${userId}`, fallbackChannel, tenantId);
+        conversationId = getConversationIdByUserId(userId, tenantId || 'default', fallbackChannel);
     }
 
     const id = crypto.randomUUID();
@@ -30,6 +37,8 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
     const direction = (sender === 'user') ? 'inbound' : 'outbound';
     const isInternalNote = isNote ? 1 : 0;
     const isAi = (sender === 'ai') ? 1 : 0;
+    const deliveryStatus = routing.deliveryStatus || (sender === 'user' || isNote ? 'delivered' : 'sent');
+    const metadata = routing.metadata ? JSON.stringify(routing.metadata) : null;
 
     // Determine channel from conversation
     const convRow = db.prepare('SELECT channel FROM conversations WHERE id = ?').get(conversationId);
@@ -38,13 +47,13 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
     db.transaction(() => {
         db.prepare(`
             INSERT INTO messages (
-                id, conversation_id, channel, external_message_id, direction,
+                id, conversation_id, tenant_id, channel, external_message_id, direction,
                 sender_type, role, message_type, content, is_internal_note,
-                is_ai_generated, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                is_ai_generated, delivery_status, metadata, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
         `).run(
-            id, conversationId, channel, externalMsgId ? String(externalMsgId) : null,
-            direction, sender, role, type, text, isInternalNote, isAi
+            id, conversationId, tenantId || 'default', channel, externalMsgId ? String(externalMsgId) : null,
+            direction, sender, role, type, text, isInternalNote, isAi, deliveryStatus, metadata
         );
 
         // Update conversation last seen activity
@@ -66,15 +75,29 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
 
     // Also trigger global stats update broadcast
     publishStats();
+    return id;
 }
 
-function listMessages(userId) {
-    const conversationId = getConversationIdByUserId(userId);
+function updateMessageDelivery(messageId, deliveryStatus, details = {}) {
+    const metadata = Object.keys(details).length > 0 ? JSON.stringify(details) : null;
+    db.prepare(`
+        UPDATE messages
+        SET delivery_status = ?,
+            external_message_id = COALESCE(?, external_message_id),
+            metadata = ?
+        WHERE id = ?
+    `).run(deliveryStatus, details.externalMessageId || null, metadata, messageId);
+}
+
+function listMessages(userId, tenantId = 'default', channel = null) {
+    const conversationId = getConversationIdByUserId(userId, tenantId, channel);
     if (!conversationId) return [];
 
     const rows = db.prepare(`
         SELECT sender_type as sender, content as text, message_type as type,
-               is_internal_note as isNote, strftime('%H:%M', created_at) as rawTime
+               is_internal_note as isNote, delivery_status as deliveryStatus,
+               metadata, created_at as createdAt,
+               strftime('%H:%M', created_at) as rawTime
         FROM messages
         WHERE conversation_id = ?
         ORDER BY created_at ASC
@@ -93,19 +116,31 @@ function listMessages(userId) {
             text: row.text,
             type: row.type,
             isNote: row.isNote === 1,
+            deliveryStatus: row.deliveryStatus,
+            metadata: (() => {
+                try {
+                    return row.metadata ? JSON.parse(row.metadata) : {};
+                } catch (_) {
+                    return {};
+                }
+            })(),
+            createdAt: row.createdAt,
             time: formattedTime
         };
     });
 }
 
-function existsByExternalId(channel, externalMsgId) {
+function existsByExternalId(channel, externalMsgId, tenantId = null) {
     if (!externalMsgId) return false;
-    const row = db.prepare('SELECT 1 FROM messages WHERE channel = ? AND external_message_id = ?').get(channel, String(externalMsgId));
+    const scopedTenantId = tenantId || (channel === 'whatsapp' ? null : 'default');
+    if (channel === 'whatsapp' && !scopedTenantId) return false;
+    const row = db.prepare('SELECT 1 FROM messages WHERE tenant_id = ? AND channel = ? AND external_message_id = ?')
+        .get(scopedTenantId, channel, String(externalMsgId));
     return !!row;
 }
 
-function getChatHistoryForAI(userId) {
-    const conversationId = getConversationIdByUserId(userId);
+function getChatHistoryForAI(userId, tenantId = 'default', channel = null) {
+    const conversationId = getConversationIdByUserId(userId, tenantId, channel);
     if (!conversationId) return [];
 
     const rows = db.prepare(`
@@ -139,6 +174,7 @@ function getMessagesCount() {
 
 module.exports = {
     saveMessage,
+    updateMessageDelivery,
     listMessages,
     existsByExternalId,
     getChatHistoryForAI,
