@@ -11,6 +11,7 @@ class FakeElement {
         this.textContent = '';
         this.attributes = {};
         this.children = [];
+        this.listeners = {};
     }
 
     setAttribute(name, value) {
@@ -20,6 +21,14 @@ class FakeElement {
     appendChild(child) {
         this.children.push(child);
         return child;
+    }
+
+    addEventListener(name, handler) {
+        this.listeners[name] = handler;
+    }
+
+    remove() {
+        this.removed = true;
     }
 }
 
@@ -49,15 +58,71 @@ test('untrusted values are created as text nodes, never HTML elements', () => {
     }
 });
 
+test('customer avatars accept only authenticated local profile image paths', () => {
+    const utils = context.window.Dashboard.utils;
+    const safe = utils.createCustomerAvatar(
+        { name: 'Safe', avatarUrl: '/uploads/profile_0123456789abcdef01234567.jpg' },
+        'avatar',
+        'SA'
+    );
+    assert.equal(safe.children.length, 1);
+    assert.equal(safe.children[0].tagName, 'IMG');
+    assert.equal(safe.children[0].attributes.src, '/uploads/profile_0123456789abcdef01234567.jpg');
+    assert.equal(safe.children[0].attributes.referrerpolicy, 'no-referrer');
+
+    for (const avatarUrl of [
+        'https://evil.example/avatar.jpg',
+        '/uploads/not-a-profile.jpg',
+        '\"><img src=x onerror=alert(1)>'
+    ]) {
+        const unsafe = utils.createCustomerAvatar({ name: 'Unsafe', avatarUrl }, 'avatar', 'UN');
+        assert.equal(unsafe.children.length, 0);
+        assert.equal(unsafe.textContent, 'UN');
+    }
+});
+
 test('high-risk customer, message, error, and realtime renderers contain no HTML sinks', () => {
-    const files = ['users.js', 'chatThemes.js', 'chat.js', 'composer.js', 'errors.js', 'realtime.js', 'analyticsDashboard.js', 'aimodels.js', 'whatsapp.js'];
+    const dashboardDirectory = path.join(__dirname, '..', 'public', 'js', 'dashboard');
+    const files = fs.readdirSync(dashboardDirectory).filter(filename => filename.endsWith('.js'));
     for (const filename of files) {
         const source = fs.readFileSync(
-            path.join(__dirname, '..', 'public', 'js', 'dashboard', filename),
+            path.join(dashboardDirectory, filename),
             'utf8'
         );
-        assert.doesNotMatch(source, /\.(?:innerHTML|outerHTML)\b|insertAdjacentHTML\s*\(|document\.write\s*\(/, filename);
-        assert.doesNotMatch(source, /\bon(?:click|mouseover|error|load)\s*=/i, filename);
+        if (filename !== 'utils.js') {
+            assert.doesNotMatch(
+                source,
+                /\.(?:innerHTML|outerHTML)\b|insertAdjacentHTML\s*\(|document\.write\s*\(/,
+                filename
+            );
+        } else {
+            assert.match(source, /DOMPurify\.sanitize/, 'The only reviewed HTML sink must use DOMPurify');
+            assert.equal((source.match(/\.innerHTML\s*=/g) || []).length, 1);
+        }
+        assert.doesNotMatch(
+            source,
+            /\son(?:click|change|input|load|error|mouseover)\s*=\s*["']/i,
+            filename
+        );
+    }
+
+    const dashboardHtml = fs.readFileSync(
+        path.join(__dirname, '..', 'public', 'dashboard.html'),
+        'utf8'
+    );
+    assert.doesNotMatch(dashboardHtml, /\son(?:click|change|input|load|error|mouseover)\s*=/i);
+    assert.match(dashboardHtml, /\/vendor\/dompurify\.min\.js/);
+    assert.match(dashboardHtml, /\/js\/dashboard\/eventBindings\.js/);
+});
+
+test('XSS payloads are escaped when approved rich fragments require interpolation', () => {
+    for (const payload of payloads) {
+        const escaped = context.window.Dashboard.utils.escapeHTML(payload);
+        assert.equal(escaped.includes('<'), false);
+        assert.equal(escaped.includes('>'), false);
+        assert.equal(escaped.includes('<script'), false);
+        assert.equal(escaped.includes('<img'), false);
+        assert.equal(escaped.includes('<svg'), false);
     }
 });
 

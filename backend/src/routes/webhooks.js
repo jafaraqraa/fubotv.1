@@ -9,117 +9,106 @@ const { normalizeMetaMessage } = require('../messaging/normalizers/metaNormalize
 const { processIncomingMessage } = require('../messaging/messageProcessor');
 const { getExtensionFromMime } = require('../utils/helpers');
 
-// Cryptographic verification middleware for Meta Webhook POST requests (Task 3)
-function verifyMetaSignature(req, res, next) {
-    // GET /webhook is for Meta token verification handshake, skip signature check
-    if (req.method === 'GET') {
-        return next();
-    }
+const REPLAY_WINDOW_MS = 5 * 60 * 1000;
+const MAX_REPLAY_ENTRIES = 10000;
 
-    const signatureHeader = req.headers['x-hub-signature-256'];
-    const appSecret = process.env.META_APP_SECRET;
-    const isProd = process.env.NODE_ENV === 'production';
-
-    // 1. Missing secret handling (Production must fail closed)
-    if (!appSecret) {
-        if (isProd) {
-            console.error('❌ Production Fail-Closed: META_APP_SECRET environment variable is missing.');
-            return res.status(500).json({ success: false, error: 'Internal server configuration error' });
-        } else {
-            console.warn('⚠️ Development warning: META_APP_SECRET is not configured. Webhook signature check bypassed.');
-            return next();
+function rejectReplay(scope, signatureHeader, res) {
+    const now = Date.now();
+    const replayKey = crypto
+        .createHash('sha256')
+        .update(`${scope}\0${signatureHeader}`)
+        .digest('hex');
+    const db = require('../database/connection');
+    const inserted = db.transaction(() => {
+        db.prepare('DELETE FROM webhook_replay_guard WHERE expires_at <= ?').run(now);
+        const count = db.prepare('SELECT COUNT(*) AS count FROM webhook_replay_guard').get().count;
+        if (count >= MAX_REPLAY_ENTRIES) {
+            db.prepare(`
+                DELETE FROM webhook_replay_guard
+                WHERE replay_key IN (
+                    SELECT replay_key FROM webhook_replay_guard
+                    ORDER BY expires_at ASC LIMIT ?
+                )
+            `).run(Math.max(1, count - MAX_REPLAY_ENTRIES + 1));
         }
+        return db.prepare(`
+            INSERT INTO webhook_replay_guard (replay_key, expires_at)
+            VALUES (?, ?)
+            ON CONFLICT(replay_key) DO NOTHING
+        `).run(replayKey, now + REPLAY_WINDOW_MS).changes === 1;
+    })();
+    if (!inserted) {
+        console.warn(`[Webhook] Replay rejected. Scope: ${scope}`);
+        res.status(409).json({ success: false, error: 'Duplicate webhook delivery' });
+        return true;
     }
-
-    // 2. Reject if signature header is missing
-    if (!signatureHeader) {
-        return res.status(401).json({ success: false, error: 'Signature missing' });
-    }
-
-    // 3. Signature format validation: sha256=<hex-digest>
-    const match = signatureHeader.match(/^sha256=([A-Fa-f0-9]+)$/);
-    if (!match) {
-        return res.status(400).json({ success: false, error: 'Invalid signature format' });
-    }
-
-    const receivedHashHex = match[1];
-    const receivedBuffer = Buffer.from(receivedHashHex, 'hex');
-
-    // Verify SHA256 digest size (32 bytes)
-    if (receivedBuffer.length !== 32) {
-        return res.status(400).json({ success: false, error: 'Invalid signature length' });
-    }
-
-    // 4. Calculate HMAC-SHA256 signature of the raw body buffer
-    const rawBody = req.rawBody || Buffer.from(JSON.stringify(req.body));
-    const hmac = crypto.createHmac('sha256', appSecret);
-    hmac.update(rawBody);
-    const expectedBuffer = hmac.digest();
-
-    // 5. Compare signatures using constant-time comparison (timingSafeEqual)
-    try {
-        if (!crypto.timingSafeEqual(receivedBuffer, expectedBuffer)) {
-            return res.status(401).json({ success: false, error: 'Signature verification failed' });
-        }
-    } catch (e) {
-        return res.status(401).json({ success: false, error: 'Signature verification failed' });
-    }
-
-    next();
+    return false;
 }
+
+function verifySignedWebhook({ secretEnvNames, scope }) {
+    return function signedWebhookVerification(req, res, next) {
+        const signatureHeader = req.headers['x-hub-signature-256'];
+        if (!signatureHeader) {
+            console.warn('[Webhook] Missing signature header.');
+            return res.status(401).json({ success: false, error: 'Signature missing' });
+        }
+
+        const appSecret = secretEnvNames
+            .map(name => process.env[name])
+            .find(value => typeof value === 'string' && value.length > 0);
+        const signatureMatch = signatureHeader.match(/^sha256=([A-Fa-f0-9]{64})$/);
+        const rawBody = req.rawBody;
+
+        if (!appSecret) {
+            console.error(`[Webhook] Required signing secret is missing: ${secretEnvNames.join(' or ')}.`);
+            return res.status(503).json({ success: false, error: 'Webhook verification unavailable' });
+        }
+        if (!signatureMatch || !Buffer.isBuffer(rawBody)) {
+            console.warn('[Webhook] Invalid signature.');
+            return res.status(401).json({ success: false, error: 'Invalid signature' });
+        }
+
+        const receivedSignature = Buffer.from(signatureMatch[1], 'hex');
+        const expectedSignature = crypto
+            .createHmac('sha256', appSecret)
+            .update(rawBody)
+            .digest();
+        if (
+            receivedSignature.length !== expectedSignature.length ||
+            !crypto.timingSafeEqual(receivedSignature, expectedSignature)
+        ) {
+            console.warn('[Webhook] Invalid signature.');
+            return res.status(401).json({ success: false, error: 'Invalid signature' });
+        }
+        if (rejectReplay(`${scope}:${req.params.tenantId || 'global'}`, signatureHeader, res)) {
+            return;
+        }
+        console.log('[Webhook] Signature verified.');
+        return next();
+    };
+}
+
+// Cryptographic verification middleware for Meta Webhook POST requests (Task 3)
+const verifyMetaSignature = verifySignedWebhook({
+    secretEnvNames: ['META_APP_SECRET'],
+    scope: 'meta'
+});
 
 // Verify WhatsApp Cloud webhook authenticity using Meta's official
 // X-Hub-Signature-256 HMAC over the exact raw HTTP request body.
-function verifyWhatsAppSignature(req, res, next) {
-    const verificationDisabled =
-        String(process.env.WHATSAPP_VERIFY_SIGNATURE || '').toLowerCase() === 'false';
-
-    if (verificationDisabled) {
-        console.warn('[Webhook] Signature verification disabled.');
-        return next();
-    }
-
-    const signatureHeader = req.headers['x-hub-signature-256'];
-    if (!signatureHeader) {
-        console.warn('[Webhook] Missing signature header.');
-        return res.status(401).json({ success: false, error: 'Signature missing' });
-    }
-
-    const signatureMatch = signatureHeader.match(/^sha256=([A-Fa-f0-9]{64})$/);
-    const appSecret = process.env.WHATSAPP_APP_SECRET || process.env.META_APP_SECRET;
-    const rawBody = req.rawBody;
-
-    if (!signatureMatch || !appSecret || !Buffer.isBuffer(rawBody)) {
-        console.warn('[Webhook] Invalid signature.');
-        return res.status(401).json({ success: false, error: 'Invalid signature' });
-    }
-
-    const receivedSignature = Buffer.from(signatureMatch[1], 'hex');
-    const expectedSignature = crypto
-        .createHmac('sha256', appSecret)
-        .update(rawBody)
-        .digest();
-
-    if (
-        receivedSignature.length !== expectedSignature.length ||
-        !crypto.timingSafeEqual(receivedSignature, expectedSignature)
-    ) {
-        console.warn('[Webhook] Invalid signature.');
-        return res.status(401).json({ success: false, error: 'Invalid signature' });
-    }
-
-    console.log('[Webhook] Signature verified.');
-    return next();
-}
+const verifyWhatsAppSignature = verifySignedWebhook({
+    secretEnvNames: ['WHATSAPP_APP_SECRET', 'META_APP_SECRET'],
+    scope: 'whatsapp'
+});
 
 // 1. مسار التحقق من Webhook لفيسبوك وانستجرام (GET)
 router.get('/webhook', (req, res) => {
-    const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN || "my_secure_token";
+    const VERIFY_TOKEN = process.env.META_VERIFY_TOKEN;
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
 
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    if (VERIFY_TOKEN && mode === 'subscribe' && token === VERIFY_TOKEN) {
         console.log('✅ تم التحقق من Webhook الخاص بشركة Meta بنجاح!');
         addLog("تم التحقق من رابط الـ Webhook الخاص بـ Meta بنجاح!");
         return res.status(200).send(challenge);
@@ -143,16 +132,15 @@ router.post('/webhook', verifyMetaSignature, async (req, res) => {
                 const senderPsid = webhookEvent.sender.id;
 
                 if (webhookEvent.message && webhookEvent.message.text) {
-                    let username = `عميل ${platform === 'messenger' ? 'ماسنجر' : 'انستجرام'}`;
+                    let profile = null;
                     try {
-                        const profileName = await getMetaUserProfile(senderPsid, platform);
-                        if (profileName) username = profileName;
+                        profile = await getMetaUserProfile(senderPsid, platform);
                     } catch (e) {
-                        console.log("فشل جلب اسم حساب ميتّا الشخصي.");
+                        console.log("فشل جلب ملف حساب ميتّا الشخصي.");
                     }
 
                     // Route strictly through unified normalizer and central incoming message processor (Task 11)
-                    const normalized = normalizeMetaMessage(webhookEvent, platform, username);
+                    const normalized = normalizeMetaMessage(webhookEvent, platform, profile);
                     await processIncomingMessage(normalized);
                 }
             }

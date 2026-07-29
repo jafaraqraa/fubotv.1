@@ -3,6 +3,7 @@ const { registerCustomerUser, findCustomerUser, incrementUnreadCount } = require
 const { saveMessage, existsByExternalId } = require('../database/repositories/messageRepository');
 const { addLog, reportError } = require('../services/logger');
 const { getAIResponse } = require('../services/ai');
+const { materializeProfileImage } = require('../services/profileImageService');
 
 async function processIncomingMessage(normalizedMsg) {
     try {
@@ -28,10 +29,37 @@ async function processIncomingMessage(normalizedMsg) {
             };
         }
 
-        // 3. Centralized customer profile lookup and register
-        registerCustomerUser(externalUserId, customer.displayName, channel, tenantId);
+        // 3. Materialize external profile images locally so provider access tokens
+        // and administrator network details are never exposed to the browser.
+        const profileData = { ...(customer.profileData || {}) };
+        const profileImageRemoteUrl = profileData.profileImageRemoteUrl || null;
+        delete profileData.profileImageRemoteUrl;
 
-        // 4. Inbound persistence in SQLite
+        // 4. Centralized customer profile lookup and register. Avatar retrieval is
+        // intentionally non-blocking and cannot delay message processing or replies.
+        registerCustomerUser(externalUserId, customer.displayName, channel, tenantId, profileData);
+        if (profileImageRemoteUrl) {
+            materializeProfileImage({
+                channel,
+                tenantId,
+                externalUserId,
+                remoteUrl: profileImageRemoteUrl
+            }).then(avatarUrl => {
+                if (avatarUrl) {
+                    registerCustomerUser(
+                        externalUserId,
+                        customer.displayName,
+                        channel,
+                        tenantId,
+                        { avatarUrl }
+                    );
+                }
+            }).catch(() => {
+                // Profile photos are optional; messaging must remain available.
+            });
+        }
+
+        // 5. Inbound persistence in SQLite
         saveMessage(externalUserId, 'user', content, messageType, false, externalMessageId, {
             channel,
             tenantId,
@@ -43,7 +71,7 @@ async function processIncomingMessage(normalizedMsg) {
         incrementUnreadCount(externalUserId, tenantId || 'default');
         addLog(`رسالة جديدة من ${customer.displayName} عبر ${channel}`);
 
-        // 5. Check AI automation status (Task 6)
+        // 6. Check AI automation status (Task 6)
         const user = findCustomerUser(externalUserId, channel, tenantId);
         const isAIEnabled = user ? user.isAIEnabled : true;
         const assignee = user ? user.assignee : 'ai';
@@ -60,7 +88,7 @@ async function processIncomingMessage(normalizedMsg) {
             };
         }
 
-        // 6. AI automation mode is active
+        // 7. AI automation mode is active
         let replyText = '';
         const textToProcess = (messageType !== 'text') ? content : content; // handles attachments captions or paths
 
@@ -77,7 +105,7 @@ async function processIncomingMessage(normalizedMsg) {
             replyText = `تم استلام الملف بنجاح، جاري المراجعة والرد عليك قريباً.`;
         }
 
-        // 7. Dispatch AI response through unified outgoing handler
+        // 8. Dispatch AI response through unified outgoing handler
         const { sendOutgoingMessage } = require('./outgoingMessageService');
         const outgoingResult = await sendOutgoingMessage({
             channel,

@@ -6,7 +6,7 @@ const path = require('path');
 // Force isolated test DB
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_settings_app.db');
 process.env.SQLITE_DB_PATH = testDbPath;
-process.env.SESSION_SECRET = 'test_session_secret_123';
+process.env.SESSION_SECRET = 'test_session_secret_123_32_characters';
 process.env.NODE_ENV = 'development';
 
 if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
@@ -15,7 +15,15 @@ if (fs.existsSync(testDbPath + '-shm')) fs.unlinkSync(testDbPath + '-shm');
 
 const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
-const { saveSetting, getSetting, getAllSettings, maskSecret, isMaskedPlaceholder, loadSettingsOnStartup } = require('../src/services/settingsService');
+const {
+    saveSetting,
+    getSetting,
+    getAllSettings,
+    SENSITIVE_KEYS,
+    maskSecret,
+    isMaskedPlaceholder,
+    loadSettingsOnStartup
+} = require('../src/services/settingsService');
 
 test('SQLite Settings Persistence Suite', async (t) => {
 
@@ -81,6 +89,18 @@ test('SQLite Settings Persistence Suite', async (t) => {
         }
 
         assert.strictEqual(getSetting('MESSENGER_ACCESS_TOKEN'), 'new_awesome_token_xyz', "Should update secret when real value is supplied");
+    });
+
+    await t.test('8. Meta signing secrets are classified as sensitive and load on startup', () => {
+        assert.ok(SENSITIVE_KEYS.includes('META_APP_SECRET'));
+        assert.ok(SENSITIVE_KEYS.includes('WHATSAPP_APP_SECRET'));
+
+        saveSetting('META_APP_SECRET', '0123456789abcdef0123456789abcdef');
+        delete process.env.META_APP_SECRET;
+        loadSettingsOnStartup();
+
+        assert.strictEqual(process.env.META_APP_SECRET, '0123456789abcdef0123456789abcdef');
+        assert.strictEqual(maskSecret(process.env.META_APP_SECRET), '••••••••cdef');
     });
 
     t.after(() => {

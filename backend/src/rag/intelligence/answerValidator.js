@@ -15,7 +15,7 @@ const STATUS = Object.freeze({
     INSUFFICIENT: 'INSUFFICIENT_CONTEXT'
 });
 const UNVERIFIED_MESSAGE = "I couldn't verify this information from the available knowledge.";
-const ARABIC_UNVERIFIED_MESSAGE = 'لم أتمكن من التحقق من هذه المعلومة من المعرفة المتاحة.';
+const ARABIC_UNVERIFIED_MESSAGE = 'لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.';
 const INJECTION_PATTERNS = [
     /ignore\s+(all\s+)?previous\s+instructions?/i,
     /disregard\s+(all\s+)?previous/i,
@@ -369,12 +369,21 @@ function safeReplacement(answer) {
 function rewriteUnsafeClaims(answer, claims, status) {
     if (status === STATUS.INSUFFICIENT) return safeReplacement(answer);
     let output = answer;
+    let replacementInserted = false;
     for (const claim of claims) {
         if (claim.classification !== STATUS.UNSUPPORTED
             && claim.classification !== STATUS.CONTRADICTED) continue;
-        output = output.replace(claim.text, safeReplacement(claim.text));
+        // Multiple unsupported claims are one validation outcome, not multiple
+        // user-facing failures. Preserve supported/non-factual text while emitting
+        // the localized fallback at most once for the whole answer.
+        const replacement = replacementInserted ? '' : safeReplacement(answer);
+        output = output.replace(claim.text, replacement);
+        replacementInserted = true;
     }
-    return output;
+    return output
+        .replace(/[ \t]{2,}/g, ' ')
+        .replace(/(?:\r?\n[ \t]*){3,}/g, '\n\n')
+        .trim();
 }
 
 function validateDetailed(answer, retrievedContext) {

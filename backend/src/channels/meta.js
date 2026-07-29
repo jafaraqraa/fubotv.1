@@ -1,14 +1,28 @@
 const { addLog, reportError } = require('../services/logger');
 
-// دالة جلب معلومات ملف مستخدم Meta الشخصي (الاسم الحقيقي)
+// Fetch the customer display name and profile image metadata. The remote image
+// is materialized server-side before persistence and is never exposed directly.
 async function getMetaUserProfile(psid, platform) {
     const accessToken = platform === 'messenger' ? process.env.MESSENGER_ACCESS_TOKEN : process.env.INSTAGRAM_ACCESS_TOKEN;
     if (!accessToken) return null;
     try {
-        const response = await fetch(`https://graph.facebook.com/v19.0/${psid}?fields=first_name,last_name&access_token=${accessToken}`);
+        const fields = platform === 'messenger'
+            ? 'first_name,last_name,profile_pic'
+            : 'name,username,profile_picture_url';
+        const response = await fetch(
+            `https://graph.facebook.com/v19.0/${encodeURIComponent(psid)}`
+            + `?fields=${encodeURIComponent(fields)}&access_token=${encodeURIComponent(accessToken)}`
+        );
         if (response.ok) {
             const data = await response.json();
-            return `${data.first_name || ''} ${data.last_name || ''}`.trim() || null;
+            return {
+                displayName: (
+                    platform === 'messenger'
+                        ? `${data.first_name || ''} ${data.last_name || ''}`.trim()
+                        : data.name || data.username
+                ) || null,
+                profileImageRemoteUrl: data.profile_pic || data.profile_picture_url || null
+            };
         }
     } catch (e) {
         console.error("Error fetching Meta user profile:", e.message);

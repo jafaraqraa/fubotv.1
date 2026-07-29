@@ -1,4 +1,10 @@
-function normalizeTelegramMessage(ctx, localPath = null, mediaType = 'text', fileExt = '') {
+function normalizeTelegramMessage(
+    ctx,
+    localPath = null,
+    mediaType = 'text',
+    fileExt = '',
+    profileImageRemoteUrl = null
+) {
     const from = ctx.from || {};
     const message = ctx.message || {};
     const messageId = String(message.message_id || '');
@@ -26,7 +32,7 @@ function normalizeTelegramMessage(ctx, localPath = null, mediaType = 'text', fil
             displayName,
             username,
             phoneNumber: null,
-            profileData: {}
+            profileData: profileImageRemoteUrl ? { profileImageRemoteUrl } : {}
         },
         direction: 'incoming',
         senderType: 'customer',

@@ -185,9 +185,10 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
         );
 
         // Assert transcript is generated and passed to the subsequent text pipeline
-        assert.strictEqual(response, 'لم أتمكن من التحقق من هذه المعلومة من المعرفة المتاحة.');
+        assert.strictEqual(response, 'تم إجابة سؤال الصوت بنجاح');
         assert.deepStrictEqual(modelsCalled, ['gpt-test-text-model']);
         assert.ok(contentsPassed[0].includes('تفريغ صوتي حقيقي'));
+        assert.ok(!contentsPassed[0].includes('UNTRUSTED_RETRIEVED_CONTEXT_START'));
     } finally {
         global.fetch = originalFetch;
     }

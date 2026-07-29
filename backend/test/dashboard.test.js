@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
+process.env.SESSION_SECRET = 'dashboard_test_session_secret_32_characters';
 
 // Load App for server-based integration checks
 const app = require('../src/app');

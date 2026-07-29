@@ -16,20 +16,21 @@ window.Dashboard.settings = {
         const toast = document.createElement('div');
         toast.className = `futh-toast ${type}`;
 
-        let iconMarkup = '';
-        if (type === 'success') {
-            iconMarkup = `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
-        } else {
-            iconMarkup = `<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
-        }
+        const icon = document.createElement('div');
+        icon.className = `flex-shrink-0 ${type === 'success' ? 'text-green-500' : 'text-red-500'}`;
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = type === 'success' ? '✓' : '!';
 
-        toast.innerHTML = `
-            <div class="flex-shrink-0">${iconMarkup}</div>
-            <div class="flex flex-col">
-                <div class="text-xs font-bold text-slate-800">${type === 'success' ? 'تم حفظ الإعدادات بنجاح' : 'حدث خطأ أثناء الحفظ'}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">${message}</div>
-            </div>
-        `;
+        const content = document.createElement('div');
+        content.className = 'flex flex-col';
+        const title = document.createElement('div');
+        title.className = 'text-xs font-bold text-slate-800';
+        title.textContent = type === 'success' ? 'تم حفظ الإعدادات بنجاح' : 'حدث خطأ أثناء الحفظ';
+        const details = document.createElement('div');
+        details.className = 'text-[10px] text-slate-500 mt-0.5';
+        details.textContent = String(message ?? '');
+        content.append(title, details);
+        toast.replaceChildren(icon, content);
 
         container.appendChild(toast);
 
@@ -117,7 +118,7 @@ window.Dashboard.settings = {
                 break;
         }
 
-        if (iconContainer) iconContainer.innerHTML = iconHTML;
+        if (iconContainer) window.Dashboard.utils.setSanitizedHTML(iconContainer, iconHTML);
         if (titleEl) titleEl.innerText = title;
         if (descEl) descEl.innerText = desc;
 
@@ -293,12 +294,12 @@ window.Dashboard.settings = {
         const text = input.value.trim();
 
         const btn = document.getElementById('drawer-save-btn');
-        let originalBtnHTML = '';
+        let originalBtnNodes = [];
 
         if (btn) {
-            originalBtnHTML = btn.innerHTML;
+            originalBtnNodes = Array.from(btn.childNodes, node => node.cloneNode(true));
             btn.disabled = true;
-            btn.innerHTML = `<span class="futh-spinner"></span> <span>جارٍ الحفظ...</span>`;
+            window.Dashboard.utils.setSanitizedHTML(btn, `<span class="futh-spinner"></span> <span>جارٍ الحفظ...</span>`);
         }
 
         window.Dashboard.state.isSaving = true;
@@ -330,7 +331,7 @@ window.Dashboard.settings = {
             window.Dashboard.state.isSaving = false;
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = originalBtnHTML;
+                btn.replaceChildren(...originalBtnNodes);
             }
         }
     },
@@ -338,12 +339,12 @@ window.Dashboard.settings = {
     // 8. Save New Settings Payload central integration
     saveNewSettingsPayload: async function(payload, type) {
         const btn = document.getElementById('drawer-save-btn');
-        let originalBtnHTML = '';
+        let originalBtnNodes = [];
 
         if (btn) {
-            originalBtnHTML = btn.innerHTML;
+            originalBtnNodes = Array.from(btn.childNodes, node => node.cloneNode(true));
             btn.disabled = true;
-            btn.innerHTML = `<span class="futh-spinner"></span> <span>جارٍ الحفظ...</span>`;
+            window.Dashboard.utils.setSanitizedHTML(btn, `<span class="futh-spinner"></span> <span>جارٍ الحفظ...</span>`);
         }
 
         window.Dashboard.state.isSaving = true;
@@ -357,6 +358,10 @@ window.Dashboard.settings = {
             const result = await response.json();
 
             if (result.success) {
+                if (type === 'meta' && !result.metaAppSecretConfigured) {
+                    window.Dashboard.settings.showToast('لم يتم حفظ Meta App Secret. أعد إدخاله ثم حاول مجددًا.', 'error');
+                    return;
+                }
                 window.Dashboard.settings.showToast('تم تحديث إعدادات القناة وتفاصيل الربط بنجاح.');
 
                 if (type === 'telegram') {
@@ -421,7 +426,7 @@ window.Dashboard.settings = {
             window.Dashboard.state.isSaving = false;
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = originalBtnHTML;
+                btn.replaceChildren(...originalBtnNodes);
             }
         }
     },
@@ -528,12 +533,18 @@ window.Dashboard.settings = {
 
     submitMetaVerifySettings: function() {
         const metaVerifyToken = document.getElementById('meta-verify-input').value.trim();
+        const metaAppSecret = document.getElementById('meta-app-secret-input').value.trim();
+
+        if (!metaVerifyToken || !metaAppSecret) {
+            window.Dashboard.settings.showToast('يرجى إدخال Verify Token وMeta App Secret.', 'error');
+            return;
+        }
 
         window.Dashboard.conversationControls.openSettingsConfirmModal(
             'meta',
-            { metaVerifyToken },
+            { metaVerifyToken, metaAppSecret },
             'مزامنة Webhook؟',
-            'تحديث توكن المصافحة لتأكيد وتوثيق طلبات Meta Webhook المباشرة.',
+            'سيتم تحديث توكن المصافحة وسر التطبيق للتحقق من توقيع طلبات Meta Webhook.',
             'WEBHOOK',
             'bg-slate-850 hover:bg-slate-950'
         );
@@ -550,12 +561,12 @@ window.Dashboard.settings = {
         }
 
         const btn = document.getElementById('drawer-save-btn');
-        let originalBtnHTML = '';
+        let originalBtnNodes = [];
 
         if (btn) {
-            originalBtnHTML = btn.innerHTML;
+            originalBtnNodes = Array.from(btn.childNodes, node => node.cloneNode(true));
             btn.disabled = true;
-            btn.innerHTML = `<span class="futh-spinner"></span> <span>جاري التحديث...</span>`;
+            window.Dashboard.utils.setSanitizedHTML(btn, `<span class="futh-spinner"></span> <span>جاري التحديث...</span>`);
         }
 
         window.Dashboard.state.isSaving = true;
@@ -584,7 +595,7 @@ window.Dashboard.settings = {
             window.Dashboard.state.isSaving = false;
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = originalBtnHTML;
+                btn.replaceChildren(...originalBtnNodes);
             }
         }
     },
@@ -964,11 +975,11 @@ window.Dashboard.settings = {
 
             if (data.success && data.documents) {
                 if (data.documents.length === 0) {
-                    listContainer.innerHTML = `
+                    window.Dashboard.utils.setSanitizedHTML(listContainer, `
                         <div class="text-slate-400 text-center py-6 text-[10px] font-arabic leading-relaxed">
                             لا يوجد مستندات مرفوعة حالياً.
                         </div>
-                    `;
+                    `);
                     return;
                 }
 
@@ -1036,13 +1047,13 @@ window.Dashboard.settings = {
                     let actionButtons = '';
                     if (d.status === 'failed') {
                         actionButtons += `
-                            <button type="button" onclick="window.Dashboard.settings.retryFailedDocumentUI('${d.documentId}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 shadow-sm">
+                            <button type="button" data-document-retry="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 shadow-sm">
                                 <span>إعادة المحاولة</span>
                             </button>
                         `;
                     } else if (d.status !== 'deleting') {
                         actionButtons += `
-                            <button type="button" onclick="window.Dashboard.settings.reindexDocumentUI('${d.documentId}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-slate-200">
+                            <button type="button" data-document-reindex="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-slate-200">
                                 <span>إعادة الفهرسة</span>
                             </button>
                         `;
@@ -1050,7 +1061,7 @@ window.Dashboard.settings = {
 
                     if (d.status !== 'deleting') {
                         actionButtons += `
-                            <button type="button" onclick="window.Dashboard.settings.deleteDocumentUI('${d.documentId}', '${d.originalFilename.replace(/'/g, "\\'")}')" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-red-200">
+                            <button type="button" data-document-delete="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" data-document-name="${window.Dashboard.utils.escapeHTML(String(d.originalFilename || ''))}" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-red-200">
                                 <span>حذف</span>
                             </button>
                         `;
@@ -1074,16 +1085,16 @@ window.Dashboard.settings = {
                                         ${window.Dashboard.utils.escapeHTML(d.originalFilename)}
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono mt-0.5">
-                                        <span>${d.fileType}</span>
+                                        <span>${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</span>
                                         <span>•</span>
-                                        <span>${formattedSize}</span>
+                                        <span>${window.Dashboard.utils.escapeHTML(String(formattedSize || ''))}</span>
                                         <span>•</span>
-                                        <span>${d.chunkCount} مقطع</span>
+                                        <span>${window.Dashboard.utils.escapeHTML(String(d.chunkCount ?? 0))} مقطع</span>
                                     </div>
                                 </div>
                                 <div class="shrink-0 flex flex-col items-end gap-1">
                                     <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeClass}">
-                                        ${statusText}
+                                        ${window.Dashboard.utils.escapeHTML(String(statusText || ''))}
                                     </span>
                                 </div>
                             </div>
@@ -1095,15 +1106,27 @@ window.Dashboard.settings = {
                     `;
                 });
 
-                listContainer.innerHTML = html;
+                window.Dashboard.utils.setSanitizedHTML(listContainer, html);
+                listContainer.querySelectorAll('[data-document-retry]').forEach(button => {
+                    button.addEventListener('click', () => window.Dashboard.settings.retryFailedDocumentUI(button.dataset.documentRetry));
+                });
+                listContainer.querySelectorAll('[data-document-reindex]').forEach(button => {
+                    button.addEventListener('click', () => window.Dashboard.settings.reindexDocumentUI(button.dataset.documentReindex));
+                });
+                listContainer.querySelectorAll('[data-document-delete]').forEach(button => {
+                    button.addEventListener('click', () => window.Dashboard.settings.deleteDocumentUI(
+                        button.dataset.documentDelete,
+                        button.dataset.documentName
+                    ));
+                });
             }
         } catch (err) {
             console.error('Failed to load documents list:', err);
-            listContainer.innerHTML = `
+            window.Dashboard.utils.setSanitizedHTML(listContainer, `
                 <div class="text-red-500 text-center py-6 text-[10px] font-arabic">
                     تعذر تحميل قائمة المستندات حالياً.
                 </div>
-            `;
+            `);
         }
     },
 
@@ -1391,7 +1414,7 @@ window.Dashboard.settings.populateModelsDropdown = async function(provider) {
     const select = document.getElementById('model-select');
     if (!select) return;
 
-    select.innerHTML = '';
+    select.replaceChildren();
 
     const standardModels = {
         'openrouter': [

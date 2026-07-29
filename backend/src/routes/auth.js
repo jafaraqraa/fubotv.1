@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { authenticate } = require('../services/authService');
 const adminRepo = require('../database/repositories/adminRepository');
 const { requireAuth } = require('../middleware/requireAuth');
+const { requireSessionSecret } = require('../config/securityConfig');
 
 // Persistent SQLite-backed Login Rate Limiter (Task 5)
 function rateLimitLogin(req, res, next) {
@@ -82,7 +83,7 @@ router.post(['/api/auth/login', '/api/v1/auth/login'], rateLimitLogin, (req, res
         req.session.csrfToken = crypto.randomBytes(32).toString('hex');
 
         // Create a signed session ID to return to the client as an iframe cookie-bypass fallback
-        const SESSION_SECRET = process.env.SESSION_SECRET || 'futh_secure_fallback_secret_2026_xxxx';
+        const SESSION_SECRET = requireSessionSecret();
         const signatureStr = crypto
             .createHmac('sha256', SESSION_SECRET)
             .update(req.sessionID)

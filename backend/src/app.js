@@ -48,7 +48,7 @@ app.originPolicy = originPolicy;
 // 3. Configure server-side session authentication with custom SQLite Session Store (Task 8)
 const sessionMiddleware = session({
     store: new SQLiteStore(),
-    secret: process.env.SESSION_SECRET || 'futh_secure_fallback_secret_2026_xxxx',
+    secret: require('./config/securityConfig').requireSessionSecret(),
     resave: false,
     saveUninitialized: false,
     name: 'connect.sid',
@@ -93,8 +93,17 @@ app.get('/dashboard.html', (req, res) => {
     res.redirect('/login');
 });
 
-// Serves ONLY backend uploads/media static files publicly
-app.use('/uploads', express.static(path.join(__dirname, '..', 'public', 'uploads')));
+// Customer media is private. It is served only to an authenticated administrator
+// and must never be exposed as an anonymous static directory.
+app.use('/uploads', requireAuth, (req, res, next) => {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+    next();
+}, express.static(path.join(__dirname, '..', 'public', 'uploads'), {
+    dotfiles: 'deny',
+    fallthrough: false,
+    index: false
+}));
 
 // التأكد من وجود مجلد رفع وحفظ الوسائط الفورية في السيرفر
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -154,6 +163,12 @@ app.get('/config.js', (req, res) => {
 });
 
 const frontendPublicDir = path.join(__dirname, '..', '..', 'frontend', 'public');
+
+// Pinned, local sanitizer for the few reviewed UI fragments that require HTML.
+app.get('/vendor/dompurify.min.js', (req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.sendFile(require.resolve('dompurify/dist/purify.min.js'));
+});
 
 // Serve static assets
 app.use(express.static(frontendPublicDir));

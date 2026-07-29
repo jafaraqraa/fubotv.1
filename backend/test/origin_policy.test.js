@@ -9,7 +9,9 @@ const WebSocket = require('ws');
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_origin_policy.db');
 process.env.SQLITE_DB_PATH = testDbPath;
 process.env.NODE_ENV = 'test';
-process.env.SESSION_SECRET = 'origin-policy-test-secret';
+process.env.SESSION_SECRET = 'origin_policy_test_secret_32_characters';
+process.env.ADMIN_BOOTSTRAP_USERNAME = 'origin-admin';
+process.env.ADMIN_BOOTSTRAP_PASSWORD = 'Origin!Bootstrap9Password';
 process.env.INITIAL_ADMIN_USERNAME = 'origin_admin';
 process.env.INITIAL_ADMIN_PASSWORD = 'OriginPolicy@123';
 process.env.ALLOWED_ORIGINS = ' http://localhost:5173/ ,https://app.example.com/,http://localhost:5173 ';
@@ -100,7 +102,7 @@ test('shared Express and Socket.IO origin policy', async t => {
     const login = await fetch(`${baseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-forwarded-proto': 'https' },
-        body: JSON.stringify({ username: 'admin', password: 'Admin@123456' })
+        body: JSON.stringify({ username: 'origin-admin', password: 'Origin!Bootstrap9Password' })
     });
     assert.equal(login.status, 200);
     const cookie = login.headers.get('set-cookie').split(';')[0];

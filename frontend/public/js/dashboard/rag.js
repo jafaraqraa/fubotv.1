@@ -495,13 +495,13 @@ window.Dashboard.rag = {
                     </td>
                 </tr>
             `;
-            tbody.innerHTML = emptyHTML;
+            window.Dashboard.utils.setSanitizedHTML(tbody, emptyHTML);
             if (mobileContainer) {
-                mobileContainer.innerHTML = `
+                window.Dashboard.utils.setSanitizedHTML(mobileContainer, `
                     <div class="text-slate-400 text-center p-6 bg-white border border-slate-200 rounded-xl font-arabic text-[11px] leading-relaxed">
                         ⚠️ لا توجد مستندات مطابقة لخيارات البحث والتصفية الحالية.
                     </div>
-                `;
+                `);
             }
             return;
         }
@@ -542,59 +542,72 @@ window.Dashboard.rag = {
             const srcBadgeClass = d.sourceType === 'manual_knowledge' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600';
 
             tableHTML += `
-                <tr class="hover:bg-slate-50/50 transition cursor-pointer select-text text-xs" onclick="window.Dashboard.rag.handleRowClick(event, '${d.documentId}')">
-                    <td class="p-3 text-right w-10" onclick="event.stopPropagation()">
-                        <input type="checkbox" data-id="${d.documentId}" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
+                <tr data-document-open="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="hover:bg-slate-50/50 transition cursor-pointer select-text text-xs">
+                    <td class="p-3 text-right w-10">
+                        <input type="checkbox" data-id="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
                     </td>
                     <td class="p-3 font-semibold text-slate-800 truncate max-w-[200px]" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">
                         ${fileIcon} ${window.Dashboard.utils.escapeHTML(d.originalFilename)}
                     </td>
-                    <td class="p-3 font-mono text-slate-500">${d.fileType}</td>
+                    <td class="p-3 font-mono text-slate-500">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold ${srcBadgeClass}">${srcLabelAr}</span>
                     </td>
-                    <td class="p-3 font-mono text-slate-600 font-bold">${d.version || 1}</td>
+                    <td class="p-3 font-mono text-slate-600 font-bold">${window.Dashboard.utils.escapeHTML(String(d.version || 1))}</td>
                     <td class="p-3 font-mono text-slate-600">-</td>
-                    <td class="p-3 font-mono text-slate-600">${formattedSize}</td>
-                    <td class="p-3 font-mono text-slate-600 font-bold text-blue-600">${d.chunkCount}</td>
+                    <td class="p-3 font-mono text-slate-600">${window.Dashboard.utils.escapeHTML(String(formattedSize))}</td>
+                    <td class="p-3 font-mono text-slate-600 font-bold text-blue-600">${window.Dashboard.utils.escapeHTML(String(d.chunkCount ?? 0))}</td>
                     <td class="p-3 text-slate-500 truncate max-w-[120px]">nomic-embed</td>
                     <td class="p-3 text-slate-500 font-mono">${formattedDate}</td>
                     <td class="p-3">
                         <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeClass}">
-                            ${statusText}
+                            ${window.Dashboard.utils.escapeHTML(String(statusText || ''))}
                         </span>
                     </td>
-                    <td class="p-3 text-center" onclick="event.stopPropagation()">
-                        <button onclick="window.Dashboard.rag.openDocDetailsPanel('${d.documentId}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[10px] transition font-arabic">عرض التفاصيل</button>
+                    <td class="p-3 text-center">
+                        <button type="button" data-document-details="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[10px] transition font-arabic">عرض التفاصيل</button>
                     </td>
                 </tr>
             `;
 
             mobileHTML += `
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 font-arabic" onclick="window.Dashboard.rag.openDocDetailsPanel('${d.documentId}')">
+                <div data-document-open="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 font-arabic">
                     <div class="flex justify-between items-start gap-2">
                         <div class="flex items-center gap-2">
-                            <input type="checkbox" data-id="${d.documentId}" onclick="event.stopPropagation()" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
+                            <input type="checkbox" data-id="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
                             <span class="text-xs font-bold text-slate-800 truncate max-w-[150px]" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">${fileIcon} ${window.Dashboard.utils.escapeHTML(d.originalFilename)}</span>
                         </div>
-                        <span class="px-2.5 py-0.5 rounded-full border text-[9px] font-bold ${badgeClass}">${statusText}</span>
+                        <span class="px-2.5 py-0.5 rounded-full border text-[9px] font-bold ${badgeClass}">${window.Dashboard.utils.escapeHTML(String(statusText || ''))}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-500 font-mono">
-                        <div>النوع: <strong class="text-slate-700 block">${d.fileType}</strong></div>
-                        <div>الحجم: <strong class="text-slate-700 block">${formattedSize}</strong></div>
-                        <div>المقاطع: <strong class="text-slate-700 block font-bold text-blue-600">${d.chunkCount}</strong></div>
-                        <div>الإصدار: <strong class="text-slate-700 block font-bold text-purple-600">${d.version || 1}</strong></div>
+                        <div>النوع: <strong class="text-slate-700 block">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</strong></div>
+                        <div>الحجم: <strong class="text-slate-700 block">${window.Dashboard.utils.escapeHTML(String(formattedSize))}</strong></div>
+                        <div>المقاطع: <strong class="text-slate-700 block font-bold text-blue-600">${window.Dashboard.utils.escapeHTML(String(d.chunkCount ?? 0))}</strong></div>
+                        <div>الإصدار: <strong class="text-slate-700 block font-bold text-purple-600">${window.Dashboard.utils.escapeHTML(String(d.version || 1))}</strong></div>
                     </div>
                 </div>
             `;
         });
 
-        tbody.innerHTML = tableHTML;
-        if (mobileContainer) mobileContainer.innerHTML = mobileHTML;
+        window.Dashboard.utils.setSanitizedHTML(tbody, tableHTML);
+        if (mobileContainer) window.Dashboard.utils.setSanitizedHTML(mobileContainer, mobileHTML);
+
+        document.querySelectorAll('[data-document-open]').forEach(row => {
+            row.addEventListener('click', event => {
+                if (event.target.closest('button, input, a')) return;
+                window.Dashboard.rag.openDocDetailsPanel(row.dataset.documentOpen);
+            });
+        });
+        document.querySelectorAll('[data-document-details]').forEach(button => {
+            button.addEventListener('click', event => {
+                event.stopPropagation();
+                window.Dashboard.rag.openDocDetailsPanel(button.dataset.documentDetails);
+            });
+        });
 
         // Re-bind row checkboxes
         document.querySelectorAll('.rag-doc-row-chk').forEach(chk => {
-            chk.onchange = function(e) {
+            chk.addEventListener('change', function(e) {
                 const id = this.getAttribute('data-id');
                 if (this.checked) {
                     window.Dashboard.state.ragSelectedDocIds.add(id);
@@ -602,7 +615,7 @@ window.Dashboard.rag = {
                     window.Dashboard.state.ragSelectedDocIds.delete(id);
                 }
                 window.Dashboard.rag.updateBulkBarState();
-            };
+            });
         });
     },
 

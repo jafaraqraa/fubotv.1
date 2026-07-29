@@ -3,7 +3,41 @@ const crypto = require('crypto');
 const { publish } = require('../../realtime/eventPublisher');
 const { EVENTS } = require('../../realtime/events');
 
-function registerCustomerUser(userId, name, platform, tenantId = null) {
+function sanitizeProfileData(profileData) {
+    const avatarUrl = profileData && typeof profileData.avatarUrl === 'string'
+        ? profileData.avatarUrl.trim()
+        : '';
+    if (!/^\/uploads\/profile_[a-f0-9]{24}\.(?:jpg|png|webp|gif)$/.test(avatarUrl)) {
+        return null;
+    }
+    return { avatarUrl };
+}
+
+function parseProfileData(value) {
+    try {
+        return sanitizeProfileData(value ? JSON.parse(value) : null) || {};
+    } catch (_) {
+        return {};
+    }
+}
+
+function mapCustomerRow(row) {
+    if (!row) return null;
+    const profileData = parseProfileData(row.profile_data);
+    return {
+        id: row.id,
+        name: row.name,
+        platform: row.platform,
+        tenantId: row.tenant_id,
+        avatarUrl: profileData.avatarUrl || null,
+        isAIEnabled: row.is_ai_enabled === 1,
+        unreadCount: row.unread_count,
+        assignee: row.assignee,
+        lastSeen: row.lastSeen
+    };
+}
+
+function registerCustomerUser(userId, name, platform, tenantId = null, profileData = null) {
     const scopedTenantId = tenantId || (platform === 'whatsapp' ? null : 'default');
     if (platform === 'whatsapp' && !scopedTenantId) {
         throw new Error('Missing tenantId for WhatsApp customer');
@@ -16,6 +50,8 @@ function registerCustomerUser(userId, name, platform, tenantId = null) {
     `).get(scopedTenantId, platform, String(userId));
 
     const lastSeen = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+    const safeProfileData = sanitizeProfileData(profileData);
+    const serializedProfileData = safeProfileData ? JSON.stringify(safeProfileData) : null;
 
     if (!existing) {
         const customerId = crypto.randomUUID();
@@ -26,7 +62,8 @@ function registerCustomerUser(userId, name, platform, tenantId = null) {
             INSERT INTO customers (id, display_name) VALUES (?, ?)
         `);
         const insertAccount = db.prepare(`
-            INSERT INTO channel_accounts (id, customer_id, channel, external_user_id, username) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO channel_accounts (id, customer_id, channel, external_user_id, username, profile_data)
+            VALUES (?, ?, ?, ?, ?, ?)
         `);
         const insertConversation = db.prepare(`
             INSERT INTO conversations (id, customer_id, channel_account_id, channel, tenant_id, is_ai_enabled, assignee, unread_count, last_message_at)
@@ -35,7 +72,7 @@ function registerCustomerUser(userId, name, platform, tenantId = null) {
 
         db.transaction(() => {
             insertCustomer.run(customerId, name);
-            insertAccount.run(accountId, customerId, platform, String(userId), name);
+            insertAccount.run(accountId, customerId, platform, String(userId), name, serializedProfileData);
             insertConversation.run(conversationId, customerId, accountId, platform, scopedTenantId, lastSeen);
         })();
 
@@ -45,8 +82,11 @@ function registerCustomerUser(userId, name, platform, tenantId = null) {
         db.transaction(() => {
             db.prepare('UPDATE customers SET display_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
               .run(name, existing.customer_id);
-            db.prepare('UPDATE channel_accounts SET username = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-              .run(name, existing.channel_account_id);
+            db.prepare(`
+                UPDATE channel_accounts
+                SET username = ?, profile_data = COALESCE(?, profile_data), updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `).run(name, serializedProfileData, existing.channel_account_id);
             db.prepare(`
                 INSERT INTO conversations (id, customer_id, channel_account_id, channel, tenant_id, is_ai_enabled, assignee, unread_count, last_message_at)
                 VALUES (?, ?, ?, ?, ?, 1, 'ai', 0, ?)
@@ -57,8 +97,11 @@ function registerCustomerUser(userId, name, platform, tenantId = null) {
         db.transaction(() => {
             db.prepare('UPDATE customers SET display_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
               .run(name, existing.customer_id);
-            db.prepare('UPDATE channel_accounts SET username = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-              .run(name, existing.channel_account_id);
+            db.prepare(`
+                UPDATE channel_accounts
+                SET username = ?, profile_data = COALESCE(?, profile_data), updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `).run(name, serializedProfileData, existing.channel_account_id);
             db.prepare('UPDATE conversations SET last_message_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
               .run(lastSeen, existing.conversation_id);
         })();
@@ -83,30 +126,19 @@ function findCustomerUser(userId, platform, tenantId = null) {
     const scopedTenantId = tenantId || (platform === 'whatsapp' ? null : 'default');
     if (platform === 'whatsapp' && !scopedTenantId) return null;
     const row = db.prepare(`
-        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform,
+        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform, ca.profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
         WHERE ca.channel = ? AND ca.external_user_id = ? AND c.tenant_id = ?
     `).get(platform, String(userId), scopedTenantId);
 
-    if (!row) return null;
-
-    return {
-        id: row.id,
-        name: row.name,
-        platform: row.platform,
-        tenantId: row.tenant_id,
-        isAIEnabled: row.is_ai_enabled === 1,
-        unreadCount: row.unread_count,
-        assignee: row.assignee,
-        lastSeen: row.lastSeen
-    };
+    return mapCustomerRow(row);
 }
 
 function findCustomerUserByIdOnly(userId, tenantId = null) {
     const row = db.prepare(`
-        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform,
+        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform, ca.profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
@@ -114,39 +146,19 @@ function findCustomerUserByIdOnly(userId, tenantId = null) {
         ORDER BY CASE WHEN c.tenant_id = 'default' THEN 0 ELSE 1 END
     `).get(String(userId), tenantId, tenantId);
 
-    if (!row) return null;
-
-    return {
-        id: row.id,
-        name: row.name,
-        platform: row.platform,
-        tenantId: row.tenant_id,
-        isAIEnabled: row.is_ai_enabled === 1,
-        unreadCount: row.unread_count,
-        assignee: row.assignee,
-        lastSeen: row.lastSeen
-    };
+    return mapCustomerRow(row);
 }
 
 function listCustomerUsers() {
     const rows = db.prepare(`
-        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform,
+        SELECT ca.external_user_id as id, ca.username as name, ca.channel as platform, ca.profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
         ORDER BY c.updated_at DESC
     `).all();
 
-    return rows.map(row => ({
-        id: row.id,
-        name: row.name,
-        platform: row.platform,
-        tenantId: row.tenant_id,
-        isAIEnabled: row.is_ai_enabled === 1,
-        unreadCount: row.unread_count,
-        assignee: row.assignee,
-        lastSeen: row.lastSeen
-    }));
+    return rows.map(mapCustomerRow);
 }
 
 function updateAIEnabled(userId, isEnabled, tenantId = 'default') {

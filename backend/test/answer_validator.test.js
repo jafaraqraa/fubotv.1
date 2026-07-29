@@ -39,6 +39,21 @@ test('production evidence-based Answer Validator', async t => {
         assert.notStrictEqual(result.finalAnswer, answer);
     });
 
+    await t.test('multiple unsupported claims emit one localized fallback only', () => {
+        const fallback = 'لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.';
+        const answer = 'لدينا فرع على القمر. نوفر توصيلًا مجانيًا إلى المريخ. كيف يمكنني خدمتك اليوم؟';
+        const result = validateDetailed(answer, [{
+            id: 'store',
+            text: 'يقع المتجر في القدس وتتوفر خدمة الاستلام من المتجر.'
+        }]);
+
+        assert.strictEqual(result.overallStatus, STATUS.UNSUPPORTED);
+        assert.strictEqual(result.finalAnswer.split(fallback).length - 1, 1);
+        assert.ok(result.finalAnswer.includes('كيف يمكنني خدمتك اليوم؟'));
+        assert.ok(!result.finalAnswer.includes('القمر'));
+        assert.ok(!result.finalAnswer.includes('المريخ'));
+    });
+
     await t.test('contradictory answer', () => {
         const result = validateDetailed(
             'Our office closes at 7 PM.',

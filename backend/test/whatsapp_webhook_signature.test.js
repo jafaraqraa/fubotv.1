@@ -68,6 +68,18 @@ test('WhatsApp Cloud webhook signature verification', async (t) => {
         assert.strictEqual(response.status, 200);
     });
 
+    await t.test('replayed valid signature is rejected before processing', async () => {
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Hub-Signature-256': sign(payload)
+            },
+            body: payload
+        });
+        assert.strictEqual(response.status, 409);
+    });
+
     await t.test('invalid signature returns 401', async () => {
         const response = await fetch(webhookUrl, {
             method: 'POST',
@@ -103,6 +115,28 @@ test('WhatsApp Cloud webhook signature verification', async (t) => {
             body: tamperedPayload
         });
         assert.strictEqual(response.status, 401);
+    });
+
+    await t.test('missing signing secret fails closed', async () => {
+        const previousWhatsAppSecret = process.env.WHATSAPP_APP_SECRET;
+        const previousMetaSecret = process.env.META_APP_SECRET;
+        delete process.env.WHATSAPP_APP_SECRET;
+        delete process.env.META_APP_SECRET;
+        try {
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Hub-Signature-256': `sha256=${'1'.repeat(64)}`
+                },
+                body: JSON.stringify({ object: 'whatsapp_business_account', entry: [{ id: 'missing-secret' }] })
+            });
+            assert.strictEqual(response.status, 503);
+        } finally {
+            process.env.WHATSAPP_APP_SECRET = previousWhatsAppSecret;
+            if (previousMetaSecret === undefined) delete process.env.META_APP_SECRET;
+            else process.env.META_APP_SECRET = previousMetaSecret;
+        }
     });
 
     await t.test('existing GET challenge verification still works', async () => {

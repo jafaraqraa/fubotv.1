@@ -27,6 +27,7 @@ class WhatsAppWebProvider extends WhatsAppProvider {
         this.processLeasePath = null;
         this.hasProcessLease = false;
         this.exitLeaseHandler = null;
+        this.profileImageCache = new Map();
     }
 
     _getProcessIdentity(pid = process.pid) {
@@ -239,6 +240,21 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 let fileExt = '';
 
                 const contact = await msg.getContact();
+                let profileImageRemoteUrl = null;
+                const cachedProfileImage = this.profileImageCache.get(userId);
+                if (cachedProfileImage && cachedProfileImage.expiresAt > Date.now()) {
+                    profileImageRemoteUrl = cachedProfileImage.url;
+                } else {
+                    try {
+                        profileImageRemoteUrl = await contact.getProfilePicUrl();
+                    } catch (_) {
+                        // Privacy settings commonly make profile photos unavailable.
+                    }
+                    this.profileImageCache.set(userId, {
+                        url: profileImageRemoteUrl || null,
+                        expiresAt: Date.now() + (6 * 60 * 60 * 1000)
+                    });
+                }
 
                 if (msg.hasMedia) {
                     try {
@@ -261,7 +277,14 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                     }
                 }
 
-                const normalized = normalizeWhatsAppMessage(msg, contact, msg.hasMedia ? userText : null, mediaType, fileExt);
+                const normalized = normalizeWhatsAppMessage(
+                    msg,
+                    contact,
+                    msg.hasMedia ? userText : null,
+                    mediaType,
+                    fileExt,
+                    profileImageRemoteUrl
+                );
                 normalized.metadata = normalized.metadata || {};
                 normalized.metadata.tenantId = this.tenantId;
 

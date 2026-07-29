@@ -1,9 +1,9 @@
-function normalizeMetaMessage(webhookEvent, platform, profileName = null) {
+function normalizeMetaMessage(webhookEvent, platform, profile = null) {
     const senderPsid = String(webhookEvent.sender.id || '');
     const userText = webhookEvent.message.text || '';
     const messageId = String(webhookEvent.message.mid || '');
 
-    const displayName = profileName || `عميل ${platform === 'messenger' ? 'ماسنجر' : 'انستجرام'}`;
+    const displayName = profile?.displayName || `عميل ${platform === 'messenger' ? 'ماسنجر' : 'انستجرام'}`;
 
     return {
         channel: platform, // 'messenger' or 'instagram'
@@ -13,7 +13,9 @@ function normalizeMetaMessage(webhookEvent, platform, profileName = null) {
             displayName,
             username: null,
             phoneNumber: null,
-            profileData: {}
+            profileData: profile?.profileImageRemoteUrl
+                ? { profileImageRemoteUrl: profile.profileImageRemoteUrl }
+                : {}
         },
         direction: 'incoming',
         senderType: 'customer',

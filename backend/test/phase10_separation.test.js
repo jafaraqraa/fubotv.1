@@ -4,6 +4,7 @@ const http = require('http');
 
 process.env.NODE_ENV = 'test';
 process.env.ALLOWED_ORIGINS = 'http://localhost:5173, https://dashboard.example.com/';
+process.env.SESSION_SECRET = 'phase10_test_session_secret_32_characters';
 
 // Load App
 const app = require('../src/app');

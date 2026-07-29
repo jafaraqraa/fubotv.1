@@ -38,6 +38,10 @@ body { font-family: 'Cairo', 'Inter', sans-serif; }
     display: grid; place-items: center; flex: none;
     color: #fff; font: 700 10px/1 Inter, sans-serif;
     background: linear-gradient(145deg, var(--channel-accent), color-mix(in srgb, var(--channel-accent), #111 20%));
+    overflow: hidden;
+}
+.customer-profile-image {
+    width: 100%; height: 100%; display: block; object-fit: cover; border-radius: inherit;
 }
 .channel-header-identity { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
 .channel-header-name { color: #0f172a; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -344,6 +348,7 @@ body { font-family: 'Cairo', 'Inter', sans-serif; }
     display: grid; place-items: center; width: 39px; height: 39px; flex: 0 0 39px;
     border-radius: 50%; color: #fff; background: #64748b;
     font-size: 10px; font-weight: 800;
+    overflow: hidden;
 }
 .chat-customer-avatar.is-whatsapp { background: linear-gradient(145deg,#22c55e,#078c4d); }
 .chat-customer-avatar.is-telegram { background: linear-gradient(145deg,#55ace3,#168bd0); }

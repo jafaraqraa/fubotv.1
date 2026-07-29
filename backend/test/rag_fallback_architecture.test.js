@@ -148,7 +148,7 @@ test('production-safe deterministic RAG fallback architecture', async t => {
     });
     await t.test('16 knowledgeBaseOnly blocks general model knowledge', () => {
         assert.strictEqual(policy.shouldBlockOpenDomain({ knowledgeBaseOnly: true }), true);
-        assert.match(policy.blockOpenDomain('tenant-a'), /لم أتمكن من التحقق/);
+        assert.match(policy.blockOpenDomain('tenant-a'), /لا تتوفر لدي معلومات مؤكدة/);
     });
     await t.test('17 open-domain disabled blocks even non-KB-only requests', () => {
         assert.strictEqual(policy.shouldBlockOpenDomain({ knowledgeBaseOnly: false }), true);

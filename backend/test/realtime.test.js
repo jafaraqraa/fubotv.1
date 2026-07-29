@@ -7,6 +7,9 @@ const http = require('http');
 // Set environment variable to test database path before loading app or initialize
 const testDbPath = path.join(__dirname, '..', 'data', 'test_realtime.db');
 process.env.SQLITE_DB_PATH = testDbPath;
+process.env.SESSION_SECRET = 'realtime_test_session_secret_32_characters';
+process.env.ADMIN_BOOTSTRAP_USERNAME = 'realtime-admin';
+process.env.ADMIN_BOOTSTRAP_PASSWORD = 'Realtime!Bootstrap8Password';
 
 // Clean up any stale test database before booting
 try {
@@ -67,7 +70,7 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
                 'Content-Type': 'application/json',
                 'x-forwarded-proto': 'https'
             },
-            body: JSON.stringify({ username: 'admin', password: 'Admin@123456' })
+            body: JSON.stringify({ username: 'realtime-admin', password: 'Realtime!Bootstrap8Password' })
         });
         assert.strictEqual(loginRes.status, 200, 'Login should succeed to get session cookie');
 

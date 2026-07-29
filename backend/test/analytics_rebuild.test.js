@@ -6,7 +6,7 @@ const path = require('path');
 // Force isolated test DB for analytics rebuild verification
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_analytics_rebuild.db');
 process.env.SQLITE_DB_PATH = testDbPath;
-process.env.SESSION_SECRET = 'test_session_secret_analytics';
+process.env.SESSION_SECRET = 'test_session_secret_analytics_32_chars';
 process.env.NODE_ENV = 'development';
 
 if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);

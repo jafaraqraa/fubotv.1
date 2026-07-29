@@ -1,5 +1,6 @@
 const db = require('../connection');
 const crypto = require('crypto');
+const { requireSessionSecret } = require('../../config/securityConfig');
 
 function findAdminByUsername(username) {
     const row = db.prepare('SELECT id, username, password_hash, display_name, is_active FROM administrators WHERE username = ?').get(username);
@@ -39,7 +40,7 @@ function createAdmin(username, passwordHash, displayName = 'Administrator') {
 // --- Persistent Login Rate Limiting (Task 5) ---
 
 function hashIp(ip) {
-    const salt = process.env.SESSION_SECRET || 'futh_secure_fallback_secret_2026_xxxx';
+    const salt = requireSessionSecret();
     return crypto.createHmac('sha256', salt).update(String(ip)).digest('hex');
 }
 

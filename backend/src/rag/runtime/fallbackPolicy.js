@@ -96,7 +96,7 @@ function shouldBlockOpenDomain({ knowledgeBaseOnly } = {}) {
 function blockOpenDomain(tenantId, reason = 'insufficient_context') {
     metrics.rag_open_domain_blocked_total++;
     console.log('[RAG Open Domain] Blocked', { tenantId, reason });
-    return 'لم أتمكن من التحقق من هذه المعلومة من قاعدة المعرفة المتاحة.';
+    return 'لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.';
 }
 
 function validateWithPolicy({ answer, context, validator, tenantId }) {

@@ -73,10 +73,11 @@ window.Dashboard.users = {
             row.addEventListener('click', () => window.Dashboard.chat.selectUser(user.id));
 
             const initials = String(user.name || user.platform || '?').trim().split(/\s+/).slice(0, 2).map(part => part.charAt(0)).join('');
-            const avatar = dom.createElement('span', {
-                className: `chat-customer-avatar is-${user.platform}`,
-                text: initials || '?'
-            });
+            const avatar = dom.createCustomerAvatar(
+                user,
+                `chat-customer-avatar is-${user.platform}`,
+                initials || '?'
+            );
             const details = dom.createElement('div', { className: 'flex-1 min-w-0 ml-2' });
             const titleRow = dom.createElement('div', { className: 'flex items-center gap-2' });
             titleRow.append(

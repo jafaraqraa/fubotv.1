@@ -661,6 +661,8 @@ window.Dashboard.analytics = {
             if (stats.metaVerifyToken !== undefined && !window.Dashboard.state.isMetaVerifyLoaded) {
                 const metaVerifyInput = document.getElementById('meta-verify-input');
                 if (metaVerifyInput) metaVerifyInput.value = stats.metaVerifyToken;
+                const metaAppSecretInput = document.getElementById('meta-app-secret-input');
+                if (metaAppSecretInput) metaAppSecretInput.value = stats.metaAppSecret || '';
                 window.Dashboard.state.isMetaVerifyLoaded = true;
             }
             if (stats.messengerToken !== undefined && !window.Dashboard.state.isMessengerLoaded) {

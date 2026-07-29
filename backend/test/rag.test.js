@@ -7,7 +7,7 @@ const crypto = require('crypto');
 // Force isolated test DB for RAG tests
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_rag_app.db');
 process.env.SQLITE_DB_PATH = testDbPath;
-process.env.SESSION_SECRET = 'test_rag_session_secret_123';
+process.env.SESSION_SECRET = 'test_rag_session_secret_123_32_chars';
 process.env.NODE_ENV = 'development';
 
 if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);

@@ -112,7 +112,7 @@ window.Dashboard.apiKeys = {
                 if (hasError) {
                     metricsHtml += `
                         <div class="text-[10px] text-red-500 leading-relaxed font-arabic mt-2 bg-red-50/50 p-2.5 rounded-lg border border-red-100">
-                            خطأ المزامنة: ${key.errorMessage}
+                            خطأ المزامنة: ${window.Dashboard.utils.escapeHTML(String(key.errorMessage || ''))}
                         </div>
                     `;
                 }
@@ -143,7 +143,7 @@ window.Dashboard.apiKeys = {
                                 <input type="password" id="key-input-${prov}" class="futh-input bg-slate-50/40 text-xs flex-1"
                                     placeholder="${isConfigured ? '••••••••••••••••' : 'أدخل المفتاح هنا...'}"
                                     value="">
-                                <button onclick="window.Dashboard.apiKeys.saveInlineKey('${prov}')" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition shadow-sm font-arabic">
+                                <button type="button" data-api-key-save="${window.Dashboard.utils.escapeHTML(prov)}" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition shadow-sm font-arabic">
                                     حفظ
                                 </button>
                             </div>
@@ -156,7 +156,7 @@ window.Dashboard.apiKeys = {
                     <!-- Refresh Button -->
                     ${isConfigured ? `
                         <div class="flex gap-1.5 pt-3 border-t border-slate-100 justify-end">
-                            <button onclick="window.Dashboard.apiKeys.triggerRefresh(${key.id}, this)" class="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-xs font-bold transition font-arabic flex items-center gap-1">
+                            <button type="button" data-api-key-refresh="${Number(key.id)}" class="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-xs font-bold transition font-arabic flex items-center gap-1">
                                 <span>🔄 تحديث البيانات</span>
                             </button>
                         </div>
@@ -165,7 +165,17 @@ window.Dashboard.apiKeys = {
             `;
         });
 
-        container.innerHTML = html;
+        window.Dashboard.utils.setSanitizedHTML(container, html);
+        container.querySelectorAll('[data-api-key-save]').forEach(button => {
+            button.addEventListener('click', () => {
+                window.Dashboard.apiKeys.saveInlineKey(button.dataset.apiKeySave);
+            });
+        });
+        container.querySelectorAll('[data-api-key-refresh]').forEach(button => {
+            button.addEventListener('click', () => {
+                window.Dashboard.apiKeys.triggerRefresh(Number(button.dataset.apiKeyRefresh), button);
+            });
+        });
     },
 
     saveInlineKey: async function(provider) {
@@ -208,7 +218,7 @@ window.Dashboard.apiKeys = {
     triggerRefresh: async function(id, btn) {
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<span>جاري التحديث...</span>';
+            btn.textContent = 'جاري التحديث...';
         }
 
         try {
@@ -229,7 +239,7 @@ window.Dashboard.apiKeys = {
         } finally {
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = '<span>🔄 تحديث البيانات</span>';
+                btn.textContent = '🔄 تحديث البيانات';
             }
         }
     }

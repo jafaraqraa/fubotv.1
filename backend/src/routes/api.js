@@ -142,7 +142,8 @@ router.post('/send-direct', async (req, res) => {
 router.post('/config/settings', async (req, res) => {
     const {
         token, openrouterKey, model, systemPrompt, adminId, waAutoReply,
-        messengerToken, instagramToken, metaVerifyToken, messengerAutoReply, instagramAutoReply,
+        messengerToken, instagramToken, metaVerifyToken, metaAppSecret,
+        messengerAutoReply, instagramAutoReply,
         ragChunkSize, ragChunkOverlap, ragEmbeddingModel, qdrantCollection,
         ragIndexOnStartup, qdrantUrl, ollamaBaseUrl,
         ragMinTopK, ragDefaultTopK, ragMaxTopK, ragCandidateMultiplier,
@@ -156,6 +157,42 @@ router.post('/config/settings', async (req, res) => {
     const { validateSetting, validateAllSettings, getConfig } = require('../rag');
 
     try {
+        let normalizedMetaAppSecret = null;
+        if (metaAppSecret !== undefined && metaAppSecret !== '') {
+            if (typeof metaAppSecret !== 'string') {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Meta App Secret غير صالح.'
+                });
+            }
+            if (!isMaskedPlaceholder(metaAppSecret)) {
+                normalizedMetaAppSecret = metaAppSecret.trim();
+            }
+        }
+        if (normalizedMetaAppSecret !== null) {
+            if (
+                normalizedMetaAppSecret.length < 16 ||
+                normalizedMetaAppSecret.length > 256 ||
+                /[\r\n\0]/.test(normalizedMetaAppSecret)
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Meta App Secret غير صالح.'
+                });
+            }
+        }
+        const metaSettingsRequested = metaVerifyToken !== undefined || metaAppSecret !== undefined;
+        if (
+            metaSettingsRequested &&
+            normalizedMetaAppSecret === null &&
+            !process.env.META_APP_SECRET
+        ) {
+            return res.status(400).json({
+                success: false,
+                error: 'Meta App Secret مطلوب لتفعيل التحقق من توقيع Webhook.'
+            });
+        }
+
         // RAG Settings Validation and Save
         const tempSettings = {
             RAG_CHUNK_SIZE: ragChunkSize !== undefined ? String(ragChunkSize) : (getConfig('RAG_CHUNK_SIZE') || '800'),
@@ -421,14 +458,20 @@ router.post('/config/settings', async (req, res) => {
             }
         }
 
-        // 10. تعديل حالة الرد الآلي لماسينجر
+        // 10. تحديث سر تطبيق Meta المستخدم للتحقق من توقيع POST Webhooks
+        if (normalizedMetaAppSecret !== null) {
+            saveSetting('META_APP_SECRET', normalizedMetaAppSecret);
+            updateEnvFile('META_APP_SECRET', normalizedMetaAppSecret);
+        }
+
+        // 11. تعديل حالة الرد الآلي لماسينجر
         if (messengerAutoReply !== undefined) {
             saveSetting('MESSENGER_AUTO_REPLY', messengerAutoReply);
             updateEnvFile('MESSENGER_AUTO_REPLY', messengerAutoReply);
             addLog(`تعديل حالة الرد الآلي لماسنجر إلى: ${messengerAutoReply === 'true' ? 'مفعّل' : 'موقف'}`);
         }
 
-        // 11. تعديل حالة الرد الآلي لانستجرام
+        // 12. تعديل حالة الرد الآلي لانستجرام
         if (instagramAutoReply !== undefined) {
             saveSetting('INSTAGRAM_AUTO_REPLY', instagramAutoReply);
             updateEnvFile('INSTAGRAM_AUTO_REPLY', instagramAutoReply);
@@ -452,7 +495,11 @@ router.post('/config/settings', async (req, res) => {
             console.error('⚠️ Failed to sync API keys on settings update:', err.message);
         });
 
-        res.json({ success: true, message: 'تم حفظ وتحديث كافة الإعدادات والموديل والتعليمات وقنوات ميتّا بنجاح واشتغال البوت بالخلفية!' });
+        res.json({
+            success: true,
+            message: 'تم حفظ وتحديث كافة الإعدادات والموديل والتعليمات وقنوات ميتّا بنجاح واشتغال البوت بالخلفية!',
+            metaAppSecretConfigured: !!process.env.META_APP_SECRET
+        });
     } catch (err) {
         reportError("حفظ الإعدادات العامة", err.message);
         res.status(500).json({ success: false, error: err.message });
@@ -520,6 +567,7 @@ router.get('/stats', (req, res) => {
         messengerToken: maskSecret(process.env.MESSENGER_ACCESS_TOKEN),
         instagramToken: maskSecret(process.env.INSTAGRAM_ACCESS_TOKEN),
         metaVerifyToken: maskSecret(process.env.META_VERIFY_TOKEN),
+        metaAppSecret: maskSecret(process.env.META_APP_SECRET),
 
         aiProvider: textGenerationConfig?.provider || process.env.AI_PROVIDER || 'openrouter',
         aiModel: textGenerationConfig?.model || process.env.AI_MODEL || process.env.OPENROUTER_MODEL || 'openrouter/free',
@@ -535,7 +583,8 @@ router.get('/stats', (req, res) => {
         isOpenRouterConfigured: !!process.env.OPENROUTER_API_KEY,
         isMessengerConfigured: !!process.env.MESSENGER_ACCESS_TOKEN,
         isInstagramConfigured: !!process.env.INSTAGRAM_ACCESS_TOKEN,
-        isMetaVerifyConfigured: !!process.env.META_VERIFY_TOKEN,
+        isMetaVerifyConfigured: !!process.env.META_VERIFY_TOKEN && !!process.env.META_APP_SECRET,
+        isMetaAppSecretConfigured: !!process.env.META_APP_SECRET,
 
         platformsCount: {
             telegram: tgUsers,

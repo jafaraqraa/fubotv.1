@@ -29,7 +29,7 @@
         }
     </script>
     <!-- استدعاء ملف الأنماط المنسق المستخرج -->
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/dashboard.css?v=20260729-profile-images">
     <link rel="stylesheet" href="/css/settings.css">
 </head>
 <body class="bg-futh_bg text-slate-800 h-screen flex flex-col tech-grid">
@@ -49,12 +49,12 @@
                 </div>
 
                 <nav class="space-y-1.5">
-                    <button onclick="showSection('chat-section')" id="btn-chat" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg bg-blue-600 text-white font-semibold transition shadow-md shadow-blue-600/10">
+                    <button data-legacy-click="showSection('chat-section')" id="btn-chat" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg bg-blue-600 text-white font-semibold transition shadow-md shadow-blue-600/10">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                         <span class="text-xs font-semibold">الدعم والدردشة</span>
                     </button>
                     
-                    <button onclick="showSection('errors-section')" id="btn-errors" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('errors-section')" id="btn-errors" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             <span class="text-xs font-semibold">تتبع الأعطال</span>
@@ -62,14 +62,14 @@
                         <span id="badge-errors-count" class="bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full hidden">0</span>
                     </button>
 
-                    <button onclick="showSection('analytics-section')" id="btn-analytics" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('analytics-section')" id="btn-analytics" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
                             <span class="text-xs font-semibold">تحليلات الأداء</span>
                         </div>
                     </button>
 
-                    <button onclick="showSection('whatsapp-section')" id="btn-whatsapp" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('whatsapp-section')" id="btn-whatsapp" class="w-full text-right flex items-center justify-between py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             <span class="text-xs font-semibold">واتساب ويب</span>
@@ -77,22 +77,22 @@
                         <span id="badge-wa-status" class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                     </button>
 
-                    <button onclick="showSection('rag-section')" id="btn-rag" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('rag-section')" id="btn-rag" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         <span class="text-xs font-semibold">نظام المعرفة (RAG)</span>
                     </button>
 
-                    <button onclick="showSection('aimodels-section')" id="btn-aimodels" data-testid="btn-aimodels" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('aimodels-section')" id="btn-aimodels" data-testid="btn-aimodels" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         <span class="text-xs font-semibold">إدارة الموديلات (AI Models)</span>
                     </button>
 
-                    <button onclick="showSection('usage-section')" id="btn-usage" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('usage-section')" id="btn-usage" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="text-xs font-semibold">استخدام الرصيد (AI Usage)</span>
                     </button>
 
-                    <button onclick="showSection('settings-section')" id="btn-settings" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    <button data-legacy-click="showSection('settings-section')" id="btn-settings" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="text-xs font-semibold">إعدادات النظام</span>
                     </button>
@@ -102,7 +102,7 @@
                         <span class="text-xs font-semibold">صفحة الهبوط</span>
                     </a>
 
-                    <button onclick="logoutAdmin()" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-red-800 text-red-400 hover:text-white transition">
+                    <button data-legacy-click="logoutAdmin()" class="w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-red-800 text-red-400 hover:text-white transition">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         <span class="text-xs font-semibold">تسجيل الخروج</span>
                     </button>
@@ -370,7 +370,7 @@
                         <!-- اختيار نوع المزود -->
                         <div class="space-y-2">
                             <label class="block text-xs font-bold text-slate-700">نوع مزود الخدمة النشط:</label>
-                            <select id="wa-provider-select" onchange="toggleWhatsAppProviderUI()" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <select id="wa-provider-select" data-legacy-change="toggleWhatsAppProviderUI()" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                 <option value="web">واتساب ويب (QR Code Web Login)</option>
                                 <option value="cloud">بوابة WhatsApp Business Cloud API (رسمي)</option>
                             </select>
@@ -386,7 +386,7 @@
                                 <p class="text-[10px] text-slate-400 uppercase tracking-[0.2em]">Requesting Gateway Access...</p>
                             </div>
 
-                            <button onclick="logoutWhatsApp()" id="wa-logout-btn" class="w-full bg-red-650 hover:bg-red-750 text-white font-bold py-2.5 rounded-lg text-[10px] transition hidden uppercase tracking-widest font-inter">
+                            <button data-legacy-click="logoutWhatsApp()" id="wa-logout-btn" class="w-full bg-red-650 hover:bg-red-750 text-white font-bold py-2.5 rounded-lg text-[10px] transition hidden uppercase tracking-widest font-inter">
                                 Disconnect & Terminate Session
                             </button>
                         </div>
@@ -423,13 +423,13 @@
                                 <label class="block text-[11px] font-bold text-slate-700">رابط الويب هوك الخاص بك (Webhook Callback URL):</label>
                                 <div class="flex items-center gap-2 mt-1.5">
                                     <input type="text" id="wa-cloud-webhook-url" readonly class="flex-1 bg-slate-100 border border-slate-200 rounded-lg p-2 text-xs text-slate-500 font-mono" value="">
-                                    <button onclick="copyCloudWebhookUrl()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold transition">نسخ</button>
+                                    <button data-legacy-click="copyCloudWebhookUrl()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold transition">نسخ</button>
                                 </div>
                                 <p class="text-[9px] text-slate-400 mt-1 font-arabic">قم بنسخ هذا الرابط ووضعه في حقل Webhook في لوحة مطوري فيسبوك، مع تفعيل تصريح (messages).</p>
                                 <div id="wa-cloud-webhook-warning" class="hidden text-[10px] text-amber-600 font-semibold mt-2 font-arabic bg-amber-50 p-2.5 rounded-lg border border-amber-100 leading-relaxed text-right animate-pulse"></div>
                             </div>
 
-                            <button onclick="saveWhatsAppCloudConfig()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-[10px] transition uppercase tracking-widest font-inter shadow-md shadow-blue-600/10">
+                            <button data-legacy-click="saveWhatsAppCloudConfig()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-[10px] transition uppercase tracking-widest font-inter shadow-md shadow-blue-600/10">
                                 حفظ الإعدادات وتنشيط البوابة السحابية
                             </button>
                         </div>
@@ -475,7 +475,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إدارة حالة الاتصال والرد التلقائي</p>
                                 </div>
                                 <span class="badge-status offline" id="badge-whatsapp">غير متصل</span>
-                                <button onclick="openSettingsDrawer('whatsapp')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('whatsapp')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -491,7 +491,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إعداد البوت ومعرّف المسؤول</p>
                                 </div>
                                 <span class="badge-status offline" id="badge-telegram">غير متصل</span>
-                                <button onclick="openSettingsDrawer('telegram')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('telegram')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -507,7 +507,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إعداد النموذج والتعليمات وسلوك المساعد</p>
                                 </div>
                                 <span class="badge-status offline" id="badge-ai">غير متصل</span>
-                                <button onclick="openSettingsDrawer('ai')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('ai')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -523,7 +523,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إعدادات النظام العامة وتغيير الرقم السري</p>
                                 </div>
                                 <span class="badge-status active" id="badge-general">مفعل</span>
-                                <button onclick="openSettingsDrawer('general')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('general')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -539,7 +539,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إعدادات Webhook والتحقق المشترك</p>
                                 </div>
                                 <span class="badge-status danger" id="badge-meta">يحتاج إعداد</span>
-                                <button onclick="openSettingsDrawer('meta')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('meta')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -555,7 +555,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إدارة الرسائل والردود التلقائية</p>
                                 </div>
                                 <span class="badge-status danger" id="badge-instagram">يحتاج إعداد</span>
-                                <button onclick="openSettingsDrawer('instagram')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('instagram')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -571,7 +571,7 @@
                                     <p class="text-[10px] text-slate-400 mt-1">إعداد الرسائل والردود التلقائية</p>
                                 </div>
                                 <span class="badge-status danger" id="badge-messenger">يحتاج إعداد</span>
-                                <button onclick="openSettingsDrawer('messenger')" class="btn-manage-settings">
+                                <button data-legacy-click="openSettingsDrawer('messenger')" class="btn-manage-settings">
                                     <span>إدارة الإعدادات</span>
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
                                 </button>
@@ -627,7 +627,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="window.Dashboard.aiUsage.refreshAll(true)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                        <button data-legacy-click="window.Dashboard.aiUsage.refreshAll(true)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1.5">
                             <span class="refresh-spinner hidden">🔄</span>
                             <span>تحديث يدوي</span>
                         </button>
@@ -875,7 +875,7 @@
                                 </div>
                                 <div class="text-xs font-bold text-slate-700">اسحب ملفات المعرفة وأفلتها هنا</div>
                                 <div class="text-[10px] text-slate-400">PDF, TXT, DOCX, MD (بحد أقصى 10 ميجابايت)</div>
-                                <button type="button" onclick="document.getElementById('rag-file-input').click()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-[11px] font-bold rounded-xl transition">اختيار ملف</button>
+                                <button type="button" data-legacy-click="document.getElementById('rag-file-input').click()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-[11px] font-bold rounded-xl transition">اختيار ملف</button>
                                 <input type="file" id="rag-file-input" class="hidden" accept=".pdf,.txt,.docx,.md">
                             </div>
 
@@ -1093,7 +1093,7 @@
                                 </div>
                                 <div class="flex flex-col gap-3">
                                     <button id="rag-del-confirm-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-lg">حذف المستند نهائياً</button>
-                                    <button onclick="document.getElementById('rag-delete-confirm-modal').classList.add('hidden')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">إلغاء</button>
+                                    <button data-legacy-click="document.getElementById('rag-delete-confirm-modal').classList.add('hidden')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">إلغاء</button>
                                 </div>
                             </div>
                         </div>
@@ -1109,7 +1109,7 @@
                                 </div>
                                 <div class="flex flex-col gap-3">
                                     <button id="rag-reindex-confirm-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-3 rounded-xl transition shadow-lg">البدء في إعادة الفهرسة</button>
-                                    <button onclick="document.getElementById('rag-reindex-confirm-modal').classList.add('hidden')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">إلغاء</button>
+                                    <button data-legacy-click="document.getElementById('rag-reindex-confirm-modal').classList.add('hidden')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">إلغاء</button>
                                 </div>
                             </div>
                         </div>
@@ -1121,16 +1121,16 @@
                                     <span class="text-lg">📄</span>
                                     <h3 class="text-xs font-bold text-slate-900">تفاصيل المستند</h3>
                                 </div>
-                                <button onclick="document.getElementById('rag-doc-details-panel').classList.add('-translate-x-full'); setTimeout(()=>document.getElementById('rag-doc-details-panel').classList.add('hidden'), 300)" class="w-7 h-7 rounded-lg hover:bg-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700">&times;</button>
+                                <button data-legacy-click="document.getElementById('rag-doc-details-panel').classList.add('-translate-x-full'); setTimeout(()=>document.getElementById('rag-doc-details-panel').classList.add('hidden'), 300)" class="w-7 h-7 rounded-lg hover:bg-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700">&times;</button>
                             </div>
 
                             <!-- Tabbed Navigation inside details panel (Goal 4) -->
                             <div class="flex border-b border-slate-100 text-[10px] select-none font-bold bg-slate-50/50" id="rag-panel-tabs">
-                                <button onclick="window.Dashboard.rag.switchPanelTab('general')" id="panel-tab-general" class="flex-1 py-3 text-center border-b-2 border-blue-600 text-blue-600 transition duration-150">عام</button>
-                                <button onclick="window.Dashboard.rag.switchPanelTab('metadata')" id="panel-tab-metadata" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">فهرس</button>
-                                <button onclick="window.Dashboard.rag.switchPanelTab('chunks')" id="panel-tab-chunks" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">مقاطع</button>
-                                <button onclick="window.Dashboard.rag.switchPanelTab('versions')" id="panel-tab-versions" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">نسخ</button>
-                                <button onclick="window.Dashboard.rag.switchPanelTab('activity')" id="panel-tab-activity" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">نشاط</button>
+                                <button data-legacy-click="window.Dashboard.rag.switchPanelTab('general')" id="panel-tab-general" class="flex-1 py-3 text-center border-b-2 border-blue-600 text-blue-600 transition duration-150">عام</button>
+                                <button data-legacy-click="window.Dashboard.rag.switchPanelTab('metadata')" id="panel-tab-metadata" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">فهرس</button>
+                                <button data-legacy-click="window.Dashboard.rag.switchPanelTab('chunks')" id="panel-tab-chunks" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">مقاطع</button>
+                                <button data-legacy-click="window.Dashboard.rag.switchPanelTab('versions')" id="panel-tab-versions" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">نسخ</button>
+                                <button data-legacy-click="window.Dashboard.rag.switchPanelTab('activity')" id="panel-tab-activity" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition duration-150">نشاط</button>
                             </div>
 
                             <div class="flex-1 overflow-y-auto p-5 text-xs select-text">
@@ -1257,7 +1257,7 @@
                             <div class="flex gap-2">
                                 <input type="text" id="rag-playground-query" class="flex-1 p-3 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="اسأل البوت هنا للتجربة الفورية لقاعدة المعرفة...">
                                 <button id="rag-playground-ask-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl text-xs transition shadow-sm shrink-0">اسأل المساعد</button>
-                                <button id="rag-playground-clear-btn" onclick="window.Dashboard.rag.clearPlayground()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl text-xs border border-slate-200 transition shrink-0">مسح</button>
+                                <button id="rag-playground-clear-btn" data-legacy-click="window.Dashboard.rag.clearPlayground()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl text-xs border border-slate-200 transition shrink-0">مسح</button>
                             </div>
 
                             <!-- Playground Results Display Grid -->
@@ -1305,7 +1305,7 @@
                                 <div class="p-4 rounded-xl bg-blue-50/40 border border-blue-100 space-y-1.5">
                                     <div class="flex justify-between items-center border-b border-blue-100 pb-1.5 mb-1.5">
                                         <h4 class="text-xs font-bold text-blue-900">الرد الذكي المتولد (Final Answer)</h4>
-                                        <button id="rag-playground-copy-btn" onclick="window.Dashboard.rag.copyPlaygroundAnswer()" class="px-2 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-[10px] font-bold rounded flex items-center gap-1 transition text-slate-700 shadow-sm">نسخ الإجابة</button>
+                                        <button id="rag-playground-copy-btn" data-legacy-click="window.Dashboard.rag.copyPlaygroundAnswer()" class="px-2 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-[10px] font-bold rounded flex items-center gap-1 transition text-slate-700 shadow-sm">نسخ الإجابة</button>
                                     </div>
                                     <div id="rag-playground-answer" class="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap select-text">-</div>
                                 </div>
@@ -1362,7 +1362,7 @@
                                 </div>
 
                                 <!-- Collapsible Retrieval Settings -->
-                                <button type="button" onclick="document.getElementById('rag-retrieval-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
+                                <button type="button" data-legacy-click="document.getElementById('rag-retrieval-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
                                     <span>⚙️ خيارات استرجاع متقدمة (Advanced)</span>
                                     <span class="arrow transition-transform duration-200">▼</span>
                                 </button>
@@ -1427,7 +1427,7 @@
                                 </div>
 
                                 <!-- Collapsible Chunking Settings -->
-                                <button type="button" onclick="document.getElementById('rag-chunking-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
+                                <button type="button" data-legacy-click="document.getElementById('rag-chunking-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
                                     <span>⚙️ خيارات تقسيم متقدمة (Advanced)</span>
                                     <span class="arrow transition-transform duration-200">▼</span>
                                 </button>
@@ -1480,7 +1480,7 @@
                                 </div>
 
                                 <!-- Collapsible Embedding Settings -->
-                                <button type="button" onclick="document.getElementById('rag-embedding-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
+                                <button type="button" data-legacy-click="document.getElementById('rag-embedding-advanced').classList.toggle('hidden'); this.querySelector('.arrow').classList.toggle('rotate-180')" class="w-full text-right py-2 text-[10px] font-bold text-slate-500 hover:text-slate-700 flex justify-between items-center transition select-none pt-1">
                                     <span>⚙️ خيارات نماذج متقدمة (Advanced)</span>
                                     <span class="arrow transition-transform duration-200">▼</span>
                                 </button>
@@ -1590,7 +1590,7 @@
             </div>
 
             <!-- Settings Drawer Element (Left side slide-out for RTL flow) -->
-            <div class="settings-drawer-backdrop" id="settings-drawer-backdrop" onclick="handleBackdropClick(event)"></div>
+            <div class="settings-drawer-backdrop" id="settings-drawer-backdrop" data-legacy-click="handleBackdropClick(event)"></div>
             <div class="settings-drawer font-cairo" id="settings-drawer">
                 <!-- Drawer Header -->
                 <div class="p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
@@ -1603,7 +1603,7 @@
                             <p class="text-[11px] text-slate-500 mt-0.5" id="drawer-desc">إدارة تفاصيل الاتصال والرد التلقائي</p>
                         </div>
                     </div>
-                    <button onclick="handleDrawerCloseBtn()" class="w-8 h-8 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 flex items-center justify-center transition">
+                    <button data-legacy-click="handleDrawerCloseBtn()" class="w-8 h-8 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-slate-700 flex items-center justify-center transition">
                         <span class="text-xl leading-none">&times;</span>
                     </button>
                 </div>
@@ -1636,7 +1636,7 @@
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">مفتاح واجهة البرمجة (API Key)</label>
                                     <div class="relative">
                                         <input id="openrouter-input" type="password" class="futh-input pe-10" placeholder="Secret Key ID">
-                                        <button onclick="togglePasswordVisibility('openrouter-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                        <button data-legacy-click="togglePasswordVisibility('openrouter-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
                                 </div>
                                 <div id="ai-base-url-container" style="display: none !important;">
@@ -1649,9 +1649,9 @@
                                         <!-- Will be dynamically populated by JS based on selected provider -->
                                     </select>
                                     <div class="mt-2 text-left flex justify-between items-center flex-wrap gap-2">
-                                        <button type="button" onclick="showAddCustomModelDialog()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold font-arabic">+ إضافة نموذج مخصص (Add Custom Model)</button>
+                                        <button type="button" data-legacy-click="showAddCustomModelDialog()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold font-arabic">+ إضافة نموذج مخصص (Add Custom Model)</button>
                                         <div id="settings-delete-model-container" class="hidden">
-                                            <button type="button" onclick="deleteCustomModelFromSettings()" class="text-[11px] text-red-650 hover:text-red-750 font-bold transition flex items-center gap-1 font-arabic">
+                                            <button type="button" data-legacy-click="deleteCustomModelFromSettings()" class="text-[11px] text-red-650 hover:text-red-750 font-bold transition flex items-center gap-1 font-arabic">
                                                 <i class="fa fa-trash-alt"></i> حذف النموذج المخصص
                                             </button>
                                         </div>
@@ -1701,7 +1701,7 @@
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Bot Token ID</label>
                                     <div class="relative">
                                         <input id="token-input" type="password" class="futh-input pe-10" placeholder="Bot Token ID">
-                                        <button onclick="togglePasswordVisibility('token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                        <button data-legacy-click="togglePasswordVisibility('token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
                                 </div>
                                 <div>
@@ -1742,7 +1742,7 @@
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Page Access Token</label>
                                     <div class="relative">
                                         <input id="messenger-token-input" type="password" class="futh-input pe-10" placeholder="Page Access Token">
-                                        <button onclick="togglePasswordVisibility('messenger-token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                        <button data-legacy-click="togglePasswordVisibility('messenger-token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
                                 </div>
                             </div>
@@ -1765,7 +1765,7 @@
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Instagram Access Token</label>
                                     <div class="relative">
                                         <input id="instagram-token-input" type="password" class="futh-input pe-10" placeholder="Instagram Access Token">
-                                        <button onclick="togglePasswordVisibility('instagram-token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                        <button data-legacy-click="togglePasswordVisibility('instagram-token-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
                                 </div>
                             </div>
@@ -1782,10 +1782,18 @@
                                     <input id="meta-verify-input" type="text" class="futh-input" placeholder="Verify Token ID">
                                 </div>
                                 <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Meta App Secret</label>
+                                    <div class="relative">
+                                        <input id="meta-app-secret-input" type="password" class="futh-input pe-10" placeholder="Meta App Secret" autocomplete="new-password">
+                                        <button type="button" data-legacy-click="togglePasswordVisibility('meta-app-secret-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                    </div>
+                                    <p class="mt-1.5 text-[10px] leading-relaxed text-slate-400">من Meta Developers ← App settings ← Basic ← App secret. لن يتم عرضه كاملًا بعد الحفظ.</p>
+                                </div>
+                                <div>
                                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Callback URL</label>
                                     <div class="flex gap-2">
                                         <input id="meta-callback-url" type="text" class="futh-input bg-slate-100 text-slate-500 select-all" readonly value="https://futhing.com/webhook">
-                                        <button onclick="copyCallbackUrl()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-lg transition shrink-0">نسخ</button>
+                                        <button data-legacy-click="copyCallbackUrl()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-lg transition shrink-0">نسخ</button>
                                     </div>
                                 </div>
                             </div>
@@ -1815,11 +1823,11 @@
 
                 <!-- Fixed Drawer Footer (Dynamic triggers routed in JS settings) -->
                 <div class="drawer-footer">
-                    <button onclick="handleDrawerSaveBtn()" id="drawer-save-btn" class="px-8 py-3 bg-[#0F172A] hover:bg-black text-white font-bold text-xs rounded-xl transition shadow-sm font-inter uppercase tracking-wider flex items-center justify-center gap-2">
+                    <button data-legacy-click="handleDrawerSaveBtn()" id="drawer-save-btn" class="px-8 py-3 bg-[#0F172A] hover:bg-black text-white font-bold text-xs rounded-xl transition shadow-sm font-inter uppercase tracking-wider flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         <span>حفظ الإعدادات</span>
                     </button>
-                    <button onclick="handleDrawerCancelBtn()" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition">
+                    <button data-legacy-click="handleDrawerCancelBtn()" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition">
                         <span>إلغاء</span>
                     </button>
                 </div>
@@ -1836,8 +1844,8 @@
                         <p class="text-xs text-slate-500 leading-relaxed font-arabic px-2">سيتم فقدان التعديلات التي لم يتم حفظها. هل تريد المتابعة؟</p>
                     </div>
                     <div class="flex flex-col gap-3 pt-2">
-                        <button onclick="dismissUnsavedConfirmation()" class="w-full bg-[#0F172A] hover:bg-black text-white font-bold text-[10px] py-3 rounded-lg transition uppercase tracking-widest shadow-lg">متابعة التعديل</button>
-                        <button onclick="confirmDiscardChanges()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 rounded-lg transition uppercase tracking-widest font-inter">تجاهل التعديلات</button>
+                        <button data-legacy-click="dismissUnsavedConfirmation()" class="w-full bg-[#0F172A] hover:bg-black text-white font-bold text-[10px] py-3 rounded-lg transition uppercase tracking-widest shadow-lg">متابعة التعديل</button>
+                        <button data-legacy-click="confirmDiscardChanges()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 rounded-lg transition uppercase tracking-widest font-inter">تجاهل التعديلات</button>
                     </div>
                 </div>
             </div>
@@ -1850,7 +1858,7 @@
                             <span class="text-xl">🔍</span>
                             <h3 id="rag-preview-title" class="text-sm font-bold text-slate-900 font-arabic">معاينة النص المعرفي ومقاطعه دلالياً</h3>
                         </div>
-                        <button onclick="document.getElementById('rag-preview-modal').classList.add('hidden')" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 text-lg">&times;</button>
+                        <button data-legacy-click="document.getElementById('rag-preview-modal').classList.add('hidden')" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 text-lg">&times;</button>
                     </div>
 
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden mb-4">
@@ -1895,7 +1903,7 @@
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-6 transform scale-95 transition-transform duration-300 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
                         <h3 class="text-xs font-bold text-slate-900">تفاصيل مقطع التوجيه</h3>
-                        <button onclick="document.getElementById('rag-chunk-details-modal').classList.add('hidden')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700">&times;</button>
+                        <button data-legacy-click="document.getElementById('rag-chunk-details-modal').classList.add('hidden')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700">&times;</button>
                     </div>
                     <div class="space-y-3 text-xs select-text">
                         <div class="space-y-0.5">
@@ -1953,7 +1961,7 @@
                     <div class="flex flex-col gap-3 font-arabic">
                         <button id="rag-version-replace-btn" class="w-full bg-[#0F172A] hover:bg-black text-white font-bold text-xs py-3 rounded-xl transition shadow-lg">استبدال النسخة الحالية وترقية الإصدار</button>
                         <button id="rag-version-keep-btn" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3 rounded-xl transition">الاحتفاظ بكلا الملفين كنسخ منفصلة</button>
-                        <button onclick="document.getElementById('rag-version-modal').classList.add('hidden')" class="w-full text-slate-400 hover:text-slate-600 text-xs py-1.5 transition">إلغاء الأمر</button>
+                        <button data-legacy-click="document.getElementById('rag-version-modal').classList.add('hidden')" class="w-full text-slate-400 hover:text-slate-600 text-xs py-1.5 transition">إلغاء الأمر</button>
                     </div>
                 </div>
             </div>
@@ -1967,7 +1975,7 @@
                             <span class="text-lg">🤖</span>
                             <h3 id="aimodels-modal-title" class="font-bold text-sm text-slate-800">تعديل الموديل الذكي</h3>
                         </div>
-                        <button onclick="hideAIModelModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl leading-none">&times;</button>
+                        <button data-legacy-click="hideAIModelModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl leading-none">&times;</button>
                     </div>
 
                     <!-- المحتوى -->
@@ -1977,7 +1985,7 @@
                         <!-- اختيار المزود -->
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">مزود الخدمة (Provider)</label>
-                            <select id="aimodels-modal-provider" data-testid="provider-select" class="w-full p-2.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white" onchange="onAIModelProviderChange()">
+                            <select id="aimodels-modal-provider" data-testid="provider-select" class="w-full p-2.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 bg-white" data-legacy-change="onAIModelProviderChange()">
                                 <option value="openrouter">OpenRouter</option>
                                 <option value="openai">OpenAI</option>
                                 <option value="gemini">Google Gemini</option>
@@ -1992,7 +2000,7 @@
                                 <!-- يتم ملؤها ديناميكياً -->
                             </select>
                             <div id="aimodels-modal-delete-container" class="hidden pt-2">
-                                <button type="button" onclick="deleteCustomModelFromModal()" class="w-full justify-center text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-100 font-bold transition flex items-center gap-2 font-arabic rounded-lg py-2.5">
+                                <button type="button" data-legacy-click="deleteCustomModelFromModal()" class="w-full justify-center text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-100 font-bold transition flex items-center gap-2 font-arabic rounded-lg py-2.5">
                                     <i class="fa fa-trash-alt"></i> حذف هذا الموديل المخصص
                                 </button>
                             </div>
@@ -2001,8 +2009,8 @@
 
                     <!-- الأزرار السفلية -->
                     <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                        <button onclick="hideAIModelModal()" class="text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 px-4 rounded-lg hover:bg-slate-100 transition">إلغاء</button>
-                        <button onclick="saveAIModelTaskConfig()" data-testid="btn-save-task" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg text-xs transition shadow-sm">حفظ التغييرات</button>
+                        <button data-legacy-click="hideAIModelModal()" class="text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 px-4 rounded-lg hover:bg-slate-100 transition">إلغاء</button>
+                        <button data-legacy-click="saveAIModelTaskConfig()" data-testid="btn-save-task" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg text-xs transition shadow-sm">حفظ التغييرات</button>
                     </div>
                 </div>
             </div>
@@ -2016,7 +2024,7 @@
                             <span class="text-lg">✨</span>
                             <h3 class="font-bold text-sm text-slate-800">إضافة نموذج مخصص للمهمة</h3>
                         </div>
-                        <button onclick="hideAICardCustomModelModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl leading-none">&times;</button>
+                        <button data-legacy-click="hideAICardCustomModelModal()" class="text-slate-400 hover:text-slate-600 transition text-2xl leading-none">&times;</button>
                     </div>
 
                     <!-- المحتوى -->
@@ -2050,8 +2058,8 @@
 
                     <!-- الأزرار السفلية -->
                     <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                        <button onclick="hideAICardCustomModelModal()" class="text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 px-4 rounded-lg hover:bg-slate-100 transition">إلغاء</button>
-                        <button onclick="saveAICardCustomModel()" data-testid="btn-save-card-custom-model" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg text-xs transition shadow-sm">حفظ وتعيين النموذج</button>
+                        <button data-legacy-click="hideAICardCustomModelModal()" class="text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 px-4 rounded-lg hover:bg-slate-100 transition">إلغاء</button>
+                        <button data-legacy-click="saveAICardCustomModel()" data-testid="btn-save-card-custom-model" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg text-xs transition shadow-sm">حفظ وتعيين النموذج</button>
                     </div>
                 </div>
             </div>
@@ -2061,7 +2069,7 @@
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-sm w-full p-6 text-right select-text mx-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
                         <h3 class="text-sm font-bold text-slate-900 font-arabic">إضافة نموذج مخصص (Add Custom Model)</h3>
-                        <button onclick="hideCustomModelModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 text-lg">&times;</button>
+                        <button data-legacy-click="hideCustomModelModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 text-lg">&times;</button>
                     </div>
                     <div class="space-y-4">
                         <div>
@@ -2074,8 +2082,8 @@
                         </div>
                     </div>
                     <div class="flex justify-end gap-2 mt-6 font-arabic">
-                        <button onclick="hideCustomModelModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">إلغاء</button>
-                        <button onclick="saveCustomModelUI()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition">حفظ</button>
+                        <button data-legacy-click="hideCustomModelModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">إلغاء</button>
+                        <button data-legacy-click="saveCustomModelUI()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition">حفظ</button>
                     </div>
                 </div>
             </div>
@@ -2098,7 +2106,7 @@
             <p id="confirm-modal-text" class="text-xs text-slate-500 leading-relaxed font-arabic px-2"></p>
             <div class="flex flex-col gap-3 pt-2">
                 <button id="confirm-yes-btn" class="w-full text-white font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg">Confirm Action</button>
-                <button onclick="closeConfirmModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest font-inter">Cancel</button>
+                <button data-legacy-click="closeConfirmModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest font-inter">Cancel</button>
             </div>
         </div>
     </div>
@@ -2113,34 +2121,36 @@
             <p id="delete-custom-model-confirm-text" class="text-xs text-slate-500 leading-relaxed font-arabic px-2">هل أنت متأكد من حذف هذا الموديل؟ لا يمكن التراجع عن هذا الإجراء.</p>
             <div class="flex flex-col gap-3 pt-2">
                 <button id="delete-custom-model-confirm-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] py-3 px-8 rounded-lg transition shadow-lg">حذف الموديل</button>
-                <button onclick="hideDeleteCustomModelModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 px-8 rounded-lg transition">إلغاء</button>
+                <button data-legacy-click="hideDeleteCustomModelModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] py-3 px-8 rounded-lg transition">إلغاء</button>
             </div>
         </div>
     </div>
 
     <!-- استدعاء وحدات نظام الواجهة الموزعة بنظافة -->
     <script src="/config.js"></script>
+    <script src="/vendor/dompurify.min.js"></script>
     <script src="/js/dashboard/state.js"></script>
-    <script src="/js/dashboard/utils.js"></script>
+    <script src="/js/dashboard/utils.js?v=20260729-profile-images"></script>
     <script src="/js/dashboard/api.js"></script>
     <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
     <script src="/js/dashboard/realtime.js"></script>
     <script src="/js/dashboard/auth.js"></script>
     <script src="/js/dashboard/navigation.js"></script>
-    <script src="/js/dashboard/users.js"></script>
+    <script src="/js/dashboard/users.js?v=20260729-profile-images"></script>
     <script src="/js/dashboard/chatThemes.js"></script>
-    <script src="/js/dashboard/chat.js"></script>
+    <script src="/js/dashboard/chat.js?v=20260729-profile-images"></script>
     <script src="/js/dashboard/composer.js"></script>
     <script src="/js/dashboard/conversationControls.js"></script>
     <script src="/js/dashboard/analyticsApi.js"></script>
     <script src="/js/dashboard/analyticsStore.js"></script>
-    <script src="/js/dashboard/analyticsDashboard.js"></script>
+    <script src="/js/dashboard/analyticsDashboard.js?v=20260729-meta-secret"></script>
     <script src="/js/dashboard/errors.js"></script>
     <script src="/js/dashboard/whatsapp.js"></script>
     <script src="/js/dashboard/apiKeys.js"></script>
-    <script src="/js/dashboard/settings.js"></script>
+    <script src="/js/dashboard/settings.js?v=20260729-meta-secret"></script>
     <script src="/js/dashboard/rag.js"></script>
     <script src="/js/dashboard/aimodels.js"></script>
+    <script src="/js/dashboard/eventBindings.js"></script>
     <script src="/js/dashboard/main.js"></script>
 </body>
 </html>

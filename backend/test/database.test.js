@@ -51,6 +51,22 @@ test('SQLite Database Layer Suite', async (t) => {
         assert.strictEqual(user.name, 'Ahmed Al-Bakri', "Name should be updated to Al-Bakri");
     });
 
+    await t.test('4b. Profile image metadata is safe, persisted, and preserved', () => {
+        const avatarUrl = '/uploads/profile_0123456789abcdef01234567.jpg';
+        customerRepo.registerCustomerUser('tg123', 'Ahmed Al-Bakri', 'telegram', 'default', {
+            avatarUrl
+        });
+        assert.strictEqual(customerRepo.findCustomerUser('tg123', 'telegram').avatarUrl, avatarUrl);
+
+        customerRepo.registerCustomerUser('tg123', 'Ahmed Al-Bakri', 'telegram');
+        assert.strictEqual(customerRepo.findCustomerUser('tg123', 'telegram').avatarUrl, avatarUrl);
+
+        customerRepo.registerCustomerUser('unsafe-avatar', 'Unsafe', 'telegram', 'default', {
+            avatarUrl: 'https://evil.example/avatar.jpg'
+        });
+        assert.strictEqual(customerRepo.findCustomerUser('unsafe-avatar', 'telegram').avatarUrl, null);
+    });
+
     await t.test('5. Uniqueness constraint prevents duplicate channel accounts', () => {
         // The registerCustomerUser uses transaction and safe exists check,
         // we can test directly inserting duplicate to verify constraint works!

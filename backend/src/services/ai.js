@@ -13,6 +13,7 @@ const {
 } = require('../rag/runtime/fallbackPolicy');
 const PromptBuilder = require('./PromptBuilder');
 const OpenRouterService = require('./OpenRouterService');
+const { MODE, classifyConversationMode } = require('./conversationModeRouter');
 const { performance } = require('perf_hooks');
 
 /**
@@ -79,12 +80,13 @@ async function retrieveContext(userText, profiler = null, retrievalContext = {})
  * 2. buildPrompt()
  * Builds the final prompt/messages payload using PromptBuilder.
  */
-function buildPrompt(conversationHistory, systemPrompt, context, userText) {
+function buildPrompt(conversationHistory, systemPrompt, context, userText, options = {}) {
     return PromptBuilder.buildMessages({
         systemPrompt,
         conversationHistory,
         knowledgeContext: context,
-        userQuestion: userText
+        userQuestion: userText,
+        responseMode: options.responseMode
     });
 }
 
@@ -220,6 +222,14 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
 
     // 1. Fetch system prompt personality, rules, safety
     const systemPrompt = getSystemPrompt();
+    const routingDecision = isImage
+        ? { mode: MODE.COMPANY_KNOWLEDGE, intent: 'Vision', reason: 'media_requires_grounding' }
+        : classifyConversationMode(userText);
+    const useCompanyKnowledge = routingDecision.mode === MODE.COMPANY_KNOWLEDGE;
+    console.log(
+        `[AI Routing] mode=${routingDecision.mode} intent=${routingDecision.intent} `
+        + `reason=${routingDecision.reason} tenant=${tenantId}`
+    );
 
     // 2. Retrieve Context (RAG)
     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
@@ -228,12 +238,25 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         && typeof routing.retrievalTelemetry === 'object'
         ? routing.retrievalTelemetry
         : {};
-    const context = await retrieveContext(retrievalText, profiler, {
-        tenantId,
-        telemetry: retrievalTelemetry
-    });
-    const retrievalMetadata = retrievalTelemetry.metadata || getLastRetrievalMetadata();
-    if (!String(context || '').trim()
+    const context = useCompanyKnowledge
+        ? await retrieveContext(retrievalText, profiler, {
+            tenantId,
+            telemetry: retrievalTelemetry
+        })
+        : '';
+    const retrievalMetadata = useCompanyKnowledge
+        ? (retrievalTelemetry.metadata || getLastRetrievalMetadata())
+        : {
+            retrievalMode: 'SKIPPED_GENERAL_CONVERSATION',
+            degraded: false,
+            cacheHit: false
+        };
+    console.log(
+        `[RAG Routing] mode=${routingDecision.mode} invoked=${useCompanyKnowledge} `
+        + `contextAvailable=${Boolean(String(context || '').trim())}`
+    );
+    if (useCompanyKnowledge
+        && !String(context || '').trim()
         && shouldBlockOpenDomain({ knowledgeBaseOnly: routing.knowledgeBaseOnly })) {
         const blockedAnswer = blockOpenDomain(tenantId, 'insufficient_context');
         return validateWithPolicy({
@@ -250,7 +273,13 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     // 4. Construct messages payload using Prompt Builder
     profiler.startStage('Prompt Builder');
     // If it's an image, PromptBuilder builds the same array, and we then enrich the last user message inside Providers.
-    const messagesPayload = buildPrompt(conversationHistory, systemPrompt, context, isImage ? (mediaObj.caption || 'صورة مرفقة') : userText);
+    const messagesPayload = buildPrompt(
+        conversationHistory,
+        systemPrompt,
+        context,
+        isImage ? (mediaObj.caption || 'صورة مرفقة') : userText,
+        { responseMode: routingDecision.mode }
+    );
     profiler.endStage('Prompt Builder');
 
     // 5. Send payload to AI provider (Routed to the determined task)
@@ -294,7 +323,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
 
     // 6. Validate response
     let validatedResponse = null;
-    if (rawResponse) {
+    if (rawResponse && useCompanyKnowledge) {
         profiler.startStage('Answer Validation');
         validatedResponse = validateWithPolicy({
             answer: rawResponse,
@@ -303,6 +332,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             tenantId
         });
         profiler.endStage('Answer Validation');
+    } else if (rawResponse) {
+        validatedResponse = String(rawResponse).trim();
     }
 
     // Record AI Usage Logs to database

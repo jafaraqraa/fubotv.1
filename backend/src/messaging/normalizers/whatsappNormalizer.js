@@ -1,4 +1,11 @@
-function normalizeWhatsAppMessage(msg, contact, localPath = null, mediaType = 'text', fileExt = '') {
+function normalizeWhatsAppMessage(
+    msg,
+    contact,
+    localPath = null,
+    mediaType = 'text',
+    fileExt = '',
+    profileImageRemoteUrl = null
+) {
     const userId = String(msg.from || '');
     const phoneNumber = contact.number || userId.split('@')[0];
     const displayName = contact.pushname || contact.name || `+${phoneNumber}`;
@@ -23,7 +30,7 @@ function normalizeWhatsAppMessage(msg, contact, localPath = null, mediaType = 't
             displayName,
             username: null,
             phoneNumber,
-            profileData: {}
+            profileData: profileImageRemoteUrl ? { profileImageRemoteUrl } : {}
         },
         direction: 'incoming',
         senderType: 'customer',

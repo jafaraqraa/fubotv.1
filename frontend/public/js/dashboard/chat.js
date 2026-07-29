@@ -40,10 +40,11 @@ window.Dashboard.chat = {
         const dom = window.Dashboard.utils;
         const headerInfo = document.getElementById('chat-user-header-info');
         if (headerInfo) {
-            const avatar = dom.createElement('div', {
-                className: 'channel-avatar',
-                text: String(user.name || theme.avatar).slice(0, 2).toUpperCase()
-            });
+            const avatar = dom.createCustomerAvatar(
+                user,
+                'channel-avatar',
+                String(user.name || theme.avatar).slice(0, 2).toUpperCase()
+            );
             const identity = dom.createElement('div', { className: 'channel-header-identity' });
             identity.append(
                 dom.createElement('strong', { className: 'channel-header-name', text: user.name }),

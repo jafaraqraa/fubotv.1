@@ -1,5 +1,13 @@
 const path = require('path');
+const {
+    installProcessOutputGuards,
+    isDetachedOutputError
+} = require('./src/config/processOutputSafety');
+
+// A closed terminal/pipe must not be reported as an application failure.
+installProcessOutputGuards();
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+const { validateProductionSecurityConfig } = require('./src/config/securityConfig');
 const { initializeDatabase } = require('./src/database/initialize');
 const { loadSettingsOnStartup } = require('./src/services/settingsService');
 const { bootstrapAdminAccount } = require('./src/services/adminBootstrap');
@@ -9,6 +17,7 @@ initializeDatabase();
 
 // Load persistent SQLite settings into process.env before starting other services
 loadSettingsOnStartup();
+validateProductionSecurityConfig();
 require('./src/rag/config/ragConfig').validateRuntimeConfig();
 require('./src/rag/runtime/distributedLockService').startStaleLeaseRecovery();
 
@@ -54,10 +63,12 @@ async function startBackgroundServices() {
 
 // حماية السيرفر من الانهيار عند حدوث أخطاء غير متوقعة بالخلفية
 process.on('uncaughtException', (err) => {
-    reportError("خطأ داخلي غير متوقع بالخلفية", err.message);
+    if (isDetachedOutputError(err)) return;
+    void reportError("خطأ داخلي غير متوقع بالخلفية", err.message);
 });
 process.on('unhandledRejection', (reason, promise) => {
-    reportError("وعد برمجي غير معالج (Rejection)", reason.message || String(reason));
+    if (isDetachedOutputError(reason)) return;
+    void reportError("وعد برمجي غير معالج (Rejection)", reason.message || String(reason));
 });
 
 // Graceful Shutdown handling (Task 18)

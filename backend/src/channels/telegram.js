@@ -7,6 +7,32 @@ const { processIncomingMessage } = require('../messaging/messageProcessor');
 let bot;
 let botToken = process.env.BOT_TOKEN;
 let isValidToken = botToken && /^[0-9]+:[a-zA-Z0-9_-]+$/.test(botToken);
+const profileImageCache = new Map();
+
+async function getTelegramProfileImageUrl(ctx) {
+    const userId = String(ctx.from?.id || '');
+    if (!userId) return null;
+    const cached = profileImageCache.get(userId);
+    if (cached && cached.expiresAt > Date.now()) return cached.url;
+
+    let url = null;
+    try {
+        const result = await ctx.telegram.getUserProfilePhotos(userId, 0, 1);
+        const photos = result?.photos;
+        const largest = Array.isArray(photos?.[0]) ? photos[0].at(-1) : null;
+        if (largest?.file_id) {
+            const link = await ctx.telegram.getFileLink(largest.file_id);
+            url = typeof link === 'object' && link ? link.href : String(link || '');
+        }
+    } catch (_) {
+        // A profile photo is optional and must never block message processing.
+    }
+    profileImageCache.set(userId, {
+        url: url || null,
+        expiresAt: Date.now() + (6 * 60 * 60 * 1000)
+    });
+    return url;
+}
 
 // Register the notifier inside logger so reportError can alert the admin
 setTelegramNotifier(async (type, date, time, message) => {
@@ -24,7 +50,8 @@ function startBot(token) {
         bot = new Telegraf(token);
 
         bot.start(async (ctx) => {
-            const normalized = normalizeTelegramMessage(ctx);
+            const profileImageRemoteUrl = await getTelegramProfileImageUrl(ctx);
+            const normalized = normalizeTelegramMessage(ctx, null, 'text', '', profileImageRemoteUrl);
             // Replace user command specifically for /start normalization mapping
             normalized.content = '/start';
             normalized.messageType = 'text';
@@ -82,7 +109,14 @@ function startBot(token) {
             }
 
             // Route strictly through unified normalizer and central incoming message processor (Task 9)
-            const normalized = normalizeTelegramMessage(ctx, fileId ? userText : null, mediaType, fileExt);
+            const profileImageRemoteUrl = await getTelegramProfileImageUrl(ctx);
+            const normalized = normalizeTelegramMessage(
+                ctx,
+                fileId ? userText : null,
+                mediaType,
+                fileExt,
+                profileImageRemoteUrl
+            );
             await processIncomingMessage(normalized);
         });
 

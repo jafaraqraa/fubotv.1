@@ -6,7 +6,7 @@ const path = require('path');
 // Force isolated test DB
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_ai_tasks_routing.db');
 process.env.SQLITE_DB_PATH = testDbPath;
-process.env.SESSION_SECRET = 'test_ai_tasks_secret_123';
+process.env.SESSION_SECRET = 'test_ai_tasks_secret_123_32_characters';
 process.env.NODE_ENV = 'development';
 
 if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
