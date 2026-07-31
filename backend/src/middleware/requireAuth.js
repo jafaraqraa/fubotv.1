@@ -1,6 +1,12 @@
 function requireAuth(req, res, next) {
     if (req.session && req.session.userId) {
-        return next();
+        const admin = require('../database/repositories/adminRepository')
+            .findAdminById(req.session.userId);
+        const absoluteExpiresAt = Number(req.session.absoluteExpiresAt || 0);
+        if (admin?.isActive && (!absoluteExpiresAt || absoluteExpiresAt > Date.now())) {
+            return next();
+        }
+        if (req.session) req.session.destroy(() => {});
     }
 
     // Check if the request is an API call or JSON request

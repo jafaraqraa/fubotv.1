@@ -1,4 +1,5 @@
 const { reportError } = require('./logger');
+const { reliableFetch } = require('../utils/reliableFetch');
 
 class OpenRouterService {
     /**
@@ -14,7 +15,7 @@ class OpenRouterService {
     static async callChatCompletions(messages, { model, apiKey, temperature }) {
         try {
             console.log(`🤖 [OpenRouterService] requesting completions using model: [${model}] and temperature: [${temperature}]...`);
-            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            const response = await reliableFetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,

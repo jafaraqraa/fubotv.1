@@ -446,6 +446,7 @@ function getLastValidationMetadata() {
 
 module.exports = {
     STATUS,
+    ARABIC_UNVERIFIED_MESSAGE,
     splitIntoSentences,
     extractNumbers,
     extractClaims,

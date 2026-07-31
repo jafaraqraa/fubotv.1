@@ -232,9 +232,13 @@ test('SQLite distributed RAG leases', async t => {
     await t.test('real processes allow equivalent resources for different tenants', async () => {
         const a = worker({ RAG_LOCK_TENANT: 'worker-a' });
         const b = worker({ RAG_LOCK_TENANT: 'worker-b' });
+        t.after(() => {
+            if (!a.killed) a.kill('SIGKILL');
+            if (!b.killed) b.kill('SIGKILL');
+        });
         const [ma, mb] = await Promise.all([message(a), message(b)]);
-        assert.strictEqual(ma.type, 'acquired');
-        assert.strictEqual(mb.type, 'acquired');
+        assert.strictEqual(ma.type, 'acquired', ma.message || ma.code);
+        assert.strictEqual(mb.type, 'acquired', mb.message || mb.code);
         a.send('release'); b.send('release');
         await Promise.all([
             new Promise(resolve => a.once('exit', resolve)),
@@ -248,4 +252,3 @@ test.after(() => {
     db.close();
     fs.rmSync(root, { recursive: true, force: true });
 });
-

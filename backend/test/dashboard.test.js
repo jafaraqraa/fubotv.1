@@ -102,7 +102,12 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
         ];
 
         scripts.forEach(script => {
-            assert.match(dashboardHtml, new RegExp(`src="${script}"`), `Script reference to "${script}" must exist`);
+            const escaped = script.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            assert.match(
+                dashboardHtml,
+                new RegExp(`src="${escaped}(?:\\?[^"]*)?"`),
+                `Script reference to "${script}" must exist`
+            );
         });
     });
 

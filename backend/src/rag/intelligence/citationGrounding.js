@@ -14,7 +14,11 @@ class EvidenceMetadata {
         const payload = chunk.payload || {};
         const sourceName = chunk.source || payload.documentName || 'معرفة عامة';
         const docId = chunk.documentId || payload.documentId || sourceName;
-        const chunkId = chunk.chunkId || payload.chunkId || `chunk-${Math.random().toString(36).substring(2, 7)}`;
+        const chunkId = chunk.chunkId || payload.chunkId || require('crypto')
+            .createHash('sha256')
+            .update(`${docId}\0${String(chunk.text || payload.text || '')}`)
+            .digest('hex')
+            .slice(0, 20);
 
         return {
             chunkId,
@@ -22,6 +26,8 @@ class EvidenceMetadata {
             sourceName,
             title: payload.title || sourceName.replace(/\.[^/.]+$/, ""), // Strip extension for default title
             section: payload.section || 'General Content',
+            heading: payload.heading || payload.section || null,
+            page: payload.page ?? null,
             retrievalScore: chunk.score || 0.0,
             semanticScore: chunk.semanticScore || chunk.score || 0.0,
             keywordScore: chunk.keywordScore || 0.0,
@@ -74,6 +80,15 @@ class EvidenceIndex {
 
     getDiscarded() {
         return Array.from(this.discardedEvidence.values());
+    }
+
+    retainActive(chunkIds, reason = 'Excluded by context budget.') {
+        const allowed = new Set(chunkIds);
+        for (const [chunkId, reference] of this.activeEvidence) {
+            if (allowed.has(chunkId)) continue;
+            this.activeEvidence.delete(chunkId);
+            this.discardedEvidence.set(chunkId, { reference, reason });
+        }
     }
 }
 

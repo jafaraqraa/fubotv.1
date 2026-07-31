@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+router.parsePagination = parsePagination;
 const fs = require('fs');
 const path = require('path');
 const { addLog, reportError, getRecentLogs, listErrors, getActiveErrorsCount, solveError } = require('../services/logger');
@@ -8,6 +9,8 @@ const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUr
 const { updateEnvFile } = require('../utils/helpers');
 const { requireRagTenant } = require('../rag/security/tenantContext');
 const { getManualKnowledgePath } = require('../rag/storage/tenantKnowledgeStorage');
+const { requirePermission } = require('../security/accessControl');
+const { audit } = require('../security/accessControl');
 
 function addRAGAuditLog(user, action, target, result) {
     try {
@@ -29,25 +32,48 @@ const {
 const {
     saveMessage,
     listMessages,
-    getMessagesCount
+    getMessagesCount,
+    getMessageForRetry,
+    updateMessageDelivery
 } = require('../database/repositories/messageRepository');
+const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
+const { sendMetaMessage } = require('../channels/meta');
 
 const { sendOutgoingMessage } = require('../messaging/outgoingMessageService');
+const {
+    persistOutgoingMedia,
+    removeStoredMedia
+} = require('../services/outgoingMediaStorage');
 const { saveSetting, getSetting, maskSecret, isMaskedPlaceholder } = require('../services/settingsService');
 const budgetService = require('../services/budgetService');
 
 const uploadsDir = path.join(__dirname, '..', '..', 'public', 'uploads');
+const privateMediaDir = path.join(__dirname, '..', '..', 'data', 'private-media');
+
+function parsePagination(query, { defaultLimit = 10, maxLimit = 100 } = {}) {
+    const page = Number.parseInt(query.page ?? '1', 10);
+    const limit = Number.parseInt(query.limit ?? String(defaultLimit), 10);
+    if (!/^\d+$/.test(String(query.page ?? '1')) || !Number.isSafeInteger(page) || page < 1) {
+        const error = new Error('page يجب أن يكون عدداً صحيحاً موجباً.');
+        error.code = 'INVALID_PAGINATION';
+        throw error;
+    }
+    if (!/^\d+$/.test(String(query.limit ?? defaultLimit))
+        || !Number.isSafeInteger(limit) || limit < 1 || limit > maxLimit) {
+        const error = new Error(`limit يجب أن يكون بين 1 و${maxLimit}.`);
+        error.code = 'INVALID_PAGINATION';
+        throw error;
+    }
+    return { page, limit };
+}
 
 // 1. مسار إسناد المحادثة للموظفين (Chat Assignment Endpoint)
-router.post('/chat/assign', (req, res) => {
-    const { userId, assignee, tenantId } = req.body;
+router.post('/chat/assign', requirePermission('conversations:write'), (req, res) => {
+    const { userId, assignee } = req.body;
     if (!userId || !assignee) return res.status(400).json({ success: false, error: 'بيانات ناقصة' });
 
-    const user = findCustomerUserByIdOnly(userId, tenantId || null);
+    const user = findCustomerUserByIdOnly(userId, req.tenantId);
     if (user) {
-        if (user.platform === 'whatsapp' && !tenantId) {
-            return res.status(400).json({ success: false, error: 'tenantId مطلوب لعمليات WhatsApp' });
-        }
         updateAssignee(userId, assignee, user.tenantId);
         const isAI = assignee === 'ai';
         addLog(`تم إسناد محادثة العميل ${user.name} إلى: ${assignee === 'ai' ? 'وكيل الذكاء الاصطناعي' : assignee}`);
@@ -58,16 +84,14 @@ router.post('/chat/assign', (req, res) => {
 });
 
 // 2. تحديث وتطوير مسار إرسال الرسائل الفردية والملاحظات والوسائط (Rich Media & Notes Support) - uses outgoingMessageService (Task 14)
-router.post('/send-direct', async (req, res) => {
-    const { userId, message, isNote, mediaData, mediaName, mediaType, tenantId } = req.body;
+router.post('/send-direct', requirePermission('messages:send'), async (req, res) => {
+    const { userId, message, isNote, mediaData, mediaName, mediaType, shareUrl } = req.body;
     if (!userId) return res.status(400).json({ success: false, error: 'بيانات ناقصة' });
 
-    const user = findCustomerUserByIdOnly(userId, tenantId || null);
+    const user = findCustomerUserByIdOnly(userId, req.tenantId);
     if (!user) return res.status(404).json({ success: false, error: 'المستخدم غير موجود' });
-    if (user.platform === 'whatsapp' && !tenantId) {
-        return res.status(400).json({ success: false, error: 'tenantId مطلوب لإرسال WhatsApp' });
-    }
 
+    let mediaMetadata = null;
     try {
         // If it is a private internal note, delegate to persistence save directly without sending
         if (isNote === true) {
@@ -83,31 +107,57 @@ router.post('/send-direct', async (req, res) => {
         let finalMessageText = message;
         let localPath = null;
         let actualMediaType = 'text';
-        let mediaMetadata = null;
-
-        // إذا كان هناك ملف ميديا مرسل من لوحة التحكم (Base64)
+        if (shareUrl) {
+            if (user.platform !== 'instagram') {
+                return res.status(400).json({ success: false, error: 'Share URL is supported only for Instagram.' });
+            }
+            let parsedShareUrl;
+            try {
+                parsedShareUrl = new URL(shareUrl);
+            } catch (_) {
+                return res.status(400).json({ success: false, error: 'Share URL is invalid.' });
+            }
+            if (parsedShareUrl.protocol !== 'https:') {
+                return res.status(400).json({ success: false, error: 'Share URL must use HTTPS.' });
+            }
+            mediaMetadata = { shareUrl: parsedShareUrl.toString(), publicUrl: parsedShareUrl.toString() };
+            finalMessageText = parsedShareUrl.toString();
+            actualMediaType = 'image';
+        }
+        // Persist dashboard media before dispatch. Failed sends roll the file back.
         if (mediaData && mediaName) {
-            const fileExt = mediaName.split('.').pop();
-            const fileName = `${Date.now()}_sent.${fileExt}`;
-            const destPath = path.join(uploadsDir, fileName);
+            const isMetaChannel = user.platform === 'messenger' || user.platform === 'instagram';
+            mediaMetadata = persistOutgoingMedia({
+                mediaData,
+                mediaName,
+                mediaType,
+                uploadsDir: isMetaChannel
+                    ? path.join(privateMediaDir, user.tenantId)
+                    : uploadsDir
+            });
+            if (isMetaChannel) {
+                const attachment = mediaAttachmentRepo.createAttachment({
+                    tenantId: user.tenantId,
+                    channel: user.platform,
+                    ownerAdministratorId: req.session.userId,
+                    originalFilename: mediaMetadata.originalName,
+                    storedFilename: mediaMetadata.fileName,
+                    storagePath: mediaMetadata.localPath,
+                    mimeType: mediaMetadata.mimeType,
+                    sizeBytes: mediaMetadata.size,
+                    checksum: mediaMetadata.checksum
+                });
+                mediaMetadata.attachmentId = attachment.id;
+                mediaMetadata.publicUrl = `/api/media/${attachment.id}/download`;
+            }
+            localPath = mediaMetadata.localPath;
+            finalMessageText = mediaMetadata.publicUrl;
 
-            // كتابة الملف محلياً في مجلد الرفع
-            fs.writeFileSync(destPath, Buffer.from(mediaData, 'base64'));
-            localPath = destPath;
-            finalMessageText = `/uploads/${fileName}`;
-
-            const mimeLower = String(mediaType).toLowerCase();
+            const mimeLower = mediaMetadata.mimeType;
             if (mimeLower.startsWith('image/')) actualMediaType = 'image';
             else if (mimeLower.startsWith('audio/')) actualMediaType = 'audio';
             else if (mimeLower.startsWith('video/')) actualMediaType = 'video';
             else actualMediaType = 'document';
-
-            mediaMetadata = {
-                localPath: destPath,
-                publicUrl: finalMessageText,
-                fileName: fileName,
-                mimeType: mediaType
-            };
         }
 
         if (!finalMessageText && !localPath) {
@@ -127,19 +177,151 @@ router.post('/send-direct', async (req, res) => {
         });
 
         if (outgoingResult.success) {
-            res.json({ success: true });
+            audit({
+                actorId: req.session.userId, tenantId: user.tenantId,
+                action: 'media_send', resourceType: user.platform,
+                resourceId: mediaMetadata?.attachmentId || outgoingResult.externalMessageId,
+                outcome: 'success'
+            });
+            res.json({
+                success: true,
+                messageId: outgoingResult.externalMessageId || null,
+                attachmentId: mediaMetadata?.attachmentId || null,
+                deliveryStatus: outgoingResult.status
+            });
         } else {
-            res.status(500).json({ success: false, error: outgoingResult.error || 'Failed sending outgoing reply' });
+            audit({
+                actorId: req.session.userId, tenantId: user.tenantId,
+                action: 'media_send', resourceType: user.platform,
+                resourceId: mediaMetadata?.attachmentId,
+                outcome: 'failure'
+            });
+            res.status(outgoingResult.statusCode === 401 ? 502 : 500).json({
+                success: false,
+                error: outgoingResult.error || 'Failed sending outgoing reply',
+                attachmentId: mediaMetadata?.attachmentId || null,
+                retryable: Boolean(mediaMetadata?.attachmentId)
+            });
         }
 
     } catch (err) {
+        if (!mediaMetadata?.attachmentId) removeStoredMedia(mediaMetadata);
         reportError(`إرسال رسالة فردية (${user.platform})`, err.message);
-        res.status(500).json({ success: false, error: `فشل الإرسال للعميل عبر ${user.platform}: ${err.message}` });
+        const validationCodes = new Set([
+            'INVALID_MEDIA_DATA', 'EMPTY_MEDIA', 'MEDIA_TOO_LARGE',
+            'UNSUPPORTED_MEDIA_TYPE', 'INVALID_MEDIA_NAME',
+            'MEDIA_EXTENSION_MISMATCH', 'CORRUPT_MEDIA'
+        ]);
+        res.status(validationCodes.has(err.code) ? 400 : 500)
+            .json({ success: false, error: `فشل الإرسال للعميل عبر ${user.platform}: ${err.message}` });
+    }
+});
+
+router.get('/media/:attachmentId/download', requirePermission('conversations:read'), (req, res) => {
+    const attachment = mediaAttachmentRepo.getAttachment(req.params.attachmentId, req.tenantId);
+    if (!attachment || attachment.status === 'deleted') {
+        return res.status(404).json({ success: false, error: 'Media attachment not found' });
+    }
+    const resolved = path.resolve(attachment.storage_path);
+    const tenantRoot = path.resolve(privateMediaDir, req.tenantId);
+    if (!resolved.startsWith(`${tenantRoot}${path.sep}`) || !fs.existsSync(resolved)) {
+        return res.status(404).json({ success: false, error: 'Media file is unavailable' });
+    }
+    res.setHeader('Content-Type', attachment.mime_type);
+    res.setHeader('Content-Length', attachment.size_bytes);
+    res.setHeader('Content-Disposition',
+        `attachment; filename*=UTF-8''${encodeURIComponent(attachment.original_filename)}`);
+    res.setHeader('Cache-Control', 'private, no-store');
+    return res.sendFile(resolved);
+});
+
+router.post('/media/:attachmentId/retry', requirePermission('messages:send'), async (req, res) => {
+    const attachment = mediaAttachmentRepo.getAttachment(req.params.attachmentId, req.tenantId);
+    if (!attachment || attachment.status !== 'failed' || !attachment.message_id) {
+        return res.status(409).json({ success: false, error: 'Attachment is not retryable' });
+    }
+    const message = getMessageForRetry(attachment.message_id, req.tenantId);
+    if (!message || !['messenger', 'instagram'].includes(message.channel)) {
+        return res.status(404).json({ success: false, error: 'Original message not found' });
+    }
+
+    mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
+        status: 'sending',
+        retryCount: attachment.retry_count + 1,
+        lastError: null
+    });
+    updateMessageDelivery(message.id, 'sending', { retry: attachment.retry_count + 1 });
+    const result = await sendMetaMessage(message.external_user_id, message.content, message.channel, {
+        localPath: attachment.storage_path,
+        originalName: attachment.original_filename,
+        mimeType: attachment.mime_type,
+        messageType: message.message_type,
+        providerAttachmentId: attachment.provider_attachment_id
+    });
+    if (!result.success) {
+        updateMessageDelivery(message.id, 'failed', {
+            httpStatus: result.statusCode,
+            metaErrorCode: result.metaErrorCode,
+            metaErrorMessage: result.error
+        });
+        mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
+            status: 'failed', lastError: result.error,
+            providerAttachmentId: result.attachmentId || attachment.provider_attachment_id
+        });
+        return res.status(502).json({ success: false, error: result.error, retryable: true });
+    }
+    updateMessageDelivery(message.id, 'sent', {
+        externalMessageId: result.messageId,
+        httpStatus: result.statusCode
+    });
+    try {
+        mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
+            status: 'sent', externalMessageId: result.messageId,
+            providerAttachmentId: result.attachmentId || attachment.provider_attachment_id,
+            lastError: null
+        });
+    } catch (attachmentError) {
+        reportError('تحديث سجل مرفق Meta بعد إعادة المحاولة', attachmentError.message);
+    }
+    audit({
+        actorId: req.session.userId, tenantId: req.tenantId,
+        action: 'media_retry', resourceType: message.channel,
+        resourceId: attachment.id, outcome: 'success'
+    });
+    return res.json({ success: true, attachmentId: attachment.id, messageId: result.messageId });
+});
+
+router.delete('/media/:attachmentId', requirePermission('messages:send'), (req, res) => {
+    const attachment = mediaAttachmentRepo.getAttachment(req.params.attachmentId, req.tenantId);
+    if (!attachment || attachment.status === 'deleted') {
+        return res.status(404).json({ success: false, error: 'Media attachment not found' });
+    }
+    if (['uploading', 'sending'].includes(attachment.status)) {
+        return res.status(409).json({ success: false, error: 'Media attachment is currently in use' });
+    }
+    const resolved = path.resolve(attachment.storage_path);
+    const tenantRoot = path.resolve(privateMediaDir, req.tenantId);
+    if (!resolved.startsWith(`${tenantRoot}${path.sep}`)) {
+        return res.status(403).json({ success: false, error: 'Media ownership mismatch' });
+    }
+    try {
+        if (fs.existsSync(resolved)) fs.unlinkSync(resolved);
+        mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
+            status: 'deleted', lastError: null
+        });
+        audit({
+            actorId: req.session.userId, tenantId: req.tenantId,
+            action: 'media_delete', resourceType: attachment.channel,
+            resourceId: attachment.id, outcome: 'success'
+        });
+        return res.json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Failed to delete media attachment' });
     }
 });
 
 // 3. مسارات التهيئة وحفظ الإعدادات الفنية الفردية والموحدة لـ الـ SaaS
-router.post('/config/settings', async (req, res) => {
+router.post('/config/settings', requirePermission('system:manage'), async (req, res) => {
     const {
         token, openrouterKey, model, systemPrompt, adminId, waAutoReply,
         messengerToken, instagramToken, metaVerifyToken, metaAppSecret,
@@ -367,7 +549,7 @@ router.post('/config/settings', async (req, res) => {
                 }
                 saveSetting('BOT_TOKEN', token);
                 updateEnvFile('BOT_TOKEN', token);
-                const success = startBot(token);
+                const success = await startBot(token);
 
                 if (success) {
                     const tokenError = listErrors().find(e => e.type === "توكن تيليجرام مفقود" && !e.solved);
@@ -507,7 +689,7 @@ router.post('/config/settings', async (req, res) => {
 });
 
 // 4. جلب الإحصائيات مع الحماية التامة وحظر إرسال التوكنات كاملة للواجهة لمنع الاختراق
-router.get('/stats', (req, res) => {
+router.get('/stats', requirePermission('settings:manage'), (req, res) => {
     const { getConfig } = require('../rag/config/ragConfig');
     const { resolveAuthorizedTenant } = require('../rag/security/tenantContext');
     const textGenerationConfig = require('../database/repositories/aiTaskRepository')
@@ -519,7 +701,7 @@ router.get('/stats', (req, res) => {
     const defaultPrompt = "أنت مساعد خدمة عملاء محترف وذكي يجيب باللغة العربية بلطف ومودة.";
     const systemPromptText = fs.existsSync(promptPath) ? fs.readFileSync(promptPath, 'utf8') : defaultPrompt;
 
-    const usersArray = listCustomerUsers();
+    const usersArray = listCustomerUsers(req.tenantId);
     const tgUsers = usersArray.filter(u => u.platform === 'telegram').length;
     const waUsers = usersArray.filter(u => u.platform === 'whatsapp').length;
     const msgUsers = usersArray.filter(u => u.platform === 'messenger').length;
@@ -527,7 +709,7 @@ router.get('/stats', (req, res) => {
 
     res.json({
         usersCount: usersArray.length,
-        messagesCount: getMessagesCount(),
+        messagesCount: getMessagesCount(req.tenantId),
         logs: getRecentLogs(),
         status: getIsValidToken() ? "نشط" : "غير مفعّل",
         currentModel: process.env.OPENROUTER_MODEL || "openrouter/free",
@@ -595,29 +777,23 @@ router.get('/stats', (req, res) => {
     });
 });
 
-router.get('/users', (req, res) => {
-    res.json(listCustomerUsers());
+router.get('/users', requirePermission('conversations:read'), (req, res) => {
+    res.json(listCustomerUsers(req.tenantId));
 });
 
-router.get('/chat/:userId', (req, res) => {
+router.get('/chat/:userId', requirePermission('conversations:read'), (req, res) => {
     const userId = req.params.userId;
-    const user = findCustomerUserByIdOnly(userId, req.query.tenantId || null);
+    const user = findCustomerUserByIdOnly(userId, req.tenantId);
     if (!user) return res.status(404).json({ success: false, error: 'المستخدم غير موجود' });
-    if (user.platform === 'whatsapp' && !req.query.tenantId) {
-        return res.status(400).json({ success: false, error: 'tenantId مطلوب لمحادثات WhatsApp' });
-    }
     clearUnreadCount(userId, user.tenantId);
     res.json(listMessages(userId, user.tenantId, user.platform));
 });
 
-router.post('/chat/toggle-ai', (req, res) => {
-    const { userId, tenantId } = req.body;
-    const user = findCustomerUserByIdOnly(userId, tenantId || null);
+router.post('/chat/toggle-ai', requirePermission('conversations:write'), (req, res) => {
+    const { userId } = req.body;
+    const user = findCustomerUserByIdOnly(userId, req.tenantId);
 
     if (user) {
-        if (user.platform === 'whatsapp' && !tenantId) {
-            return res.status(400).json({ success: false, error: 'tenantId مطلوب لعمليات WhatsApp' });
-        }
         const nextState = !user.isAIEnabled;
         updateAIEnabled(userId, nextState, user.tenantId);
         addLog(`تم ${nextState ? 'تفعيل' : 'إيقاف'} الذكاء الاصطناعي للعميل: ${user.name}`);
@@ -627,18 +803,18 @@ router.post('/chat/toggle-ai', (req, res) => {
     }
 });
 
-router.get('/errors', (req, res) => {
+router.get('/errors', requirePermission('system:manage'), (req, res) => {
     res.json(listErrors());
 });
 
-router.post('/errors/solve', (req, res) => {
+router.post('/errors/solve', requirePermission('system:manage'), (req, res) => {
     const { id } = req.body;
     solveError(id);
     addLog(`تم تعليم العطل كـ 'تم الحل'`);
     res.json({ success: true });
 });
 
-router.post('/config/knowledge', async (req, res) => {
+router.post('/config/knowledge', requirePermission('knowledge:manage'), async (req, res) => {
     const { text } = req.body;
     let lease;
     try {
@@ -716,6 +892,12 @@ function ragMutationError(res, error, fallbackCode = 'RAG_MUTATION_FAILED') {
 }
 
 router.use('/rag', requireRagTenant);
+router.use('/rag', (req, res, next) => {
+    const permission = ['GET', 'HEAD'].includes(req.method)
+        ? 'knowledge:read'
+        : 'knowledge:manage';
+    return requirePermission(permission)(req, res, next);
+});
 
 // Authenticated by the parent API router and tenant-authorized here. Values are
 // returned with source/scope/freshness metadata; unavailable metrics remain null.
@@ -932,9 +1114,9 @@ router.get('/ai/ollama-models', async (req, res) => {
     } finally { cancellation.cleanup(); }
 });
 
-router.get('/whatsapp/config', async (req, res) => {
+router.get('/whatsapp/config', requirePermission('integrations:manage'), async (req, res) => {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const db = require('../database/connection');
         let row = db.prepare('SELECT * FROM whatsapp_tenant_configs WHERE tenant_id = ?').get(tenantId);
         if (!row) {
@@ -971,9 +1153,9 @@ router.get('/whatsapp/config', async (req, res) => {
     }
 });
 
-router.post('/whatsapp/config', async (req, res) => {
-    const { tenantId, providerType, config } = req.body;
-    const targetTenantId = tenantId || 'default';
+router.post('/whatsapp/config', requirePermission('integrations:manage'), async (req, res) => {
+    const { providerType, config } = req.body;
+    const targetTenantId = req.tenantId;
     if (!providerType) {
         return res.status(400).json({ success: false, error: 'نوع المزود مطلوب.' });
     }
@@ -1003,15 +1185,18 @@ router.post('/whatsapp/config', async (req, res) => {
     }
 });
 
-router.get('/whatsapp/status', (req, res) => {
+router.get('/whatsapp/status', requirePermission('integrations:manage'), (req, res) => {
+    const provider = require('../channels/whatsapp-providers/WhatsAppProviderManager')
+        .getProvider(req.tenantId);
     res.json({
-        status: getWaStatus(),
-        qr: getLastQrCodeUrl()
+        status: provider?.getStatus ? provider.getStatus() : getWaStatus(),
+        qr: provider?.getQrCode ? provider.getQrCode() : getLastQrCodeUrl(),
+        tenantId: req.tenantId
     });
 });
 
 // تسجيل خروج واتساب الذكي لإعادة توليد الـ QR
-router.post('/whatsapp/logout', async (req, res) => {
+router.post('/whatsapp/logout', requirePermission('integrations:manage'), async (req, res) => {
     addLog("🧹 جاري إغلاق وفصل اتصال واتساب وإعادة تهيئة البوابات...");
     console.log("🧹 جاري إغلاق وفصل اتصال واتساب...");
 
@@ -1031,10 +1216,10 @@ router.post('/whatsapp/logout', async (req, res) => {
         }
 
         const db = require('../database/connection');
-        const row = db.prepare("SELECT provider_type, config_json FROM whatsapp_tenant_configs WHERE tenant_id = 'default'").get();
+        const row = db.prepare("SELECT provider_type, config_json FROM whatsapp_tenant_configs WHERE tenant_id = ?").get(req.tenantId);
         const providerType = row ? row.provider_type : 'web';
         const config = row ? JSON.parse(row.config_json || '{}') : {};
-        await manager.switchProvider('default', providerType, config);
+        await manager.switchProvider(req.tenantId, providerType, config);
 
         res.json({ success: true, message: "تم فصل الاتصال بنجاح وتصفير المحادثة، جاري توليد كود QR جديد..." });
     } catch (err) {
@@ -1166,8 +1351,7 @@ router.get('/rag/chunks', async (req, res) => {
     try {
         const search = req.query.search ? req.query.search.toLowerCase() : '';
         const documentId = req.query.documentId || '';
-        const page = parseInt(req.query.page || '1', 10);
-        const limit = parseInt(req.query.limit || '10', 10);
+        const { page, limit } = parsePagination(req.query);
 
         const db = require('../database/connection');
         const docs = db.prepare(
@@ -1249,7 +1433,12 @@ router.get('/rag/chunks', async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        const validation = err.code === 'INVALID_PAGINATION';
+        res.status(validation ? 400 : 500).json({
+            success: false,
+            code: err.code || 'RAG_CHUNKS_FAILED',
+            error: validation ? err.message : 'تعذر تحميل المقاطع.'
+        });
     }
 });
 
@@ -1388,13 +1577,14 @@ router.get('/rag/documents/:documentId/download', (req, res) => {
 // GET /rag/documents
 router.get('/rag/documents', async (req, res) => {
     try {
+        const pagination = parsePagination(req.query);
         const filters = {
             tenantId: req.ragTenantId,
             search: req.query.search,
             type: req.query.type,
             status: req.query.status,
-            page: req.query.page,
-            limit: req.query.limit
+            page: pagination.page,
+            limit: pagination.limit
         };
         const documents = kbDocService.listDocuments(filters);
         const total = kbDocService.countDocuments(filters);
@@ -1459,12 +1649,17 @@ router.get('/rag/documents', async (req, res) => {
             documents: safeDocs,
             pagination: {
                 total: total + (safeDocs.some(d => d.documentId === 'manual_text') ? 1 : 0),
-                page: parseInt(filters.page || '1', 10),
-                limit: parseInt(filters.limit || '10', 10)
+                page: pagination.page,
+                limit: pagination.limit
             }
         });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        const validation = err.code === 'INVALID_PAGINATION';
+        res.status(validation ? 400 : 500).json({
+            success: false,
+            code: err.code || 'RAG_DOCUMENT_LIST_FAILED',
+            error: validation ? err.message : 'تعذر تحميل المستندات.'
+        });
     }
 });
 
@@ -1566,7 +1761,7 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
             });
         }
         if (err.code === 'DUPLICATE_UPLOAD') {
-            return res.status(400).json({
+            return res.status(409).json({
                 success: false,
                 code: 'DUPLICATE_UPLOAD',
                 message: err.message,
@@ -1574,7 +1769,13 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
             });
         }
         if (err.code === 'DUPLICATE_DOCUMENT' || err.message.includes('موجود مسبقاً')) {
-            return res.status(400).json({ success: false, error: err.message });
+            return res.status(409).json({ success: false, code: err.code || 'DUPLICATE_DOCUMENT', error: err.message });
+        }
+        if (err.code === 'RAG_FILE_TOO_LARGE') {
+            return res.status(413).json({ success: false, code: err.code, error: err.message });
+        }
+        if (err.code === 'UNSUPPORTED_FILE_TYPE' || err.code === 'INVALID_MIME_TYPE') {
+            return res.status(415).json({ success: false, code: err.code, error: err.message });
         }
         if (!cancellation.signal.aborted) ragMutationError(res, err, 'RAG_INDEX_FAILED');
     } finally { cancellation.cleanup(); }
@@ -1738,30 +1939,58 @@ router.delete('/rag/documents/:documentId', async (req, res) => {
 });
 
 // Redesigned AI Provider API Key Management & Usage Limits APIs
-router.get('/providers/api-keys', (req, res) => {
+router.get('/providers/api-keys', requirePermission('system:manage'), (req, res) => {
     try {
         const grouped = budgetService.getApiKeysGrouped();
         res.json({ success: true, apiKeys: grouped });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({
+            success: false,
+            code: 'API_KEY_LIST_FAILED',
+            error: 'تعذر تحميل المفاتيح البرمجية.'
+        });
     }
 });
 
-router.post('/providers/api-keys', async (req, res) => {
+router.post('/providers/api-keys', requirePermission('system:manage'), async (req, res) => {
     const { friendlyName, provider, apiKey, enabled } = req.body;
     try {
         const id = await budgetService.addApiKey(friendlyName, provider, apiKey, enabled !== false);
-        res.json({ success: true, id, message: 'تم تسجيل المفتاح البرمجي والتحقق من كفاءته بنجاح!' });
+        const db = require('../database/connection');
+        const stored = db.prepare(
+            'SELECT error_message, last_sync_success FROM api_keys WHERE id = ?'
+        ).get(id);
+        res.json({
+            success: true,
+            id,
+            syncSuccess: Boolean(stored?.last_sync_success) && !stored?.error_message,
+            syncError: stored?.error_message || null,
+            message: stored?.error_message
+                ? 'تم حفظ المفتاح، لكن فشلت المزامنة مع المزود.'
+                : 'تم حفظ المفتاح واكتملت مزامنة إمكانات المزود.'
+        });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        const validation = new Set([
+            'INVALID_API_KEY_INPUT', 'INVALID_API_KEY_PROVIDER'
+        ]).has(err.code);
+        const conflict = err.code === 'SQLITE_CONSTRAINT_UNIQUE';
+        res.status(conflict ? 409 : (validation ? 400 : 500)).json({
+            success: false,
+            code: err.code || 'API_KEY_CREATE_FAILED',
+            error: validation || conflict ? err.message : 'تعذر حفظ المفتاح البرمجي.'
+        });
     }
 });
 
-router.put('/providers/api-keys/:id', async (req, res) => {
+router.put('/providers/api-keys/:id', requirePermission('system:manage'), async (req, res) => {
     const id = req.params.id;
     const { friendlyName, enabled } = req.body;
     try {
         const db = require('../database/connection');
+        const existing = db.prepare('SELECT provider FROM api_keys WHERE id = ?').get(id);
+        if (!existing) {
+            return res.status(404).json({ success: false, error: 'المفتاح البرمجي غير موجود.' });
+        }
         if (friendlyName !== undefined) {
             db.prepare('UPDATE api_keys SET friendly_name = ? WHERE id = ?').run(friendlyName, id);
         }
@@ -1771,7 +2000,14 @@ router.put('/providers/api-keys/:id', async (req, res) => {
 
         // Sync right after toggling on
         if (enabled) {
-            await budgetService.syncApiKey(id);
+            const syncResult = await budgetService.syncApiKey(id);
+            if (!syncResult.success) {
+                return res.status(502).json({
+                    success: false,
+                    persisted: true,
+                    error: syncResult.errorMessage || 'تم تحديث الحالة لكن فشلت المزامنة.'
+                });
+            }
         } else {
             const row = db.prepare('SELECT provider FROM api_keys WHERE id = ?').get(id);
             if (row) {
@@ -1784,13 +2020,18 @@ router.put('/providers/api-keys/:id', async (req, res) => {
     }
 });
 
-router.delete('/providers/api-keys/:id', (req, res) => {
+router.delete('/providers/api-keys/:id', requirePermission('system:manage'), (req, res) => {
     const id = req.params.id;
     try {
         const db = require('../database/connection');
         const row = db.prepare('SELECT provider FROM api_keys WHERE id = ?').get(id);
-
-        db.prepare('DELETE FROM api_keys WHERE id = ?').run(id);
+        if (!row) {
+            return res.status(404).json({ success: false, error: 'المفتاح البرمجي غير موجود.' });
+        }
+        const deletion = db.prepare('DELETE FROM api_keys WHERE id = ?').run(id);
+        if (deletion.changes !== 1) {
+            return res.status(500).json({ success: false, error: 'تعذر حذف المفتاح البرمجي.' });
+        }
 
         if (row) {
             budgetService.broadcastProviderBudget(row.provider.toLowerCase());
@@ -1801,17 +2042,24 @@ router.delete('/providers/api-keys/:id', (req, res) => {
     }
 });
 
-router.post('/providers/api-keys/:id/refresh', async (req, res) => {
+router.post('/providers/api-keys/:id/refresh', requirePermission('system:manage'), async (req, res) => {
     const id = req.params.id;
     try {
-        await budgetService.syncApiKey(id);
-        res.json({ success: true, message: 'تمت المزامنة وتحديث البيانات من المزود بنجاح!' });
+        const result = await budgetService.syncApiKey(id);
+        if (!result.success) {
+            const status = result.status === 'not_found' ? 404 : 502;
+            return res.status(status).json({
+                success: false,
+                error: result.errorMessage || 'فشلت المزامنة مع المزود.'
+            });
+        }
+        res.json({ success: true, sync: result, message: 'تمت المزامنة وتحديث البيانات من المزود بنجاح!' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
-router.get('/providers/usage-limits', (req, res) => {
+router.get('/providers/usage-limits', requirePermission('system:manage'), (req, res) => {
     try {
         res.json({ success: true, limits: budgetService.getAllProviderBudgets() });
     } catch (err) {
@@ -1819,17 +2067,23 @@ router.get('/providers/usage-limits', (req, res) => {
     }
 });
 
-router.post('/providers/usage-limits/refresh', async (req, res) => {
+router.post('/providers/usage-limits/refresh', requirePermission('system:manage'), async (req, res) => {
     try {
-        await budgetService.syncAllConfiguredApiKeys();
-        res.json({ success: true, limits: budgetService.getAllProviderBudgets() });
+        const summary = await budgetService.syncAllConfiguredApiKeys();
+        const success = summary.failed === 0;
+        res.status(success ? 200 : 502).json({
+            success,
+            summary,
+            limits: budgetService.getAllProviderBudgets(),
+            ...(success ? {} : { error: `فشلت مزامنة ${summary.failed} من أصل ${summary.total} مفاتيح.` })
+        });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
 const providerBalanceController = require('../controllers/providerBalanceController');
-router.post('/providers/balance', (req, res, next) => {
+router.post('/providers/balance', requirePermission('system:manage'), (req, res, next) => {
     console.log(`[Balance Route] Incoming provider: ${req.body.provider}`);
     next();
 }, providerBalanceController.getBalance);
@@ -1837,7 +2091,7 @@ router.post('/providers/balance', (req, res, next) => {
 const aiTaskRepository = require('../database/repositories/aiTaskRepository');
 
 // GET /ai-tasks -> fetch all AI task model configurations
-router.get('/ai-tasks', (req, res) => {
+router.get('/ai-tasks', requirePermission('ai:manage'), (req, res) => {
     try {
         const configs = aiTaskRepository.getAllTaskConfigs();
         res.json({ success: true, tasks: configs });
@@ -1847,7 +2101,7 @@ router.get('/ai-tasks', (req, res) => {
 });
 
 // POST /ai-tasks/test -> verify the saved provider/model without changing configuration
-router.post('/ai-tasks/test', async (req, res) => {
+router.post('/ai-tasks/test', requirePermission('ai:manage'), async (req, res) => {
     const task = String(req.body.task || '').trim();
     try {
         const { testAIModel } = require('../services/aiModelHealthService');
@@ -1865,7 +2119,7 @@ router.post('/ai-tasks/test', async (req, res) => {
 });
 
 // POST /ai-tasks -> update specific AI task model configuration
-router.post('/ai-tasks', (req, res) => {
+router.post('/ai-tasks', requirePermission('ai:manage'), (req, res) => {
     const { task, provider, model, enabled } = req.body;
     if (!task || !provider || !model) {
         return res.status(400).json({ success: false, error: 'بيانات ناقصة لإعداد المهمة الذكية.' });

@@ -76,10 +76,21 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
 
         const setCookieHeader = loginRes.headers.get('set-cookie');
         assert.ok(setCookieHeader, 'Response must include set-cookie header');
+        assert.match(setCookieHeader, /SameSite=Lax/i,
+            'Local/test HTTP login must issue a SameSite=Lax cookie');
+        assert.doesNotMatch(setCookieHeader, /;\s*Secure/i,
+            'Local/test HTTP login must not issue an unusable Secure cookie');
 
         // Extract cookie value: connect.sid=s%3A...
         const cookieVal = setCookieHeader.split(';')[0];
         assert.ok(cookieVal.includes('connect.sid='), 'Cookie must contain connect.sid');
+
+        const authenticatedRes = await fetch(`${baseUrl}/api/v1/auth/me`, {
+            headers: { Cookie: cookieVal }
+        });
+        assert.strictEqual(authenticatedRes.status, 200);
+        assert.strictEqual((await authenticatedRes.json()).authenticated, true,
+            'The cookie issued at login must restore the session on the next HTTP request');
 
         await st.test('a. Valid signed authenticated session cookie connects successfully', async () => {
             const handshakeRes = await fetch(`${baseUrl}/socket.io/?EIO=4&transport=polling`, {
@@ -146,7 +157,7 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
         const mockIo = {
             to: (room) => ({
                 emit: (event, envelope) => {
-                    assert.strictEqual(room, 'admins', 'Event must be restricted to admins room');
+                    assert.strictEqual(room, 'tenant:default', 'Tenant event must be restricted to its tenant room');
                     assert.strictEqual(envelope.version, 1, 'Event payload version must be 1');
                     assert.ok(envelope.eventId, 'Event must have a unique eventId');
                     assert.ok(envelope.occurredAt, 'Event must have an occurrence timestamp');
@@ -158,7 +169,7 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
         const { initialize: initPublisher } = require('../src/realtime/eventPublisher');
         initPublisher(mockIo);
 
-        publish('test:event', testData);
+        publish('test:event', { ...testData, tenantId: 'default' });
     });
 
     await t.test('4. Persistence-Before-Emission workflow verification', () => {
@@ -235,7 +246,7 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
         const { initialize: initPublisher } = require('../src/realtime/eventPublisher');
         initPublisher(mockIo);
 
-        publishStats();
+        publishStats('default');
         assert.strictEqual(statsEmitted, true, 'stats:updated event must be published cleanly');
     });
 

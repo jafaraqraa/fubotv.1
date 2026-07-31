@@ -8,6 +8,33 @@ const { getMetaUserProfile } = require('../channels/meta');
 const { normalizeMetaMessage } = require('../messaging/normalizers/metaNormalizer');
 const { processIncomingMessage } = require('../messaging/messageProcessor');
 const { getExtensionFromMime } = require('../utils/helpers');
+const {
+    updateDeliveryByExternalId,
+    markOutboundReadThrough
+} = require('../database/repositories/messageRepository');
+const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
+
+function applyMetaDeliveryUpdate(messageId, platform, status, details = {}) {
+    if (!messageId) return false;
+    const updated = updateDeliveryByExternalId(
+        messageId, platform, 'default', status, { provider: 'meta', ...details }
+    );
+    const attachment = mediaAttachmentRepo.findByExternalMessageId(messageId, platform);
+    if (attachment) {
+        try {
+            mediaAttachmentRepo.updateAttachment(attachment.id, attachment.tenant_id, {
+                status,
+                lastError: details.error || null
+            });
+        } catch (error) {
+            reportError('تحديث حالة مرفق Meta من Webhook', error.message);
+        }
+    }
+    if (updated) {
+        addLog(`[Meta Webhook] ${platform} message ${messageId} status=${status}`);
+    }
+    return updated;
+}
 
 const REPLAY_WINDOW_MS = 5 * 60 * 1000;
 const MAX_REPLAY_ENTRIES = 10000;
@@ -42,7 +69,19 @@ function rejectReplay(scope, signatureHeader, res) {
         res.status(409).json({ success: false, error: 'Duplicate webhook delivery' });
         return true;
     }
+    res.req.webhookReplayKey = replayKey;
     return false;
+}
+
+function releaseReplayReservation(req) {
+    if (!req.webhookReplayKey) return;
+    try {
+        require('../database/connection')
+            .prepare('DELETE FROM webhook_replay_guard WHERE replay_key = ?')
+            .run(req.webhookReplayKey);
+    } finally {
+        req.webhookReplayKey = null;
+    }
 }
 
 function verifySignedWebhook({ secretEnvNames, scope }) {
@@ -119,19 +158,60 @@ router.get('/webhook', (req, res) => {
 // 2. مسار استقبال ومعالجة رسائل فيسبوك وانستجرام بالـ AI (POST) - with signature check (Task 3)
 router.post('/webhook', verifyMetaSignature, async (req, res) => {
     const body = req.body;
-
-    res.status(200).send('EVENT_RECEIVED');
-
     try {
         if (body.object === 'page' || body.object === 'instagram') {
             const platform = body.object === 'page' ? 'messenger' : 'instagram';
 
-            for (const entry of body.entry) {
+            for (const entry of body.entry || []) {
                 if (!entry.messaging) continue;
-                const webhookEvent = entry.messaging[0];
-                const senderPsid = webhookEvent.sender.id;
-
-                if (webhookEvent.message && webhookEvent.message.text) {
+                for (const webhookEvent of entry.messaging) {
+                    if (webhookEvent.delivery?.mids?.length) {
+                        for (const messageId of webhookEvent.delivery.mids) {
+                            applyMetaDeliveryUpdate(messageId, platform, 'delivered', {
+                                watermark: webhookEvent.delivery.watermark || null
+                            });
+                        }
+                        continue;
+                    }
+                    if (webhookEvent.read) {
+                        const messageIds = webhookEvent.read.mids
+                            || (webhookEvent.read.mid ? [webhookEvent.read.mid] : []);
+                        for (const messageId of messageIds) {
+                            applyMetaDeliveryUpdate(messageId, platform, 'read', {
+                                watermark: webhookEvent.read.watermark || null
+                            });
+                        }
+                        if (!messageIds.length && webhookEvent.sender?.id && webhookEvent.read.watermark) {
+                            const markedIds = markOutboundReadThrough(
+                                webhookEvent.sender.id, platform, 'default',
+                                webhookEvent.read.watermark
+                            );
+                            for (const messageId of markedIds) {
+                                const attachment = mediaAttachmentRepo.findByExternalMessageId(
+                                    messageId, platform
+                                );
+                                if (attachment) {
+                                    mediaAttachmentRepo.updateAttachment(
+                                        attachment.id, attachment.tenant_id, { status: 'read' }
+                                    );
+                                }
+                            }
+                        }
+                        continue;
+                    }
+                    if (webhookEvent.message?.is_echo && webhookEvent.message.mid) {
+                        applyMetaDeliveryUpdate(webhookEvent.message.mid, platform, 'sent');
+                        continue;
+                    }
+                    if (webhookEvent.message?.error && webhookEvent.message.mid) {
+                        applyMetaDeliveryUpdate(webhookEvent.message.mid, platform, 'failed', {
+                            error: webhookEvent.message.error.message || 'Meta delivery failed',
+                            metaErrorCode: webhookEvent.message.error.code || null
+                        });
+                        continue;
+                    }
+                    const senderPsid = webhookEvent.sender?.id;
+                    if (!senderPsid || !webhookEvent.message?.text) continue;
                     let profile = null;
                     try {
                         profile = await getMetaUserProfile(senderPsid, platform);
@@ -139,14 +219,19 @@ router.post('/webhook', verifyMetaSignature, async (req, res) => {
                         console.log("فشل جلب ملف حساب ميتّا الشخصي.");
                     }
 
-                    // Route strictly through unified normalizer and central incoming message processor (Task 11)
                     const normalized = normalizeMetaMessage(webhookEvent, platform, profile);
-                    await processIncomingMessage(normalized);
+                    const result = await processIncomingMessage(normalized);
+                    if (result?.status === 'failed') {
+                        throw new Error(result.error || 'Meta webhook message processing failed');
+                    }
                 }
             }
         }
+        return res.status(200).send('EVENT_RECEIVED');
     } catch (error) {
-        reportError("استقبال Webhook لـ Meta", error.message);
+        releaseReplayReservation(req);
+        await reportError("استقبال Webhook لـ Meta", error.message);
+        return res.status(500).json({ success: false, error: 'Webhook processing failed' });
     }
 });
 
@@ -175,12 +260,35 @@ router.get('/whatsapp/:tenantId', async (req, res) => {
 });
 
 // 4. Webhook message receiver endpoint for WhatsApp Cloud API (POST)
-router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, async (req, res) => {
+router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, (req, res, next) => {
+    const tenantId = require('../rag/security/tenantContext').normalizeTenantId(req.params.tenantId);
+    const row = tenantId
+        ? require('../database/connection').prepare(
+            'SELECT provider_type, config_json, enabled FROM whatsapp_tenant_configs WHERE tenant_id = ?'
+        ).get(tenantId)
+        : null;
+    if (!row || row.enabled !== 1 || row.provider_type !== 'cloud') {
+        releaseReplayReservation(req);
+        console.warn('[Webhook] WhatsApp tenant/provider ownership rejected.');
+        return res.status(403).json({ success: false, error: 'Webhook tenant not authorized' });
+    }
+    const config = JSON.parse(row.config_json || '{}');
+    const phoneNumberIds = (req.body?.entry || [])
+        .flatMap(entry => entry.changes || [])
+        .map(change => String(change.value?.metadata?.phone_number_id || ''))
+        .filter(Boolean);
+    if (phoneNumberIds.length && (
+        !config.phoneNumberId || phoneNumberIds.some(id => id !== String(config.phoneNumberId))
+    )) {
+        releaseReplayReservation(req);
+        console.warn(`[Webhook] WhatsApp event ownership rejected tenant=${tenantId}`);
+        return res.status(403).json({ success: false, error: 'Webhook ownership mismatch' });
+    }
+    req.params.tenantId = tenantId;
+    next();
+}, async (req, res) => {
     const { tenantId } = req.params;
     const body = req.body;
-
-    // Acknowledge receipt immediately to Meta
-    res.status(200).send('EVENT_RECEIVED');
 
     try {
         if (body.object === 'whatsapp_business_account') {
@@ -274,14 +382,21 @@ router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, async (req, res) => 
                             }
                         };
 
-                        await processIncomingMessage(normalized);
+                        const result = await processIncomingMessage(normalized);
+                        if (result?.status === 'failed') {
+                            throw new Error(result.error || 'WhatsApp webhook message processing failed');
+                        }
                     }
                 }
             }
         }
+        return res.status(200).send('EVENT_RECEIVED');
     } catch (err) {
-        reportError(`استقبال Webhook لـ WhatsApp Cloud (${tenantId})`, err.message);
+        releaseReplayReservation(req);
+        await reportError(`استقبال Webhook لـ WhatsApp Cloud (${tenantId})`, err.message);
+        return res.status(500).json({ success: false, error: 'Webhook processing failed' });
     }
 });
 
+router.applyMetaDeliveryUpdate = applyMetaDeliveryUpdate;
 module.exports = router;

@@ -1,5 +1,9 @@
 # Production Readiness Audit Report: WhatsApp Multi-Provider System
 
+> **Historical subsystem report — superseded.** This document records an older
+> WhatsApp-only verification and must not be used as the current application
+> release decision. See `docs/PHASE8_RELEASE_CANDIDATE_AUDIT.md`.
+
 This audit evaluates the reliability, security, scalability, resource hygiene, and concurrency correctness of the new Provider-based WhatsApp Integration system.
 
 ---

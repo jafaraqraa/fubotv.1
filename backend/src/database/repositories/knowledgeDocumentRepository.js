@@ -72,6 +72,21 @@ function updateDocument(tenantId, id, updates) {
     tenantId = requireTenantId(tenantId, 'repository-update-document');
     const keys = Object.keys(updates);
     if (keys.length === 0) return false;
+    const allowedColumns = new Set([
+        'display_name', 'status', 'is_enabled', 'indexing_status', 'indexing_error',
+        'chunk_count', 'vector_count', 'index_fingerprint', 'indexed_at', 'disabled_at',
+        'extracted_text_hash', 'version', 'version_id', 'is_active', 'embedding_model',
+        'vector_dimension', 'cleanup_error', 'tenant_ownership_status',
+        'reconciliation_status', 'reconciliation_error', 'fencing_token', 'operation_id',
+        'storage_name', 'storage_path', 'file_size', 'content_hash', 'original_name',
+        'source_type', 'mime_type'
+    ]);
+    const invalidKey = keys.find(key => !allowedColumns.has(key));
+    if (invalidKey) {
+        const error = new Error(`Unsupported knowledge document update field: ${invalidKey}`);
+        error.code = 'INVALID_DOCUMENT_UPDATE_FIELD';
+        throw error;
+    }
 
     const setClauses = keys.map(k => `${k} = ?`).join(', ');
     const values = keys.map(k => updates[k]);
@@ -160,8 +175,18 @@ function buildFilterQuery(filters) {
  * Lists document records with dynamic search, filtering, and pagination.
  */
 function listDocuments(filters = {}) {
-    const page = parseInt(filters.page || '1', 10);
-    const limit = parseInt(filters.limit || '10', 10);
+    const page = Number.parseInt(filters.page || '1', 10);
+    const limit = Number.parseInt(filters.limit || '10', 10);
+    if (!Number.isSafeInteger(page) || page < 1) {
+        const error = new Error('page must be a positive integer.');
+        error.code = 'INVALID_PAGINATION';
+        throw error;
+    }
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) {
+        const error = new Error('limit must be between 1 and 100.');
+        error.code = 'INVALID_PAGINATION';
+        throw error;
+    }
     const offset = (page - 1) * limit;
 
     const { clauses, values } = buildFilterQuery(filters);
@@ -170,7 +195,7 @@ function listDocuments(filters = {}) {
     const sql = `
         SELECT * FROM knowledge_documents
         ${whereSql}
-        ORDER BY created_at DESC
+        ORDER BY created_at DESC, id DESC
         LIMIT ? OFFSET ?
     `;
 

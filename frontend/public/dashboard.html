@@ -205,9 +205,23 @@
                         </div>
 
                         <!-- عرض ملفات مجهزة للرفع والارسال الفوري كـ Rich Media -->
-                        <div id="media-preview-container" class="hidden flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
-                            <span id="media-filename" class="text-slate-700 font-mono text-[11px] truncate">document.pdf</span>
-                            <button id="media-preview-delete" class="text-red-500 font-bold text-[10px] hover:underline uppercase">Delete</button>
+                        <div id="media-preview-container" class="hidden bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 text-xs">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center min-w-0 gap-2">
+                                    <div id="media-thumbnail" class="hidden w-12 h-12 rounded border border-slate-200 overflow-hidden bg-white shrink-0"></div>
+                                    <div class="min-w-0">
+                                        <span id="media-filename" class="block text-slate-700 font-mono text-[11px] truncate">document.pdf</span>
+                                        <span id="media-upload-status" class="block text-[10px] text-slate-500 mt-1">جاهز للإرسال</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <button id="media-retry-btn" class="hidden text-amber-600 font-bold text-[10px] hover:underline">إعادة المحاولة</button>
+                                    <button id="media-preview-delete" class="text-red-500 font-bold text-[10px] hover:underline">إلغاء</button>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden mt-2">
+                                <div id="media-upload-progress" class="h-full bg-blue-600 transition-all duration-150" style="width:0%"></div>
+                            </div>
                         </div>
 
                         <!-- واجهة الكتابة السريعة للردود الجاهزة (Canned Responses Overlay) -->
@@ -215,7 +229,7 @@
                             <!-- توليد الردود السريعة ديناميكياً -->
                         </div>
 
-                        <div class="flex gap-2 items-center" id="input-wrapper">
+                        <div class="flex gap-2 items-center" id="input-wrapper" aria-label="اسحب الملف هنا أو اختره من زر الإرفاق">
                             <!-- حقل رفع ملفات مدمج مخفي -->
                             <input type="file" id="media-upload-input" class="hidden" accept="image/*, application/pdf, audio/*, video/*">
                             
@@ -996,8 +1010,22 @@
                                 </div>
 
                                 <!-- Document Library Layouts (Responsive Table / Cards) -->
-                                <div class="overflow-x-auto hidden md:block">
-                                    <table class="w-full text-right text-xs">
+                                <div class="rag-doc-table-scroll overflow-x-auto hidden md:block">
+                                    <table class="rag-doc-library-table w-full text-right text-xs">
+                                        <colgroup>
+                                            <col class="rag-doc-col-check">
+                                            <col class="rag-doc-col-name">
+                                            <col class="rag-doc-col-type">
+                                            <col class="rag-doc-col-source">
+                                            <col class="rag-doc-col-version">
+                                            <col class="rag-doc-col-pages">
+                                            <col class="rag-doc-col-size">
+                                            <col class="rag-doc-col-chunks">
+                                            <col class="rag-doc-col-model">
+                                            <col class="rag-doc-col-date">
+                                            <col class="rag-doc-col-status">
+                                            <col class="rag-doc-col-actions">
+                                        </colgroup>
                                         <thead>
                                             <tr class="bg-slate-50 text-slate-500 border-b border-slate-150 select-none">
                                                 <th class="p-3 text-right w-10">

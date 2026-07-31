@@ -1,0 +1,14 @@
+[
+  {"id":"direct-price","input":"كم سعر الباقة الأساسية؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"pricing","fallbackExpected":false,"criteria":["price","currency"]},
+  {"id":"paraphrased-price","input":"قديش لازم أدفع للاشتراك؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"pricing","fallbackExpected":false,"criteria":["price"]},
+  {"id":"dialect-shipping","input":"بتوصلوا ع رام الله وقديش الشحن؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"shipping","fallbackExpected":false,"criteria":["destination","shipping"]},
+  {"id":"follow-up-price","input":"كم سعرها؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"conversation-context","fallbackExpected":false,"criteria":["recent-entity"]},
+  {"id":"follow-up-payment","input":"وشو طريقة الدفع؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"payment","fallbackExpected":false,"criteria":["payment-method"]},
+  {"id":"unknown-company","input":"هل لديكم فرع على سطح القمر؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":null,"fallbackExpected":true,"criteria":["exact-safe-fallback"]},
+  {"id":"misleading-keyword","input":"هل كلمة شحن في اسم المنتج تعني أن التوصيل مجاني؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"shipping-policy","fallbackExpected":true,"criteria":["no-keyword-only-answer"]},
+  {"id":"multi-document","input":"قارن سعر الباقة مع سياسة الإلغاء","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":"pricing,cancellation","fallbackExpected":false,"criteria":["both-sources"]},
+  {"id":"greeting","input":"مرحبا","expectedRoute":"GENERAL_CONVERSATION","expectedSource":null,"fallbackExpected":false,"criteria":["natural-response"]},
+  {"id":"casual","input":"شو الأخبار","expectedRoute":"GENERAL_CONVERSATION","expectedSource":null,"fallbackExpected":false,"criteria":["natural-response"]},
+  {"id":"thanks","input":"شكراً","expectedRoute":"GENERAL_CONVERSATION","expectedSource":null,"fallbackExpected":false,"criteria":["natural-response"]},
+  {"id":"deleted-document","input":"ما هي السياسة الموجودة فقط في المستند المحذوف؟","expectedRoute":"COMPANY_KNOWLEDGE","expectedSource":null,"fallbackExpected":true,"criteria":["no-stale-citation"]}
+]

@@ -1,5 +1,10 @@
 # RAG Platform Production-Readiness Audit
 
+> **Historical audit — superseded.** These findings describe the repository
+> state on the audit date before later remediation. The current application
+> decision and remaining open gates are maintained in
+> `docs/PHASE8_RELEASE_CANDIDATE_AUDIT.md`.
+
 Audit date: 2026-07-29  
 Decision: **NO-GO**  
 Scope: RAG upload, indexing, replacement, deletion, retrieval, generation, validation, reconciliation, caches, tenant routing, security, operations, and the currently running local stack.

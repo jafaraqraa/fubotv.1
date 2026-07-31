@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    env_file:
+      - backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      SQLITE_DB_PATH: /app/backend/data/app.db
+      QDRANT_URL: http://qdrant:6333
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - app-data:/app/backend/data
+      - app-uploads:/app/backend/public/uploads
+      - whatsapp-sessions:/app/backend/.wwebjs_auth_tenant_default
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    stop_grace_period: 45s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    shm_size: 1gb
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.5
+    restart: unless-stopped
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY:?QDRANT_API_KEY is required}
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/6333"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  app-data:
+  app-uploads:
+  whatsapp-sessions:
+  qdrant-data:

@@ -24,6 +24,7 @@ const { generateMultiQueries } = require('../rag/intelligence/multiQueryGenerato
 const { generateHypotheticalAnswer } = require('../rag/intelligence/hydeRetriever');
 const { reciprocalRankFusion } = require('../rag/intelligence/rrfScorer');
 const { rerankWithCrossEncoderDetailed } = require('../rag/intelligence/crossEncoderReranker');
+const { rerankCandidates } = require('../rag/services/rerankingService');
 const { decomposeQuery } = require('../rag/intelligence/queryDecomposer');
 const { retrieveIntentAwareContext } = require('../rag/intelligence/intentRetriever');
 const { getRetrievalPlan } = require('../rag/intelligence/retrievalPlanner');
@@ -59,6 +60,35 @@ function getLastRetrievalProfiling() {
 
 function getLastRetrievalMetadata() {
     return { ...lastRetrievalMetadata };
+}
+
+function buildBudgetedEvidenceContext(evidenceIndex, budget) {
+    const limit = Math.max(500, Number(budget) || 3000);
+    const selected = [];
+    for (const reference of evidenceIndex.getActive()) {
+        const candidate = EvidenceBuilder.buildGroundingContext([...selected, reference]);
+        if (candidate.length <= limit) selected.push(reference);
+    }
+    if (!selected.length && evidenceIndex.getActive().length) {
+        const source = evidenceIndex.getActive()[0];
+        let low = 1;
+        let high = source.text.length;
+        let best = null;
+        while (low <= high) {
+            const length = Math.floor((low + high) / 2);
+            const shortened = new (source.constructor)(source.metadata, source.text.slice(0, length));
+            const candidate = EvidenceBuilder.buildGroundingContext([shortened]);
+            if (candidate.length <= limit) {
+                best = shortened;
+                low = length + 1;
+            } else {
+                high = length - 1;
+            }
+        }
+        if (best) selected.push(best);
+    }
+    evidenceIndex.retainActive(selected.map(ref => ref.metadata.chunkId));
+    return EvidenceBuilder.buildGroundingContext(selected);
 }
 
 /**
@@ -199,6 +229,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             if (profiler) profiler.startStage('Cross Encoder');
             t0 = Date.now();
             let reranked = influenceRetrieval(fusedCandidates, intent);
+            const configuredThreshold = parseFloat(getConfig('RAG_SIMILARITY_THRESHOLD')) || 0.4;
+            reranked = rerankCandidates(
+                reranked, query, Math.max(reranked.length, 1), configuredThreshold
+            );
             const rerankResult = await rerankWithCrossEncoderDetailed(query, reranked, { tenantId });
             reranked = rerankResult.candidates;
             profiling.stages.reranking = Date.now() - t0;
@@ -208,7 +242,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             if (profiler) profiler.startStage('Context Optimizer');
             t0 = Date.now();
             const dynamicTopK = determineSmarterTopK(query, tokens, intent, reranked);
-            const similarityThreshold = parseFloat(getConfig('RAG_SIMILARITY_THRESHOLD')) || 0.4;
+            const similarityThreshold = configuredThreshold;
 
             // Filter below similarity threshold
             const filteredCandidates = reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold);
@@ -274,15 +308,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             });
 
             // Build final grounded, citation-rich prompt context
-            let optimizedContext = EvidenceBuilder.buildGroundingContext(evidenceIndex.getActive());
+            const budget = parseInt(getConfig('RAG_CONTEXT_BUDGET'), 10) || 3000;
+            let optimizedContext = buildBudgetedEvidenceContext(evidenceIndex, budget);
             profiling.stages.optimization = Date.now() - t0;
             if (profiler) profiler.endStage('Context Optimizer');
-
-            // Context Budget Enforcement
-            const budget = parseInt(getConfig('RAG_CONTEXT_BUDGET'), 10) || 3000;
-            if (optimizedContext.length > budget) {
-                optimizedContext = optimizedContext.substring(0, budget) + '... [تم اقتطاع جزء من السياق للمحافظة على الميزانية]';
-            }
 
             // Run Grounded Citations Auditor
             GroundingValidator.audit(evidenceIndex, Date.now() - profiling.startTime);
@@ -334,8 +363,11 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             // 2. Cross Encoder reranking on the ORIGINAL query
             if (profiler) profiler.startStage('Cross Encoder');
             t0 = Date.now();
+            const locallyReranked = rerankCandidates(
+                diversified, query, Math.max(diversified.length, 1), similarityThreshold
+            );
             const rerankResult = await rerankWithCrossEncoderDetailed(
-                query, diversified, { tenantId }
+                query, locallyReranked, { tenantId }
             );
             const reranked = rerankResult.candidates;
             profiling.stages.reranking = Date.now() - t0;
@@ -368,15 +400,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
             // 4. Build final merged metadata-rich context
             if (profiler) profiler.startStage('Context Optimizer');
-            let optimizedContext = EvidenceBuilder.buildGroundingContext(evidenceIndex.getActive());
+            const budget = parseInt(getConfig('RAG_CONTEXT_BUDGET'), 10) || 3000;
+            let optimizedContext = buildBudgetedEvidenceContext(evidenceIndex, budget);
             profiling.stages.optimization = Date.now() - t0;
             if (profiler) profiler.endStage('Context Optimizer');
-
-            // 5. Context character budget enforcement
-            const budget = parseInt(getConfig('RAG_CONTEXT_BUDGET'), 10) || 3000;
-            if (optimizedContext.length > budget) {
-                optimizedContext = optimizedContext.substring(0, budget) + '... [تم اقتطاع جزء من السياق للمحافظة على الميزانية]';
-            }
 
             // Run Grounded Citations Auditor
             GroundingValidator.audit(evidenceIndex, Date.now() - profiling.startTime);
@@ -460,5 +487,6 @@ module.exports = {
     getLastRetrievalMode,
     getLastRetrievalProfiling,
     getLastRetrievalMetadata,
+    buildBudgetedEvidenceContext,
     getSystemPrompt
 };

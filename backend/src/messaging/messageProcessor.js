@@ -100,9 +100,12 @@ async function processIncomingMessage(normalizedMsg) {
                 normalizedMsg.media,
                 { tenantId: tenantId || 'default', channel }
             );
-            replyText = aiResponse || `شكراً لتواصلك معنا. تم استلام رسالتك وجاري مراجعتها قريباً.`;
+            if (!aiResponse || !String(aiResponse).trim()) {
+                throw new Error('AI provider returned an empty response');
+            }
+            replyText = String(aiResponse).trim();
         } else {
-            replyText = `تم استلام الملف بنجاح، جاري المراجعة والرد عليك قريباً.`;
+            throw new Error('Incoming attachment has no processable content');
         }
 
         // 8. Dispatch AI response through unified outgoing handler

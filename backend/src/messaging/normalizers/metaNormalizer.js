@@ -1,4 +1,4 @@
-function normalizeMetaMessage(webhookEvent, platform, profile = null) {
+function normalizeMetaMessage(webhookEvent, platform, profile = null, tenantId = 'default') {
     const senderPsid = String(webhookEvent.sender.id || '');
     const userText = webhookEvent.message.text || '';
     const messageId = String(webhookEvent.message.mid || '');
@@ -23,7 +23,7 @@ function normalizeMetaMessage(webhookEvent, platform, profile = null) {
         content: userText,
         media: null,
         timestamp: new Date(webhookEvent.timestamp || Date.now()).toISOString(),
-        metadata: {}
+        metadata: { tenantId }
     };
 }
 

@@ -4,6 +4,8 @@ const eventPublisher = require('./eventPublisher');
 const { EVENTS } = require('./events');
 const app = require('../app');
 const { getOriginPolicy } = require('../security/originPolicy');
+const runtimeState = require('../runtime/runtimeState');
+const { getMemberships } = require('../security/accessControl');
 
 let io = null;
 
@@ -23,16 +25,22 @@ function initializeSocketServer(httpServer) {
             allowedHeaders: originPolicy.allowedHeaders
         },
         allowRequest: (req, callback) => {
+            if (!runtimeState.snapshot().ready) {
+                return callback('Server is not ready', false);
+            }
             const decision = originPolicy.evaluate(req.headers.origin, 'Socket.IO');
             callback(null, decision.allowed);
         }
     });
 
-    // Intercept Engine.IO handshake to support sessionId passed via query param when cookies are blocked in iframes
+    // Optional iframe-development compatibility. Disabled by default because
+    // query-string credentials can leak through URLs and access logs.
     io.engine.use((req, res, next) => {
         const url = require('url');
         const parsedUrl = url.parse(req.url, true);
-        const sessionId = parsedUrl.query && parsedUrl.query.sessionId;
+        const sessionId = process.env.ALLOW_SESSION_TOKEN_FALLBACK === 'true'
+            ? parsedUrl.query && parsedUrl.query.sessionId
+            : null;
         if (sessionId) {
             req.headers.cookie = `connect.sid=${sessionId}`;
         }
@@ -65,15 +73,26 @@ function initializeSocketServer(httpServer) {
 
         console.log(`🔌 Secure administrator socket connected: ${session.username} (Socket ID: ${socket.id})`);
 
+        const memberships = getMemberships(session.userId);
+        if (!memberships.length) {
+            console.warn('⚠️ Rejected socket connection without an active tenant membership.');
+            return socket.disconnect(true);
+        }
+
         // Bind validated administrator properties to the socket instance (Task 6)
         socket.admin = {
             userId: session.userId,
             username: session.username,
-            displayName: session.displayName
+            displayName: session.displayName,
+            memberships
         };
 
-        // Join the admins security segment (Task 21)
-        socket.join('admins');
+        for (const membership of memberships) {
+            socket.join(`tenant:${membership.tenantId}`);
+        }
+        if (memberships.some(item => item.role === 'super_admin')) {
+            socket.join('system:admins');
+        }
 
         // Emit fallback confirmation signal immediately (Task 22)
         socket.emit(EVENTS.READY, {
@@ -84,7 +103,8 @@ function initializeSocketServer(httpServer) {
                 message: 'Connected to real-time system',
                 admin: {
                     username: socket.admin.username,
-                    displayName: socket.admin.displayName
+                    displayName: socket.admin.displayName,
+                    tenants: memberships.map(({ tenantId, role }) => ({ tenantId, role }))
                 }
             }
         });
@@ -100,11 +120,31 @@ function initializeSocketServer(httpServer) {
     return io;
 }
 
+function disconnectAdministrator(userId) {
+    if (!io) return;
+    for (const socket of io.sockets.sockets.values()) {
+        if (socket.admin?.userId === userId) socket.disconnect(true);
+    }
+}
+
 function getIO() {
     return io;
 }
 
+async function closeSocketServer() {
+    if (!io) {
+        eventPublisher.shutdown();
+        return;
+    }
+    const server = io;
+    io = null;
+    eventPublisher.shutdown();
+    await new Promise(resolve => server.close(() => resolve()));
+}
+
 module.exports = {
     initializeSocketServer,
-    getIO
+    getIO,
+    disconnectAdministrator,
+    closeSocketServer
 };

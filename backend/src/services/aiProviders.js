@@ -1,4 +1,5 @@
 const { reportError, addLog } = require('./logger');
+const { reliableFetch } = require('../utils/reliableFetch');
 
 // Global tracker for the last provider response metadata to support multi-instance retrieval
 let lastResponseMetadata = null;
@@ -54,7 +55,7 @@ Adapter Used: OpenRouterProvider`);
                 throw new Error(`Configuration Error: Adapter mismatch inside OpenRouterProvider. Found: ${this.constructor.name}`);
             }
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`,
@@ -125,7 +126,7 @@ Adapter Used: OpenRouterProvider`);
             // Force Arabic language to avoid language misdetection & improve transcription accuracy
             formData.append('language', 'ar');
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`
@@ -192,7 +193,7 @@ Adapter Used: OpenAIProvider`);
                 }
             }
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`,
@@ -261,7 +262,7 @@ Adapter Used: OpenAIProvider`);
             // Force Arabic language to avoid language misdetection & improve transcription accuracy
             formData.append('language', 'ar');
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`
@@ -347,7 +348,7 @@ Adapter Used: GeminiProvider`);
                 };
             }
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -427,7 +428,7 @@ Adapter Used: OllamaProvider`);
                 }
             }
 
-            const response = await fetch(url, {
+            const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

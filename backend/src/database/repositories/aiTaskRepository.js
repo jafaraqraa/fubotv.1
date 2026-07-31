@@ -6,7 +6,7 @@ function getTaskConfig(task) {
         return db.prepare('SELECT task, provider, model, api_key_ref, enabled FROM ai_task_configs WHERE task = ?').get(task);
     } catch (err) {
         console.error(`Error in getTaskConfig(${task}):`, err.message);
-        return null;
+        throw err;
     }
 }
 
@@ -15,7 +15,7 @@ function getAllTaskConfigs() {
         return db.prepare('SELECT task, provider, model, api_key_ref, enabled FROM ai_task_configs').all();
     } catch (err) {
         console.error('Error in getAllTaskConfigs:', err.message);
-        return [];
+        throw err;
     }
 }
 
@@ -123,6 +123,7 @@ function initializeTasks() {
         console.log('🎉 Successfully seeded 6 default AI task configurations.');
     } catch (err) {
         console.error('❌ Failed to initialize/seed AI task configurations:', err.message);
+        throw err;
     }
 }
 

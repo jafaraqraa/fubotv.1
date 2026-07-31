@@ -74,6 +74,34 @@ function makeError(code, message, extra = {}) {
     return Object.assign(new Error(message), { code, retryable: true, ...extra });
 }
 
+function isSqliteBusy(error) {
+    return String(error?.code || '').startsWith('SQLITE_BUSY')
+        || /database is (?:locked|busy)/i.test(String(error?.message || ''));
+}
+
+async function withSqliteBusyRetry(operation, { attempts = 4, delayMs = 20, signal } = {}) {
+    let lastError;
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        throwIfAborted(signal);
+        try {
+            return operation();
+        } catch (error) {
+            lastError = error;
+            if (!isSqliteBusy(error) || attempt === attempts) throw error;
+            const jitter = Math.floor(Math.random() * Math.max(2, delayMs / 2));
+            console.warn(JSON.stringify({
+                level: 'warn',
+                event: 'sqlite_busy_retry',
+                component: 'rag_distributed_lock',
+                attempt,
+                maxAttempts: attempts
+            }));
+            await sleep((delayMs * attempt) + jitter, signal);
+        }
+    }
+    throw lastError;
+}
+
 function throwIfAborted(signal) {
     if (signal?.aborted) {
         throw Object.assign(new Error('RAG lock acquisition cancelled.'), { code: 'ABORT_ERR' });
@@ -231,12 +259,15 @@ async function acquireLease(input) {
     }
 
     try {
-        db.prepare(`
+        await withSqliteBusyRetry(() => db.prepare(`
             INSERT INTO rag_operations (
                 operation_id, tenant_id, resource_type, resource_id,
                 operation_type, status, lock_key, idempotency_key, instance_id
             ) VALUES (?, ?, ?, ?, ?, 'acquiring_lock', ?, ?, ?)
-        `).run(operationId, tenantId, resourceType, resourceId, operation, lockKey, idempotencyKey, instanceId);
+        `).run(
+            operationId, tenantId, resourceType, resourceId,
+            operation, lockKey, idempotencyKey, instanceId
+        ), { signal: input.signal });
     } catch (error) {
         if (idempotencyKey && String(error.code).includes('SQLITE_CONSTRAINT')) {
             const existing = db.prepare(`
@@ -254,10 +285,10 @@ async function acquireLease(input) {
     while (!acquired) {
         throwIfAborted(input.signal);
         try {
-            acquired = tryAcquire({
+            acquired = await withSqliteBusyRetry(() => tryAcquire({
                 tenantId, resourceType, resourceId, operation,
                 operationId, ttlMs: config.ttlMs, metadata: input.metadata
-            });
+            }), { signal: input.signal });
         } catch (error) {
             metrics.increment('ragLockAcquireFailuresTotal');
             updateOperation(operationId, {

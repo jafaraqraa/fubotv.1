@@ -312,6 +312,16 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     console.log(`🤖 AI Provider API Request completed at: ${new Date(apiEnd).toISOString()}`);
 
     const apiLatency = apiEnd - apiStart;
+    const operationalMetrics = require('../observability/runtimeMetrics');
+    operationalMetrics.increment('ai_provider_requests_total', {
+        provider: activeProviderName,
+        task: activeTask,
+        outcome: trackSuccess ? 'success' : 'failure'
+    });
+    operationalMetrics.observe('ai_provider_duration_milliseconds', apiLatency, {
+        provider: activeProviderName,
+        task: activeTask
+    });
     const providerApiStage = `${activeProviderName.charAt(0).toUpperCase()}${activeProviderName.slice(1)} API`;
     profiler.recordDuration(providerApiStage, apiLatency);
     profiler.setApiDetails({ latency: apiLatency, startedAt: apiStart, completedAt: apiEnd });

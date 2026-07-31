@@ -40,6 +40,10 @@ class ProviderAdapter {
      * Checks and parses mock keys for local testing
      */
     parseMockKey(providerName) {
+        const mocksEnabled = process.env.NODE_ENV === 'test'
+            && process.env.ALLOW_MOCK_PROVIDER_KEYS === 'true';
+        if (!mocksEnabled) return null;
+
         if (this.apiKey && this.apiKey.startsWith('mock-')) {
             const parts = this.apiKey.split('-');
             let limit = 100.0;

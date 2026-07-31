@@ -6,6 +6,9 @@ const path = require('path');
 // Force separate temporary test database
 const testDbPath = path.resolve(__dirname, '..', 'data', 'test_budget.db');
 process.env.SQLITE_DB_PATH = testDbPath;
+process.env.NODE_ENV = 'test';
+process.env.ALLOW_MOCK_PROVIDER_KEYS = 'true';
+process.env.SESSION_SECRET = 'budget_service_test_secret_more_than_32_chars';
 
 if (fs.existsSync(testDbPath)) fs.unlinkSync(testDbPath);
 if (fs.existsSync(testDbPath + '-wal')) fs.unlinkSync(testDbPath + '-wal');

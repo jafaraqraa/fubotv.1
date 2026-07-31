@@ -9,6 +9,7 @@ window.Dashboard.composer = {
             ['media-preview-delete', 'click', () => this.clearMediaUpload()],
             ['media-upload-btn', 'click', () => this.triggerFileInput()],
             ['media-upload-input', 'change', () => this.handleFileSelection()],
+            ['media-retry-btn', 'click', () => this.retryMediaSend()],
             ['send-btn', 'click', () => this.sendDirectMessage()]
         ];
         bindings.forEach(([id, eventName, listener]) => {
@@ -20,6 +21,21 @@ window.Dashboard.composer = {
             input.addEventListener('keyup', event => this.handleInputKey(event));
             input.addEventListener('input', () => this.detectCannedResponseTrigger(input));
         }
+        const dropZone = document.getElementById('input-wrapper');
+        if (dropZone) {
+            ['dragenter', 'dragover'].forEach(name => dropZone.addEventListener(name, event => {
+                event.preventDefault();
+                dropZone.classList.add('ring-2', 'ring-blue-400', 'rounded-lg');
+            }));
+            ['dragleave', 'drop'].forEach(name => dropZone.addEventListener(name, event => {
+                event.preventDefault();
+                dropZone.classList.remove('ring-2', 'ring-blue-400', 'rounded-lg');
+            }));
+            dropZone.addEventListener('drop', event => {
+                const file = event.dataTransfer?.files?.[0];
+                if (file) this.setSelectedFile(file);
+            });
+        }
     },
 
     triggerFileInput: function() {
@@ -30,21 +46,72 @@ window.Dashboard.composer = {
     handleFileSelection: function() {
         const input = document.getElementById('media-upload-input');
         if (input && input.files && input.files.length > 0) {
-            window.Dashboard.state.selectedMediaFile = input.files[0];
-            const previewContainer = document.getElementById('media-preview-container');
-            const filenameSpan = document.getElementById('media-filename');
+            this.setSelectedFile(input.files[0]);
+        }
+    },
 
-            if (filenameSpan) filenameSpan.innerText = window.Dashboard.state.selectedMediaFile.name;
-            if (previewContainer) previewContainer.classList.remove('hidden');
+    setSelectedFile: function(file) {
+        const user = window.Dashboard.state.usersCache.find(
+            item => String(item.id) === String(window.Dashboard.state.selectedUserId)
+        );
+        if (!user || !['messenger', 'instagram'].includes(user.platform)) {
+            window.Dashboard.settings.showToast('إرسال الوسائط غير متاح لهذه القناة حالياً.', 'error');
+            return;
+        }
+        if (user.platform === 'instagram' && file.type.startsWith('audio/')) {
+            window.Dashboard.settings.showToast('Instagram لا يدعم إرسال الملفات الصوتية.', 'error');
+            return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+            window.Dashboard.settings.showToast('حجم الملف يتجاوز الحد الأقصى 10 ميجابايت.', 'error');
+            return;
+        }
+        window.Dashboard.state.selectedMediaFile = file;
+        window.Dashboard.state.failedMediaAttachmentId = null;
+        const previewContainer = document.getElementById('media-preview-container');
+        const filenameSpan = document.getElementById('media-filename');
+        const thumbnail = document.getElementById('media-thumbnail');
+        if (filenameSpan) filenameSpan.textContent = file.name;
+        if (thumbnail) {
+            thumbnail.replaceChildren();
+            if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                const preview = document.createElement(file.type.startsWith('image/') ? 'img' : 'video');
+                preview.src = URL.createObjectURL(file);
+                preview.className = 'w-full h-full object-cover';
+                if (preview.tagName === 'VIDEO') preview.muted = true;
+                thumbnail.appendChild(preview);
+                thumbnail.classList.remove('hidden');
+            } else {
+                thumbnail.classList.add('hidden');
+            }
+        }
+        this.setUploadProgress(0, 'جاهز للإرسال');
+        document.getElementById('media-retry-btn')?.classList.add('hidden');
+        previewContainer?.classList.remove('hidden');
+    },
+
+    setUploadProgress: function(percent, status, isError = false) {
+        const bar = document.getElementById('media-upload-progress');
+        const label = document.getElementById('media-upload-status');
+        if (bar) bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+        if (label) {
+            label.textContent = status;
+            label.className = `block text-[10px] mt-1 ${isError ? 'text-red-600' : 'text-slate-500'}`;
         }
     },
 
     clearMediaUpload: function() {
+        if (this.activeAbortController) this.activeAbortController.abort();
+        if (this.activeXhr) this.activeXhr.abort();
+        this.activeAbortController = null;
+        this.activeXhr = null;
         window.Dashboard.state.selectedMediaFile = null;
         const input = document.getElementById('media-upload-input');
         if (input) input.value = "";
         const previewContainer = document.getElementById('media-preview-container');
         if (previewContainer) previewContainer.classList.add('hidden');
+        document.getElementById('media-retry-btn')?.classList.add('hidden');
+        this.setUploadProgress(0, 'جاهز للإرسال');
     },
 
     setMessageType: function(type) {
@@ -131,6 +198,7 @@ window.Dashboard.composer = {
 
     sendDirectMessage: async function() {
         const input = document.getElementById('direct-msg-input');
+        const sendBtn = document.getElementById('send-btn');
         if (!input) return;
         const message = input.value.trim();
 
@@ -138,6 +206,7 @@ window.Dashboard.composer = {
         if (!message && !window.Dashboard.state.selectedMediaFile) return;
 
         try {
+            if (sendBtn) sendBtn.disabled = true;
             const selectedUser = window.Dashboard.state.usersCache.find(
                 user => String(user.id) === String(window.Dashboard.state.selectedUserId)
             );
@@ -147,10 +216,27 @@ window.Dashboard.composer = {
             };
 
             if (window.Dashboard.state.selectedMediaFile) {
-                // In production build files are transmitted natively; here simulated
-                payload.message = `https://futh-storage.com/media/${window.Dashboard.state.selectedMediaFile.name}`;
-                payload.mediaType = window.Dashboard.state.selectedMediaFile.type;
-                window.Dashboard.composer.clearMediaUpload();
+                const file = window.Dashboard.state.selectedMediaFile;
+                if (file.size > 10 * 1024 * 1024) {
+                    throw new Error('حجم الملف يتجاوز الحد الأقصى 10 ميجابايت.');
+                }
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = () => reject(new Error('تعذر قراءة الملف المرفق.'));
+                    reader.onprogress = event => {
+                        if (event.lengthComputable) {
+                            this.setUploadProgress(Math.round((event.loaded / event.total) * 35), 'جاري تجهيز الملف...');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+                const separatorIndex = dataUrl.indexOf(',');
+                if (separatorIndex < 0) throw new Error('تعذر ترميز الملف المرفق.');
+                payload.message = message;
+                payload.mediaData = dataUrl.slice(separatorIndex + 1);
+                payload.mediaName = file.name;
+                payload.mediaType = file.type;
             } else {
                 payload.message = message;
             }
@@ -159,23 +245,105 @@ window.Dashboard.composer = {
                 payload.isNote = true;
             }
 
-            const response = await window.Dashboard.api.request('/api/send-direct', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.success) {
-                input.value = '';
-                window.Dashboard.composer.setMessageType('reply');
-                window.Dashboard.chat.fetchChatHistory();
+            let result;
+            if (window.Dashboard.state.selectedMediaFile) {
+                result = await this.sendPayloadWithUploadProgress(payload);
             } else {
-                alert('خطأ: ' + result.error);
+                const response = await window.Dashboard.api.request('/api/send-direct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: (this.activeAbortController = new AbortController()).signal
+                });
+                result = await response.json();
+            }
+            if (result.success) {
+                this.setUploadProgress(100, 'تم الإرسال');
+                input.value = '';
+                window.Dashboard.composer.clearMediaUpload();
+                window.Dashboard.composer.setMessageType('reply');
+                await window.Dashboard.chat.fetchChatHistory();
+            } else {
+                if (result.attachmentId) {
+                    window.Dashboard.state.failedMediaAttachmentId = result.attachmentId;
+                    document.getElementById('media-retry-btn')?.classList.remove('hidden');
+                }
+                throw new Error(result.error || 'فشل إرسال الرسالة.');
             }
         } catch (err) {
-            input.value = '';
-            window.Dashboard.composer.setMessageType('reply');
-            console.log("Message simulation dispatched successfully.");
+            if (err.name !== 'AbortError') this.setUploadProgress(100, err.message || 'فشل الإرسال', true);
+            window.Dashboard.settings.showToast(
+                `فشل إرسال الرسالة: ${err.message || 'خطأ غير معروف'}`,
+                'error'
+            );
+        } finally {
+            this.activeAbortController = null;
+            this.activeXhr = null;
+            if (sendBtn) sendBtn.disabled = false;
+        }
+    },
+
+    sendPayloadWithUploadProgress: async function(payload) {
+        if (!window.Dashboard.api.csrfToken) {
+            await window.Dashboard.api.fetchCsrfToken();
+        }
+        const url = window.Dashboard.api.resolveUrl('/api/send-direct');
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            this.activeXhr = xhr;
+            xhr.open('POST', url);
+            xhr.withCredentials = true;
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            if (window.Dashboard.api.csrfToken) {
+                xhr.setRequestHeader('X-CSRF-Token', window.Dashboard.api.csrfToken);
+            }
+            const sessionId = localStorage.getItem('futh_session_id');
+            if (sessionId) xhr.setRequestHeader('X-Session-ID', sessionId);
+            xhr.upload.addEventListener('progress', event => {
+                if (event.lengthComputable) {
+                    const percent = 35 + Math.round((event.loaded / event.total) * 50);
+                    this.setUploadProgress(percent, `جاري الرفع... ${Math.round((event.loaded / event.total) * 100)}%`);
+                }
+            });
+            xhr.addEventListener('load', () => {
+                let result;
+                try {
+                    result = JSON.parse(xhr.responseText || '{}');
+                } catch (_) {
+                    return reject(new Error('استجابة الخادم غير صالحة.'));
+                }
+                if (xhr.status === 401) {
+                    window.location.href = '/login';
+                    return reject(new Error('انتهت جلسة الدخول.'));
+                }
+                resolve(result);
+            });
+            xhr.addEventListener('error', () => reject(new Error('فشل اتصال رفع الملف.')));
+            xhr.addEventListener('abort', () => {
+                const error = new Error('تم إلغاء رفع الملف.');
+                error.name = 'AbortError';
+                reject(error);
+            });
+            xhr.send(JSON.stringify(payload));
+        });
+    },
+
+    retryMediaSend: async function() {
+        const attachmentId = window.Dashboard.state.failedMediaAttachmentId;
+        if (!attachmentId) return;
+        try {
+            this.setUploadProgress(35, 'جاري إعادة المحاولة...');
+            const response = await window.Dashboard.api.request(
+                `/api/media/${encodeURIComponent(attachmentId)}/retry`,
+                { method: 'POST' }
+            );
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error || 'فشلت إعادة المحاولة.');
+            this.setUploadProgress(100, 'تم الإرسال');
+            await window.Dashboard.chat.fetchChatHistory();
+            setTimeout(() => this.clearMediaUpload(), 500);
+        } catch (error) {
+            this.setUploadProgress(100, error.message || 'فشلت إعادة المحاولة.', true);
         }
     }
 };

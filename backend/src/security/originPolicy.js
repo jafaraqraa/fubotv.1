@@ -61,7 +61,21 @@ function createOriginPolicy(env = process.env) {
         allowedOrigins,
         credentials: true,
         methods: Object.freeze(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']),
-        allowedHeaders: Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Session-ID']),
+        allowedHeaders: Object.freeze([
+            'Content-Type',
+            'X-CSRF-Token',
+            'X-Session-ID',
+            'X-Request-ID',
+            'X-Correlation-ID'
+        ]),
+        exposedHeaders: Object.freeze([
+            'X-Request-ID',
+            'X-Correlation-ID',
+            'RateLimit-Limit',
+            'RateLimit-Remaining',
+            'RateLimit-Reset',
+            'Retry-After'
+        ]),
         evaluate
     });
 }

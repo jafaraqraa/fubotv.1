@@ -7,6 +7,8 @@ const { authenticate } = require('../services/authService');
 const adminRepo = require('../database/repositories/adminRepository');
 const { requireAuth } = require('../middleware/requireAuth');
 const { requireSessionSecret } = require('../config/securityConfig');
+const { getSessionCookieClearOptions } = require('../config/sessionCookieConfig');
+const { getMemberships, audit } = require('../security/accessControl');
 
 // Persistent SQLite-backed Login Rate Limiter (Task 5)
 function rateLimitLogin(req, res, next) {
@@ -58,6 +60,7 @@ router.post(['/api/auth/login', '/api/v1/auth/login'], rateLimitLogin, (req, res
         if (req.recordFailedLoginAttempt) {
             req.recordFailedLoginAttempt();
         }
+        audit({ action: 'login', outcome: 'failure' });
         // Generic failure response without exposing whether user exists
         return res.status(401).json({
             success: false,
@@ -78,6 +81,19 @@ router.post(['/api/auth/login', '/api/v1/auth/login'], rateLimitLogin, (req, res
         req.session.userId = result.user.id;
         req.session.username = result.user.username;
         req.session.displayName = result.user.displayName;
+        const memberships = getMemberships(result.user.id);
+        if (!memberships.length) {
+            return req.session.destroy(() => res.status(403).json({
+                success: false,
+                error: 'No active tenant membership'
+            }));
+        }
+        req.session.tenantId = memberships[0].tenantId;
+        req.session.allowedTenantIds = memberships.map(item => item.tenantId);
+        req.session.rolesByTenant = Object.fromEntries(
+            memberships.map(item => [item.tenantId, item.role])
+        );
+        req.session.absoluteExpiresAt = Date.now() + (24 * 60 * 60 * 1000);
 
         // Generate cryptographically strong, session-bound CSRF token (Task 4)
         req.session.csrfToken = crypto.randomBytes(32).toString('hex');
@@ -91,22 +107,38 @@ router.post(['/api/auth/login', '/api/v1/auth/login'], rateLimitLogin, (req, res
             .replace(/=+$/, '');
         const signedSessionId = 's:' + req.sessionID + '.' + signatureStr;
 
-        res.json({
-            success: true,
-            user: result.user,
-            sessionId: signedSessionId
+        audit({
+            actorId: result.user.id, tenantId: memberships[0].tenantId,
+            action: 'login', outcome: 'success'
         });
+        const response = {
+            success: true,
+            user: {
+                ...result.user,
+                tenantId: memberships[0].tenantId,
+                role: memberships[0].role,
+                tenants: memberships.map(({ tenantId, role }) => ({ tenantId, role }))
+            }
+        };
+        if (process.env.ALLOW_SESSION_TOKEN_FALLBACK === 'true') {
+            response.sessionId = signedSessionId;
+        }
+        res.json(response);
     });
 });
 
 // 3. POST /api/auth/logout and /api/v1/auth/logout -> Secures session destruction (Section 6)
 router.post(['/api/auth/logout', '/api/v1/auth/logout'], (req, res) => {
     if (req.session) {
+        const actorId = req.session.userId;
+        const tenantId = req.session.tenantId;
+        require('../realtime/socketServer').disconnectAdministrator(actorId);
         req.session.destroy((err) => {
-            res.clearCookie('connect.sid', { httpOnly: true, sameSite: 'none', secure: true }); // Clear session cookie with matching secure attributes
+            res.clearCookie('connect.sid', getSessionCookieClearOptions());
             if (err) {
                 return res.status(500).json({ success: false, error: 'Failed logging out' });
             }
+            audit({ actorId, tenantId, action: 'logout', outcome: 'success' });
             res.json({ success: true, message: 'Logged out successfully' });
         });
     } else {
@@ -122,7 +154,9 @@ router.get(['/api/auth/me', '/api/v1/auth/me'], (req, res) => {
             user: {
                 id: req.session.userId,
                 username: req.session.username,
-                displayName: req.session.displayName
+                displayName: req.session.displayName,
+                tenantId: req.session.tenantId,
+                role: req.session.rolesByTenant?.[req.session.tenantId]
             }
         });
     }
@@ -161,9 +195,16 @@ router.post(['/api/auth/change-password', '/api/v1/auth/change-password'], requi
 
     const hash = bcrypt.hashSync(newPassword, 10);
     adminRepo.updatePassword(admin.id, hash);
+    adminRepo.revokeSessionsForAdministrator(admin.id);
+    require('../realtime/socketServer').disconnectAdministrator(admin.id);
+    audit({
+        actorId: admin.id, tenantId: req.session.tenantId,
+        action: 'password_change', outcome: 'success'
+    });
     console.log(`🔒 Password changed successfully for administrator: ${admin.username}`);
 
-    res.json({ success: true, message: 'تم تغيير كلمة المرور بنجاح!' });
+    res.clearCookie('connect.sid', getSessionCookieClearOptions());
+    res.json({ success: true, reauthenticationRequired: true, message: 'تم تغيير كلمة المرور بنجاح!' });
 });
 
 // 6. GET /api/auth/csrf-token and /api/v1/auth/csrf-token -> Provides session-bound CSRF token (Section 6)

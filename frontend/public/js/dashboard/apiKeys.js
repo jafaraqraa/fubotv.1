@@ -203,7 +203,12 @@ window.Dashboard.apiKeys = {
             if (result.success) {
                 input.value = '';
                 if (window.Dashboard.settings && window.Dashboard.settings.showToast) {
-                    window.Dashboard.settings.showToast('تم حفظ مفتاح الـ API بنجاح وجاري المزامنة تلقائياً من المزود!');
+                    window.Dashboard.settings.showToast(
+                        result.syncSuccess
+                            ? 'تم حفظ مفتاح الـ API ومزامنة إمكانات المزود.'
+                            : `تم حفظ المفتاح، لكن المزامنة فشلت: ${result.syncError || 'سبب غير معروف'}`,
+                        result.syncSuccess ? 'success' : 'error'
+                    );
                 }
                 this.loadApiKeys();
             } else {

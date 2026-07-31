@@ -58,12 +58,18 @@ class PromptBuilder {
         });
 
         // 2. Conversation History (unmodified clean clone to avoid side effects or injections)
-        const cleanHistory = (conversationHistory || [])
+        let cleanHistory = (conversationHistory || [])
             .filter(msg => msg && ['user', 'assistant'].includes(msg.role))
             .map(msg => ({
                 role: msg.role,
-                content: String(msg.content || '')
-            }));
+                content: String(msg.content || '').slice(0, 2000)
+            }))
+            .slice(-6);
+        const latest = cleanHistory.at(-1);
+        if (latest?.role === 'user'
+            && latest.content.trim() === String(userQuestion || '').trim()) {
+            cleanHistory = cleanHistory.slice(0, -1);
+        }
         messages.push(...cleanHistory);
 
         let serializedContext = '';

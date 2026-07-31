@@ -157,7 +157,8 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
             source: originalName,
             sourceType: 'uploaded_document',
             originalText: cleanText(text),
-            documentHash: contentHash
+            documentHash: contentHash,
+            ingestionVersion: versionId
         }, chunkSize, chunkOverlap).map(item => ({
             ...item,
             tenantId,
@@ -393,12 +394,19 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     const tenantId = requireTenantId(options.tenantId, 'document-upload');
 
     // 1. Run strict security validations
+    if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
+        const error = new Error('الملف فارغ ولا يمكن معالجته.');
+        error.code = 'RAG_EMPTY_FILE';
+        throw error;
+    }
+    const maxFileSize = Number(getConfig('RAG_MAX_FILE_SIZE_BYTES')) || 10 * 1024 * 1024;
+    if (buffer.length > maxFileSize) {
+        const error = new Error(`حجم الملف يتجاوز الحد المسموح ${maxFileSize} بايت.`);
+        error.code = 'RAG_FILE_TOO_LARGE';
+        throw error;
+    }
     const ext = validateFilenameSecurity(originalName);
     validateMimeAndMagicBytes(ext, mimeType, buffer);
-
-    if (!buffer || buffer.length === 0) {
-        throw new Error('الملف فارغ ولا يمكن معالجته.');
-    }
 
     // A. Duplicate Original Name & Version Detection
     const existingByName = docRepo.getDocumentByOriginalName(tenantId, originalName);
@@ -611,7 +619,8 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
             sourceType: 'uploaded_document',
             originalText: text,
             documentHash: doc.content_hash,
-            tenantId
+            tenantId,
+            ingestionVersion: versionId
         };
 
         const richChunks = annotateInjectionRisk(chunk(virtualDoc, chunkSize, chunkOverlap)
@@ -625,6 +634,7 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
                 chunkIndex: index,
                 contentHash: chunk.contentHash || extractedTextHash,
                 embeddingModel: modelName,
+                ingestionVersion: versionId,
                 createdAt: new Date().toISOString()
             })), tenantId, doc.document_key);
         if (richChunks.length === 0) {
@@ -849,17 +859,19 @@ async function deleteDocument(docKey, options = {}) {
     let operationResult;
 
     if (!doc) {
-        // Repair lookup logic: if document exists in Qdrant but is missing in SQLite, delete vectors to keep environment clean
+        // Idempotent delete: also clean any orphaned vectors left behind by a
+        // prior partial operation, then report the desired absent state.
         console.warn(`⚠️ Proceeding to clean orphaned vectors for missing SQLite document key: ${docKey}`);
         try {
             lease.assertOwnership();
             await deleteVectorsByDocument(tenantId, docKey);
         } catch (qErr) {
-            console.error('Failed to delete orphaned vectors from Qdrant:', qErr.message);
+            await lease.release({ error: qErr });
+            throw qErr;
         }
-        const error = new Error('المستند غير موجود في قاعدة البيانات.');
-        await lease.release({ error });
-        throw error;
+        operationResult = { success: true, documentId: String(docKey), alreadyAbsent: true };
+        await lease.release({ result: operationResult });
+        return true;
     }
 
     try {
@@ -874,11 +886,7 @@ async function deleteDocument(docKey, options = {}) {
 
         // 3. Delete from private filesystem
         if (doc.storage_path && fs.existsSync(doc.storage_path)) {
-            try {
-                fs.unlinkSync(doc.storage_path);
-            } catch (fsErr) {
-                console.error(`Failed to delete private stored file ${doc.storage_path}:`, fsErr.message);
-            }
+            fs.unlinkSync(doc.storage_path);
         }
 
         // 4. Delete SQLite record

@@ -542,30 +542,30 @@ window.Dashboard.rag = {
             const srcBadgeClass = d.sourceType === 'manual_knowledge' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600';
 
             tableHTML += `
-                <tr data-document-open="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="hover:bg-slate-50/50 transition cursor-pointer select-text text-xs">
-                    <td class="p-3 text-right w-10">
+                <tr data-document-open="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="rag-doc-table-row hover:bg-slate-50/50 transition cursor-pointer select-text text-xs">
+                    <td class="p-3 text-right">
                         <input type="checkbox" data-id="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
                     </td>
-                    <td class="p-3 font-semibold text-slate-800 truncate max-w-[200px]" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">
-                        ${fileIcon} ${window.Dashboard.utils.escapeHTML(d.originalFilename)}
+                    <td class="p-3 font-semibold text-slate-800" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">
+                        <span class="rag-doc-filename">${fileIcon} ${window.Dashboard.utils.escapeHTML(d.originalFilename)}</span>
                     </td>
-                    <td class="p-3 font-mono text-slate-500">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</td>
+                    <td class="p-3 font-mono text-slate-500 whitespace-nowrap">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</td>
                     <td class="p-3">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${srcBadgeClass}">${srcLabelAr}</span>
+                        <span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold ${srcBadgeClass}">${srcLabelAr}</span>
                     </td>
                     <td class="p-3 font-mono text-slate-600 font-bold">${window.Dashboard.utils.escapeHTML(String(d.version || 1))}</td>
                     <td class="p-3 font-mono text-slate-600">-</td>
                     <td class="p-3 font-mono text-slate-600">${window.Dashboard.utils.escapeHTML(String(formattedSize))}</td>
                     <td class="p-3 font-mono text-slate-600 font-bold text-blue-600">${window.Dashboard.utils.escapeHTML(String(d.chunkCount ?? 0))}</td>
-                    <td class="p-3 text-slate-500 truncate max-w-[120px]">nomic-embed</td>
-                    <td class="p-3 text-slate-500 font-mono">${formattedDate}</td>
+                    <td class="p-3 text-slate-500 whitespace-nowrap">nomic-embed</td>
+                    <td class="p-3 text-slate-500 font-mono whitespace-nowrap">${formattedDate}</td>
                     <td class="p-3">
-                        <span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeClass}">
+                        <span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeClass}">
                             ${window.Dashboard.utils.escapeHTML(String(statusText || ''))}
                         </span>
                     </td>
                     <td class="p-3 text-center">
-                        <button type="button" data-document-details="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[10px] transition font-arabic">عرض التفاصيل</button>
+                        <button type="button" data-document-details="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="whitespace-nowrap px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[10px] transition font-arabic">عرض التفاصيل</button>
                     </td>
                 </tr>
             `;
@@ -798,12 +798,12 @@ window.Dashboard.rag = {
         const opBackup = document.getElementById('rag-op-backup');
         const opSync = document.getElementById('rag-op-sync');
 
-        if (opIndexAll) opIndexAll.onclick = () => window.Dashboard.rag.triggerOperation('الفهرسة التلقائية والمزامنة الشاملة');
+        if (opIndexAll) opIndexAll.onclick = () => window.Dashboard.rag.triggerReindexAll();
         if (opReindexAll) opReindexAll.onclick = () => window.Dashboard.rag.triggerReindexAll();
-        if (opOptimize) opOptimize.onclick = () => window.Dashboard.rag.triggerOperation('تحسين ضغط المجموعة Collection Optimization');
-        if (opValidate) opValidate.onclick = () => window.Dashboard.rag.triggerOperation('مزامنة وفحص حقول SQlite والمجموعات الفردية');
-        if (opBackup) opBackup.onclick = () => window.Dashboard.rag.triggerOperation('النسخ الاحتياطي لبيانات RAG الفهرسية');
-        if (opSync) opSync.onclick = () => window.Dashboard.rag.triggerOperation('مزامنة SQLite مع قاعدة البيانات النشطة');
+        if (opOptimize) opOptimize.onclick = () => window.Dashboard.rag.triggerOperation('optimize');
+        if (opValidate) opValidate.onclick = () => window.Dashboard.rag.triggerOperation('validate');
+        if (opBackup) opBackup.onclick = () => window.Dashboard.rag.triggerOperation('backup');
+        if (opSync) opSync.onclick = () => window.Dashboard.rag.triggerOperation('sync');
 
         // Playground Ask Button
         const askBtn = document.getElementById('rag-playground-ask-btn');
@@ -1322,41 +1322,45 @@ window.Dashboard.rag = {
     },
 
     reindexDoc: async function(docId) {
-        window.Dashboard.rag.simulateIndexingProgress('إعادة الفهرسة', docId);
+        window.Dashboard.rag.showIndexingProgress('إعادة الفهرسة', docId);
 
         try {
             const res = await window.Dashboard.api.request(`/api/rag/documents/${docId}/reindex`, {
                 method: 'POST'
             });
             const data = await res.json();
-            if (data.success) {
-                window.Dashboard.settings.showToast('بدأت إعادة فهرسة المستند دلالياً بالخلفية.');
+            if (res.ok && data.success && data.document?.status === 'indexed') {
+                window.Dashboard.settings.showToast('اكتملت إعادة فهرسة المستند دلالياً بنجاح.');
                 window.Dashboard.rag.addTimelineLog('إعادة الفهرسة', `إعادة فهرسة المستند ${docId}`);
                 await window.Dashboard.rag.fetchOverviewAndDocuments();
             } else {
                 window.Dashboard.settings.showToast('فشل إعادة الفهرسة: ' + data.error, 'error');
             }
         } catch (e) {
-            console.error(e);
+            window.Dashboard.settings.showToast(`فشل إعادة الفهرسة: ${e.message}`, 'error');
+        } finally {
+            window.Dashboard.rag.hideIndexingProgress();
         }
     },
 
     retryDoc: async function(docId) {
-        window.Dashboard.rag.simulateIndexingProgress('إعادة المعالجة', docId);
+        window.Dashboard.rag.showIndexingProgress('إعادة المعالجة', docId);
 
         try {
             const res = await window.Dashboard.api.request(`/api/rag/documents/${docId}/retry`, {
                 method: 'POST'
             });
             const data = await res.json();
-            if (data.success) {
-                window.Dashboard.settings.showToast('بدأت إعادة معالجة المستند بالخلفية...');
+            if (res.ok && data.success && data.document?.status === 'indexed') {
+                window.Dashboard.settings.showToast('اكتملت إعادة معالجة المستند وفهرسته بنجاح.');
                 await window.Dashboard.rag.fetchOverviewAndDocuments();
             } else {
                 window.Dashboard.settings.showToast('فشل المحاولة: ' + data.error, 'error');
             }
         } catch (e) {
-            console.error(e);
+            window.Dashboard.settings.showToast(`فشلت إعادة المعالجة: ${e.message}`, 'error');
+        } finally {
+            window.Dashboard.rag.hideIndexingProgress();
         }
     },
 
@@ -1442,8 +1446,18 @@ window.Dashboard.rag = {
             if (!proceed) return;
 
             window.Dashboard.settings.showToast('جاري حذف المستندات جماعياً...');
-            for (const id of ids) {
-                await window.Dashboard.api.request(`/api/rag/documents/${id}`, { method: 'DELETE' });
+            const failures = await window.Dashboard.rag.runBulkRequests(
+                ids,
+                id => `/api/rag/documents/${id}`,
+                'DELETE'
+            );
+            if (failures.length) {
+                window.Dashboard.settings.showToast(
+                    `تم حذف ${ids.length - failures.length} وفشل حذف ${failures.length} مستند.`,
+                    'error'
+                );
+                await window.Dashboard.rag.fetchOverviewAndDocuments();
+                return;
             }
             window.Dashboard.state.ragSelectedDocIds.clear();
             window.Dashboard.settings.showToast('اكتمل حذف المستندات المحددة.');
@@ -1452,10 +1466,21 @@ window.Dashboard.rag = {
 
         } else if (action === 'reindex') {
             window.Dashboard.settings.showToast('جاري البدء في إعادة فهرسة المستندات المحددة جماعياً...');
-            window.Dashboard.rag.simulateIndexingProgress('إعادة الفهرسة الجماعية', `${ids.length} مستندات`);
-
-            for (const id of ids) {
-                await window.Dashboard.api.request(`/api/rag/documents/${id}/reindex`, { method: 'POST' });
+            window.Dashboard.rag.showIndexingProgress('إعادة الفهرسة الجماعية', `${ids.length} مستندات`);
+            const failures = await window.Dashboard.rag.runBulkRequests(
+                ids,
+                id => `/api/rag/documents/${id}/reindex`,
+                'POST',
+                data => data.document?.status === 'indexed'
+            );
+            window.Dashboard.rag.hideIndexingProgress();
+            if (failures.length) {
+                window.Dashboard.settings.showToast(
+                    `نجحت فهرسة ${ids.length - failures.length} وفشلت ${failures.length} عملية.`,
+                    'error'
+                );
+                await window.Dashboard.rag.fetchOverviewAndDocuments();
+                return;
             }
             window.Dashboard.state.ragSelectedDocIds.clear();
             window.Dashboard.settings.showToast('اكتملت إعادة الفهرسة لجميع المستندات المحددة.');
@@ -1464,11 +1489,22 @@ window.Dashboard.rag = {
 
         } else if (action === 'retry') {
             window.Dashboard.settings.showToast('جاري إعادة معالجة المستندات المحددة...');
-            for (const id of ids) {
-                await window.Dashboard.api.request(`/api/rag/documents/${id}/retry`, { method: 'POST' });
+            const failures = await window.Dashboard.rag.runBulkRequests(
+                ids,
+                id => `/api/rag/documents/${id}/retry`,
+                'POST',
+                data => data.document?.status === 'indexed'
+            );
+            if (failures.length) {
+                window.Dashboard.settings.showToast(
+                    `نجحت معالجة ${ids.length - failures.length} وفشلت ${failures.length} عملية.`,
+                    'error'
+                );
+                await window.Dashboard.rag.fetchOverviewAndDocuments();
+                return;
             }
             window.Dashboard.state.ragSelectedDocIds.clear();
-            window.Dashboard.settings.showToast('تمت جدولة إعادة المعالجة للمستندات المحددة.');
+            window.Dashboard.settings.showToast('اكتملت إعادة معالجة المستندات المحددة.');
             await window.Dashboard.rag.fetchOverviewAndDocuments();
             window.Dashboard.rag.updateBulkBarState();
 
@@ -1484,6 +1520,22 @@ window.Dashboard.rag = {
         }
     },
 
+    runBulkRequests: async function(ids, urlFactory, method, validateResult = () => true) {
+        const failures = [];
+        for (const id of ids) {
+            try {
+                const response = await window.Dashboard.api.request(urlFactory(id), { method });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || data.success !== true || !validateResult(data)) {
+                    failures.push({ id, error: data.error || `HTTP ${response.status}` });
+                }
+            } catch (error) {
+                failures.push({ id, error: error.message });
+            }
+        }
+        return failures;
+    },
+
     triggerReindexAll: function() {
         const modal = document.getElementById('rag-reindex-confirm-modal');
         const confirmBtn = document.getElementById('rag-reindex-confirm-btn');
@@ -1495,7 +1547,7 @@ window.Dashboard.rag = {
             confirmBtn.onclick = async function() {
                 modal.classList.add('hidden');
                 window.Dashboard.settings.showToast('جاري تهيئة عملية إعادة الفهرسة الشاملة...');
-                window.Dashboard.rag.simulateIndexingProgress('إعادة الفهرسة الشاملة', 'كافة مستندات المعرفة');
+                window.Dashboard.rag.showIndexingProgress('إعادة الفهرسة الشاملة', 'كافة مستندات المعرفة');
 
                 try {
                     const response = await window.Dashboard.api.request('/api/rag/reindex', {
@@ -1505,7 +1557,7 @@ window.Dashboard.rag = {
                     });
                     const data = await response.json();
 
-                    if (data.success) {
+                    if (response.ok && data.success && data.status === 'active') {
                         window.Dashboard.settings.showToast('اكتملت عملية إعادة الفهرسة وتوليد الـ Embeddings بنجاح!');
                         window.Dashboard.rag.addTimelineLog('إعادة فهرسة شاملة', 'تمت إعادة الفهرسة الشاملة لكافة المستندات.');
                         await window.Dashboard.rag.fetchOverviewAndDocuments();
@@ -1514,17 +1566,47 @@ window.Dashboard.rag = {
                     }
                 } catch (err) {
                     window.Dashboard.settings.showToast('حدث خطأ بالشبكة للعملية.', 'error');
+                } finally {
+                    window.Dashboard.rag.hideIndexingProgress();
                 }
             };
         }
     },
 
-    triggerOperation: function(opName) {
-        window.Dashboard.settings.showToast(`تم تنفيذ الإجراء (${opName}) بنجاح.`);
-        window.Dashboard.rag.addTimelineLog('إجراء يدوي', `تم تنفيذ الإجراء: ${opName}`);
+    triggerOperation: async function(operation) {
+        if (operation !== 'validate') {
+            const labels = {
+                optimize: 'تحسين مجموعة Qdrant',
+                backup: 'النسخ الاحتياطي لـ RAG',
+                sync: 'مزامنة SQLite التلقائية'
+            };
+            window.Dashboard.settings.showToast(
+                `${labels[operation] || operation}: هذه العملية غير منفذة في الخادم حالياً ولم يتم تشغيل أي إجراء.`,
+                'error'
+            );
+            return false;
+        }
+
+        try {
+            const response = await window.Dashboard.api.request('/api/v1/rag/reconciliation/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || data.success !== true || !data.report) {
+                throw new Error(data.error || `HTTP ${response.status}`);
+            }
+            window.Dashboard.settings.showToast('اكتمل فحص تطابق SQLite وQdrant بنجاح.');
+            window.Dashboard.rag.addTimelineLog('فحص التطابق', 'اكتمل فحص RAG الحقيقي دون تعديل البيانات.');
+            return true;
+        } catch (error) {
+            window.Dashboard.settings.showToast(`فشل فحص التطابق: ${error.message}`, 'error');
+            return false;
+        }
     },
 
-    simulateIndexingProgress: function(opName, docName) {
+    showIndexingProgress: function(opName, docName) {
         const container = document.getElementById('rag-indexing-progress-container');
         const pStep = document.getElementById('rag-progress-step');
         const pPct = document.getElementById('rag-progress-pct');
@@ -1538,41 +1620,19 @@ window.Dashboard.rag = {
         container.classList.remove('hidden');
         pActiveDoc.innerText = docName;
 
-        let pct = 0;
-        let elapsed = 0;
+        pStep.innerText = `${opName}: بانتظار النتيجة النهائية من الخادم`;
+        pPct.innerText = '—';
+        pBar.style.width = '100%';
+        pBar.classList.add('animate-pulse');
+        pElapsed.innerText = 'يُقاس في الخادم';
+        pEta.innerText = 'غير متاح';
+    },
 
-        const steps = [
-            'بدء استخراج نصوص الملف',
-            'تنظيف المعرفة ومعالجة الحروف والياء',
-            'تقسيم النصوص دلالياً إلى مقاطع كاملة',
-            'توليد المتجهات (Embeddings) عبر نموذج الذكاء',
-            'تخزين وحفظ المتجهات في قاعدة بيانات Qdrant',
-            'ربط وتأكيد مزامنة السجلات بقاعدة SQLite'
-        ];
-
-        const interval = setInterval(() => {
-            elapsed++;
-            pElapsed.innerText = `${elapsed} ثانية`;
-
-            pct += Math.floor(Math.random() * 12) + 6;
-            if (pct >= 100) {
-                pct = 100;
-                clearInterval(interval);
-                setTimeout(() => {
-                    container.classList.add('hidden');
-                }, 1500);
-            }
-
-            pPct.innerText = `${pct}%`;
-            pBar.style.width = `${pct}%`;
-
-            const stepIdx = Math.min(Math.floor((pct / 100) * steps.length), steps.length - 1);
-            pStep.innerText = steps[stepIdx];
-
-            const remaining = Math.max(1, Math.round(((100 - pct) / pct) * elapsed));
-            pEta.innerText = `${remaining} ثانية`;
-
-        }, 500);
+    hideIndexingProgress: function() {
+        const container = document.getElementById('rag-indexing-progress-container');
+        const pBar = document.getElementById('rag-progress-bar');
+        if (pBar) pBar.classList.remove('animate-pulse');
+        if (container) container.classList.add('hidden');
     },
 
     // L. Live Playground Query with optional Debug Mode (Goal 4 & Goal 7)
@@ -1759,7 +1819,7 @@ window.Dashboard.rag = {
             return;
         }
 
-        window.Dashboard.rag.simulateIndexingProgress('رفع المعالجة', file.name);
+        window.Dashboard.rag.showIndexingProgress('رفع ومعالجة المستند', file.name);
 
         try {
             let csrfToken = window.Dashboard.api.csrfToken;
@@ -1794,17 +1854,27 @@ window.Dashboard.rag = {
                 if (xhr.status === 400 && data.code === 'DUPLICATE_UPLOAD') {
                     // Show Versioning Modal Dialog (Goal 5)
                     window.Dashboard.rag.showVersioningModal(file, data.existing);
-                } else if (xhr.status >= 200 && xhr.status < 300) {
-                    window.Dashboard.settings.showToast('تم رفع المستند وبدء الفهرسة بالخلفية.');
+                } else if (
+                    xhr.status >= 200 && xhr.status < 300
+                    && data.success === true
+                    && data.status === 'indexed'
+                ) {
+                    window.Dashboard.settings.showToast('تم رفع المستند وفهرسته وتفعيله بنجاح.');
                     window.Dashboard.rag.addTimelineLog('رفع مستند', `تم رفع وتضمين المستند ${file.name}`);
                     window.Dashboard.rag.fetchOverviewAndDocuments();
                 } else {
                     alert('خطأ في الرفع: ' + (data.error || 'فشلت معالجة الخادم للمستند.'));
                 }
+                window.Dashboard.rag.hideIndexingProgress();
+            };
+            xhr.onerror = function() {
+                window.Dashboard.rag.hideIndexingProgress();
+                window.Dashboard.settings.showToast('فشل الاتصال بالخادم أثناء رفع المستند.', 'error');
             };
             xhr.send(formData);
         } catch (e) {
-            console.error(e);
+            window.Dashboard.rag.hideIndexingProgress();
+            window.Dashboard.settings.showToast(`فشل رفع المستند: ${e.message}`, 'error');
         }
     },
 

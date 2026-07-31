@@ -1,4 +1,5 @@
 const ProviderAdapter = require('./ProviderAdapter');
+const { reliableFetch } = require('../../utils/reliableFetch');
 
 class OpenRouterAdapter extends ProviderAdapter {
     getCapabilities() {
@@ -27,7 +28,7 @@ class OpenRouterAdapter extends ProviderAdapter {
         const targetUrl = this.baseUrl || 'https://openrouter.ai/api/v1/key';
         try {
             console.log(`🌐 [OpenRouterAdapter] Requesting URL: ${targetUrl}`);
-            const response = await fetch(targetUrl, {
+            const response = await reliableFetch(targetUrl, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`

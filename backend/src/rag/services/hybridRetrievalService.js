@@ -8,6 +8,7 @@ const { requireTenantId } = require('../security/tenantContext');
 const { searchPoints } = require('../vector/qdrantVectorStore');
 const { registerOperation } = require('../runtime/operationRegistry');
 const { RETRIEVAL_MODE, createMetadata } = require('../runtime/fallbackPolicy');
+const crypto = require('crypto');
 
 // In-Memory caches to optimize latency and eliminate redundant HTTP requests (Task: Optimizations)
 const embeddingsCache = new Map();
@@ -67,6 +68,15 @@ function determineDynamicTopK(query, queryTokens) {
  * Accepts optional profiler parameter for high-resolution timing sub-stage telemetry tracking.
  */
 async function retrieveHybridContextInternal(query, profiler = null, cacheContext = {}) {
+    if (typeof query !== 'string' || !query.trim()) {
+        return {
+            candidates: [],
+            dynamicTopK: 0,
+            similarityThreshold: Number(getConfig('RAG_SIMILARITY_THRESHOLD')) || 0.4,
+            timings: { embeddings: 0, vectorSearch: 0, keywordSearch: 0 },
+            metadata: createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL, emptyQuery: true })
+        };
+    }
     const retrievalStartedAt = performance.now();
     const collectionName = getConfig('QDRANT_COLLECTION');
     const tenantId = requireTenantId(cacheContext.tenantId, 'hybrid-retrieval');
@@ -150,6 +160,9 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
     if (!queryVector || queryVector.length === 0) {
         throw new Error('فشل توليد متجه الاستعلام من Ollama.');
     }
+    if (!queryVector.every(Number.isFinite)) {
+        throw new Error('متجه الاستعلام يحتوي على قيم غير صالحة.');
+    }
 
     // 4. Query Qdrant for semantic candidates
     // Sub-stage 1: Request Build
@@ -159,7 +172,11 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
         limit: candidateCount,
         // Staged replacement vectors must not become searchable before activation.
         filter: {
-            must: [{ key: 'tenantId', match: { value: tenantId } }],
+            must: [
+                { key: 'tenantId', match: { value: tenantId } },
+                { key: 'embeddingModel', match: { value: embeddingModel } },
+                { key: 'vectorDimension', match: { value: queryVector.length } }
+            ],
             must_not: [
                 { key: 'lifecycle', match: { value: 'staging' } },
                 { key: 'lifecycle', match: { value: 'archived' } }
@@ -178,7 +195,8 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
         with_payload: [
             "text", "source", "chunkId", "documentName", "previousChunkId", "nextChunkId",
             "tenantId", "documentId", "documentVersionId", "indexVersionId", "sourceType",
-            "chunkIndex", "contentHash", "embeddingModel", "vectorDimension", "createdAt", "lifecycle"
+            "chunkIndex", "contentHash", "embeddingModel", "vectorDimension", "createdAt", "lifecycle",
+            "heading", "section", "textLength", "ingestionVersion"
         ]
     };
     const durationBuild = performance.now() - tBuildStart;
@@ -249,7 +267,20 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
         maxEntries: parseInt(getConfig('RAG_RETRIEVAL_CACHE_MAX_ENTRIES'), 10) || 1000
     });
 
-    console.log(`[RAG Retrieval] tenant=${tenantId} operation=hybrid results=${candidates.length} cache=miss durationMs=${(performance.now() - retrievalStartedAt).toFixed(1)}`);
+    console.log(JSON.stringify({
+        level: 'info',
+        event: 'rag_retrieval_completed',
+        tenantId,
+        queryHash: crypto.createHash('sha256')
+            .update(versionedCache.normalizeQuery(query)).digest('hex').slice(0, 16),
+        collection: collectionName,
+        resultCount: candidates.length,
+        selectedChunkIds: candidates.slice(0, dynamicTopK).map(item => item.chunkId),
+        topScore: candidates.length ? Math.max(...candidates.map(item => item.finalScore)) : null,
+        threshold: similarityThreshold,
+        durationMs: Number((performance.now() - retrievalStartedAt).toFixed(1)),
+        cache: 'miss'
+    }));
     return result;
 }
 

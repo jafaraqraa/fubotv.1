@@ -65,6 +65,12 @@ function splitIntoStructuralUnits(text, maxUnitSize) {
     return units;
 }
 
+function isHeading(text) {
+    const value = String(text || '').trim();
+    if (!value || value.length > 160 || value.includes('\n')) return false;
+    return /^(?:#{1,6}\s+|(?:الفصل|القسم|الباب|Chapter|Section)\b|[^\n.!?؟]{2,80}:$)/i.test(value);
+}
+
 /**
  * Generates chunks from structural units with overlap and links previous/next.
  * Chunk size is measured in Unicode characters, not exact model tokens.
@@ -77,12 +83,15 @@ function chunkDocument(document, chunkSize = 800, chunkOverlap = 120) {
 
     const chunks = [];
     let currentChunkText = '';
+    let currentHeading = null;
+    let chunkHeading = null;
 
     for (let i = 0; i < units.length; i++) {
         const unit = units[i];
+        if (isHeading(unit)) currentHeading = unit.replace(/^#{1,6}\s+/, '').replace(/:$/, '').trim();
 
         if (currentChunkText && (currentChunkText + '\n\n' + unit).length > chunkSize) {
-            chunks.push(currentChunkText);
+            chunks.push({ text: currentChunkText, heading: chunkHeading });
 
             // Build the next chunk starting with overlap from the current chunk
             let overlapText = '';
@@ -99,17 +108,27 @@ function chunkDocument(document, chunkSize = 800, chunkOverlap = 120) {
             }
 
             currentChunkText = overlapText ? (overlapText + '\n\n' + unit) : unit;
+            chunkHeading = currentHeading;
         } else {
+            if (!currentChunkText) chunkHeading = currentHeading;
             currentChunkText = currentChunkText ? (currentChunkText + '\n\n' + unit) : unit;
         }
     }
 
     if (currentChunkText) {
-        chunks.push(currentChunkText);
+        chunks.push({ text: currentChunkText, heading: chunkHeading });
     }
 
+    const seenContent = new Set();
+    const uniqueChunks = chunks.filter(chunk => {
+        const fingerprint = normalizeArabic(chunk.text).toLowerCase().replace(/\s+/g, ' ').trim();
+        if (!fingerprint || seenContent.has(fingerprint)) return false;
+        seenContent.add(fingerprint);
+        return true;
+    });
+
     // Map to final Rich Chunk model with metadata and linkage
-    const richChunks = chunks.map((text, index) => {
+    const richChunks = uniqueChunks.map(({ text, heading }, index) => {
         const normalizedText = normalizeArabic(text);
         const contentHash = crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 
@@ -122,8 +141,11 @@ function chunkDocument(document, chunkSize = 800, chunkOverlap = 120) {
             source,
             sourceType,
             chunkIndex: index,
-            totalChunks: chunks.length,
+            totalChunks: uniqueChunks.length,
             text,
+            textLength: text.length,
+            heading: heading || null,
+            section: heading || null,
             normalizedText,
             contentHash,
             documentHash,
@@ -133,6 +155,7 @@ function chunkDocument(document, chunkSize = 800, chunkOverlap = 120) {
             language: 'ar',
             chunkSize,
             chunkOverlap,
+            ingestionVersion: document.ingestionVersion || document.versionId || 'v1',
             previousChunkId: null,
             nextChunkId: null
         };

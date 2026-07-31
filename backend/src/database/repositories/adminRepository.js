@@ -31,10 +31,16 @@ function anyAdminExists() {
 }
 
 function createAdmin(username, passwordHash, displayName = 'Administrator') {
-    db.prepare(`
-        INSERT INTO administrators (username, password_hash, display_name, is_active, created_at, updated_at)
-        VALUES (?, ?, ?, 1, datetime('now'), datetime('now'))
-    `).run(username, passwordHash, displayName);
+    db.transaction(() => {
+        const result = db.prepare(`
+            INSERT INTO administrators (username, password_hash, display_name, is_active, created_at, updated_at)
+            VALUES (?, ?, ?, 1, datetime('now'), datetime('now'))
+        `).run(username, passwordHash, displayName);
+        db.prepare(`
+            INSERT INTO administrator_tenants (administrator_id, tenant_id, role)
+            SELECT ?, id, 'super_admin' FROM tenants
+        `).run(Number(result.lastInsertRowid));
+    })();
 }
 
 // --- Persistent Login Rate Limiting (Task 5) ---
@@ -92,6 +98,24 @@ function updatePassword(id, newPasswordHash) {
     db.prepare("UPDATE administrators SET password_hash = ?, updated_at = datetime('now') WHERE id = ?").run(newPasswordHash, id);
 }
 
+function revokeSessionsForAdministrator(id) {
+    const rows = db.prepare('SELECT sid, sess FROM sessions').all();
+    const deleteSession = db.prepare('DELETE FROM sessions WHERE sid = ?');
+    let revoked = 0;
+    db.transaction(() => {
+        for (const row of rows) {
+            try {
+                if (JSON.parse(row.sess)?.userId === id) {
+                    revoked += deleteSession.run(row.sid).changes;
+                }
+            } catch (_) {
+                revoked += deleteSession.run(row.sid).changes;
+            }
+        }
+    })();
+    return revoked;
+}
+
 module.exports = {
     findAdminByUsername,
     findAdminById,
@@ -99,6 +123,7 @@ module.exports = {
     createAdmin,
     updateLastLogin,
     updatePassword,
+    revokeSessionsForAdministrator,
     hashIp,
     getRateLimit,
     incrementFailedAttempts,

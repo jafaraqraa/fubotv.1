@@ -39,6 +39,7 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
     const isAi = (sender === 'ai') ? 1 : 0;
     const deliveryStatus = routing.deliveryStatus || (sender === 'user' || isNote ? 'delivered' : 'sent');
     const metadata = routing.metadata ? JSON.stringify(routing.metadata) : null;
+    const media = routing.media || null;
 
     // Determine channel from conversation
     const convRow = db.prepare('SELECT channel FROM conversations WHERE id = ?').get(conversationId);
@@ -49,16 +50,19 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
             INSERT INTO messages (
                 id, conversation_id, tenant_id, channel, external_message_id, direction,
                 sender_type, role, message_type, content, is_internal_note,
-                is_ai_generated, delivery_status, metadata, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                is_ai_generated, delivery_status, metadata, media_url, media_path,
+                media_name, mime_type, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
         `).run(
             id, conversationId, tenantId || 'default', channel, externalMsgId ? String(externalMsgId) : null,
-            direction, sender, role, type, text, isInternalNote, isAi, deliveryStatus, metadata
+            direction, sender, role, type, text, isInternalNote, isAi, deliveryStatus, metadata,
+            media?.publicUrl || null, media?.localPath || null,
+            media?.originalName || media?.fileName || null, media?.mimeType || null
         );
 
         // Update conversation last seen activity
-        db.prepare('UPDATE conversations SET last_message_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-          .run(time, conversationId);
+        db.prepare('UPDATE conversations SET last_message_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+          .run(conversationId);
     })();
 
     console.log(`✉️ Saved message in SQLite for user: ${userId} (${type})`);
@@ -70,23 +74,66 @@ function saveMessage(userId, sender, text, type = 'text', isNote = false, extern
         text,
         type,
         isNote: !!isNote,
-        time
-    });
+        time,
+        tenantId
+    }, { tenantId });
 
     // Also trigger global stats update broadcast
-    publishStats();
+    publishStats(tenantId);
     return id;
 }
 
 function updateMessageDelivery(messageId, deliveryStatus, details = {}) {
+    const allowedTransitions = {
+        pending: new Set(['pending', 'sending', 'failed']),
+        sending: new Set(['sending', 'sent', 'failed']),
+        sent: new Set(['sent', 'delivered', 'read', 'failed']),
+        delivered: new Set(['delivered', 'read']),
+        read: new Set(['read']),
+        failed: new Set(['failed', 'sending'])
+    };
+    if (!allowedTransitions[deliveryStatus]) {
+        const error = new Error(`Unsupported message delivery status: ${deliveryStatus}`);
+        error.code = 'INVALID_MESSAGE_STATUS';
+        throw error;
+    }
     const metadata = Object.keys(details).length > 0 ? JSON.stringify(details) : null;
-    db.prepare(`
-        UPDATE messages
-        SET delivery_status = ?,
-            external_message_id = COALESCE(?, external_message_id),
-            metadata = ?
-        WHERE id = ?
-    `).run(deliveryStatus, details.externalMessageId || null, metadata, messageId);
+    return db.transaction(() => {
+        const current = db.prepare(
+            'SELECT delivery_status FROM messages WHERE id = ?'
+        ).get(messageId);
+        if (!current) {
+            const error = new Error('Message not found.');
+            error.code = 'MESSAGE_NOT_FOUND';
+            throw error;
+        }
+        if (!allowedTransitions[current.delivery_status]?.has(deliveryStatus)) {
+            const error = new Error(
+                `Invalid message delivery transition: ${current.delivery_status} -> ${deliveryStatus}`
+            );
+            error.code = 'INVALID_MESSAGE_STATUS_TRANSITION';
+            throw error;
+        }
+        const result = db.prepare(`
+            UPDATE messages
+            SET delivery_status = ?,
+                external_message_id = COALESCE(?, external_message_id),
+                metadata = ?
+            WHERE id = ? AND delivery_status = ?
+        `).run(
+            deliveryStatus,
+            details.externalMessageId || null,
+            metadata,
+            messageId,
+            current.delivery_status
+        );
+        if (result.changes !== 1) {
+            const error = new Error('Concurrent message status update rejected.');
+            error.code = 'MESSAGE_STATUS_CONFLICT';
+            throw error;
+        }
+        return true;
+    })();
 }
 
 function listMessages(userId, tenantId = 'default', channel = null) {
@@ -96,7 +143,8 @@ function listMessages(userId, tenantId = 'default', channel = null) {
     const rows = db.prepare(`
         SELECT sender_type as sender, content as text, message_type as type,
                is_internal_note as isNote, delivery_status as deliveryStatus,
-               metadata, created_at as createdAt,
+               metadata, media_url as mediaUrl, media_name as mediaName,
+               mime_type as mimeType, created_at as createdAt,
                strftime('%H:%M', created_at) as rawTime
         FROM messages
         WHERE conversation_id = ?
@@ -117,6 +165,9 @@ function listMessages(userId, tenantId = 'default', channel = null) {
             type: row.type,
             isNote: row.isNote === 1,
             deliveryStatus: row.deliveryStatus,
+            mediaUrl: row.mediaUrl,
+            mediaName: row.mediaName,
+            mimeType: row.mimeType,
             metadata: (() => {
                 try {
                     return row.metadata ? JSON.parse(row.metadata) : {};
@@ -167,9 +218,51 @@ function getChatHistoryForAI(userId, tenantId = 'default', channel = null) {
     }));
 }
 
-function getMessagesCount() {
-    const row = db.prepare('SELECT COUNT(*) as count FROM messages').get();
+function getMessagesCount(tenantId) {
+    if (!tenantId) throw new Error('tenantId is required');
+    const row = db.prepare('SELECT COUNT(*) as count FROM messages WHERE tenant_id = ?').get(tenantId);
     return row ? row.count : 0;
+}
+
+function getMessageForRetry(messageId, tenantId) {
+    return db.prepare(`
+        SELECT m.*, ca.external_user_id
+        FROM messages m
+        JOIN conversations c ON c.id = m.conversation_id
+        JOIN channel_accounts ca ON ca.id = c.channel_account_id
+        WHERE m.id = ? AND m.tenant_id = ?
+    `).get(messageId, tenantId);
+}
+
+function updateDeliveryByExternalId(externalMessageId, channel, tenantId, status, details = {}) {
+    const row = db.prepare(`
+        SELECT id FROM messages
+        WHERE external_message_id = ? AND channel = ? AND tenant_id = ?
+    `).get(String(externalMessageId), channel, tenantId);
+    if (!row) return false;
+    updateMessageDelivery(row.id, status, details);
+    return true;
+}
+
+function markOutboundReadThrough(externalUserId, channel, tenantId, watermark) {
+    const cutoff = Number(watermark);
+    if (!Number.isFinite(cutoff)) return [];
+    const rows = db.prepare(`
+        SELECT m.id, m.external_message_id
+        FROM messages m
+        JOIN conversations c ON c.id = m.conversation_id
+        JOIN channel_accounts ca ON ca.id = c.channel_account_id
+        WHERE ca.external_user_id = ? AND m.channel = ? AND m.tenant_id = ?
+          AND m.direction = 'outbound'
+          AND m.delivery_status IN ('sent', 'delivered')
+          AND CAST(strftime('%s', m.created_at) AS INTEGER) * 1000 <= ?
+    `).all(String(externalUserId), channel, tenantId, cutoff);
+    const update = db.prepare(`
+        UPDATE messages SET delivery_status = 'read'
+        WHERE id = ? AND delivery_status IN ('sent', 'delivered')
+    `);
+    db.transaction(() => rows.forEach(row => update.run(row.id)))();
+    return rows.map(row => row.external_message_id).filter(Boolean);
 }
 
 module.exports = {
@@ -178,5 +271,8 @@ module.exports = {
     listMessages,
     existsByExternalId,
     getChatHistoryForAI,
-    getMessagesCount
+    getMessagesCount,
+    getMessageForRetry,
+    updateDeliveryByExternalId,
+    markOutboundReadThrough
 };

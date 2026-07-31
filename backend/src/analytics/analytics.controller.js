@@ -2,7 +2,7 @@ const service = require('./analytics.service');
 
 function getOverview(req, res) {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const data = service.getOverview(tenantId);
         res.json({ success: true, overview: data });
     } catch (err) {
@@ -13,7 +13,7 @@ function getOverview(req, res) {
 
 function getProviders(req, res) {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const data = service.getProviders(tenantId);
         res.json({ success: true, providers: data });
     } catch (err) {
@@ -24,7 +24,7 @@ function getProviders(req, res) {
 
 function getModels(req, res) {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const data = service.getModels(tenantId);
         res.json({ success: true, models: data });
     } catch (err) {
@@ -35,7 +35,7 @@ function getModels(req, res) {
 
 function getHistory(req, res) {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const data = service.getHistory(tenantId);
         res.json({ success: true, history: data });
     } catch (err) {
@@ -46,7 +46,7 @@ function getHistory(req, res) {
 
 function getLive(req, res) {
     try {
-        const tenantId = req.query.tenantId || 'default';
+        const tenantId = req.tenantId;
         const data = service.getLive(tenantId);
         res.json({ success: true, live: data });
     } catch (err) {

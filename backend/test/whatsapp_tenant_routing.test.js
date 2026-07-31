@@ -12,6 +12,10 @@ for (const suffix of ['', '-wal', '-shm']) {
 const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
 initializeDatabase();
+db.prepare(`
+    INSERT OR IGNORE INTO tenants (id, name)
+    VALUES ('tenant-a', 'Tenant A'), ('tenant-b', 'Tenant B')
+`).run();
 
 const manager = require('../src/channels/whatsapp-providers/WhatsAppProviderManager');
 const ai = require('../src/services/ai');

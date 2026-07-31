@@ -11,6 +11,9 @@ const { validateProductionSecurityConfig } = require('./src/config/securityConfi
 const { initializeDatabase } = require('./src/database/initialize');
 const { loadSettingsOnStartup } = require('./src/services/settingsService');
 const { bootstrapAdminAccount } = require('./src/services/adminBootstrap');
+const runtimeState = require('./src/runtime/runtimeState');
+
+runtimeState.markStarting();
 
 // 1. Initialize SQLite connection and run schema migrations synchronously before starting services
 initializeDatabase();
@@ -27,9 +30,12 @@ bootstrapAdminAccount();
 const app = require('./src/app');
 const http = require('http');
 const httpServer = http.createServer(app);
+httpServer.requestTimeout = Number(process.env.HTTP_REQUEST_TIMEOUT_MS) || 120000;
+httpServer.headersTimeout = Number(process.env.HTTP_HEADERS_TIMEOUT_MS) || 60000;
+httpServer.keepAliveTimeout = Number(process.env.HTTP_KEEP_ALIVE_TIMEOUT_MS) || 5000;
 
 // Initialize real-time Socket.IO server layer
-const { initializeSocketServer } = require('./src/realtime/socketServer');
+const { initializeSocketServer, closeSocketServer } = require('./src/realtime/socketServer');
 initializeSocketServer(httpServer);
 
 const { reportError } = require('./src/services/logger');
@@ -43,7 +49,27 @@ const PORT = process.env.PORT || 3000;
 
 async function startBackgroundServices() {
     // Never initialize external providers until the HTTP port is successfully bound.
-    initializeTelegramOnStartup();
+    try {
+        const telegramStarted = await withTimeout(
+            initializeTelegramOnStartup(),
+            Number(process.env.TELEGRAM_STARTUP_TIMEOUT_MS) || 15000,
+            'Telegram startup'
+        );
+        if (!telegramStarted) {
+            console.warn(JSON.stringify({
+                level: 'warn',
+                event: 'telegram_startup_degraded',
+                message: 'Telegram provider is unavailable'
+            }));
+        }
+    } catch (err) {
+        await reportError('تهيئة تيليجرام عند بدء الخادم', err.message);
+        console.warn(JSON.stringify({
+            level: 'warn',
+            event: 'telegram_startup_degraded',
+            message: err.message
+        }));
+    }
     try {
         await startWhatsApp();
     } catch (err) {
@@ -61,88 +87,198 @@ async function startBackgroundServices() {
     require('./src/rag/services/ragReconciliationScheduler').startReconciliationScheduler();
 }
 
-// حماية السيرفر من الانهيار عند حدوث أخطاء غير متوقعة بالخلفية
-process.on('uncaughtException', (err) => {
-    if (isDetachedOutputError(err)) return;
-    void reportError("خطأ داخلي غير متوقع بالخلفية", err.message);
-});
-process.on('unhandledRejection', (reason, promise) => {
-    if (isDetachedOutputError(reason)) return;
-    void reportError("وعد برمجي غير معالج (Rejection)", reason.message || String(reason));
-});
-
-// Graceful Shutdown handling (Task 18)
 let isShuttingDown = false;
-async function gracefulShutdown(signal, exitCode = 0) {
-    if (isShuttingDown) return;
-    isShuttingDown = true;
-    console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
-    try {
-        const { getConfig } = require('./src/rag/config/ragConfig');
-        const graceMs = Number(getConfig('RAG_SHUTDOWN_GRACE_MS')) || 15000;
-        console.log(`🔌 Draining active RAG operations (graceMs=${graceMs})...`);
-        await require('./src/rag/runtime/operationRegistry').beginShutdown(graceMs);
-    } catch (e) {
-        console.error('Failed to drain active RAG operations:', e.message);
-    }
+let shutdownPromise = null;
 
-    // 1. Stop Telegram Bot if active
-    const bot = getBot();
-    if (bot) {
-        try {
-            console.log('🔌 Stopping Telegram Bot...');
-            await bot.stop('SIGTERM');
-        } catch (e) {
-            console.error('Failed to stop Telegram bot:', e.message);
-        }
-    }
-
-    // 2. Stop all WhatsApp Provider Manager instances safely (Task 18)
-    try {
-        console.log('🔌 Stopping all WhatsApp Provider Manager instances...');
-        await whatsappManager.destroyAll();
-    } catch (e) {
-        console.error('Failed to destroy WhatsApp Provider Manager:', e.message);
-    }
-
-    // 3. Close SQLite Connection safely
-    try {
-        console.log('🔌 Closing SQLite database connection...');
-        require('./src/rag/services/ragReconciliationScheduler').stopReconciliationScheduler();
-        require('./src/rag/runtime/distributedLockService').stopStaleLeaseRecovery();
-        db.close();
-    } catch (e) {
-        console.error('Failed to close database:', e.message);
-    }
-
-    console.log('👋 Clean exit. Goodbye!');
-    process.exit(exitCode);
+function withTimeout(promise, timeoutMs, label) {
+    let timer;
+    return Promise.race([
+        Promise.resolve(promise),
+        new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+            timer.unref?.();
+        })
+    ]).finally(() => clearTimeout(timer));
 }
 
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+function stopSchedulers() {
+    require('./src/rag/services/ragReconciliationScheduler').stopReconciliationScheduler();
+    require('./src/rag/runtime/distributedLockService').stopStaleLeaseRecovery();
+}
 
-httpServer.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`❌ Port ${PORT} is already in use. Background services were not started.`);
-    } else {
-        console.error('❌ HTTP server failed to start:', err.message);
+function closeHttpServer(graceMs) {
+    if (!httpServer.listening) return Promise.resolve();
+    return new Promise(resolve => {
+        let settled = false;
+        let forceTimer;
+        const finish = () => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(forceTimer);
+            resolve();
+        };
+        httpServer.close(finish);
+        httpServer.closeIdleConnections?.();
+        forceTimer = setTimeout(() => {
+            httpServer.closeAllConnections?.();
+            finish();
+        }, graceMs);
+        forceTimer.unref?.();
+    });
+}
+
+async function safeReportFatal(type, error) {
+    try {
+        await withTimeout(
+            reportError(type, error?.message || String(error)),
+            Number(process.env.FATAL_LOG_TIMEOUT_MS) || 2000,
+            'fatal error reporting'
+        );
+    } catch (_) {
+        // stdout/stderr or SQLite may already be unavailable. Never recurse.
     }
-    gracefulShutdown('HTTP_SERVER_ERROR', 1);
+}
+
+async function gracefulShutdown(signal, exitCode = 0, cause = null) {
+    if (shutdownPromise) return shutdownPromise;
+    isShuttingDown = true;
+    runtimeState.markShuttingDown(signal);
+
+    shutdownPromise = (async () => {
+        const graceMs = Number(process.env.SHUTDOWN_GRACE_MS)
+            || Number(require('./src/rag/config/ragConfig').getConfig('RAG_SHUTDOWN_GRACE_MS'))
+            || 15000;
+        const hardTimeoutMs = Number(process.env.SHUTDOWN_HARD_TIMEOUT_MS) || Math.max(30000, graceMs + 10000);
+        const hardTimer = setTimeout(() => {
+            console.error(JSON.stringify({
+                level: 'fatal',
+                event: 'shutdown_timeout',
+                signal,
+                timeoutMs: hardTimeoutMs
+            }));
+            process.exit(exitCode || 1);
+        }, hardTimeoutMs);
+
+        console.log(JSON.stringify({
+            level: cause ? 'fatal' : 'info',
+            event: 'shutdown_started',
+            signal,
+            exitCode,
+            message: cause?.message || null
+        }));
+
+        stopSchedulers();
+        const httpClosePromise = closeHttpServer(graceMs);
+
+        try {
+            await withTimeout(
+                require('./src/rag/runtime/operationRegistry').beginShutdown(graceMs),
+                graceMs,
+                'RAG operation drain'
+            );
+        } catch (e) {
+            console.error(JSON.stringify({ level: 'error', event: 'rag_drain_failed', error: e.message }));
+        }
+
+        try {
+            await withTimeout(closeSocketServer(), 5000, 'Socket.IO shutdown');
+        } catch (e) {
+            console.error(JSON.stringify({ level: 'error', event: 'socket_shutdown_failed', error: e.message }));
+        }
+
+        const bot = getBot();
+        if (bot) {
+            try {
+                await withTimeout(bot.stop(signal), 5000, 'Telegram shutdown');
+            } catch (e) {
+                console.error(JSON.stringify({ level: 'error', event: 'telegram_shutdown_failed', error: e.message }));
+            }
+        }
+
+        try {
+            await withTimeout(whatsappManager.destroyAll(), 10000, 'WhatsApp shutdown');
+        } catch (e) {
+            console.error(JSON.stringify({ level: 'error', event: 'whatsapp_shutdown_failed', error: e.message }));
+        }
+
+        try {
+            await withTimeout(httpClosePromise, graceMs + 1000, 'HTTP shutdown');
+        } catch (e) {
+            httpServer.closeAllConnections?.();
+            console.error(JSON.stringify({ level: 'error', event: 'http_shutdown_failed', error: e.message }));
+        }
+
+        try {
+            if (db.open) db.close();
+        } catch (e) {
+            console.error(JSON.stringify({ level: 'error', event: 'database_shutdown_failed', error: e.message }));
+        }
+
+        console.log(JSON.stringify({ level: 'info', event: 'shutdown_completed', signal, exitCode }));
+        clearTimeout(hardTimer);
+        process.exitCode = exitCode;
+        await new Promise(resolve => setImmediate(resolve));
+        process.exit(exitCode);
+    })();
+
+    return shutdownPromise;
+}
+
+async function handleFatal(type, reason) {
+    const error = reason instanceof Error ? reason : new Error(String(reason));
+    if (isDetachedOutputError(error)) return;
+    await safeReportFatal(type, error);
+    await gracefulShutdown(type, 1, error);
+}
+
+process.on('uncaughtException', (error) => {
+    void handleFatal('UNCAUGHT_EXCEPTION', error);
 });
+process.on('unhandledRejection', (reason) => {
+    void handleFatal('UNHANDLED_REJECTION', reason);
+});
+process.on('SIGINT', () => void gracefulShutdown('SIGINT', 0));
+process.on('SIGTERM', () => void gracefulShutdown('SIGTERM', 0));
+
+function listenHttpServer() {
+    return new Promise((resolve, reject) => {
+        const onError = error => {
+            httpServer.off('listening', onListening);
+            reject(error);
+        };
+        const onListening = () => {
+            httpServer.off('error', onError);
+            resolve();
+        };
+        httpServer.once('error', onError);
+        httpServer.once('listening', onListening);
+        httpServer.listen(PORT);
+    });
+}
 
 async function startServer() {
     const { assertQdrantTenantOwnershipSafe } = require('./src/rag/security/legacyTenantMigration');
     await assertQdrantTenantOwnershipSafe();
-    httpServer.listen(PORT, () => {
-        console.log(`🌐 السيرفر يعمل على: http://localhost:${PORT}`);
-        startBackgroundServices().catch(err => {
-            reportError('تشغيل خدمات الخلفية بعد بدء HTTP', err.message);
-        });
-    });
+    await listenHttpServer();
+    httpServer.on('error', error => void handleFatal('HTTP_SERVER_ERROR', error));
+    await startBackgroundServices();
+    runtimeState.markReady();
+    console.log(JSON.stringify({
+        level: 'info',
+        event: 'server_ready',
+        url: `http://localhost:${PORT}`
+    }));
 }
 
 startServer().catch(error => {
-    console.error(`❌ Startup blocked: ${error.message}`);
-    gracefulShutdown('RAG_TENANT_AUDIT_FAILED', 1);
+    console.error(JSON.stringify({ level: 'fatal', event: 'startup_failed', error: error.message }));
+    void safeReportFatal('STARTUP_FAILED', error)
+        .finally(() => gracefulShutdown('STARTUP_FAILED', 1, error));
 });
+
+module.exports = {
+    startServer,
+    gracefulShutdown,
+    handleFatal,
+    httpServer
+};

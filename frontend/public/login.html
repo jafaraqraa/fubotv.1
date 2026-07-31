@@ -113,6 +113,8 @@
                 if (response.ok && result.success) {
                     if (result.sessionId) {
                         localStorage.setItem('futh_session_id', result.sessionId);
+                    } else {
+                        localStorage.removeItem('futh_session_id');
                     }
                     // Redirect to dashboard on successful authentication
                     window.location.href = '/dashboard';

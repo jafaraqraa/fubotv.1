@@ -3,6 +3,7 @@ const db = require('../database/connection');
 const { getSetting, saveSetting } = require('../database/repositories/settingsRepository');
 const ProviderAdapterFactory = require('./adapters/ProviderAdapterFactory');
 const providerBalanceCacheRepository = require('../database/repositories/providerBalanceCacheRepository');
+const { encryptSecret, decryptSecret } = require('../security/credentialCrypto');
 
 const SUPPORTED_PROVIDERS = new Set(['openrouter', 'openai', 'gemini', 'anthropic']);
 
@@ -32,7 +33,7 @@ function getApiKeyForProvider(provider) {
         WHERE LOWER(provider) = ? AND enabled = 1
         ORDER BY created_at DESC LIMIT 1
     `).get(normalizedProvider);
-    if (row && row.api_key) return row.api_key;
+    if (row && row.api_key) return decryptSecret(row.api_key);
 
     const providerEnvKey = `${normalizedProvider.toUpperCase()}_API_KEY`;
     if (process.env[providerEnvKey]) return process.env[providerEnvKey];
@@ -117,6 +118,18 @@ function isMaskedPlaceholder(value) {
  */
 function seedExistingKeysOnStartup() {
     try {
+        const plaintextRows = db.prepare(
+            "SELECT id, api_key FROM api_keys WHERE api_key NOT LIKE 'enc:v1:%'"
+        ).all();
+        const updateEncrypted = db.prepare('UPDATE api_keys SET api_key = ? WHERE id = ?');
+        db.transaction(() => {
+            for (const row of plaintextRows) {
+                updateEncrypted.run(encryptSecret(row.api_key), row.id);
+            }
+        })();
+        if (plaintextRows.length) {
+            console.log(`[BudgetService] Encrypted ${plaintextRows.length} stored API key(s) at rest.`);
+        }
         const count = db.prepare('SELECT COUNT(*) as cnt FROM api_keys').get().cnt;
         if (count > 0) {
             console.log('🌱 [BudgetService] API Keys table already contains records. Seeding bypassed.');
@@ -149,7 +162,7 @@ function seedExistingKeysOnStartup() {
                     db.prepare(`
                         INSERT INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
                         VALUES (?, ?, ?, ?, 1)
-                    `).run(item.name, provider, val, hash);
+                    `).run(item.name, provider, encryptSecret(val), hash);
                     console.log(`✅ [BudgetService] Seeded existing key [${item.key}] as [${item.name}]`);
                 } catch (err) {
                     console.error(`❌ [BudgetService] Failed to seed key ${item.key}:`, err.message);
@@ -183,7 +196,7 @@ function getApiKeysGrouped() {
                 id: r.id,
                 friendlyName: r.friendly_name,
                 provider: r.provider,
-                maskedKey: r.masked_key || maskApiKey(r.api_key),
+                maskedKey: r.masked_key || maskApiKey(decryptSecret(r.api_key)),
                 enabled: r.enabled === 1,
                 limitsAvailable: r.limits_available === 1,
                 capabilities,
@@ -205,7 +218,7 @@ function getApiKeysGrouped() {
         return grouped;
     } catch (err) {
         console.error('❌ [BudgetService] getApiKeysGrouped failed:', err.message);
-        return {};
+        throw err;
     }
 }
 
@@ -241,25 +254,38 @@ function getLocalMonthlyUsage(providerName, keyHash) {
  * Strictly enforces ONE API Key per provider.
  */
 async function addApiKey(friendlyName, provider, apiKey, enabled = 1) {
-    if (!friendlyName || !provider || !apiKey) {
-        throw new Error('بيانات ناقصة لإضافة المفتاح البرمجي.');
+    const normalizedName = String(friendlyName || '').trim();
+    const provLower = String(provider || '').toLowerCase().trim();
+    const normalizedKey = String(apiKey || '').trim();
+    if (!normalizedName || !provLower || !normalizedKey) {
+        const error = new Error('بيانات ناقصة لإضافة المفتاح البرمجي.');
+        error.code = 'INVALID_API_KEY_INPUT';
+        throw error;
     }
-    const hash = hashApiKey(apiKey);
-    const masked = maskApiKey(apiKey);
-    const provLower = provider.toLowerCase();
+    if (!['openrouter', 'openai', 'gemini', 'ollama'].includes(provLower)) {
+        const error = new Error('مزود المفتاح البرمجي غير مدعوم.');
+        error.code = 'INVALID_API_KEY_PROVIDER';
+        throw error;
+    }
+    if (normalizedName.length > 120 || normalizedKey.length > 4096 || /[\r\n\0]/.test(normalizedKey)) {
+        const error = new Error('بيانات المفتاح البرمجي غير صالحة.');
+        error.code = 'INVALID_API_KEY_INPUT';
+        throw error;
+    }
+    const hash = hashApiKey(normalizedKey);
 
-    // Delete any existing API Key for this provider to guarantee exactly ONE API Key
-    db.prepare('DELETE FROM api_keys WHERE LOWER(provider) = ?').run(provLower);
+    // Replacement is atomic: an insert/constraint failure must preserve the
+    // previously configured key for this provider.
+    const id = db.transaction(() => {
+        db.prepare('DELETE FROM api_keys WHERE LOWER(provider) = ?').run(provLower);
+        const result = db.prepare(`
+            INSERT INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
+            VALUES (?, ?, ?, ?, ?)
+        `).run(normalizedName, provLower, encryptSecret(normalizedKey), hash, enabled ? 1 : 0);
+        return Number(result.lastInsertRowid);
+    })();
 
-    db.prepare(`
-        INSERT INTO api_keys (friendly_name, provider, api_key, api_key_hash, enabled)
-        VALUES (?, ?, ?, ?, ?)
-    `).run(friendlyName, provLower, apiKey, hash, enabled ? 1 : 0);
-
-    const row = db.prepare('SELECT id FROM api_keys WHERE api_key_hash = ?').get(hash);
-    const id = row.id;
-
-    console.log(`✅ [BudgetService] Registered unique key [${friendlyName}] for [${provLower}]. Triggering initial sync...`);
+    console.log(`✅ [BudgetService] Registered unique key [${normalizedName}] for [${provLower}]. Triggering initial sync...`);
     await syncApiKey(id);
 
     return id;
@@ -270,22 +296,22 @@ async function addApiKey(friendlyName, provider, apiKey, enabled = 1) {
  */
 async function syncApiKey(id) {
     const r = db.prepare('SELECT * FROM api_keys WHERE id = ?').get(id);
-    if (!r) return null;
+    if (!r) return { id: Number(id), success: false, status: 'not_found', errorMessage: 'API key not found.' };
 
     const provider = r.provider.toLowerCase();
-    const keyValue = r.api_key;
+    const keyValue = decryptSecret(r.api_key);
     const keyHash = r.api_key_hash;
     const masked = maskApiKey(keyValue);
 
     if (r.enabled !== 1) {
         console.log(`[BudgetService] Key [${r.friendly_name}] is disabled. Skipping sync.`);
-        return null;
+        return { id: Number(id), success: false, status: 'disabled', errorMessage: 'API key is disabled.' };
     }
 
     const adapter = ProviderAdapterFactory.getAdapter(provider, keyValue);
     if (!adapter) {
         console.warn(`⚠️ [BudgetService] No adapter found for provider: ${provider}`);
-        return null;
+        return { id: Number(id), success: false, status: 'unsupported_provider', errorMessage: `Unsupported provider: ${provider}` };
     }
 
     console.log(`🔄 [BudgetService] Syncing limits for key [${r.friendly_name}] (${provider}) from official API...`);
@@ -345,7 +371,13 @@ async function syncApiKey(id) {
     // Broadcast updated provider budget metrics to WebSocket clients
     broadcastProviderBudget(provider);
 
-    return id;
+    return {
+        id: Number(id),
+        success: info.success === true,
+        status: info.success === true ? 'synced' : 'failed',
+        limitsAvailable: info.limitsAvailable === true,
+        errorMessage: info.errorMessage || null
+    };
 }
 
 /**
@@ -355,11 +387,19 @@ async function syncAllConfiguredApiKeys() {
     try {
         const rows = db.prepare('SELECT id FROM api_keys WHERE enabled = 1').all();
         console.log(`🔄 [BudgetService] Running background sync for ${rows.length} active keys...`);
+        const results = [];
         for (const r of rows) {
-            await syncApiKey(r.id);
+            results.push(await syncApiKey(r.id));
         }
+        return {
+            total: results.length,
+            succeeded: results.filter(result => result.success).length,
+            failed: results.filter(result => !result.success).length,
+            results
+        };
     } catch (e) {
         console.error('[BudgetService] syncAllConfiguredApiKeys failed:', e.message);
+        throw e;
     }
 }
 
@@ -432,7 +472,7 @@ function getProviderBudget(providerName) {
             percentage: percentage > 100 ? 100.0 : percentage,
             billingPeriod: primaryKey.billing_period,
             resetDate: primaryKey.reset_date,
-            maskedKey: primaryKey.masked_key || maskApiKey(primaryKey.api_key),
+            maskedKey: primaryKey.masked_key || maskApiKey(decryptSecret(primaryKey.api_key)),
             syncStatus: primaryKey.error_message ? 'Failed' : 'Synced',
             errorMessage: primaryKey.error_message,
             lastSyncSuccess: primaryKey.last_sync_success,
@@ -454,7 +494,7 @@ function getProviderBudget(providerName) {
             percentage: null,
             billingPeriod: null,
             resetDate: null,
-            maskedKey: primaryKey.masked_key || maskApiKey(primaryKey.api_key),
+            maskedKey: primaryKey.masked_key || maskApiKey(decryptSecret(primaryKey.api_key)),
             syncStatus: primaryKey.error_message ? 'Failed' : 'Synced',
             errorMessage: primaryKey.error_message,
             lastSyncSuccess: primaryKey.last_sync_success,

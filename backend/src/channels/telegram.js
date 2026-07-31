@@ -42,7 +42,7 @@ setTelegramNotifier(async (type, date, time, message) => {
     }
 });
 
-function startBot(token) {
+async function startBot(token) {
     try {
         if (bot) {
             try { bot.stop('RESTART'); } catch (e) {}
@@ -120,38 +120,33 @@ function startBot(token) {
             await processIncomingMessage(normalized);
         });
 
-        bot.launch()
-            .then(() => {
-                console.log("🤖 تم تشغيل البوت بنجاح.");
-                addLog("تم تشغيل البوت بنجاح");
-                isValidToken = true;
+        await bot.launch();
+        console.log("🤖 تم تشغيل البوت بنجاح.");
+        addLog("تم تشغيل البوت بنجاح");
+        isValidToken = true;
 
-                const { listErrors, solveError } = require('../database/repositories/logRepository');
-                const tokenError = listErrors().find(e => e.type === "توكن تيليجرام مفقود" && !e.solved);
-                if (tokenError) {
-                    solveError(tokenError.id);
-                    addLog("✅ تم حل عطل توكن تيليجرام تلقائياً!");
-                }
-            })
-            .catch(err => {
-                reportError("اتصال خادم تيليجرام", err.message);
-                isValidToken = false;
-            });
+        const { listErrors, solveError } = require('../database/repositories/logRepository');
+        const tokenError = listErrors().find(e => e.type === "توكن تيليجرام مفقود" && !e.solved);
+        if (tokenError) {
+            solveError(tokenError.id);
+            addLog("✅ تم حل عطل توكن تيليجرام تلقائياً!");
+        }
         return true;
     } catch (e) {
-        reportError("إقلاع البوت الداخلي", e.message);
+        await reportError("إقلاع البوت الداخلي", e.message);
         isValidToken = false;
         return false;
     }
 }
 
 // initialize bot on start if token is valid
-function initializeTelegramOnStartup() {
+async function initializeTelegramOnStartup() {
     if (isValidToken) {
-        startBot(botToken);
+        return startBot(botToken);
     } else {
-        reportError("توكن تيليجرام مفقود", "لا يوجد توكن تيليجرام صالح حالياً في لوحة التحكم أو ملف .env للسيرفر.");
+        await reportError("توكن تيليجرام مفقود", "لا يوجد توكن تيليجرام صالح حالياً في لوحة التحكم أو ملف .env للسيرفر.");
         console.warn("⚠️ تنبيه: لا يوجد توكن صالح حالياً، يمكنك إضافته من الإعدادات في لوحة التحكم.");
+        return false;
     }
 }
 

@@ -24,9 +24,12 @@ function resolveAuthorizedTenant(req) {
     const sessionTenants = Array.isArray(req.session?.allowedTenantIds)
         ? req.session.allowedTenantIds.map(normalizeTenantId).filter(Boolean)
         : [];
-    const allowed = sessionTenant ? [sessionTenant] : (sessionTenants.length ? sessionTenants : configuredTenants());
+    const allowed = sessionTenants.length
+        ? sessionTenants
+        : (sessionTenant ? [sessionTenant] : []);
     const requested = normalizeTenantId(
-        req.headers['x-tenant-id'] || req.params?.tenantId || req.body?.tenantId || req.query?.tenantId
+        req.tenantId || req.headers['x-tenant-id'] || req.params?.tenantId
+        || req.body?.tenantId || req.query?.tenantId
     );
 
     if (!allowed.length) {

@@ -5,7 +5,7 @@ const MODE = Object.freeze({
     GENERAL_CONVERSATION: 'GENERAL_CONVERSATION'
 });
 
-const COMPANY_MARKERS = /(?:\b(?:company|business|service|services|pricing|price|subscription|subscriptions|product|products|policy|policies|payment|shipping|delivery|support|warranty|refund|return|order|store)\b|شرك(?:ه|ة)|خدمات?|اشتراك|باقات?|منتجات?|سياس(?:ه|ة)|اسعار|سعر|تكلف(?:ه|ة)|دفع|شحن|توصيل|دعم|ضمان|استرجاع|استبدال|طلب|متجر|فروع?|دوام|موقعكم|رقمكم|بتقدموا|تقدمون)/i;
+const COMPANY_MARKERS = /(?:\b(?:company|business|service|services|pricing|price|subscription|subscriptions|product|products|policy|policies|payment|shipping|delivery|support|warranty|refund|return|order|store)\b|شرك(?:ه|ة)|خدمات?|اشتراك|باقات?|منتجات?|سياس(?:ه|ة)|اسعار|سعر|تكلف(?:ه|ة)|دفع|شحن|توصيل|دعم|ضمان|استرجاع|استبدال|طلب|متجر|فرع|فروع|دوام|موقعكم|رقمكم|بتقدموا|تقدمون)/i;
 const SOCIAL_ONLY = /^(?:(?:يا\s+)?(?:مرحبا|مرحبا بك|اهلا|اهلين|هلا|هلو|السلام عليكم|وعليكم السلام|صباح الخير|مساء الخير|يسعد صباحك|يسعد مساك|كيفك|كيف حالك|شو الاخبار|شو اخبارك|اخبارك|تمام|الحمد لله|شكرا|شكرا لك|يسلمو|يعطيك العافيه|الله يعطيك العافيه|مع السلامه|باي|الى اللقاء|hello|hi|hey|good morning|good evening|how are you|what'?s up|thanks|thank you|bye)[\s،,.!?؟]*)+$/i;
 
 function normalizeForRouting(text) {

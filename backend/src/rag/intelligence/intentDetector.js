@@ -181,8 +181,24 @@ class IntentDetector {
             }
         }
 
-        // Sort descending by confidence
-        results.sort((a, b) => b.confidence - a.confidence);
+        // Resolve equal-confidence overlaps deterministically. Specific action
+        // intents must outrank broad logistics terms (e.g. "إرجاع طرد").
+        const priority = {
+            Returns: 100,
+            Refund: 95,
+            Cancellation: 90,
+            'Order Modification': 85,
+            'Technical Issue': 80,
+            Payment: 75,
+            Pricing: 70,
+            Shipping: 60,
+            Delivery: 55
+        };
+        results.sort((a, b) =>
+            b.confidence - a.confidence
+            || (priority[b.name] || 0) - (priority[a.name] || 0)
+            || a.name.localeCompare(b.name)
+        );
 
         const executionTimeMs = Date.now() - startTime;
 

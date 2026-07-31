@@ -4,10 +4,17 @@ const fs = require('fs');
 const session = require('express-session');
 const SQLiteStore = require('./database/sessionStore');
 const { requireAuth } = require('./middleware/requireAuth');
+const { attachAccessContext } = require('./security/accessControl');
 const { getOriginPolicy } = require('./security/originPolicy');
+const runtimeState = require('./runtime/runtimeState');
+const { httpObservability, requireMetricsToken } = require('./observability/httpObservability');
+const runtimeMetrics = require('./observability/runtimeMetrics');
+const { adminApiLimit, aiLimit, uploadLimit, webhookLimit } = require('./middleware/rateLimits');
+const { getSessionCookieOptions } = require('./config/sessionCookieConfig');
 
 const app = express();
 const originPolicy = getOriginPolicy();
+app.use(httpObservability);
 
 // Trust reverse proxy (Cloud Run, Nginx, etc.) to allow secure cookies over HTTPS
 app.set('trust proxy', 1);
@@ -17,7 +24,15 @@ app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), payment=()');
+    res.setHeader('Content-Security-Policy',
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
+        + "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        + "font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; "
+        + "connect-src 'self' ws: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'");
+    if (process.env.NODE_ENV === 'production') {
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    }
     next();
 });
 
@@ -35,6 +50,7 @@ app.use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Credentials', String(originPolicy.credentials));
         res.setHeader('Access-Control-Allow-Methods', originPolicy.methods.join(', '));
         res.setHeader('Access-Control-Allow-Headers', originPolicy.allowedHeaders.join(', '));
+        res.setHeader('Access-Control-Expose-Headers', originPolicy.exposedHeaders.join(', '));
         res.setHeader('Access-Control-Max-Age', '600');
     }
 
@@ -45,6 +61,21 @@ app.use((req, res, next) => {
 });
 app.originPolicy = originPolicy;
 
+// Reject new application work while startup is incomplete or shutdown is in
+// progress. Health/readiness remain available to supervisors.
+app.use((req, res, next) => {
+    if (['/health', '/ready', '/live', '/internal/metrics'].includes(req.path)) return next();
+    const runtime = runtimeState.snapshot();
+    if (!runtime.ready) {
+        res.setHeader('Connection', 'close');
+        return res.status(503).json({
+            success: false,
+            error: runtime.shuttingDown ? 'Server is shutting down' : 'Server is starting'
+        });
+    }
+    next();
+});
+
 // 3. Configure server-side session authentication with custom SQLite Session Store (Task 8)
 const sessionMiddleware = session({
     store: new SQLiteStore(),
@@ -52,18 +83,15 @@ const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
     name: 'connect.sid',
-    cookie: {
-        httpOnly: true,
-        sameSite: 'none', // Required for cross-origin iframe preview in AI Studio
-        secure: true,     // Required when SameSite=None is used
-        maxAge: 28800000, // 8 hours session duration
-        domain: process.env.COOKIE_DOMAIN || undefined
-    }
+    cookie: getSessionCookieOptions()
 });
 
-// Interceptor to allow session identification via custom headers or query params when cookies are blocked by browsers in iframes
+// Optional iframe-development compatibility. Production authentication uses
+// only the HttpOnly session cookie.
 app.use((req, res, next) => {
-    const sessionId = req.headers['x-session-id'] || req.query.sessionId;
+    const sessionId = process.env.ALLOW_SESSION_TOKEN_FALLBACK === 'true'
+        ? req.headers['x-session-id']
+        : null;
     if (sessionId) {
         req.headers.cookie = `connect.sid=${sessionId}`;
     }
@@ -112,12 +140,37 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // 5. Safe backend health endpoints (Section 18)
+app.get('/live', (req, res) => {
+    const runtime = runtimeState.snapshot();
+    res.status(runtime.shuttingDown ? 503 : 200).json({
+        status: runtime.shuttingDown ? 'SHUTTING_DOWN' : 'ALIVE',
+        uptime: process.uptime()
+    });
+});
+
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', uptime: process.uptime() });
+    const runtime = runtimeState.snapshot();
+    res.status(runtime.shuttingDown ? 503 : 200).json({
+        status: runtime.shuttingDown ? 'SHUTTING_DOWN' : 'OK',
+        uptime: process.uptime(),
+        runtime: runtime.state
+    });
+});
+
+app.get('/internal/metrics', requireMetricsToken, (req, res) => {
+    res.type('text/plain; version=0.0.4; charset=utf-8').send(runtimeMetrics.prometheus());
 });
 
 app.get('/ready', (req, res) => {
     try {
+        const runtime = runtimeState.snapshot();
+        if (!runtime.ready) {
+            return res.status(503).json({
+                status: 'NOT_READY',
+                runtime: runtime.state,
+                reason: runtime.reason
+            });
+        }
         const db = require('./database/connection');
         const result = db.prepare("SELECT 1 as active").get();
         if (result && result.active === 1) {
@@ -125,7 +178,7 @@ app.get('/ready', (req, res) => {
         }
         return res.status(500).json({ status: 'NOT_READY', error: 'Database inactive' });
     } catch (err) {
-        return res.status(500).json({ status: 'NOT_READY', error: err.message });
+        return res.status(500).json({ status: 'NOT_READY', error: 'Database readiness check failed' });
     }
 });
 
@@ -136,17 +189,20 @@ const apiRouter = require('./routes/api');
 const { csrfProtection } = require('./middleware/csrf');
 
 // تركيب المسارات البرمجية بنظافة
+app.use(['/webhook', '/whatsapp'], webhookLimit);
 app.use('/', webhookRouter); // Webhooks are public (Task 14)
 app.use(authRouter);         // Auth endpoints are public (Task 10) - contains support for both legacy /api/auth and versioned /api/v1/auth
 
 // API routes: support both versioned /api/v1 and legacy /api paths (Section 6)
-app.use('/api/v1', requireAuth, csrfProtection, apiRouter);
-app.use('/api', requireAuth, csrfProtection, apiRouter);
+app.use(['/api/v1/rag/playground', '/api/rag/playground'], aiLimit);
+app.use(['/api/v1/rag/documents/upload', '/api/rag/documents/upload'], uploadLimit);
+app.use('/api/v1', adminApiLimit, requireAuth, csrfProtection, attachAccessContext, apiRouter);
+app.use('/api', adminApiLimit, requireAuth, csrfProtection, attachAccessContext, apiRouter);
 
 // Clean-Architecture Rebuilt Analytics Module Routes
 const analyticsRouter = require('./analytics/analytics.routes');
-app.use('/api/v1/analytics', requireAuth, csrfProtection, analyticsRouter);
-app.use('/api/analytics', requireAuth, csrfProtection, analyticsRouter);
+app.use('/api/v1/analytics', requireAuth, csrfProtection, attachAccessContext, analyticsRouter);
+app.use('/api/analytics', requireAuth, csrfProtection, attachAccessContext, analyticsRouter);
 
 // ==========================================
 // FRONTEND STATIC SERVING AND INTEGRATION (AI Studio Migration)
@@ -194,6 +250,29 @@ app.get('/dashboard.html', (req, res) => {
 // Fallback redirect for other unknown UI requests to /login
 app.get('/', (req, res) => {
     res.redirect('/login');
+});
+
+// Final Express failure boundary. It must be last so route failures cannot
+// escape as HTML stack traces or become unhandled promise/process failures.
+app.use((err, req, res, _next) => {
+    const uploadTooLarge = err?.code === 'LIMIT_FILE_SIZE';
+    const status = uploadTooLarge ? 413 : Number(err?.status || err?.statusCode);
+    const safeStatus = status >= 400 && status < 600 ? status : 500;
+    console.error(JSON.stringify({
+        level: 'error',
+        event: 'http_request_failed',
+        method: req.method,
+        path: req.originalUrl,
+        status: safeStatus,
+        code: err?.code || null,
+        message: err?.message || 'Unknown request failure'
+    }));
+    if (res.headersSent) return res.end();
+    return res.status(safeStatus).json({
+        success: false,
+        code: uploadTooLarge ? 'PAYLOAD_TOO_LARGE' : (err?.code || 'REQUEST_FAILED'),
+        error: safeStatus >= 500 ? 'Internal server error' : (err?.message || 'Request failed')
+    });
 });
 
 module.exports = app;

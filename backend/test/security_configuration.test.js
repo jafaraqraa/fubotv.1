@@ -53,9 +53,25 @@ test('security configuration fails closed', async (t) => {
         withEnvironment({
             NODE_ENV: 'production',
             SESSION_SECRET: 'production_session_secret_at_least_32_chars',
-            QDRANT_API_KEY: 'production_qdrant_api_key_at_least_32_chars'
+            QDRANT_API_KEY: 'production_qdrant_api_key_at_least_32_chars',
+            METRICS_TOKEN: 'production_metrics_token_at_least_32_chars'
         }, () => {
             assert.strictEqual(validateProductionSecurityConfig(), true);
+        });
+    });
+
+    await t.test('production forbids browser-readable session token fallback', () => {
+        withEnvironment({
+            NODE_ENV: 'production',
+            SESSION_SECRET: 'production_session_secret_at_least_32_chars',
+            QDRANT_API_KEY: 'production_qdrant_api_key_at_least_32_chars',
+            METRICS_TOKEN: 'production_metrics_token_at_least_32_chars',
+            ALLOW_SESSION_TOKEN_FALLBACK: 'true'
+        }, () => {
+            assert.throws(
+                validateProductionSecurityConfig,
+                error => error.code === 'INSECURE_SESSION_TOKEN_FALLBACK'
+            );
         });
     });
 });

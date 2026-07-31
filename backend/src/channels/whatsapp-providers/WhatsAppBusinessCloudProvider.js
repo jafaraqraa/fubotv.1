@@ -1,6 +1,7 @@
 // WhatsAppBusinessCloudProvider.js - Meta WhatsApp Business Cloud API Implementation
 
 const WhatsAppProvider = require('./WhatsAppProvider');
+const { reliableFetch } = require('../../utils/reliableFetch');
 const fs = require('fs');
 const path = require('path');
 const { Blob } = require('buffer');
@@ -93,7 +94,7 @@ class WhatsAppBusinessCloudProvider extends WhatsAppProvider {
             formData.append('messaging_product', 'whatsapp');
 
             const uploadStartTime = Date.now();
-            const uploadResponse = await fetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/media`, {
+            const uploadResponse = await reliableFetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/media`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -134,7 +135,7 @@ class WhatsAppBusinessCloudProvider extends WhatsAppProvider {
             };
         }
 
-        const response = await fetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/messages`, {
+        const response = await reliableFetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/messages`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

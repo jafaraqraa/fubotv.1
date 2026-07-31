@@ -8,7 +8,11 @@ function initialize(io) {
     console.log('📡 Real-time event publisher initialized successfully!');
 }
 
-function publish(eventName, rawData = {}) {
+function tenantFrom(rawData, options) {
+    return options?.tenantId || rawData?.tenantId || rawData?.tenant_id || null;
+}
+
+function publish(eventName, rawData = {}, options = {}) {
     if (!ioInstance) {
         // Safe no-op when Socket.IO server is not instantiated (e.g. during standalone database testing)
         return null;
@@ -25,26 +29,42 @@ function publish(eventName, rawData = {}) {
         data: rawData
     };
 
-    // Emit event strictly to the authenticated 'admins' security room only (Task 21)
-    ioInstance.to('admins').emit(eventName, envelope);
+    const tenantId = tenantFrom(rawData, options);
+    if (tenantId) {
+        ioInstance.to(`tenant:${tenantId}`).emit(eventName, envelope);
+    } else {
+        // Operational events without tenant ownership are visible only to
+        // explicitly authorized super administrators.
+        ioInstance.to('system:admins').emit(eventName, envelope);
+    }
     return envelope;
 }
 
-function publishStats() {
+function shutdown() {
+    ioInstance = null;
+}
+
+function publishStats(tenantId) {
     if (!ioInstance) return null;
+    if (!tenantId) return null;
     try {
         const db = require('../database/connection');
-        const usersCountRow = db.prepare('SELECT COUNT(*) as count FROM channel_accounts').get();
-        const messagesCountRow = db.prepare('SELECT COUNT(*) as count FROM messages').get();
+        const usersCountRow = db.prepare(
+            'SELECT COUNT(*) as count FROM conversations WHERE tenant_id = ?'
+        ).get(tenantId);
+        const messagesCountRow = db.prepare(
+            'SELECT COUNT(*) as count FROM messages WHERE tenant_id = ?'
+        ).get(tenantId);
         const activeErrorsCountRow = db.prepare('SELECT COUNT(*) as count FROM application_errors WHERE solved = 0').get();
 
         const stats = {
             usersCount: usersCountRow ? usersCountRow.count : 0,
             messagesCount: messagesCountRow ? messagesCountRow.count : 0,
             activeErrorsCount: activeErrorsCountRow ? activeErrorsCountRow.count : 0
+            ,tenantId
         };
 
-        return publish('stats:updated', stats);
+        return publish('stats:updated', stats, { tenantId });
     } catch (err) {
         console.error('⚠️ Failed to publish stats update:', err.message);
     }
@@ -54,5 +74,6 @@ function publishStats() {
 module.exports = {
     initialize,
     publish,
-    publishStats
+    publishStats,
+    shutdown
 };

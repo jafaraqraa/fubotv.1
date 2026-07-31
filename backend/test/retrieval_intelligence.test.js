@@ -85,7 +85,7 @@ test('Retrieval Intelligence Engine Suite', async (t) => {
         assert.strictEqual(detectIntent('كيف اشحن للقدس؟'), 'Shipping');
         assert.strictEqual(detectIntent('وسائل الدفع المتاحة'), 'Payment');
         assert.strictEqual(detectIntent('أريد ارجاع طرد'), 'Returns');
-        assert.strictEqual(detectIntent('عندي مشكلة في الحساب'), 'Technical');
+        assert.strictEqual(detectIntent('عندي مشكلة في الحساب'), 'Technical Issue');
         assert.strictEqual(detectIntent('ما هي سياسة الاستبدال؟'), 'Returns');
 
         // Score Boosting
@@ -145,7 +145,7 @@ test('Retrieval Intelligence Engine Suite', async (t) => {
         // Hallucinated fact (zero semantic overlap)
         const completelyHallucinated = 'لدينا عروض خاصة على الساعات الذكية ماركة ابل بسعر 500 شيكل.';
         const fallback = validateAnswer(completelyHallucinated, retrievedContext);
-        assert.ok(fallback.includes('تفاصيل لم يتم تأكيدها'));
+        assert.ok(fallback.includes('لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً'));
     });
 
     // --- PHASE 11 ADVANCED RETRIEVAL INTELLIGENCE TESTS ---

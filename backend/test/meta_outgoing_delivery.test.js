@@ -15,6 +15,7 @@ const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
 initializeDatabase();
 const { sendOutgoingMessage } = require('../src/messaging/outgoingMessageService');
+const webhookRouter = require('../src/routes/webhooks');
 
 const originalFetch = global.fetch;
 
@@ -56,12 +57,26 @@ test('Meta outgoing delivery states', async t => {
         assert.equal(stored.delivery_status, 'sent');
         assert.equal(stored.external_message_id, 'mid.200');
         assert.equal(JSON.parse(stored.metadata).httpStatus, 200);
+        assert.equal(webhookRouter.applyMetaDeliveryUpdate(
+            'mid.200', 'messenger', 'delivered', { watermark: 1 }
+        ), true);
+        assert.equal(latestMessage('case-200').delivery_status, 'delivered');
+        assert.equal(webhookRouter.applyMetaDeliveryUpdate(
+            'mid.200', 'messenger', 'read', { watermark: 2 }
+        ), true);
+        assert.equal(latestMessage('case-200').delivery_status, 'read');
     });
 
-    await t.test('media response follows the same verified Meta result path', async () => {
-        let requestBody;
-        global.fetch = async (_url, options) => {
-            requestBody = JSON.parse(options.body);
+    await t.test('Messenger media uploads first and sends the returned attachment ID', async () => {
+        const mediaPath = path.join(__dirname, 'fixtures', 'meta-test.png');
+        fs.mkdirSync(path.dirname(mediaPath), { recursive: true });
+        fs.writeFileSync(mediaPath, Buffer.from('89504e470d0a1a0a00000000', 'hex'));
+        const calls = [];
+        global.fetch = async (url, options) => {
+            calls.push({ url: String(url), options });
+            if (String(url).includes('/message_attachments')) {
+                return response(200, { attachment_id: 'attachment.media' });
+            }
             return response(200, { recipient_id: 'recipient', message_id: 'mid.media' });
         };
         const result = await sendOutgoingMessage({
@@ -70,12 +85,21 @@ test('Meta outgoing delivery states', async t => {
             senderType: 'agent',
             messageType: 'image',
             content: 'caption',
-            media: { localPath: '/uploads/example.jpg' }
+            media: {
+                localPath: mediaPath,
+                originalName: 'meta-test.png',
+                mimeType: 'image/png',
+                publicUrl: '/api/media/example/download'
+            }
         });
-        const stored = latestMessage('/uploads/example.jpg');
         assert.equal(result.success, true);
-        assert.equal(stored.delivery_status, 'sent');
-        assert.match(requestBody.message.text, /caption.*example\.jpg/);
+        assert.equal(result.externalMessageId, 'mid.media');
+        assert.equal(calls.length, 2);
+        assert.match(calls[0].url, /message_attachments/);
+        assert.match(calls[1].url, /\/messages/);
+        const sendBody = JSON.parse(calls[1].options.body);
+        assert.equal(sendBody.message.attachment.payload.attachment_id, 'attachment.media');
+        fs.unlinkSync(mediaPath);
     });
 
     for (const testCase of [

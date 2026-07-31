@@ -101,7 +101,12 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
         telegramAdapter.setIsValidToken(true);
 
         const result1 = await processIncomingMessage(normalized);
-        assert.strictEqual(result1.status, 'processed', "Should process and reply automatically");
+        assert.strictEqual(
+            result1.status,
+            'failed',
+            'An empty AI provider response must not be replaced by a fake successful reply'
+        );
+        assert.match(result1.error, /empty response/);
         assert.strictEqual(result1.duplicate, false);
 
         // Disable AI automation to test human agent queue mapping
@@ -119,7 +124,7 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
         assert.strictEqual(resultAgent.status, 'waiting_for_agent', "AI-disabled user goes to human queue");
 
         // Check customer list has our user
-        const users = customerRepo.listCustomerUsers();
+        const users = customerRepo.listCustomerUsers('default');
         const found = users.find(u => u.id === 'tg_user_99');
         assert.ok(found, "User Samer should be saved");
         assert.strictEqual(found.name, 'Samer');

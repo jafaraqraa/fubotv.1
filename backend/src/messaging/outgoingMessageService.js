@@ -3,13 +3,18 @@ const whatsappManager = require('../channels/whatsapp-providers/WhatsAppProvider
 const { sendMetaMessage } = require('../channels/meta');
 const { saveMessage, updateMessageDelivery } = require('../database/repositories/messageRepository');
 const { reportError } = require('../services/logger');
+const mediaRepo = require('../database/repositories/mediaAttachmentRepository');
 
 async function sendOutgoingMessage(outgoingMsg) {
     const { channel, externalUserId, senderType, messageType, content, media } = outgoingMsg;
     const tenantId = outgoingMsg.tenantId;
+    const supportedChannels = new Set(['telegram', 'whatsapp', 'messenger', 'instagram']);
 
     let persistedMessageId = null;
     try {
+        if (!supportedChannels.has(channel)) {
+            throw new Error(`Unsupported outgoing channel: ${channel || 'missing'}`);
+        }
         if (channel === 'whatsapp' && !tenantId) {
             console.error(`[Outgoing Message] Missing tenantId for WhatsApp message. Sending aborted. messageId=${outgoingMsg.externalMessageId || 'unknown'} channel=${channel}`);
             throw new Error('Missing tenantId for WhatsApp message');
@@ -43,6 +48,8 @@ async function sendOutgoingMessage(outgoingMsg) {
                 }
                 if (sentMsg) {
                     externalMessageId = String(sentMsg.message_id || '');
+                } else {
+                    throw new Error('Telegram API returned no sent message');
                 }
             } else {
                 throw new Error('Telegram bot client is not initialized or offline');
@@ -66,11 +73,11 @@ async function sendOutgoingMessage(outgoingMsg) {
                 throw new Error('WhatsApp provider is not connected');
             }
         } else if (channel === 'messenger' || channel === 'instagram') {
-            const finalContent = finalPath ? `${content || ''} ${finalPath}`.trim() : content;
+            const finalContent = content;
             persistedMessageId = saveMessage(
                 externalUserId,
                 senderType,
-                finalPath || content,
+                media?.publicUrl || finalPath || content,
                 messageType,
                 false,
                 null,
@@ -78,10 +85,27 @@ async function sendOutgoingMessage(outgoingMsg) {
                     channel,
                     tenantId,
                     deliveryStatus: 'sending',
-                    metadata: { provider: 'meta' }
+                    metadata: {
+                        provider: 'meta',
+                        attachmentId: media?.attachmentId || null,
+                        fileName: media?.originalName || media?.fileName || null,
+                        caption: content || null
+                    },
+                    media
                 }
             );
-            const metaResult = await sendMetaMessage(externalUserId, finalContent, channel);
+            if (media?.attachmentId) {
+                mediaRepo.updateAttachment(media.attachmentId, tenantId || 'default', {
+                    messageId: persistedMessageId,
+                    status: 'sending'
+                });
+            }
+            const metaResult = await sendMetaMessage(
+                externalUserId,
+                finalContent,
+                channel,
+                media ? { ...media, messageType } : null
+            );
             if (!metaResult || !metaResult.success) {
                 const failure = metaResult || {
                     error: 'Meta sender returned no result',
@@ -96,6 +120,14 @@ async function sendOutgoingMessage(outgoingMsg) {
                     metaErrorMessage: failure.error,
                     rawResponse: failure.rawResponse
                 });
+                if (media?.attachmentId) {
+                    mediaRepo.updateAttachment(media.attachmentId, tenantId || 'default', {
+                        messageId: persistedMessageId,
+                        status: 'failed',
+                        providerAttachmentId: failure.attachmentId || null,
+                        lastError: failure.error
+                    });
+                }
                 const error = new Error(failure.error || 'Meta Graph API send failed');
                 error.deliveryDetails = failure;
                 throw error;
@@ -107,6 +139,21 @@ async function sendOutgoingMessage(outgoingMsg) {
                 externalMessageId,
                 rawResponse: metaResult.rawResponse
             });
+            if (media?.attachmentId) {
+                try {
+                    mediaRepo.updateAttachment(media.attachmentId, tenantId || 'default', {
+                        messageId: persistedMessageId,
+                        status: 'sent',
+                        providerAttachmentId: metaResult.attachmentId || null,
+                        externalMessageId,
+                        lastError: null
+                    });
+                } catch (attachmentError) {
+                    // Meta already accepted the message. Never rewrite the authoritative
+                    // delivery result as failed because secondary attachment metadata failed.
+                    reportError('تحديث سجل مرفق Meta بعد الإرسال', attachmentError.message);
+                }
+            }
         }
 
         // Save delivery output to SQLite message thread

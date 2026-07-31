@@ -226,7 +226,8 @@ async function reindexKnowledgeBase(force = false, options = {}) {
             ...document,
             documentId: `${DOCUMENT_ID}:${indexVersionId}`,
             sourceType: SOURCE_TYPE,
-            originalText: cleanText(document.originalText)
+            originalText: cleanText(document.originalText),
+            ingestionVersion: indexVersionId
         }, chunkSize, chunkOverlap);
         if (!baseChunks.length) throw new Error('لم يتم إنشاء أي مقاطع.');
         const maxChunks = Number(getConfig('RAG_MAX_CHUNKS_PER_DOCUMENT')) || 5000;
@@ -251,6 +252,7 @@ async function reindexKnowledgeBase(force = false, options = {}) {
                 contentHash: item.contentHash,
                 documentContentHash: contentHash,
                 embeddingModel,
+                ingestionVersion: indexVersionId,
                 createdAt: new Date().toISOString(),
                 lifecycle: 'staging',
                 injectionRisk: injectionGuard?.riskLevel || null,

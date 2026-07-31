@@ -2,13 +2,14 @@ const { getConfig } = require('../config/ragConfig');
 const { reconcileRagIndex } = require('./ragReconciliationService');
 const { configuredTenants } = require('../security/tenantContext');
 const { disableTenantRag } = require('../security/tenantRagSafety');
+const runtimeState = require('../../runtime/runtimeState');
 
 let timer = null;
 let runController = null;
 const continuations = new Map();
 
 async function runScheduledReconciliation() {
-    if (runController) return false;
+    if (runController || runtimeState.snapshot().shuttingDown) return false;
     runController = new AbortController();
     try {
         for (const tenantId of configuredTenants()) {
@@ -29,7 +30,13 @@ async function runScheduledReconciliation() {
                 }
             } catch (error) {
                 if (error.code !== 'RAG_REQUEST_CANCELLED' && error.code !== 'ABORT_ERR') {
-                    console.error(`[RAG Reconcile] Scheduled dry-run failed tenant=${tenantId} error=${error.message}`);
+                    console.error(JSON.stringify({
+                        level: 'error',
+                        event: 'background_job_failed',
+                        job: 'rag_reconciliation',
+                        tenantId,
+                        error: error.message
+                    }));
                 }
             }
         }
@@ -43,8 +50,16 @@ function startReconciliationScheduler() {
     if (String(getConfig('RAG_RECONCILIATION_ENABLED')) !== 'true' || timer) return false;
     const intervalMs = Math.max(1, Number(getConfig('RAG_RECONCILIATION_INTERVAL_HOURS')) || 24)
         * 60 * 60 * 1000;
-    runScheduledReconciliation().catch(() => {});
-    timer = setInterval(() => runScheduledReconciliation().catch(() => {}), intervalMs);
+    const run = () => runScheduledReconciliation().catch(error => {
+        console.error(JSON.stringify({
+            level: 'error',
+            event: 'background_job_failed',
+            job: 'rag_reconciliation',
+            error: error.message
+        }));
+    });
+    void run();
+    timer = setInterval(run, intervalMs);
     timer.unref?.();
     return true;
 }

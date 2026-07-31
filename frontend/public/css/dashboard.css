@@ -400,3 +400,45 @@ body { font-family: 'Cairo', 'Inter', sans-serif; }
     .dashboard-topbar { padding-inline: 16px; }
     #page-subtitle { display: none; }
 }
+
+/* RAG document library: keep dense metadata aligned instead of crushing cells. */
+.rag-doc-table-scroll {
+    width: 100%;
+    padding-bottom: 4px;
+    scrollbar-gutter: stable;
+    overscroll-behavior-inline: contain;
+}
+.rag-doc-library-table {
+    width: 100%;
+    min-width: 1240px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.rag-doc-library-table th,
+.rag-doc-library-table td {
+    vertical-align: middle;
+}
+.rag-doc-library-table thead th {
+    white-space: nowrap;
+}
+.rag-doc-library-table .rag-doc-col-check { width: 48px; }
+.rag-doc-library-table .rag-doc-col-name { width: 220px; }
+.rag-doc-library-table .rag-doc-col-type { width: 80px; }
+.rag-doc-library-table .rag-doc-col-source { width: 120px; }
+.rag-doc-library-table .rag-doc-col-version { width: 72px; }
+.rag-doc-library-table .rag-doc-col-pages { width: 70px; }
+.rag-doc-library-table .rag-doc-col-size { width: 82px; }
+.rag-doc-library-table .rag-doc-col-chunks { width: 78px; }
+.rag-doc-library-table .rag-doc-col-model { width: 120px; }
+.rag-doc-library-table .rag-doc-col-date { width: 115px; }
+.rag-doc-library-table .rag-doc-col-status { width: 90px; }
+.rag-doc-library-table .rag-doc-col-actions { width: 110px; }
+.rag-doc-table-row {
+    min-height: 58px;
+}
+.rag-doc-filename {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

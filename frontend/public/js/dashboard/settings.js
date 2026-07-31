@@ -854,8 +854,8 @@ window.Dashboard.settings = {
 
             const data = await response.json();
 
-            if (data.success) {
-                if (data.status === 'unchanged') {
+            if (response.ok && data.success && data.status === 'active') {
+                if (data.unchanged === true) {
                     window.Dashboard.settings.showToast('قاعدة المعرفة محدثة بالفعل، ولم يتم إنشاء Embeddings جديدة.');
                 } else {
                     window.Dashboard.settings.showToast(`تمت فهرسة قاعدة المعرفة بنجاح. المقاطع المنشأة: ${data.chunksCreated}، المدة: ${data.durationMs}ms`);
@@ -1245,8 +1245,12 @@ window.Dashboard.settings = {
                     result = { success: false, error: 'تعذر تحليل رد السيرفر' };
                 }
 
-                if (xhr.status >= 200 && xhr.status < 300 && result.success) {
-                    window.Dashboard.settings.showToast('تم رفع وتضمين المستند في الـ RAG بنجاح.');
+                if (
+                    xhr.status >= 200 && xhr.status < 300
+                    && result.success
+                    && result.status === 'indexed'
+                ) {
+                    window.Dashboard.settings.showToast('تم رفع المستند وفهرسته وتفعيله في RAG بنجاح.');
                     window.Dashboard.settings.loadDocumentsList();
                     window.Dashboard.settings.refreshRagStatus();
                 } else {
@@ -1282,7 +1286,7 @@ window.Dashboard.settings = {
             });
             const result = await response.json();
 
-            if (result.success) {
+            if (response.ok && result.success && result.document?.status === 'indexed') {
                 window.Dashboard.settings.showToast('تمت إعادة فهرسة المستند بنجاح.');
                 window.Dashboard.settings.loadDocumentsList();
                 window.Dashboard.settings.refreshRagStatus();
@@ -1303,8 +1307,8 @@ window.Dashboard.settings = {
             });
             const result = await response.json();
 
-            if (result.success) {
-                window.Dashboard.settings.showToast('جاري إعادة معالجة المستند...');
+            if (response.ok && result.success && result.document?.status === 'indexed') {
+                window.Dashboard.settings.showToast('اكتملت إعادة معالجة المستند وفهرسته بنجاح.');
                 window.Dashboard.settings.loadDocumentsList();
                 window.Dashboard.settings.refreshRagStatus();
             } else {
