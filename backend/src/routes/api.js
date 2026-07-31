@@ -1756,7 +1756,8 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
             req.file.buffer,
             {
                 overwriteAction, tenantId: req.ragTenantId, signal: cancellation.signal,
-                idempotencyKey: req.get('Idempotency-Key') || null
+                idempotencyKey: req.get('Idempotency-Key') || null,
+                mediaDescription: req.body.mediaDescription || null
             }
         );
         if (cancellation.signal.aborted) return;
@@ -1791,6 +1792,8 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
                 version: doc.version || 1,
                 createdAt: doc.created_at,
                 indexedAt: doc.indexed_at
+                , mediaDescription: doc.media_description || null
+                , aiSendEnabled: doc.ai_send_enabled === 1
             }
         });
     } catch (err) {

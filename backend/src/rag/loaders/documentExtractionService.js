@@ -59,9 +59,9 @@ function validateFilenameSecurity(filename) {
     }
 
     const ext = extMatch[1].toLowerCase();
-    const allowed = ['txt', 'md', 'markdown', 'pdf', 'docx'];
+    const allowed = ['txt', 'md', 'markdown', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
     if (!allowed.includes(ext)) {
-        throw new Error('امتداد الملف غير مدعوم. الامتدادات المدعومة: PDF, TXT, MD, DOCX.');
+        throw new Error('امتداد الملف غير مدعوم. الامتدادات المدعومة: PDF, TXT, MD, DOCX, JPG, PNG, WEBP.');
     }
 
     return ext;
@@ -104,6 +104,23 @@ function validateMimeAndMagicBytes(ext, mimeType, buffer) {
         // Inspect DOCX magic bytes: 50 4b 03 04 (PK\x03\x04)
         if (buffer.length < 4 || buffer.toString('hex', 0, 4) !== '504b0304') {
             throw new Error('بنية ملف DOCX غير صالحة أو تالفة.');
+        }
+    } else if (ext === 'jpg' || ext === 'jpeg') {
+        if (!['image/jpeg', 'image/jpg'].includes(mimeLower)
+            || buffer.length < 4 || buffer[0] !== 0xff || buffer[1] !== 0xd8
+            || buffer[buffer.length - 2] !== 0xff || buffer[buffer.length - 1] !== 0xd9) {
+            throw new Error('صورة JPEG غير صالحة أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'png') {
+        if (mimeLower !== 'image/png' || buffer.length < 24
+            || buffer.toString('hex', 0, 8) !== '89504e470d0a1a0a') {
+            throw new Error('صورة PNG غير صالحة أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'webp') {
+        if (mimeLower !== 'image/webp' || buffer.length < 12
+            || buffer.toString('ascii', 0, 4) !== 'RIFF'
+            || buffer.toString('ascii', 8, 12) !== 'WEBP') {
+            throw new Error('صورة WEBP غير صالحة أو نوع MIME غير متوافق.');
         }
     }
 }

@@ -7,6 +7,7 @@ const MODE = Object.freeze({
 
 const COMPANY_MARKERS = /(?:\b(?:company|business|service|services|pricing|price|subscription|subscriptions|product|products|policy|policies|payment|shipping|delivery|support|warranty|refund|return|order|store)\b|شرك(?:ه|ة)|خدمات?|اشتراك|باقات?|منتجات?|سياس(?:ه|ة)|اسعار|سعر|تكلف(?:ه|ة)|دفع|شحن|توصيل|دعم|ضمان|استرجاع|استبدال|طلب|متجر|فرع|فروع|دوام|موقعكم|رقمكم|بتقدموا|تقدمون)/i;
 const SOCIAL_ONLY = /^(?:(?:يا\s+)?(?:مرحبا|مرحبا بك|اهلا|اهلين|هلا|هلو|السلام عليكم|وعليكم السلام|صباح الخير|مساء الخير|يسعد صباحك|يسعد مساك|كيفك|كيف حالك|شو الاخبار|شو اخبارك|اخبارك|تمام|الحمد لله|شكرا|شكرا لك|يسلمو|يعطيك العافيه|الله يعطيك العافيه|مع السلامه|باي|الى اللقاء|hello|hi|hey|good morning|good evening|how are you|what'?s up|thanks|thank you|bye)[\s،,.!?؟]*)+$/i;
+const KNOWLEDGE_MEDIA_REQUEST = /(?:(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|بدي|اريد|send|show).{0,80}(?:صوره|صور|image|photo|picture)|(?:صوره|صور|image|photo|picture).{0,80}(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|بدي|اريد|send|show))/i;
 
 function normalizeForRouting(text) {
     return String(text || '')
@@ -29,7 +30,7 @@ function classifyConversationMode(text) {
     // Business evidence wins over a greeting in mixed messages such as
     // "مرحبا، كم سعر الاشتراك؟".
     const detectedIntent = detectIntent(text);
-    if (detectedIntent !== 'General' || COMPANY_MARKERS.test(normalized)) {
+    if (detectedIntent !== 'General' || COMPANY_MARKERS.test(normalized) || KNOWLEDGE_MEDIA_REQUEST.test(normalized)) {
         return {
             mode: MODE.COMPANY_KNOWLEDGE,
             intent: detectedIntent,

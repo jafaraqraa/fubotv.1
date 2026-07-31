@@ -101,6 +101,8 @@ Adapter Used: OpenRouterProvider`);
             }
 
             const finalMessages = withImageContent(messages, options.media);
+            const maxCompletionTokens = completionTokenLimit(options);
+            console.log(`[AI Request Prep] Max completion tokens: ${maxCompletionTokens}`);
             const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
@@ -113,7 +115,7 @@ Adapter Used: OpenRouterProvider`);
                     model: model,
                     messages: finalMessages,
                     temperature: temp,
-                    max_tokens: completionTokenLimit(options)
+                    max_completion_tokens: maxCompletionTokens
                 })
             });
 
@@ -220,6 +222,8 @@ Adapter Used: OpenAIProvider`);
             }
 
             const finalMessages = withImageContent(messages, options.media);
+            const maxCompletionTokens = completionTokenLimit(options);
+            console.log(`[AI Request Prep] Max completion tokens: ${maxCompletionTokens}`);
 
             const response = await reliableFetch(url, {
                 method: 'POST',
@@ -231,7 +235,7 @@ Adapter Used: OpenAIProvider`);
                     model: model,
                     messages: finalMessages,
                     temperature: temp,
-                    max_tokens: completionTokenLimit(options)
+                    max_completion_tokens: maxCompletionTokens
                 })
             });
 

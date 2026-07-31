@@ -27,6 +27,18 @@ const { createLifecycle, assertActiveDocument } = require('../indexing/indexingL
 const { scanText } = require('../security/promptInjectionGuard');
 const { acquireLease } = require('../runtime/distributedLockService');
 
+const RAG_IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp']);
+
+function buildImageIndexText(originalName, description) {
+    const value = String(description || '').normalize('NFKC').replace(/[\u0000-\u001f]/g, ' ').trim();
+    if (value.length < 3 || value.length > 2000) {
+        const error = new Error('وصف صورة RAG مطلوب ويجب أن يكون بين 3 و2000 حرف.');
+        error.code = 'RAG_IMAGE_DESCRIPTION_REQUIRED';
+        throw error;
+    }
+    return `صورة معتمدة قابلة للإرسال: ${originalName}\nوصف الصورة: ${value}\nنوع المصدر: صورة من مكتبة معرفة الشركة.`;
+}
+
 function annotateInjectionRisk(chunks, tenantId, documentId) {
     if (String(getConfig('RAG_INJECTION_SCAN_ON_INGEST')).toLowerCase() === 'false') return chunks;
     return chunks.map(item => {
@@ -110,6 +122,9 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
     try {
         console.log(`[RAG Replace] Staging new version tenant=${tenantId} document=${logicalDocumentId} version=${versionNumber}`);
         fs.writeFileSync(stagingPath, buffer);
+        const mediaDescription = RAG_IMAGE_EXTENSIONS.has(ext)
+            ? String(options.mediaDescription || existing.media_description || '').trim()
+            : null;
         stagingRowId = docRepo.insertDocument({
             document_key: temporaryDocumentId,
             original_name: originalName,
@@ -127,11 +142,15 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
             version: versionNumber,
             tenant_id: tenantId,
             logical_document_id: logicalDocumentId,
-            version_id: versionId
+            version_id: versionId,
+            media_description: mediaDescription,
+            ai_send_enabled: RAG_IMAGE_EXTENSIONS.has(ext) ? 1 : 0
         });
 
         currentStage = 'extraction';
-        const text = await extract(ext, buffer);
+        const text = RAG_IMAGE_EXTENSIONS.has(ext)
+            ? buildImageIndexText(originalName, mediaDescription)
+            : await extract(ext, buffer);
         if (!text || !text.trim()) throw new Error('المحتوى المستخرج فارغ.');
         const maxTextLength = Number(getConfig('RAG_MAX_EXTRACTED_TEXT_LENGTH')) || 10000000;
         if (text.length > maxTextLength) {
@@ -166,7 +185,9 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
             documentVersionId: versionId,
             indexVersionId: versionId,
             versionNumber,
-            lifecycle: 'staging'
+            lifecycle: 'staging',
+            ragMediaType: RAG_IMAGE_EXTENSIONS.has(ext) ? 'image' : null,
+            ragMediaDocumentId: RAG_IMAGE_EXTENSIONS.has(ext) ? temporaryDocumentId : null
         })), tenantId, logicalDocumentId);
         if (!chunks.length) throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');
         const maxChunks = Number(getConfig('RAG_MAX_CHUNKS_PER_DOCUMENT')) || 5000;
@@ -407,6 +428,10 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     }
     const ext = validateFilenameSecurity(originalName);
     validateMimeAndMagicBytes(ext, mimeType, buffer);
+    const mediaDescription = RAG_IMAGE_EXTENSIONS.has(ext)
+        ? String(options.mediaDescription || '').trim()
+        : null;
+    if (RAG_IMAGE_EXTENSIONS.has(ext)) buildImageIndexText(originalName, mediaDescription);
 
     // A. Duplicate Original Name & Version Detection
     const existingByName = docRepo.getDocumentByOriginalName(tenantId, originalName);
@@ -470,7 +495,9 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
         vector_count: 0,
         index_fingerprint: null,
         version: nextVersion,
-        tenant_id: tenantId
+        tenant_id: tenantId,
+        media_description: mediaDescription,
+        ai_send_enabled: RAG_IMAGE_EXTENSIONS.has(ext) ? 1 : 0
     });
 
     emitDocumentEvent('rag:document-uploaded', { documentId: docKey, originalFilename: originalName, status: 'uploaded' });
@@ -566,7 +593,9 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
         const ext = doc.source_type;
         let text = '';
         try {
-            text = await extract(ext, fileBuffer);
+            text = RAG_IMAGE_EXTENSIONS.has(ext)
+                ? buildImageIndexText(doc.original_name, doc.media_description)
+                : await extract(ext, fileBuffer);
         } catch (extractErr) {
             let errorMsg = extractErr.message;
             if (ext === 'pdf' && errorMsg.includes('extract text')) {
@@ -635,7 +664,9 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
                 contentHash: chunk.contentHash || extractedTextHash,
                 embeddingModel: modelName,
                 ingestionVersion: versionId,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                ragMediaType: RAG_IMAGE_EXTENSIONS.has(ext) ? 'image' : null,
+                ragMediaDocumentId: RAG_IMAGE_EXTENSIONS.has(ext) ? doc.document_key : null
             })), tenantId, doc.document_key);
         if (richChunks.length === 0) {
             throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');

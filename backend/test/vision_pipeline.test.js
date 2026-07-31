@@ -155,7 +155,8 @@ test('OpenRouter vision request contains the actual image', async () => {
         );
         assert.strictEqual(result, 'OpenRouter vision response');
         assert.strictEqual(capturedBody.model, 'google/gemini-2.5-flash');
-        assert.strictEqual(capturedBody.max_tokens, 1024);
+        assert.strictEqual(capturedBody.max_completion_tokens, 1024);
+        assert.strictEqual(capturedBody.max_tokens, undefined);
         assert.ok(Array.isArray(capturedBody.messages[0].content));
         assert.strictEqual(capturedBody.messages[0].content[1].type, 'image_url');
         assert.match(capturedBody.messages[0].content[1].image_url.url, /^data:image\/jpeg;base64,/);

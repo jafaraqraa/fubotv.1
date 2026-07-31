@@ -197,6 +197,7 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
             "tenantId", "documentId", "documentVersionId", "indexVersionId", "sourceType",
             "chunkIndex", "contentHash", "embeddingModel", "vectorDimension", "createdAt", "lifecycle",
             "heading", "section", "textLength", "ingestionVersion"
+            , "ragMediaType", "ragMediaDocumentId"
         ]
     };
     const durationBuild = performance.now() - tBuildStart;

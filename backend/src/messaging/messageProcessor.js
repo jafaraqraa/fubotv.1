@@ -4,6 +4,75 @@ const { saveMessage, existsByExternalId } = require('../database/repositories/me
 const { addLog, reportError } = require('../services/logger');
 const { getAIResponse } = require('../services/ai');
 const { materializeProfileImage } = require('../services/profileImageService');
+const fs = require('fs');
+const path = require('path');
+const knowledgeDocumentRepo = require('../database/repositories/knowledgeDocumentRepository');
+const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
+const { persistMediaBuffer, removeStoredMedia } = require('../services/outgoingMediaStorage');
+
+function requestsKnowledgeImage(text) {
+    const value = String(text || '').normalize('NFKC').toLowerCase();
+    return /(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|بدي|اريد|أريد|send|show).{0,80}(?:صوره|صورة|صور|image|photo|picture)/i.test(value)
+        || /(?:صوره|صورة|صور|image|photo|picture).{0,80}(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|بدي|اريد|أريد|send|show)/i.test(value);
+}
+
+function selectRetrievedRagImage(tenantId, telemetry) {
+    const chunks = telemetry?.profiling?.topChunks;
+    if (!Array.isArray(chunks)) return null;
+    for (const chunk of chunks) {
+        const documentId = chunk?.payload?.ragMediaDocumentId;
+        if (!documentId || chunk?.payload?.ragMediaType !== 'image') continue;
+        const doc = knowledgeDocumentRepo.getDocumentByKey(tenantId, documentId);
+        if (doc && doc.tenant_id === tenantId && doc.ai_send_enabled === 1
+            && doc.is_active === 1 && ['active', 'indexed', 'cleanup_pending'].includes(doc.status)) {
+            return doc;
+        }
+    }
+    return null;
+}
+
+function createOutgoingMediaFromRagImage(doc, channel, tenantId) {
+    const knowledgeRoot = path.resolve(__dirname, '..', '..', 'data', 'knowledge-documents');
+    const sourcePath = path.resolve(doc.storage_path);
+    if (!sourcePath.startsWith(`${knowledgeRoot}${path.sep}`) || !fs.existsSync(sourcePath)) {
+        const error = new Error('ملف صورة RAG غير موجود أو مساره غير صالح.');
+        error.code = 'RAG_MEDIA_FILE_UNAVAILABLE';
+        throw error;
+    }
+    const media = persistMediaBuffer({
+        buffer: fs.readFileSync(sourcePath),
+        mediaName: doc.original_name,
+        mediaType: doc.mime_type,
+        uploadsDir: path.join(__dirname, '..', '..', 'data', 'private-media', tenantId)
+    });
+    try {
+        const attachment = mediaAttachmentRepo.createAttachment({
+            tenantId,
+            channel,
+            provider: ['messenger', 'instagram'].includes(channel) ? 'meta' : channel,
+            direction: 'outgoing',
+            mediaType: 'image',
+            originalFilename: media.originalName,
+            storedFilename: media.fileName,
+            storagePath: media.localPath,
+            mimeType: media.mimeType,
+            extension: path.extname(media.fileName).slice(1),
+            sizeBytes: media.size,
+            checksum: media.checksum,
+            caption: doc.media_description || null,
+            status: 'uploaded'
+        });
+        return {
+            ...media,
+            attachmentId: attachment.id,
+            publicUrl: `/api/media/${attachment.id}/download`,
+            ragDocumentId: doc.document_key
+        };
+    } catch (error) {
+        removeStoredMedia(media);
+        throw error;
+    }
+}
 
 async function processIncomingMessage(normalizedMsg) {
     let persistedMessageId = null;
@@ -92,20 +161,29 @@ async function processIncomingMessage(normalizedMsg) {
 
         // 7. AI automation mode is active
         let replyText = '';
+        let replyMedia = null;
         const textToProcess = (messageType !== 'text') ? content : content; // handles attachments captions or paths
 
         if (textToProcess || messageType === 'image' || messageType === 'audio' || messageType === 'voice') {
+            const retrievalTelemetry = {};
             const aiResponse = await getAIResponse(
                 externalUserId,
                 textToProcess || '',
                 messageType,
                 normalizedMsg.media,
-                { tenantId: tenantId || 'default', channel }
+                { tenantId: tenantId || 'default', channel, retrievalTelemetry }
             );
             if (!aiResponse || !String(aiResponse).trim()) {
                 throw new Error('AI provider returned an empty response');
             }
             replyText = String(aiResponse).trim();
+            if (messageType === 'text' && requestsKnowledgeImage(textToProcess)) {
+                const imageDocument = selectRetrievedRagImage(tenantId, retrievalTelemetry);
+                if (imageDocument) {
+                    replyMedia = createOutgoingMediaFromRagImage(imageDocument, channel, tenantId);
+                    console.log(`[AI Media] Selected RAG image tenant=${tenantId} document=${imageDocument.document_key} channel=${channel}`);
+                }
+            }
         } else {
             throw new Error('Incoming attachment has no processable content');
         }
@@ -117,9 +195,9 @@ async function processIncomingMessage(normalizedMsg) {
             externalUserId,
             direction: 'outgoing',
             senderType: 'ai',
-            messageType: 'text',
+            messageType: replyMedia ? 'image' : 'text',
             content: replyText,
-            media: null,
+            media: replyMedia,
             tenantId
         });
 
@@ -131,6 +209,7 @@ async function processIncomingMessage(normalizedMsg) {
             aiEnabled: true,
             responseSent: outgoingResult.success,
             outgoingMessageId: outgoingResult.externalMessageId,
+            attachmentId: replyMedia?.attachmentId || null,
             messageId: persistedMessageId
         };
 
@@ -146,5 +225,10 @@ async function processIncomingMessage(normalizedMsg) {
 }
 
 module.exports = {
-    processIncomingMessage
+    processIncomingMessage,
+    _test: {
+        requestsKnowledgeImage,
+        selectRetrievedRagImage,
+        createOutgoingMediaFromRagImage
+    }
 };

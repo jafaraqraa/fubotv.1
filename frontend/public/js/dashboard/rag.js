@@ -1802,6 +1802,70 @@ window.Dashboard.rag = {
         return row;
     },
 
+    requestImageDescription: function(fileName) {
+        return new Promise(resolve => {
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 z-[100] bg-slate-950/50 flex items-center justify-center p-4';
+            const dialog = document.createElement('div');
+            dialog.className = 'w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl';
+            dialog.setAttribute('role', 'dialog');
+            dialog.setAttribute('aria-modal', 'true');
+
+            const title = document.createElement('h3');
+            title.className = 'text-lg font-bold text-slate-900 mb-2';
+            title.textContent = 'وصف صورة قاعدة المعرفة';
+            const hint = document.createElement('p');
+            hint.className = 'text-sm text-slate-500 mb-4';
+            hint.textContent = `اكتب وصفاً دقيقاً للصورة ${fileName} ليتمكن الذكاء من العثور عليها وإرسالها.`;
+            const textarea = document.createElement('textarea');
+            textarea.className = 'w-full min-h-28 rounded-xl border border-slate-300 p-3 text-sm focus:border-blue-500 focus:outline-none';
+            textarea.maxLength = 2000;
+            textarea.placeholder = 'مثال: صورة المنتج الأحمر من الأمام، موديل 2026';
+            const error = document.createElement('p');
+            error.className = 'mt-2 text-sm text-red-600 hidden';
+            error.textContent = 'الوصف مطلوب ويجب أن يكون بين 3 و2000 حرف.';
+            const actions = document.createElement('div');
+            actions.className = 'mt-5 flex gap-3';
+            const confirm = document.createElement('button');
+            confirm.type = 'button';
+            confirm.className = 'flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-white';
+            confirm.textContent = 'اعتماد الوصف ورفع الصورة';
+            const cancel = document.createElement('button');
+            cancel.type = 'button';
+            cancel.className = 'rounded-xl border border-slate-300 px-4 py-2.5 text-slate-700';
+            cancel.textContent = 'إلغاء';
+            actions.append(confirm, cancel);
+            dialog.append(title, hint, textarea, error, actions);
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+
+            let settled = false;
+            const finish = value => {
+                if (settled) return;
+                settled = true;
+                overlay.remove();
+                resolve(value);
+            };
+            confirm.addEventListener('click', () => {
+                const value = textarea.value.trim();
+                if (value.length < 3) {
+                    error.classList.remove('hidden');
+                    textarea.focus();
+                    return;
+                }
+                finish(value);
+            });
+            cancel.addEventListener('click', () => finish(null));
+            overlay.addEventListener('click', event => {
+                if (event.target === overlay) finish(null);
+            });
+            textarea.addEventListener('keydown', event => {
+                if (event.key === 'Escape') finish(null);
+            });
+            textarea.focus();
+        });
+    },
+
     // M. File Upload with Version Conflict Checks (Goal 5 & Goal 7)
     handleFileUpload: async function(files, overwriteAction = '') {
         if (!files || files.length === 0) return;
@@ -1813,10 +1877,17 @@ window.Dashboard.rag = {
         }
 
         const ext = file.name.split('.').pop().toLowerCase();
-        const allowed = ['pdf', 'txt', 'docx', 'md'];
+        const allowed = ['pdf', 'txt', 'docx', 'md', 'jpg', 'jpeg', 'png', 'webp'];
         if (!allowed.includes(ext)) {
-            alert('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD');
+            alert('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD, JPG, PNG, WEBP');
             return;
+        }
+
+        const isImage = ['jpg', 'jpeg', 'png', 'webp'].includes(ext);
+        let mediaDescription = '';
+        if (isImage) {
+            mediaDescription = await this.requestImageDescription(file.name);
+            if (mediaDescription === null) return;
         }
 
         window.Dashboard.rag.showIndexingProgress('رفع ومعالجة المستند', file.name);
@@ -1829,6 +1900,7 @@ window.Dashboard.rag = {
 
             const formData = new FormData();
             formData.append('file', file);
+            if (isImage) formData.append('mediaDescription', mediaDescription);
             if (overwriteAction) {
                 formData.append('overwriteAction', overwriteAction);
             }
@@ -1857,7 +1929,7 @@ window.Dashboard.rag = {
                 } else if (
                     xhr.status >= 200 && xhr.status < 300
                     && data.success === true
-                    && data.status === 'indexed'
+                    && ['indexed', 'active'].includes(data.status)
                 ) {
                     window.Dashboard.settings.showToast('تم رفع المستند وفهرسته وتفعيله بنجاح.');
                     window.Dashboard.rag.addTimelineLog('رفع مستند', `تم رفع وتضمين المستند ${file.name}`);
