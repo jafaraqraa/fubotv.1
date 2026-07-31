@@ -103,10 +103,11 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
         const result1 = await processIncomingMessage(normalized);
         assert.strictEqual(
             result1.status,
-            'failed',
-            'An empty AI provider response must not be replaced by a fake successful reply'
+            'ai_failed',
+            'A persisted incoming message must distinguish AI failure from webhook persistence failure'
         );
-        assert.match(result1.error, /empty response/);
+        assert.match(result1.error, /empty or null response|empty response/i);
+        assert.ok(result1.messageId, 'The durable incoming message ID must be retained');
         assert.strictEqual(result1.duplicate, false);
 
         // Disable AI automation to test human agent queue mapping

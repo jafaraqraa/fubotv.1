@@ -58,7 +58,7 @@ const fixtures = {
 test('Messenger and Instagram media use attachment upload and real send responses', async t => {
     for (const [platform, types] of [
         ['messenger', ['image', 'video', 'audio', 'file']],
-        ['instagram', ['image', 'video', 'file']]
+        ['instagram', ['image', 'video']]
     ]) {
         for (const type of types) {
             await t.test(`${platform} ${type}`, async () => {
@@ -91,6 +91,15 @@ test('Messenger and Instagram media use attachment upload and real send response
         const result = await sendMetaMessage('recipient', '', 'instagram', fixtures.audio);
         assert.equal(result.success, false);
         assert.match(result.error, /does not support audio/);
+        assert.equal(called, false);
+    });
+
+    await t.test('Instagram arbitrary files are rejected before Graph API', async () => {
+        let called = false;
+        global.fetch = async () => { called = true; return response(200, {}); };
+        const result = await sendMetaMessage('recipient', '', 'instagram', fixtures.file);
+        assert.equal(result.success, false);
+        assert.match(result.error, /does not support file/);
         assert.equal(called, false);
     });
 

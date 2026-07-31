@@ -6,6 +6,7 @@ const { getAIResponse } = require('../services/ai');
 const { materializeProfileImage } = require('../services/profileImageService');
 
 async function processIncomingMessage(normalizedMsg) {
+    let persistedMessageId = null;
     try {
         // 1. Validate normalized payload
         validateNormalizedMessage(normalizedMsg);
@@ -60,7 +61,7 @@ async function processIncomingMessage(normalizedMsg) {
         }
 
         // 5. Inbound persistence in SQLite
-        saveMessage(externalUserId, 'user', content, messageType, false, externalMessageId, {
+        persistedMessageId = saveMessage(externalUserId, 'user', content, messageType, false, externalMessageId, {
             channel,
             tenantId,
             metadata: {
@@ -84,7 +85,8 @@ async function processIncomingMessage(normalizedMsg) {
                 channel,
                 externalUserId,
                 aiEnabled: false,
-                responseSent: false
+                responseSent: false,
+                messageId: persistedMessageId
             };
         }
 
@@ -128,15 +130,17 @@ async function processIncomingMessage(normalizedMsg) {
             externalUserId,
             aiEnabled: true,
             responseSent: outgoingResult.success,
-            outgoingMessageId: outgoingResult.externalMessageId
+            outgoingMessageId: outgoingResult.externalMessageId,
+            messageId: persistedMessageId
         };
 
     } catch (err) {
         reportError(`معالجة رسالة واردة (${normalizedMsg ? normalizedMsg.channel : 'unknown'})`, err.message);
         return {
-            status: 'failed',
+            status: persistedMessageId ? 'ai_failed' : 'failed',
             duplicate: false,
-            error: err.message
+            error: err.message,
+            messageId: persistedMessageId
         };
     }
 }

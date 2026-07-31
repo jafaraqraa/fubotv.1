@@ -13,6 +13,81 @@ const {
     markOutboundReadThrough
 } = require('../database/repositories/messageRepository');
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
+const { persistMediaBuffer, removeStoredMedia, MAX_MEDIA_BYTES } = require('../services/outgoingMediaStorage');
+
+const privateMediaDir = path.join(__dirname, '..', '..', 'data', 'private-media');
+const META_MEDIA_HOSTS = [
+    'facebook.com',
+    'facebook.net',
+    'fbcdn.net',
+    'fbsbx.com',
+    'instagram.com',
+    'cdninstagram.com'
+];
+
+async function readBoundedResponse(response, maxBytes) {
+    if (!response.body?.getReader) {
+        const fallback = Buffer.from(await response.arrayBuffer());
+        if (fallback.length > maxBytes) throw Object.assign(new Error('Media is too large'), { code: 'MEDIA_TOO_LARGE' });
+        return fallback;
+    }
+    const reader = response.body.getReader();
+    const chunks = [];
+    let total = 0;
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            total += value.byteLength;
+            if (total > maxBytes) throw Object.assign(new Error('Media is too large'), { code: 'MEDIA_TOO_LARGE' });
+            chunks.push(Buffer.from(value));
+        }
+    } finally {
+        reader.releaseLock();
+    }
+    return Buffer.concat(chunks, total);
+}
+
+async function materializeMetaAttachment(webhookEvent, platform, tenantId = 'default') {
+    const attachment = webhookEvent.message?.attachments?.[0];
+    const rawUrl = attachment?.payload?.url;
+    if (!rawUrl) return null;
+    const parsed = new URL(rawUrl);
+    const hostname = parsed.hostname.toLowerCase();
+    if (parsed.protocol !== 'https:' || !META_MEDIA_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`))) {
+        console.warn(`[Meta Webhook] Rejected attachment host: ${hostname || 'invalid'}`);
+        throw Object.assign(new Error('Meta attachment URL is not trusted'), { code: 'UNTRUSTED_MEDIA_URL' });
+    }
+    const response = await fetch(parsed, { redirect: 'error', signal: AbortSignal.timeout(15000) });
+    if (!response.ok) throw new Error(`Meta media download failed with HTTP ${response.status}`);
+    const declaredLength = Number(response.headers.get('content-length') || 0);
+    if (declaredLength > MAX_MEDIA_BYTES) throw Object.assign(new Error('Meta media is too large'), { code: 'MEDIA_TOO_LARGE' });
+    const mimeType = String(response.headers.get('content-type') || '').split(';')[0].toLowerCase();
+    const extension = getExtensionFromMime(mimeType);
+    if (!extension || extension === 'bin') throw Object.assign(new Error('Meta media type is unsupported'), { code: 'UNSUPPORTED_MEDIA_TYPE' });
+    const buffer = await readBoundedResponse(response, MAX_MEDIA_BYTES);
+    const media = persistMediaBuffer({
+        buffer,
+        mediaName: `meta-${webhookEvent.message.mid || Date.now()}.${extension}`,
+        mediaType: mimeType,
+        uploadsDir: path.join(privateMediaDir, tenantId)
+    });
+    let record;
+    try {
+        record = mediaAttachmentRepo.createAttachment({
+            tenantId, channel: platform, provider: 'meta', direction: 'incoming',
+            mediaType: attachment.type === 'file' ? 'document' : attachment.type,
+            originalFilename: media.originalName, storedFilename: media.fileName,
+            storagePath: media.localPath, mimeType: media.mimeType,
+            extension, sizeBytes: media.size, checksum: media.checksum,
+            status: 'uploaded'
+        });
+    } catch (error) {
+        removeStoredMedia(media);
+        throw error;
+    }
+    return { ...media, attachmentId: record.id, publicUrl: `/api/media/${record.id}/download` };
+}
 
 function applyMetaDeliveryUpdate(messageId, platform, status, details = {}) {
     if (!messageId) return false;
@@ -211,7 +286,7 @@ router.post('/webhook', verifyMetaSignature, async (req, res) => {
                         continue;
                     }
                     const senderPsid = webhookEvent.sender?.id;
-                    if (!senderPsid || !webhookEvent.message?.text) continue;
+                    if (!senderPsid || (!webhookEvent.message?.text && !webhookEvent.message?.attachments?.length)) continue;
                     let profile = null;
                     try {
                         profile = await getMetaUserProfile(senderPsid, platform);
@@ -219,10 +294,19 @@ router.post('/webhook', verifyMetaSignature, async (req, res) => {
                         console.log("فشل جلب ملف حساب ميتّا الشخصي.");
                     }
 
-                    const normalized = normalizeMetaMessage(webhookEvent, platform, profile);
+                    const materializedMedia = await materializeMetaAttachment(webhookEvent, platform);
+                    const normalized = normalizeMetaMessage(webhookEvent, platform, profile, 'default', materializedMedia);
                     const result = await processIncomingMessage(normalized);
+                    if (materializedMedia?.attachmentId && result?.messageId) {
+                        mediaAttachmentRepo.updateAttachment(materializedMedia.attachmentId, 'default', {
+                            messageId: result.messageId
+                        });
+                    }
                     if (result?.status === 'failed') {
                         throw new Error(result.error || 'Meta webhook message processing failed');
+                    }
+                    if (result?.status === 'ai_failed') {
+                        console.error(`[Meta Webhook] Incoming message persisted but AI reply failed: ${result.error}`);
                     }
                 }
             }
@@ -385,6 +469,9 @@ router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, (req, res, next) => 
                         const result = await processIncomingMessage(normalized);
                         if (result?.status === 'failed') {
                             throw new Error(result.error || 'WhatsApp webhook message processing failed');
+                        }
+                        if (result?.status === 'ai_failed') {
+                            console.error(`[WhatsApp Webhook] Incoming message persisted but AI reply failed: ${result.error}`);
                         }
                     }
                 }

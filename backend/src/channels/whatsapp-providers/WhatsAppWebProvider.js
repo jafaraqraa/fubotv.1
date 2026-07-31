@@ -372,7 +372,10 @@ class WhatsAppWebProvider extends WhatsAppProvider {
             sentMsg = await this.waClient.sendMessage(recipientId, content);
         }
 
-        const externalMessageId = sentMsg && sentMsg.id ? String(sentMsg.id.id || '') : `wa_web_${Date.now()}`;
+        const externalMessageId = sentMsg && sentMsg.id ? String(sentMsg.id.id || '') : '';
+        if (!externalMessageId) {
+            throw new Error('WhatsApp Web accepted no verifiable message identifier');
+        }
 
         addLog(`[WhatsApp] tenantId: ${this.tenantId} | provider: web | operation: send_message | executionTime: ${Date.now() - txStartTime} ms | details: Sent ${messageType} message to ${recipientId}`);
 

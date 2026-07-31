@@ -1,6 +1,8 @@
-function normalizeMetaMessage(webhookEvent, platform, profile = null, tenantId = 'default') {
+function normalizeMetaMessage(webhookEvent, platform, profile = null, tenantId = 'default', materializedMedia = null) {
     const senderPsid = String(webhookEvent.sender.id || '');
-    const userText = webhookEvent.message.text || '';
+    const attachment = webhookEvent.message.attachments?.[0] || null;
+    const providerType = attachment?.type === 'file' ? 'document' : attachment?.type;
+    const userText = webhookEvent.message.text || materializedMedia?.caption || '';
     const messageId = String(webhookEvent.message.mid || '');
 
     const displayName = profile?.displayName || `عميل ${platform === 'messenger' ? 'ماسنجر' : 'انستجرام'}`;
@@ -19,9 +21,9 @@ function normalizeMetaMessage(webhookEvent, platform, profile = null, tenantId =
         },
         direction: 'incoming',
         senderType: 'customer',
-        messageType: 'text',
-        content: userText,
-        media: null,
+        messageType: materializedMedia ? (providerType || 'document') : 'text',
+        content: materializedMedia?.publicUrl || userText,
+        media: materializedMedia,
         timestamp: new Date(webhookEvent.timestamp || Date.now()).toISOString(),
         metadata: { tenantId }
     };

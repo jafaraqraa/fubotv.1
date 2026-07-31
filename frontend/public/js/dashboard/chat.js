@@ -107,15 +107,7 @@ window.Dashboard.chat = {
             const element = document.getElementById(id);
             if (element) element.removeAttribute('disabled');
         });
-        const mediaInput = document.getElementById('media-upload-input');
-        const mediaButton = document.getElementById('media-upload-btn');
-        const supported = ['messenger', 'instagram', 'telegram', 'whatsapp'].includes(user.platform);
-        if (mediaButton) mediaButton.classList.toggle('hidden', !supported);
-        if (mediaInput) {
-            mediaInput.accept = user.platform === 'instagram'
-                ? 'image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,application/pdf,text/plain,text/csv,application/zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                : 'image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,audio/mpeg,audio/ogg,audio/wav,audio/mp4,application/pdf,text/plain,text/csv,application/zip,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        }
+        window.Dashboard.composer.applyChannelCapabilities(user.platform);
     },
 
     assignChat: async function(userId, assignee) {

@@ -2,6 +2,7 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.composer = {
+    mediaCapabilities: null,
     init: function() {
         const bindings = [
             ['tab-reply', 'click', () => this.setMessageType('reply')],
@@ -54,19 +55,23 @@ window.Dashboard.composer = {
         const user = window.Dashboard.state.usersCache.find(
             item => String(item.id) === String(window.Dashboard.state.selectedUserId)
         );
-        if (!user || !['messenger', 'instagram'].includes(user.platform)) {
+        const capability = user && this.mediaCapabilities?.[user.platform];
+        if (!user || !capability) {
             window.Dashboard.settings.showToast('إرسال الوسائط غير متاح لهذه القناة حالياً.', 'error');
             return;
         }
-        if (user.platform === 'instagram' && file.type.startsWith('audio/')) {
-            window.Dashboard.settings.showToast('Instagram لا يدعم إرسال الملفات الصوتية.', 'error');
+        if (!capability.mimeTypes.includes(String(file.type || '').toLowerCase())) {
+            window.Dashboard.settings.showToast('نوع الملف غير مدعوم على القناة المحددة.', 'error');
             return;
         }
-        if (file.size > 10 * 1024 * 1024) {
-            window.Dashboard.settings.showToast('حجم الملف يتجاوز الحد الأقصى 10 ميجابايت.', 'error');
+        if (file.size > capability.maxBytes) {
+            window.Dashboard.settings.showToast('حجم الملف يتجاوز حد القناة.', 'error');
             return;
         }
         window.Dashboard.state.selectedMediaFile = file;
+        window.Dashboard.state.mediaIdempotencyKey = globalThis.crypto?.randomUUID
+            ? globalThis.crypto.randomUUID()
+            : `media-${Date.now()}-${Math.random().toString(36).slice(2)}`;
         window.Dashboard.state.failedMediaAttachmentId = null;
         const previewContainer = document.getElementById('media-preview-container');
         const filenameSpan = document.getElementById('media-filename');
@@ -90,6 +95,27 @@ window.Dashboard.composer = {
         previewContainer?.classList.remove('hidden');
     },
 
+    applyChannelCapabilities: async function(channel) {
+        if (!this.mediaCapabilities) {
+            try {
+                const response = await window.Dashboard.api.request('/api/media/capabilities');
+                const result = await response.json();
+                if (result.success) this.mediaCapabilities = result.capabilities;
+            } catch (_) {
+                this.mediaCapabilities = {};
+            }
+        }
+        const capability = this.mediaCapabilities?.[channel];
+        const input = document.getElementById('media-upload-input');
+        const button = document.getElementById('media-upload-btn');
+        if (button) button.classList.toggle('hidden', !capability);
+        if (input) input.accept = capability ? capability.mimeTypes.join(',') : '';
+        const selected = window.Dashboard.state.selectedMediaFile;
+        if (selected && (!capability || !capability.mimeTypes.includes(selected.type))) {
+            this.clearMediaUpload();
+        }
+    },
+
     setUploadProgress: function(percent, status, isError = false) {
         const bar = document.getElementById('media-upload-progress');
         const label = document.getElementById('media-upload-status');
@@ -106,6 +132,7 @@ window.Dashboard.composer = {
         this.activeAbortController = null;
         this.activeXhr = null;
         window.Dashboard.state.selectedMediaFile = null;
+        window.Dashboard.state.mediaIdempotencyKey = null;
         const input = document.getElementById('media-upload-input');
         if (input) input.value = "";
         const previewContainer = document.getElementById('media-preview-container');
@@ -217,9 +244,6 @@ window.Dashboard.composer = {
 
             if (window.Dashboard.state.selectedMediaFile) {
                 const file = window.Dashboard.state.selectedMediaFile;
-                if (file.size > 10 * 1024 * 1024) {
-                    throw new Error('حجم الملف يتجاوز الحد الأقصى 10 ميجابايت.');
-                }
                 const dataUrl = await new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(String(reader.result || ''));
@@ -237,6 +261,7 @@ window.Dashboard.composer = {
                 payload.mediaData = dataUrl.slice(separatorIndex + 1);
                 payload.mediaName = file.name;
                 payload.mediaType = file.type;
+                payload.idempotencyKey = window.Dashboard.state.mediaIdempotencyKey;
             } else {
                 payload.message = message;
             }

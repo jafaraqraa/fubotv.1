@@ -234,17 +234,19 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     // 2. Retrieve Context (RAG)
     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
     const retrievalText = isImage ? (mediaObj.caption || '') : userText;
+    const shouldRetrieveKnowledge = useCompanyKnowledge
+        && (!isImage || Boolean(String(retrievalText || '').trim()));
     const retrievalTelemetry = routing.retrievalTelemetry
         && typeof routing.retrievalTelemetry === 'object'
         ? routing.retrievalTelemetry
         : {};
-    const context = useCompanyKnowledge
+    const context = shouldRetrieveKnowledge
         ? await retrieveContext(retrievalText, profiler, {
             tenantId,
             telemetry: retrievalTelemetry
         })
         : '';
-    const retrievalMetadata = useCompanyKnowledge
+    const retrievalMetadata = shouldRetrieveKnowledge
         ? (retrievalTelemetry.metadata || getLastRetrievalMetadata())
         : {
             retrievalMode: 'SKIPPED_GENERAL_CONVERSATION',
@@ -252,10 +254,10 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             cacheHit: false
         };
     console.log(
-        `[RAG Routing] mode=${routingDecision.mode} invoked=${useCompanyKnowledge} `
+        `[RAG Routing] mode=${routingDecision.mode} invoked=${shouldRetrieveKnowledge} `
         + `contextAvailable=${Boolean(String(context || '').trim())}`
     );
-    if (useCompanyKnowledge
+    if (!isImage && useCompanyKnowledge
         && !String(context || '').trim()
         && shouldBlockOpenDomain({ knowledgeBaseOnly: routing.knowledgeBaseOnly })) {
         const blockedAnswer = blockOpenDomain(tenantId, 'insufficient_context');
@@ -333,7 +335,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
 
     // 6. Validate response
     let validatedResponse = null;
-    if (rawResponse && useCompanyKnowledge) {
+    if (rawResponse && useCompanyKnowledge && !isImage) {
         profiler.startStage('Answer Validation');
         validatedResponse = validateWithPolicy({
             answer: rawResponse,
@@ -361,6 +363,16 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         let finalCost = meta ? meta.cost : null;
         const generationId = meta ? meta.id : null;
         const respModel = meta ? meta.model : activeModel;
+
+        // A rejected provider request (for example HTTP 429/no credits) has no
+        // billable completion telemetry. Do not turn prompt-size estimates into
+        // fake provider usage or cost when no provider metadata was returned.
+        if (!trackSuccess && !meta) {
+            inputTokens = 0;
+            outputTokens = 0;
+            totalTokens = 0;
+            finalCost = 0;
+        }
 
         // Fallbacks for token estimates if not provided
         if (inputTokens === null || inputTokens === undefined) {
@@ -456,7 +468,8 @@ Prompt Tokens: ${inputTokens}
 Completion Tokens: ${outputTokens}
 Total Tokens: ${totalTokens}
 Cost: ${finalCost}
-Saved: ${result.success ? 'true' : 'false'}`);
+Persisted: ${result.success ? 'true' : 'false'}
+Provider Success: ${trackSuccess ? 'true' : 'false'}`);
 
         // Broadcast real-time Socket update to active dashboard clients
         if (result.success && trackSuccess) {
@@ -472,7 +485,9 @@ Saved: ${result.success ? 'true' : 'false'}`);
     }
 
     if (!rawResponse) {
-        return null;
+        const error = new Error(trackErrorMessage || 'AI provider returned an empty response');
+        error.code = 'AI_PROVIDER_FAILED';
+        throw error;
     }
 
     // 7. Format and print timing report

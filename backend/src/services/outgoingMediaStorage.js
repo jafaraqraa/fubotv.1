@@ -82,6 +82,23 @@ function persistOutgoingMedia({ mediaData, mediaName, mediaType, uploadsDir }) {
     }
 
     const buffer = decodeBase64Media(mediaData);
+    return persistMediaBuffer({ buffer, mediaName, mediaType: normalizedType, uploadsDir });
+}
+
+function persistMediaBuffer({ buffer, mediaName, mediaType, uploadsDir }) {
+    const normalizedType = String(mediaType || '').toLowerCase().split(';')[0].trim();
+    const extension = MIME_EXTENSIONS.get(normalizedType);
+    if (!extension) {
+        throw Object.assign(new Error('نوع الملف المرفق غير مدعوم.'), { code: 'UNSUPPORTED_MEDIA_TYPE' });
+    }
+    if (typeof mediaName !== 'string' || !mediaName.trim() || /[\0\r\n]/.test(mediaName)) {
+        throw Object.assign(new Error('اسم الملف المرفق غير صالح.'), { code: 'INVALID_MEDIA_NAME' });
+    }
+    if (!Buffer.isBuffer(buffer) || buffer.length === 0 || buffer.length > MAX_MEDIA_BYTES) {
+        throw Object.assign(new Error('حجم محتوى الوسائط غير صالح.'), {
+            code: buffer?.length > MAX_MEDIA_BYTES ? 'MEDIA_TOO_LARGE' : 'EMPTY_MEDIA'
+        });
+    }
     const originalName = path.basename(mediaName);
     const suppliedExtension = path.extname(originalName).slice(1).toLowerCase();
     const normalizedExtension = EXTENSION_ALIASES.get(suppliedExtension) || suppliedExtension;
@@ -127,5 +144,6 @@ module.exports = {
     decodeBase64Media,
     hasExpectedSignature,
     persistOutgoingMedia,
+    persistMediaBuffer,
     removeStoredMedia
 };

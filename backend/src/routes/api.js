@@ -3,6 +3,7 @@ const router = express.Router();
 router.parsePagination = parsePagination;
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 const { addLog, reportError, getRecentLogs, listErrors, getActiveErrorsCount, solveError } = require('../services/logger');
 const { getIsValidToken, startBot } = require('../channels/telegram');
 const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUrl } = require('../channels/whatsapp');
@@ -37,7 +38,7 @@ const {
     updateMessageDelivery
 } = require('../database/repositories/messageRepository');
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
-const { sendMetaMessage } = require('../channels/meta');
+const { CAPABILITIES, assertMediaCapability, categoryForMime } = require('../messaging/mediaCapabilities');
 
 const { sendOutgoingMessage } = require('../messaging/outgoingMessageService');
 const {
@@ -47,8 +48,26 @@ const {
 const { saveSetting, getSetting, maskSecret, isMaskedPlaceholder } = require('../services/settingsService');
 const budgetService = require('../services/budgetService');
 
-const uploadsDir = path.join(__dirname, '..', '..', 'public', 'uploads');
 const privateMediaDir = path.join(__dirname, '..', '..', 'data', 'private-media');
+const mediaUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024, files: 1, fields: 10 }
+});
+function parseSingleMedia(req, res, next) {
+    mediaUpload.single('file')(req, res, error => {
+        if (!error) return next();
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return res.status(413).json({ success: false, error: 'Media file exceeds the upload limit.' });
+        }
+        return res.status(400).json({ success: false, error: 'Malformed media upload.' });
+    });
+}
+
+function providerFailureHttpStatus(result) {
+    if (result?.error?.toLowerCase().includes('timed out')) return 504;
+    if (result?.statusCode === 429 || result?.statusCode >= 500) return 503;
+    return 502;
+}
 
 function parsePagination(query, { defaultLimit = 10, maxLimit = 100 } = {}) {
     const page = Number.parseInt(query.page ?? '1', 10);
@@ -84,7 +103,7 @@ router.post('/chat/assign', requirePermission('conversations:write'), (req, res)
 });
 
 // 2. تحديث وتطوير مسار إرسال الرسائل الفردية والملاحظات والوسائط (Rich Media & Notes Support) - uses outgoingMessageService (Task 14)
-router.post('/send-direct', requirePermission('messages:send'), async (req, res) => {
+async function sendDirectHandler(req, res) {
     const { userId, message, isNote, mediaData, mediaName, mediaType, shareUrl } = req.body;
     if (!userId) return res.status(400).json({ success: false, error: 'بيانات ناقصة' });
 
@@ -93,6 +112,22 @@ router.post('/send-direct', requirePermission('messages:send'), async (req, res)
 
     let mediaMetadata = null;
     try {
+        const idempotencyKey = String(req.get('Idempotency-Key') || req.body.idempotencyKey || '').trim();
+        if (idempotencyKey && (idempotencyKey.length < 8 || idempotencyKey.length > 128)) {
+            return res.status(400).json({ success: false, error: 'Idempotency-Key is invalid.' });
+        }
+        const existingAttachment = mediaAttachmentRepo.findByIdempotencyKey(user.tenantId, idempotencyKey);
+        if (existingAttachment) {
+            const terminalSuccess = ['sent', 'delivered', 'read'].includes(existingAttachment.status);
+            return res.status(terminalSuccess ? 200 : 409).json({
+                success: terminalSuccess,
+                duplicate: true,
+                attachmentId: existingAttachment.id,
+                messageId: existingAttachment.external_message_id || null,
+                deliveryStatus: existingAttachment.status,
+                error: terminalSuccess ? undefined : 'A media operation with this key already exists.'
+            });
+        }
         // If it is a private internal note, delegate to persistence save directly without sending
         if (isNote === true) {
             if (!message) return res.status(400).json({ success: false, error: 'محتوى الملاحظة فارغ' });
@@ -126,17 +161,17 @@ router.post('/send-direct', requirePermission('messages:send'), async (req, res)
         }
         // Persist dashboard media before dispatch. Failed sends roll the file back.
         if (mediaData && mediaName) {
-            const isMetaChannel = user.platform === 'messenger' || user.platform === 'instagram';
+            const estimatedSize = Math.floor(String(mediaData).replace(/\s+/g, '').length * 3 / 4);
+            assertMediaCapability(user.platform, mediaType, estimatedSize);
+            actualMediaType = categoryForMime(mediaType);
+            if (actualMediaType === 'animation' && user.platform !== 'telegram') actualMediaType = 'image';
             mediaMetadata = persistOutgoingMedia({
                 mediaData,
                 mediaName,
                 mediaType,
-                uploadsDir: isMetaChannel
-                    ? path.join(privateMediaDir, user.tenantId)
-                    : uploadsDir
+                uploadsDir: path.join(privateMediaDir, user.tenantId)
             });
-            if (isMetaChannel) {
-                const attachment = mediaAttachmentRepo.createAttachment({
+            const attachment = mediaAttachmentRepo.createAttachment({
                     tenantId: user.tenantId,
                     channel: user.platform,
                     ownerAdministratorId: req.session.userId,
@@ -145,19 +180,17 @@ router.post('/send-direct', requirePermission('messages:send'), async (req, res)
                     storagePath: mediaMetadata.localPath,
                     mimeType: mediaMetadata.mimeType,
                     sizeBytes: mediaMetadata.size,
-                    checksum: mediaMetadata.checksum
-                });
-                mediaMetadata.attachmentId = attachment.id;
-                mediaMetadata.publicUrl = `/api/media/${attachment.id}/download`;
-            }
+                    checksum: mediaMetadata.checksum,
+                    mediaType: actualMediaType,
+                    caption: message || null,
+                    extension: path.extname(mediaMetadata.fileName).slice(1),
+                    idempotencyKey: idempotencyKey || null
+            });
+            mediaMetadata.attachmentId = attachment.id;
+            mediaMetadata.publicUrl = `/api/media/${attachment.id}/download`;
             localPath = mediaMetadata.localPath;
             finalMessageText = mediaMetadata.publicUrl;
 
-            const mimeLower = mediaMetadata.mimeType;
-            if (mimeLower.startsWith('image/')) actualMediaType = 'image';
-            else if (mimeLower.startsWith('audio/')) actualMediaType = 'audio';
-            else if (mimeLower.startsWith('video/')) actualMediaType = 'video';
-            else actualMediaType = 'document';
         }
 
         if (!finalMessageText && !localPath) {
@@ -196,11 +229,13 @@ router.post('/send-direct', requirePermission('messages:send'), async (req, res)
                 resourceId: mediaMetadata?.attachmentId,
                 outcome: 'failure'
             });
-            res.status(outgoingResult.statusCode === 401 ? 502 : 500).json({
+            res.status(providerFailureHttpStatus(outgoingResult)).json({
                 success: false,
                 error: outgoingResult.error || 'Failed sending outgoing reply',
                 attachmentId: mediaMetadata?.attachmentId || null,
                 retryable: Boolean(mediaMetadata?.attachmentId)
+                    && (outgoingResult.statusCode === 429 || outgoingResult.statusCode >= 500
+                        || outgoingResult.statusCode == null)
             });
         }
 
@@ -210,11 +245,35 @@ router.post('/send-direct', requirePermission('messages:send'), async (req, res)
         const validationCodes = new Set([
             'INVALID_MEDIA_DATA', 'EMPTY_MEDIA', 'MEDIA_TOO_LARGE',
             'UNSUPPORTED_MEDIA_TYPE', 'INVALID_MEDIA_NAME',
-            'MEDIA_EXTENSION_MISMATCH', 'CORRUPT_MEDIA'
+            'MEDIA_EXTENSION_MISMATCH', 'CORRUPT_MEDIA', 'INVALID_MEDIA_SIZE',
+            'UNSUPPORTED_CHANNEL_MEDIA'
         ]);
-        res.status(validationCodes.has(err.code) ? 400 : 500)
+        res.status(err.statusCode || (validationCodes.has(err.code) ? 400 : 500))
             .json({ success: false, error: `فشل الإرسال للعميل عبر ${user.platform}: ${err.message}` });
     }
+}
+
+router.post('/send-direct', requirePermission('messages:send'), sendDirectHandler);
+router.post(
+    '/conversations/:conversationId/messages/media',
+    requirePermission('messages:send'),
+    parseSingleMedia,
+    (req, res, next) => {
+        if (!req.file) return res.status(400).json({ success: false, error: 'Media file is required.' });
+        req.body = {
+            ...req.body,
+            userId: req.params.conversationId,
+            mediaData: req.file.buffer.toString('base64'),
+            mediaName: req.file.originalname,
+            mediaType: req.file.mimetype,
+            message: req.body.caption || req.body.message || ''
+        };
+        return sendDirectHandler(req, res).catch(next);
+    }
+);
+
+router.get('/media/capabilities', requirePermission('conversations:read'), (req, res) => {
+    return res.json({ success: true, capabilities: CAPABILITIES });
 });
 
 router.get('/media/:attachmentId/download', requirePermission('conversations:read'), (req, res) => {
@@ -241,7 +300,7 @@ router.post('/media/:attachmentId/retry', requirePermission('messages:send'), as
         return res.status(409).json({ success: false, error: 'Attachment is not retryable' });
     }
     const message = getMessageForRetry(attachment.message_id, req.tenantId);
-    if (!message || !['messenger', 'instagram'].includes(message.channel)) {
+    if (!message) {
         return res.status(404).json({ success: false, error: 'Original message not found' });
     }
 
@@ -251,44 +310,31 @@ router.post('/media/:attachmentId/retry', requirePermission('messages:send'), as
         lastError: null
     });
     updateMessageDelivery(message.id, 'sending', { retry: attachment.retry_count + 1 });
-    const result = await sendMetaMessage(message.external_user_id, message.content, message.channel, {
+    const result = await sendOutgoingMessage({
+        channel: message.channel,
+        externalUserId: message.external_user_id,
+        senderType: message.sender,
+        messageType: message.message_type,
+        content: attachment.caption || message.content || '',
+        tenantId: req.tenantId,
+        existingMessageId: message.id,
+        media: {
+        attachmentId: attachment.id,
         localPath: attachment.storage_path,
         originalName: attachment.original_filename,
         mimeType: attachment.mime_type,
-        messageType: message.message_type,
         providerAttachmentId: attachment.provider_attachment_id
+        }
     });
     if (!result.success) {
-        updateMessageDelivery(message.id, 'failed', {
-            httpStatus: result.statusCode,
-            metaErrorCode: result.metaErrorCode,
-            metaErrorMessage: result.error
-        });
-        mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
-            status: 'failed', lastError: result.error,
-            providerAttachmentId: result.attachmentId || attachment.provider_attachment_id
-        });
         return res.status(502).json({ success: false, error: result.error, retryable: true });
-    }
-    updateMessageDelivery(message.id, 'sent', {
-        externalMessageId: result.messageId,
-        httpStatus: result.statusCode
-    });
-    try {
-        mediaAttachmentRepo.updateAttachment(attachment.id, req.tenantId, {
-            status: 'sent', externalMessageId: result.messageId,
-            providerAttachmentId: result.attachmentId || attachment.provider_attachment_id,
-            lastError: null
-        });
-    } catch (attachmentError) {
-        reportError('تحديث سجل مرفق Meta بعد إعادة المحاولة', attachmentError.message);
     }
     audit({
         actorId: req.session.userId, tenantId: req.tenantId,
         action: 'media_retry', resourceType: message.channel,
         resourceId: attachment.id, outcome: 'success'
     });
-    return res.json({ success: true, attachmentId: attachment.id, messageId: result.messageId });
+    return res.json({ success: true, attachmentId: attachment.id, messageId: result.externalMessageId });
 });
 
 router.delete('/media/:attachmentId', requirePermission('messages:send'), (req, res) => {
@@ -1324,7 +1370,6 @@ router.post('/rag/playground', async (req, res) => {
     }
 });
 
-const multer = require('multer');
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {

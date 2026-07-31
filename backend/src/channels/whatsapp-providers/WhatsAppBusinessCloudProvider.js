@@ -151,7 +151,10 @@ class WhatsAppBusinessCloudProvider extends WhatsAppProvider {
             throw new Error(`Meta API Error: ${errorMsg}`);
         }
 
-        const externalMessageId = data.messages && data.messages[0] ? String(data.messages[0].id || '') : `wa_cloud_${Date.now()}`;
+        const externalMessageId = data.messages && data.messages[0] ? String(data.messages[0].id || '') : '';
+        if (!externalMessageId) {
+            throw new Error('WhatsApp Cloud accepted no verifiable message identifier');
+        }
 
         addLog(`[WhatsApp] tenantId: ${this.tenantId} | provider: cloud | operation: send_message | executionTime: ${Date.now() - txStartTime} ms | details: Sent ${messageType} message to ${cleanRecipientId}`);
 

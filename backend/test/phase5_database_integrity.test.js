@@ -22,7 +22,7 @@ test('Phase 5 database and data-integrity contracts', async (t) => {
         initializeDatabase();
         assert.equal(
             db.prepare('SELECT COUNT(*) count FROM schema_migrations').get().count,
-            25
+            26
         );
         assert.equal(
             db.prepare('SELECT COUNT(*) count FROM schema_migrations WHERE checksum IS NULL').get().count,

@@ -75,8 +75,8 @@ async function uploadMetaAttachment(media, platform, accessToken) {
     if (!MEDIA_TYPES.has(attachmentType)) {
         return failureResult(null, null, `Unsupported Meta attachment type: ${attachmentType}`);
     }
-    if (platform === 'instagram' && attachmentType === 'audio') {
-        return failureResult(null, null, 'Instagram Messaging does not support audio attachments');
+    if (platform === 'instagram' && !['image', 'video'].includes(attachmentType)) {
+        return failureResult(null, null, `Instagram Messaging does not support ${attachmentType} attachments`);
     }
 
     const buffer = await fs.promises.readFile(media.localPath);

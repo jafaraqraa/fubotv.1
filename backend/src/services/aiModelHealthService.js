@@ -128,7 +128,12 @@ async function discoverOpenRouterModel(context) {
     if (cached && cached.expiresAt > Date.now()) {
         models = cached.models;
     } else {
-        const discoveryUrl = `${context.baseUrl}/models?output_modalities=${encodeURIComponent(context.capability)}`;
+        // Vision consumes images and normally produces text. Filtering by
+        // output_modalities=image would incorrectly select image generators.
+        const modalityFilter = context.task === 'vision'
+            ? `input_modalities=${encodeURIComponent(context.capability)}`
+            : `output_modalities=${encodeURIComponent(context.capability)}`;
+        const discoveryUrl = `${context.baseUrl}/models?${modalityFilter}`;
         const body = await providerFetch(discoveryUrl, {
             method: 'GET',
             headers: context.headers
@@ -240,6 +245,7 @@ async function executeTest(task, provider, options) {
                 break;
             case 'text_generation':
             case 'chat':
+            case 'vision':
                 await testOpenRouterTextModel(context);
                 break;
             default:

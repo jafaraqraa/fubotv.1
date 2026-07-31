@@ -10,7 +10,7 @@ async function sendOutgoingMessage(outgoingMsg) {
     const tenantId = outgoingMsg.tenantId;
     const supportedChannels = new Set(['telegram', 'whatsapp', 'messenger', 'instagram']);
 
-    let persistedMessageId = null;
+    let persistedMessageId = outgoingMsg.existingMessageId || null;
     try {
         if (!supportedChannels.has(channel)) {
             throw new Error(`Unsupported outgoing channel: ${channel || 'missing'}`);
@@ -29,6 +29,22 @@ async function sendOutgoingMessage(outgoingMsg) {
             return { success: true, status: 'note_saved' };
         }
 
+        // Persist an authoritative "sending" state before any provider side effect.
+        // Meta keeps its richer error mapping in the existing branch below.
+        if (!persistedMessageId && media?.attachmentId && !['messenger', 'instagram'].includes(channel)) {
+            if (!persistedMessageId) persistedMessageId = saveMessage(
+                externalUserId, senderType, media.publicUrl || content, messageType,
+                false, null, {
+                    channel, tenantId, deliveryStatus: 'sending',
+                    metadata: { attachmentId: media.attachmentId, fileName: media.originalName, caption: content || null },
+                    media
+                }
+            );
+            mediaRepo.updateAttachment(media.attachmentId, tenantId, {
+                messageId: persistedMessageId, status: 'sending'
+            });
+        }
+
         if (channel === 'telegram') {
             const bot = telegram.getBot();
             if (bot) {
@@ -40,6 +56,12 @@ async function sendOutgoingMessage(outgoingMsg) {
                         sentMsg = await bot.telegram.sendVideo(externalUserId, { source: finalPath }, { caption: content || '' });
                     } else if (messageType === 'audio') {
                         sentMsg = await bot.telegram.sendAudio(externalUserId, { source: finalPath }, { caption: content || '' });
+                    } else if (messageType === 'voice') {
+                        sentMsg = await bot.telegram.sendVoice(externalUserId, { source: finalPath }, { caption: content || '' });
+                    } else if (messageType === 'animation') {
+                        sentMsg = await bot.telegram.sendAnimation(externalUserId, { source: finalPath }, { caption: content || '' });
+                    } else if (messageType === 'sticker') {
+                        sentMsg = await bot.telegram.sendSticker(externalUserId, { source: finalPath });
                     } else {
                         sentMsg = await bot.telegram.sendDocument(externalUserId, { source: finalPath }, { caption: content || '' });
                     }
@@ -156,6 +178,17 @@ async function sendOutgoingMessage(outgoingMsg) {
             }
         }
 
+        if (!externalMessageId) {
+            throw new Error(`${channel} provider returned no verifiable message identifier`);
+        }
+
+        if (persistedMessageId && media?.attachmentId && !['messenger', 'instagram'].includes(channel)) {
+            updateMessageDelivery(persistedMessageId, 'sent', { externalMessageId });
+            mediaRepo.updateAttachment(media.attachmentId, tenantId, {
+                status: 'sent', externalMessageId, providerSentAt: new Date().toISOString(), lastError: null
+            });
+        }
+
         // Save delivery output to SQLite message thread
         if (!persistedMessageId) {
             const textToSave = finalPath ? finalPath : content;
@@ -177,6 +210,15 @@ async function sendOutgoingMessage(outgoingMsg) {
             updateMessageDelivery(persistedMessageId, 'failed', {
                 error: err.message
             });
+        }
+        if (media?.attachmentId && tenantId) {
+            try {
+                mediaRepo.updateAttachment(media.attachmentId, tenantId, {
+                    status: 'failed', lastError: err.message, failureCode: err.code || 'PROVIDER_SEND_FAILED'
+                });
+            } catch (_) {
+                // Preserve the provider error when secondary status persistence fails.
+            }
         }
         reportError(`إرسال رسالة صادرة (${channel})`, err.message);
         const details = err.deliveryDetails || {};

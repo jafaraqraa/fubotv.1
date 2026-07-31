@@ -120,6 +120,25 @@ async function run() {
     assert(discoveryUrls.some(url => url.includes('output_modalities=text')));
     assert(discoveryUrls.some(url => url.includes('output_modalities=rerank')));
 
+    // Vision is a supported OpenRouter chat capability and must use image
+    // discovery instead of falling through to UNSUPPORTED_TASK_TYPE.
+    resetModelHealthCaches();
+    const visionCalls = [];
+    const visionResult = await testAIModel('vision', {
+        provider: openRouter('google/gemini-3.5-flash'),
+        fetchImpl: async (url, options) => {
+            visionCalls.push({ url, options });
+            return response({ data: [{ id: 'google/gemini-3.5-flash' }] });
+        }
+    });
+    assert.strictEqual(visionResult.success, true);
+    assert.strictEqual(visionResult.capability, 'image');
+    assert.strictEqual(visionCalls.length, 1);
+    assert.strictEqual(
+        visionCalls[0].url,
+        'https://openrouter.ai/api/v1/models?input_modalities=image'
+    );
+
     // Malformed rerank payloads fail instead of being treated as chat success.
     resetModelHealthCaches();
     await assert.rejects(

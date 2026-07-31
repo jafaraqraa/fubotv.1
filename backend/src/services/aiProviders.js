@@ -4,8 +4,52 @@ const { reliableFetch } = require('../utils/reliableFetch');
 // Global tracker for the last provider response metadata to support multi-instance retrieval
 let lastResponseMetadata = null;
 
+function withImageContent(messages, media) {
+    if (!media) return [...messages];
+    const { convertImageToBase64 } = require('../utils/imageHelper');
+    const base64Url = convertImageToBase64(media);
+    if (!base64Url || messages.length === 0) return [...messages];
+    const finalMessages = [...messages];
+    const lastUserIndex = finalMessages.map(message => message.role).lastIndexOf('user');
+    if (lastUserIndex < 0) return finalMessages;
+    const lastUser = finalMessages[lastUserIndex];
+    const text = typeof lastUser.content === 'string'
+        ? lastUser.content
+        : 'ماذا يوجد في هذه الصورة؟';
+    finalMessages[lastUserIndex] = {
+        ...lastUser,
+        content: [
+            { type: 'text', text: text || 'ماذا يوجد في هذه الصورة؟' },
+            { type: 'image_url', image_url: { url: base64Url } }
+        ]
+    };
+    return finalMessages;
+}
+
 function getLastResponseMetadata() {
     return lastResponseMetadata;
+}
+
+function extractAssistantText(data) {
+    const choice = data?.choices?.[0];
+    const content = choice?.message?.content ?? choice?.text ?? data?.output_text;
+    if (typeof content === 'string') return content.trim() || null;
+    if (Array.isArray(content)) {
+        const text = content.map(part => {
+            if (typeof part === 'string') return part;
+            if (typeof part?.text === 'string') return part.text;
+            if (typeof part?.text?.value === 'string') return part.text.value;
+            return '';
+        }).filter(Boolean).join('\n').trim();
+        return text || null;
+    }
+    return null;
+}
+
+function completionTokenLimit(options = {}) {
+    const configured = Number(options.maxTokens || process.env.AI_MAX_COMPLETION_TOKENS || 1024);
+    if (!Number.isFinite(configured)) return 1024;
+    return Math.max(16, Math.min(8192, Math.trunc(configured)));
 }
 
 /**
@@ -38,6 +82,7 @@ class AIProvider {
  */
 class OpenRouterProvider extends AIProvider {
     async generate(messages, options = {}) {
+        lastResponseMetadata = null;
         try {
             const apiBase = this.baseUrl || "https://openrouter.ai/api/v1";
             const url = `${apiBase}/chat/completions`;
@@ -55,6 +100,7 @@ Adapter Used: OpenRouterProvider`);
                 throw new Error(`Configuration Error: Adapter mismatch inside OpenRouterProvider. Found: ${this.constructor.name}`);
             }
 
+            const finalMessages = withImageContent(messages, options.media);
             const response = await reliableFetch(url, {
                 method: 'POST',
                 headers: {
@@ -65,16 +111,18 @@ Adapter Used: OpenRouterProvider`);
                 },
                 body: JSON.stringify({
                     model: model,
-                    messages: messages,
-                    temperature: temp
+                    messages: finalMessages,
+                    temperature: temp,
+                    max_tokens: completionTokenLimit(options)
                 })
             });
 
             const data = await response.json();
 
             if (data.error) {
-                reportError("OpenRouter AI Provider API", data.error.message || JSON.stringify(data.error));
-                return null;
+                const message = data.error.message || JSON.stringify(data.error);
+                reportError("OpenRouter AI Provider API", message);
+                throw Object.assign(new Error(message), { code: data.error.code || 'OPENROUTER_ERROR' });
             }
 
             // Save telemetry
@@ -86,15 +134,11 @@ Adapter Used: OpenRouterProvider`);
                 rawResponse: data
             };
 
-            if (data.choices && data.choices[0] && data.choices[0].message) {
-                return data.choices[0].message.content;
-            }
-
-            return null;
+            return extractAssistantText(data);
         } catch (error) {
             console.error("❌ [OpenRouterProvider] Error:", error.message);
             addLog("خطأ في الاتصال بـ OpenRouter");
-            return null;
+            throw error;
         }
     }
 
@@ -157,6 +201,7 @@ Adapter Used: OpenRouterProvider`);
  */
 class OpenAIProvider extends AIProvider {
     async generate(messages, options = {}) {
+        lastResponseMetadata = null;
         try {
             const apiBase = this.baseUrl || "https://api.openai.com/v1";
             const url = `${apiBase}/chat/completions`;
@@ -174,24 +219,7 @@ Adapter Used: OpenAIProvider`);
                 throw new Error(`Configuration Error: Adapter mismatch inside OpenAIProvider. Found: ${this.constructor.name}`);
             }
 
-            let finalMessages = [...messages];
-            if (options.media) {
-                const { convertImageToBase64 } = require('../utils/imageHelper');
-                const base64Url = convertImageToBase64(options.media);
-                if (base64Url && finalMessages.length > 0) {
-                    const lastMsgIdx = finalMessages.length - 1;
-                    const lastMsg = finalMessages[lastMsgIdx];
-                    if (lastMsg.role === 'user') {
-                        finalMessages[lastMsgIdx] = {
-                            ...lastMsg,
-                            content: [
-                                { type: 'text', text: lastMsg.content || 'ماذا يوجد في هذه الصورة؟' },
-                                { type: 'image_url', image_url: { url: base64Url } }
-                            ]
-                        };
-                    }
-                }
-            }
+            const finalMessages = withImageContent(messages, options.media);
 
             const response = await reliableFetch(url, {
                 method: 'POST',
@@ -202,15 +230,17 @@ Adapter Used: OpenAIProvider`);
                 body: JSON.stringify({
                     model: model,
                     messages: finalMessages,
-                    temperature: temp
+                    temperature: temp,
+                    max_tokens: completionTokenLimit(options)
                 })
             });
 
             const data = await response.json();
 
             if (data.error) {
-                reportError("OpenAI Provider API", data.error.message || JSON.stringify(data.error));
-                return null;
+                const message = data.error.message || JSON.stringify(data.error);
+                reportError("OpenAI Provider API", message);
+                throw Object.assign(new Error(message), { code: data.error.code || 'OPENAI_ERROR' });
             }
 
             // Save telemetry
@@ -222,15 +252,11 @@ Adapter Used: OpenAIProvider`);
                 rawResponse: data
             };
 
-            if (data.choices && data.choices[0] && data.choices[0].message) {
-                return data.choices[0].message.content;
-            }
-
-            return null;
+            return extractAssistantText(data);
         } catch (error) {
             console.error("❌ [OpenAIProvider] Error:", error.message);
             addLog("خطأ في الاتصال بـ OpenAI");
-            return null;
+            throw error;
         }
     }
 
@@ -293,6 +319,7 @@ Adapter Used: OpenAIProvider`);
  */
 class GeminiProvider extends AIProvider {
     async generate(messages, options = {}) {
+        lastResponseMetadata = null;
         try {
             const model = this.model || "gemini-2.5-flash";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
@@ -394,6 +421,7 @@ Adapter Used: GeminiProvider`);
  */
 class OllamaProvider extends AIProvider {
     async generate(messages, options = {}) {
+        lastResponseMetadata = null;
         try {
             const apiBase = this.baseUrl || "http://127.0.0.1:11434";
             const url = `${apiBase}/api/chat`;
