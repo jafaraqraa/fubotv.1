@@ -37,7 +37,7 @@ async function run() {
         () => uploadAndRegisterDocument('missing-description.png', 'image/png', png, {
             tenantId: 'default'
         }),
-        error => error.code === 'RAG_IMAGE_DESCRIPTION_REQUIRED'
+        error => error.code === 'RAG_MEDIA_DESCRIPTION_REQUIRED'
     );
 
     let vectorPoints = [];
@@ -47,6 +47,10 @@ async function run() {
         _testDependencies: {
             checkQdrantReady: async () => true,
             checkModelAvailability: async () => true,
+            transcribeRagAudio: async () => ({
+                transcript: 'هذا تسجيل يشرح خدمات الشركة',
+                model: 'test-audio-model'
+            }),
             initCollection: async () => true,
             generateEmbeddings: async texts => texts.map(() => [0.1, 0.2, 0.3]),
             getPointsByDocument: async () => vectorPoints,
@@ -113,11 +117,82 @@ async function run() {
         assert.strictEqual(mediaRepo.getAttachment(outgoing.attachmentId, 'another-tenant'), undefined);
     }
 
+    const ogg = Buffer.alloc(32);
+    Buffer.from('OggS').copy(ogg, 0);
+    validateMimeAndMagicBytes('ogg', 'audio/ogg', ogg);
+    assert.strictEqual(_test.requestedKnowledgeMediaType('شغل لي التسجيل التعريفي'), 'audio');
+    assert.strictEqual(classifyConversationMode('ابعث التسجيل الصوتي').mode, MODE.COMPANY_KNOWLEDGE);
+    vectorPoints = [];
+    const indexedAudio = await uploadAndRegisterDocument('intro.ogg', 'audio/ogg', ogg, {
+        tenantId: 'default',
+        mediaDescription: 'التسجيل التعريفي بخدمات الشركة',
+        _testDependencies: {
+            checkQdrantReady: async () => true,
+            checkModelAvailability: async () => true,
+            transcribeRagAudio: async () => ({
+                transcript: 'هذا تسجيل يشرح خدمات الشركة',
+                model: 'test-audio-model'
+            }),
+            initCollection: async () => true,
+            generateEmbeddings: async texts => texts.map(() => [0.1, 0.2, 0.3]),
+            getPointsByDocument: async () => vectorPoints,
+            deleteVectorsByDocument: async () => { vectorPoints = []; },
+            upsertVectors: async (chunks, vectors) => {
+                vectorPoints = chunks.map((chunk, index) => ({
+                    id: chunk.chunkId, payload: chunk, vector: vectors[index]
+                }));
+            },
+            restoreVectors: async points => { vectorPoints = points; },
+            invalidateCache: async () => 0
+        }
+    });
+    assert.strictEqual(indexedAudio.status, 'active');
+    assert.strictEqual(indexedAudio.media_transcript, 'هذا تسجيل يشرح خدمات الشركة');
+    assert.strictEqual(indexedAudio.media_analysis_model, 'test-audio-model');
+    assert.strictEqual(vectorPoints[0].payload.ragMediaType, 'audio');
+    assert.match(vectorPoints[0].payload.text, /هذا تسجيل يشرح خدمات الشركة/);
+    await assert.rejects(
+        () => uploadAndRegisterDocument('failed-audio.ogg', 'audio/ogg', Buffer.concat([ogg, Buffer.from('x')]), {
+            tenantId: 'default',
+            mediaDescription: 'تسجيل يجب أن يفشل تحليله',
+            _testDependencies: {
+                transcribeRagAudio: async () => {
+                    throw Object.assign(new Error('audio analysis failed'), {
+                        code: 'RAG_AUDIO_TRANSCRIPTION_FAILED'
+                    });
+                }
+            }
+        }),
+        error => error.code === 'RAG_INDEX_FAILED'
+            && error.stage === 'extraction'
+            && /audio analysis failed/.test(error.message)
+    );
+    const failedAudio = docRepo.listDocuments({
+        tenantId: 'default', search: 'failed-audio.ogg', limit: 10, page: 1
+    }).find(document => document.original_name === 'failed-audio.ogg');
+    assert.ok(failedAudio);
+    assert.strictEqual(failedAudio.status, 'failed');
+    const selectedAudio = _test.selectRetrievedRagMedia('default', {
+        profiling: { topChunks: [{ payload: {
+            ragMediaType: 'audio', ragMediaDocumentId: indexedAudio.document_key
+        } }] }
+    }, 'audio');
+    assert.strictEqual(selectedAudio.document_key, indexedAudio.document_key);
+    for (const channel of ['messenger', 'telegram', 'whatsapp']) {
+        const outgoing = _test.createOutgoingMediaFromRagDocument(
+            selectedAudio, channel, 'default', 'audio'
+        );
+        outgoingCopies.push(outgoing);
+        assert.strictEqual(mediaRepo.getAttachment(outgoing.attachmentId, 'default').media_type, 'audio');
+    }
+
     fs.unlinkSync(indexed.storage_path);
+    fs.unlinkSync(indexedAudio.storage_path);
+    fs.unlinkSync(failedAudio.storage_path);
     outgoingCopies.forEach(outgoing => fs.unlinkSync(outgoing.localPath));
     db.close();
     fs.unlinkSync(process.env.SQLITE_DB_PATH);
-    console.log('✅ RAG image delivery tests passed');
+    console.log('✅ RAG image/audio delivery tests passed');
 }
 
 run().catch(error => {

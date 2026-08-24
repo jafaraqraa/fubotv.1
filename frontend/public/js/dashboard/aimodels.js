@@ -6,7 +6,7 @@ window.Dashboard.aimodels = {
     tasksMetadata: {
         'text_generation': { title: "توليد النصوص (Text Generation)", icon: "📝", desc: "نموذج توليد وتطوير الردود النصية وإجراء المحادثات الذكية." },
         'vision': { title: "الرؤية البصرية (Vision - Images)", icon: "👁️", desc: "تحليل وفهم الصور والمستندات المصورة (مستقبلي)." },
-        'speech_to_text': { title: "تحويل الصوت إلى نص (Speech To Text)", icon: "🎙️", desc: "نموذج التعرف التلقائي على الكلام وتحويل الصوت إلى نص مكتوب (مستقبلي)." },
+        'speech_to_text': { title: "تحويل الصوت إلى نص (Speech To Text)", icon: "🎙️", desc: "نموذج التعرف على الكلام لتفريغ الرسائل وملفات المعرفة الصوتية إلى نص قابل للبحث." },
         'text_to_speech': { title: "تحويل النص إلى صوت (Text To Speech)", icon: "🔊", desc: "نموذج توليد ومحاكاة النطق البشري الذكي من النصوص (مستقبلي)." },
         'embedding': { title: "نموذج الترميز (Embedding Model)", icon: "🔢", desc: "توليد المتجهات الرقمية للفقرات والنصوص لتشغيل البحث الدلالي المتجهي." },
         'reranker': { title: "إعادة الترتيب (Reranker)", icon: "📊", desc: "نموذج إعادة ترتيب نتائج البحث وتصنيفها لتوفير أعلى دقة للـ RAG." }

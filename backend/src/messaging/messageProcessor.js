@@ -10,18 +10,22 @@ const knowledgeDocumentRepo = require('../database/repositories/knowledgeDocumen
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
 const { persistMediaBuffer, removeStoredMedia } = require('../services/outgoingMediaStorage');
 
-function requestsKnowledgeImage(text) {
+function requestedKnowledgeMediaType(text) {
     const value = String(text || '').normalize('NFKC').toLowerCase();
-    return /(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|بدي|اريد|أريد|send|show).{0,80}(?:صوره|صورة|صور|image|photo|picture)/i.test(value)
-        || /(?:صوره|صورة|صور|image|photo|picture).{0,80}(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|بدي|اريد|أريد|send|show)/i.test(value);
+    const action = '(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|شغل|بدي|اريد|أريد|send|show|play)';
+    const image = '(?:صوره|صورة|صور|image|photo|picture)';
+    const audio = '(?:صوت|صوتي|تسجيل|اغنيه|أغنية|انشوده|أنشودة|audio|voice|recording)';
+    if (new RegExp(`${action}.{0,80}${audio}|${audio}.{0,80}${action}`, 'i').test(value)) return 'audio';
+    if (new RegExp(`${action}.{0,80}${image}|${image}.{0,80}${action}`, 'i').test(value)) return 'image';
+    return null;
 }
 
-function selectRetrievedRagImage(tenantId, telemetry) {
+function selectRetrievedRagMedia(tenantId, telemetry, requestedType) {
     const chunks = telemetry?.profiling?.topChunks;
     if (!Array.isArray(chunks)) return null;
     for (const chunk of chunks) {
         const documentId = chunk?.payload?.ragMediaDocumentId;
-        if (!documentId || chunk?.payload?.ragMediaType !== 'image') continue;
+        if (!documentId || chunk?.payload?.ragMediaType !== requestedType) continue;
         const doc = knowledgeDocumentRepo.getDocumentByKey(tenantId, documentId);
         if (doc && doc.tenant_id === tenantId && doc.ai_send_enabled === 1
             && doc.is_active === 1 && ['active', 'indexed', 'cleanup_pending'].includes(doc.status)) {
@@ -31,11 +35,11 @@ function selectRetrievedRagImage(tenantId, telemetry) {
     return null;
 }
 
-function createOutgoingMediaFromRagImage(doc, channel, tenantId) {
+function createOutgoingMediaFromRagDocument(doc, channel, tenantId, mediaType) {
     const knowledgeRoot = path.resolve(__dirname, '..', '..', 'data', 'knowledge-documents');
     const sourcePath = path.resolve(doc.storage_path);
     if (!sourcePath.startsWith(`${knowledgeRoot}${path.sep}`) || !fs.existsSync(sourcePath)) {
-        const error = new Error('ملف صورة RAG غير موجود أو مساره غير صالح.');
+        const error = new Error('ملف وسائط RAG غير موجود أو مساره غير صالح.');
         error.code = 'RAG_MEDIA_FILE_UNAVAILABLE';
         throw error;
     }
@@ -51,7 +55,7 @@ function createOutgoingMediaFromRagImage(doc, channel, tenantId) {
             channel,
             provider: ['messenger', 'instagram'].includes(channel) ? 'meta' : channel,
             direction: 'outgoing',
-            mediaType: 'image',
+            mediaType,
             originalFilename: media.originalName,
             storedFilename: media.fileName,
             storagePath: media.localPath,
@@ -66,7 +70,8 @@ function createOutgoingMediaFromRagImage(doc, channel, tenantId) {
             ...media,
             attachmentId: attachment.id,
             publicUrl: `/api/media/${attachment.id}/download`,
-            ragDocumentId: doc.document_key
+            ragDocumentId: doc.document_key,
+            ragMediaType: mediaType
         };
     } catch (error) {
         removeStoredMedia(media);
@@ -177,11 +182,25 @@ async function processIncomingMessage(normalizedMsg) {
                 throw new Error('AI provider returned an empty response');
             }
             replyText = String(aiResponse).trim();
-            if (messageType === 'text' && requestsKnowledgeImage(textToProcess)) {
-                const imageDocument = selectRetrievedRagImage(tenantId, retrievalTelemetry);
-                if (imageDocument) {
-                    replyMedia = createOutgoingMediaFromRagImage(imageDocument, channel, tenantId);
-                    console.log(`[AI Media] Selected RAG image tenant=${tenantId} document=${imageDocument.document_key} channel=${channel}`);
+            const requestedMediaType = messageType === 'text'
+                ? requestedKnowledgeMediaType(textToProcess)
+                : null;
+            if (requestedMediaType) {
+                const mediaDocument = selectRetrievedRagMedia(
+                    tenantId, retrievalTelemetry, requestedMediaType
+                );
+                if (mediaDocument) {
+                    const { assertMediaCapability } = require('./mediaCapabilities');
+                    try {
+                        assertMediaCapability(channel, mediaDocument.mime_type, mediaDocument.file_size);
+                        replyMedia = createOutgoingMediaFromRagDocument(
+                            mediaDocument, channel, tenantId, requestedMediaType
+                        );
+                        console.log(`[AI Media] Selected RAG ${requestedMediaType} tenant=${tenantId} document=${mediaDocument.document_key} channel=${channel}`);
+                    } catch (mediaError) {
+                        if (mediaError.code !== 'UNSUPPORTED_CHANNEL_MEDIA') throw mediaError;
+                        console.warn(`[AI Media] ${requestedMediaType} is unsupported on channel=${channel}; text reply retained.`);
+                    }
                 }
             }
         } else {
@@ -195,7 +214,7 @@ async function processIncomingMessage(normalizedMsg) {
             externalUserId,
             direction: 'outgoing',
             senderType: 'ai',
-            messageType: replyMedia ? 'image' : 'text',
+            messageType: replyMedia ? (replyMedia.ragMediaType || 'document') : 'text',
             content: replyText,
             media: replyMedia,
             tenantId
@@ -227,8 +246,12 @@ async function processIncomingMessage(normalizedMsg) {
 module.exports = {
     processIncomingMessage,
     _test: {
-        requestsKnowledgeImage,
-        selectRetrievedRagImage,
-        createOutgoingMediaFromRagImage
+        requestedKnowledgeMediaType,
+        selectRetrievedRagMedia,
+        createOutgoingMediaFromRagDocument,
+        requestsKnowledgeImage: text => requestedKnowledgeMediaType(text) === 'image',
+        selectRetrievedRagImage: (tenantId, telemetry) => selectRetrievedRagMedia(tenantId, telemetry, 'image'),
+        createOutgoingMediaFromRagImage: (doc, channel, tenantId) =>
+            createOutgoingMediaFromRagDocument(doc, channel, tenantId, 'image')
     }
 };

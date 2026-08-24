@@ -16,12 +16,12 @@
     "test:rag:load-matrix": "node scripts/rag-load-matrix.js",
     "test:rag:indexing-load": "node scripts/rag-load-runner.js --config test/rag-load/indexing-smoke.json",
     "test:rag:endurance": "node scripts/rag-load-runner.js --config test/rag-load/endurance.json",
-    "test": "node test/security_configuration.test.js && node test/database.test.js && node test/rag_integration_wiring.test.js && node test/rag_reconciliation.test.js && node test/rag_runtime_controls.test.js && node test/rag_distributed_locks.test.js && node test/rag_retrieval_cache.test.js && node test/rag_fallback_architecture.test.js && node test/rag_tenant_isolation.test.js && node test/rag_atomic_replacement.test.js && node test/rag_knowledge_atomic_reindex.test.js && node test/pipeline.test.js && node test/auth.test.js && node test/dashboard.test.js && node test/realtime.test.js && node test/phase10_separation.test.js && node test/origin_policy.test.js && node test/whatsapp_webhook_signature.test.js && node test/meta_webhook_signature.test.js && node test/media_access.test.js && node test/whatsapp_tenant_routing.test.js && node test/meta_outgoing_delivery.test.js && node --test test/meta_media_support.test.js && node test/settings.test.js && node test/rag.test.js && node test/rag_documents.test.js && node test/ai_pipeline.test.js && node test/conversation_mode_routing.test.js && node test/intent_detector.test.js && node test/query_decomposer.test.js && node test/intent_retriever.test.js && node test/retrieval_planner.test.js && node test/citation_grounding.test.js && node test/answer_validator.test.js && node test/answer_validator_policy.test.js && node test/contradiction_policy.test.js && node test/ai_task_routing.test.js && node test/ai_model_health.test.js && node test/vision_pipeline.test.js && node test/stt_pipeline.test.js && node test/whatsapp_multi_provider.test.js && node test/analytics_rebuild.test.js && node test/budget_service.test.js && npm test --prefix ../frontend"
+    "test": "node test/security_configuration.test.js && node test/database.test.js && node test/rag_integration_wiring.test.js && node test/rag_reconciliation.test.js && node test/rag_runtime_controls.test.js && node test/rag_distributed_locks.test.js && node test/rag_retrieval_cache.test.js && node test/rag_fallback_architecture.test.js && node test/rag_tenant_isolation.test.js && node test/rag_atomic_replacement.test.js && node test/rag_knowledge_atomic_reindex.test.js && node test/rag_image_delivery.test.js && node test/pipeline.test.js && node test/auth.test.js && node test/dashboard.test.js && node test/realtime.test.js && node test/phase10_separation.test.js && node test/origin_policy.test.js && node test/whatsapp_webhook_signature.test.js && node test/meta_webhook_signature.test.js && node test/media_access.test.js && node test/multi_channel_media_contract.test.js && node test/whatsapp_tenant_routing.test.js && node test/meta_outgoing_delivery.test.js && node --test test/meta_media_support.test.js && node test/settings.test.js && node test/rag.test.js && node test/rag_documents.test.js && node test/retrieval_intelligence.test.js && node test/ai_pipeline.test.js && node test/conversation_mode_routing.test.js && node test/intent_detector.test.js && node test/query_decomposer.test.js && node test/intent_retriever.test.js && node test/retrieval_planner.test.js && node test/citation_grounding.test.js && node test/answer_validator.test.js && node test/answer_validator_policy.test.js && node test/contradiction_policy.test.js && node test/ai_task_routing.test.js && node test/ai_model_health.test.js && node test/vision_pipeline.test.js && node test/stt_pipeline.test.js && node test/whatsapp_multi_provider.test.js && node test/analytics_rebuild.test.js && node test/budget_service.test.js && node --test test/fake_functionality_regression.test.js test/process_output_safety.test.js && npm test --prefix ../frontend"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.11.1",
-    "dompurify": "3.4.12",
+    "dompurify": "3.4.14",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.19.0",
@@ -31,6 +31,9 @@
     "qrcode": "^1.5.4",
     "socket.io": "^4.8.3",
     "telegraf": "^4.16.3",
-    "whatsapp-web.js": "^1.34.7"
+    "whatsapp-web.js": "1.34.7"
+  },
+  "overrides": {
+    "@puppeteer/browsers": "3.2.1"
   }
 }

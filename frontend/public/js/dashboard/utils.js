@@ -18,6 +18,23 @@ window.Dashboard.utils = {
         });
     },
 
+    // Table rows must be parsed inside a real table context. Parsing a bare <tr>
+    // through an ordinary container makes browsers discard its <td> structure.
+    setSanitizedTableRows: function(tbody, rowMarkup) {
+        if (!tbody) return;
+        const container = document.createElement('div');
+        this.setSanitizedHTML(
+            container,
+            `<table><tbody>${String(rowMarkup || '')}</tbody></table>`
+        );
+        const sanitizedBody = container.querySelector('tbody');
+        if (!sanitizedBody) {
+            tbody.replaceChildren();
+            return;
+        }
+        tbody.replaceChildren(...Array.from(sanitizedBody.children));
+    },
+
     createElement: function(tagName, options = {}) {
         const element = document.createElement(tagName);
         if (options.className) element.className = options.className;

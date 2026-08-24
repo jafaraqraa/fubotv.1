@@ -2,7 +2,7 @@ function validateNormalizedMessage(msg) {
     const validChannels = ['telegram', 'whatsapp', 'messenger', 'instagram'];
     const validDirections = ['incoming', 'outgoing'];
     const validSenderTypes = ['customer', 'ai', 'agent', 'system'];
-    const validMessageTypes = ['text', 'image', 'audio', 'video', 'document', 'note'];
+    const validMessageTypes = ['text', 'image', 'audio', 'voice', 'video', 'document', 'note'];
 
     if (!msg) {
         throw new Error('Message object is null or undefined');

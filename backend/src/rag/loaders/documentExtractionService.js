@@ -59,9 +59,13 @@ function validateFilenameSecurity(filename) {
     }
 
     const ext = extMatch[1].toLowerCase();
-    const allowed = ['txt', 'md', 'markdown', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
+    const allowed = [
+        'txt', 'md', 'markdown', 'pdf', 'docx',
+        'jpg', 'jpeg', 'png', 'webp',
+        'mp3', 'ogg', 'wav', 'm4a'
+    ];
     if (!allowed.includes(ext)) {
-        throw new Error('امتداد الملف غير مدعوم. الامتدادات المدعومة: PDF, TXT, MD, DOCX, JPG, PNG, WEBP.');
+        throw new Error('امتداد الملف غير مدعوم. الامتدادات المدعومة: PDF, TXT, MD, DOCX, JPG, PNG, WEBP, MP3, OGG, WAV, M4A.');
     }
 
     return ext;
@@ -121,6 +125,30 @@ function validateMimeAndMagicBytes(ext, mimeType, buffer) {
             || buffer.toString('ascii', 0, 4) !== 'RIFF'
             || buffer.toString('ascii', 8, 12) !== 'WEBP') {
             throw new Error('صورة WEBP غير صالحة أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'mp3') {
+        const hasMp3Signature = buffer.length >= 3 && (
+            buffer.toString('ascii', 0, 3) === 'ID3'
+            || (buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0)
+        );
+        if (mimeLower !== 'audio/mpeg' || !hasMp3Signature) {
+            throw new Error('ملف MP3 غير صالح أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'ogg') {
+        if (!['audio/ogg', 'application/ogg'].includes(mimeLower)
+            || buffer.length < 4 || buffer.toString('ascii', 0, 4) !== 'OggS') {
+            throw new Error('ملف OGG غير صالح أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'wav') {
+        if (!['audio/wav', 'audio/x-wav'].includes(mimeLower) || buffer.length < 12
+            || buffer.toString('ascii', 0, 4) !== 'RIFF'
+            || buffer.toString('ascii', 8, 12) !== 'WAVE') {
+            throw new Error('ملف WAV غير صالح أو نوع MIME غير متوافق.');
+        }
+    } else if (ext === 'm4a') {
+        if (!['audio/mp4', 'audio/x-m4a'].includes(mimeLower) || buffer.length < 12
+            || buffer.toString('ascii', 4, 8) !== 'ftyp') {
+            throw new Error('ملف M4A غير صالح أو نوع MIME غير متوافق.');
         }
     }
 }

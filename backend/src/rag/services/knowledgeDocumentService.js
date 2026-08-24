@@ -27,16 +27,52 @@ const { createLifecycle, assertActiveDocument } = require('../indexing/indexingL
 const { scanText } = require('../security/promptInjectionGuard');
 const { acquireLease } = require('../runtime/distributedLockService');
 
-const RAG_IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp']);
+const RAG_MEDIA_TYPES = new Map([
+    ['jpg', 'image'], ['jpeg', 'image'], ['png', 'image'], ['webp', 'image'],
+    ['mp3', 'audio'], ['ogg', 'audio'], ['wav', 'audio'], ['m4a', 'audio']
+]);
 
-function buildImageIndexText(originalName, description) {
+function buildMediaIndexText(originalName, description, mediaType) {
     const value = String(description || '').normalize('NFKC').replace(/[\u0000-\u001f]/g, ' ').trim();
     if (value.length < 3 || value.length > 2000) {
-        const error = new Error('وصف صورة RAG مطلوب ويجب أن يكون بين 3 و2000 حرف.');
-        error.code = 'RAG_IMAGE_DESCRIPTION_REQUIRED';
+        const error = new Error('وصف وسائط RAG مطلوب ويجب أن يكون بين 3 و2000 حرف.');
+        error.code = 'RAG_MEDIA_DESCRIPTION_REQUIRED';
         throw error;
     }
-    return `صورة معتمدة قابلة للإرسال: ${originalName}\nوصف الصورة: ${value}\nنوع المصدر: صورة من مكتبة معرفة الشركة.`;
+    const label = mediaType === 'audio' ? 'ملف صوتي' : 'صورة';
+    return `${label} معتمد قابل للإرسال: ${originalName}\nوصف ${label}: ${value}\nنوع المصدر: ${label} من مكتبة معرفة الشركة.`;
+}
+
+async function transcribeRagAudio({ storagePath, originalName, mimeType }) {
+    const { getAIProviderForTask } = require('../../services/aiProviders');
+    const provider = getAIProviderForTask('speech_to_text');
+    if (!provider || typeof provider.transcribe !== 'function') {
+        const error = new Error('مهمة تحويل الصوت إلى نص غير مفعلة أو لا يدعمها المزوّد المحدد.');
+        error.code = 'RAG_AUDIO_MODEL_UNAVAILABLE';
+        throw error;
+    }
+    const model = provider.model || 'unknown';
+    console.log(`[RAG Audio] Analysis started task=speech_to_text provider=${provider.constructor.name} model=${model}`);
+    const transcript = await provider.transcribe({
+        localPath: storagePath,
+        fileName: originalName,
+        mimeType
+    });
+    const normalized = String(transcript || '').normalize('NFKC').trim();
+    if (!normalized) {
+        const error = new Error(`فشل موديل الصوت (${model}) في استخراج نص من الملف.`);
+        error.code = 'RAG_AUDIO_TRANSCRIPTION_FAILED';
+        throw error;
+    }
+    console.log(`[RAG Audio] Analysis completed task=speech_to_text model=${model} characters=${normalized.length}`);
+    return { transcript: normalized, model };
+}
+
+function buildIndexedMediaText(originalName, description, mediaType, transcript = null) {
+    const base = buildMediaIndexText(originalName, description, mediaType);
+    return mediaType === 'audio'
+        ? `${base}\nالتفريغ النصي المعتمد للتسجيل: ${transcript}`
+        : base;
 }
 
 function annotateInjectionRisk(chunks, tenantId, documentId) {
@@ -97,6 +133,7 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
     const contentHash = computeSHA256(buffer);
     const dependencies = options._testDependencies || {};
     const extract = dependencies.extractTextFromBuffer || extractTextFromBuffer;
+    const transcribeAudio = dependencies.transcribeRagAudio || transcribeRagAudio;
     const chunk = dependencies.chunkDocument || chunkDocument;
     const embed = dependencies.generateEmbeddings || generateEmbeddings;
     const qdrantReady = dependencies.checkQdrantReady || checkQdrantReady;
@@ -122,7 +159,8 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
     try {
         console.log(`[RAG Replace] Staging new version tenant=${tenantId} document=${logicalDocumentId} version=${versionNumber}`);
         fs.writeFileSync(stagingPath, buffer);
-        const mediaDescription = RAG_IMAGE_EXTENSIONS.has(ext)
+        const ragMediaType = RAG_MEDIA_TYPES.get(ext) || null;
+        const mediaDescription = ragMediaType
             ? String(options.mediaDescription || existing.media_description || '').trim()
             : null;
         stagingRowId = docRepo.insertDocument({
@@ -144,12 +182,24 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
             logical_document_id: logicalDocumentId,
             version_id: versionId,
             media_description: mediaDescription,
-            ai_send_enabled: RAG_IMAGE_EXTENSIONS.has(ext) ? 1 : 0
+            ai_send_enabled: ragMediaType ? 1 : 0
         });
 
         currentStage = 'extraction';
-        const text = RAG_IMAGE_EXTENSIONS.has(ext)
-            ? buildImageIndexText(originalName, mediaDescription)
+        let audioAnalysis = null;
+        if (ragMediaType === 'audio') {
+            audioAnalysis = await transcribeAudio({
+                storagePath: stagingPath, originalName, mimeType
+            });
+            docRepo.updateDocument(tenantId, stagingRowId, {
+                media_transcript: audioAnalysis.transcript,
+                media_analysis_model: audioAnalysis.model
+            });
+        }
+        const text = ragMediaType
+            ? buildIndexedMediaText(
+                originalName, mediaDescription, ragMediaType, audioAnalysis?.transcript
+            )
             : await extract(ext, buffer);
         if (!text || !text.trim()) throw new Error('المحتوى المستخرج فارغ.');
         const maxTextLength = Number(getConfig('RAG_MAX_EXTRACTED_TEXT_LENGTH')) || 10000000;
@@ -186,8 +236,8 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
             indexVersionId: versionId,
             versionNumber,
             lifecycle: 'staging',
-            ragMediaType: RAG_IMAGE_EXTENSIONS.has(ext) ? 'image' : null,
-            ragMediaDocumentId: RAG_IMAGE_EXTENSIONS.has(ext) ? temporaryDocumentId : null
+            ragMediaType,
+            ragMediaDocumentId: ragMediaType ? temporaryDocumentId : null
         })), tenantId, logicalDocumentId);
         if (!chunks.length) throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');
         const maxChunks = Number(getConfig('RAG_MAX_CHUNKS_PER_DOCUMENT')) || 5000;
@@ -428,10 +478,11 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     }
     const ext = validateFilenameSecurity(originalName);
     validateMimeAndMagicBytes(ext, mimeType, buffer);
-    const mediaDescription = RAG_IMAGE_EXTENSIONS.has(ext)
+    const ragMediaType = RAG_MEDIA_TYPES.get(ext) || null;
+    const mediaDescription = ragMediaType
         ? String(options.mediaDescription || '').trim()
         : null;
-    if (RAG_IMAGE_EXTENSIONS.has(ext)) buildImageIndexText(originalName, mediaDescription);
+    if (ragMediaType) buildMediaIndexText(originalName, mediaDescription, ragMediaType);
 
     // A. Duplicate Original Name & Version Detection
     const existingByName = docRepo.getDocumentByOriginalName(tenantId, originalName);
@@ -497,7 +548,7 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
         version: nextVersion,
         tenant_id: tenantId,
         media_description: mediaDescription,
-        ai_send_enabled: RAG_IMAGE_EXTENSIONS.has(ext) ? 1 : 0
+        ai_send_enabled: ragMediaType ? 1 : 0
     });
 
     emitDocumentEvent('rag:document-uploaded', { documentId: docKey, originalFilename: originalName, status: 'uploaded' });
@@ -522,6 +573,7 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
     const tenantId = requireTenantId(options.tenantId, 'document-index');
     const dependencies = options._testDependencies || {};
     const extract = dependencies.extractTextFromBuffer || extractTextFromBuffer;
+    const transcribeAudio = dependencies.transcribeRagAudio || transcribeRagAudio;
     const chunk = dependencies.chunkDocument || chunkDocument;
     const embed = dependencies.generateEmbeddings || generateEmbeddings;
     const qdrantReady = dependencies.checkQdrantReady || checkQdrantReady;
@@ -593,8 +645,26 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
         const ext = doc.source_type;
         let text = '';
         try {
-            text = RAG_IMAGE_EXTENSIONS.has(ext)
-                ? buildImageIndexText(doc.original_name, doc.media_description)
+            const ragMediaType = RAG_MEDIA_TYPES.get(ext) || null;
+            let audioAnalysis = null;
+            if (ragMediaType === 'audio') {
+                audioAnalysis = await transcribeAudio({
+                    storagePath: doc.storage_path,
+                    originalName: doc.original_name,
+                    mimeType: doc.mime_type
+                });
+                if (!docRepo.updateDocument(tenantId, doc.id, {
+                    media_transcript: audioAnalysis.transcript,
+                    media_analysis_model: audioAnalysis.model
+                })) {
+                    throw new Error('فشل حفظ نتيجة تحليل موديل الصوت.');
+                }
+            }
+            text = ragMediaType
+                ? buildIndexedMediaText(
+                    doc.original_name, doc.media_description, ragMediaType,
+                    audioAnalysis?.transcript
+                )
                 : await extract(ext, fileBuffer);
         } catch (extractErr) {
             let errorMsg = extractErr.message;
@@ -665,8 +735,8 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
                 embeddingModel: modelName,
                 ingestionVersion: versionId,
                 createdAt: new Date().toISOString(),
-                ragMediaType: RAG_IMAGE_EXTENSIONS.has(ext) ? 'image' : null,
-                ragMediaDocumentId: RAG_IMAGE_EXTENSIONS.has(ext) ? doc.document_key : null
+                ragMediaType: RAG_MEDIA_TYPES.get(ext) || null,
+                ragMediaDocumentId: RAG_MEDIA_TYPES.has(ext) ? doc.document_key : null
             })), tenantId, doc.document_key);
         if (richChunks.length === 0) {
             throw new Error('لا يمكن تقسيم المستند إلى مقاطع صالحة.');

@@ -7,7 +7,7 @@ const MODE = Object.freeze({
 
 const COMPANY_MARKERS = /(?:\b(?:company|business|service|services|pricing|price|subscription|subscriptions|product|products|policy|policies|payment|shipping|delivery|support|warranty|refund|return|order|store)\b|شرك(?:ه|ة)|خدمات?|اشتراك|باقات?|منتجات?|سياس(?:ه|ة)|اسعار|سعر|تكلف(?:ه|ة)|دفع|شحن|توصيل|دعم|ضمان|استرجاع|استبدال|طلب|متجر|فرع|فروع|دوام|موقعكم|رقمكم|بتقدموا|تقدمون)/i;
 const SOCIAL_ONLY = /^(?:(?:يا\s+)?(?:مرحبا|مرحبا بك|اهلا|اهلين|هلا|هلو|السلام عليكم|وعليكم السلام|صباح الخير|مساء الخير|يسعد صباحك|يسعد مساك|كيفك|كيف حالك|شو الاخبار|شو اخبارك|اخبارك|تمام|الحمد لله|شكرا|شكرا لك|يسلمو|يعطيك العافيه|الله يعطيك العافيه|مع السلامه|باي|الى اللقاء|hello|hi|hey|good morning|good evening|how are you|what'?s up|thanks|thank you|bye)[\s،,.!?؟]*)+$/i;
-const KNOWLEDGE_MEDIA_REQUEST = /(?:(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|بدي|اريد|send|show).{0,80}(?:صوره|صور|image|photo|picture)|(?:صوره|صور|image|photo|picture).{0,80}(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|بدي|اريد|send|show))/i;
+const KNOWLEDGE_MEDIA_REQUEST = /(?:(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|شغل|بدي|اريد|send|show|play).{0,80}(?:صوره|صور|صوت|تسجيل|اغنيه|انشوده|image|photo|picture|audio|voice|recording)|(?:صوره|صور|صوت|تسجيل|اغنيه|انشوده|image|photo|picture|audio|voice|recording).{0,80}(?:ابعث|ارسل|اعرض|ورجيني|فرجيني|شغل|بدي|اريد|send|show|play))/i;
 
 function normalizeForRouting(text) {
     return String(text || '')

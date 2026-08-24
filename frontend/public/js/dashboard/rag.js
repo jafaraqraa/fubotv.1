@@ -495,7 +495,7 @@ window.Dashboard.rag = {
                     </td>
                 </tr>
             `;
-            window.Dashboard.utils.setSanitizedHTML(tbody, emptyHTML);
+            window.Dashboard.utils.setSanitizedTableRows(tbody, emptyHTML);
             if (mobileContainer) {
                 window.Dashboard.utils.setSanitizedHTML(mobileContainer, `
                     <div class="text-slate-400 text-center p-6 bg-white border border-slate-200 rounded-xl font-arabic text-[11px] leading-relaxed">
@@ -589,7 +589,7 @@ window.Dashboard.rag = {
             `;
         });
 
-        window.Dashboard.utils.setSanitizedHTML(tbody, tableHTML);
+        window.Dashboard.utils.setSanitizedTableRows(tbody, tableHTML);
         if (mobileContainer) window.Dashboard.utils.setSanitizedHTML(mobileContainer, mobileHTML);
 
         document.querySelectorAll('[data-document-open]').forEach(row => {
@@ -1802,7 +1802,7 @@ window.Dashboard.rag = {
         return row;
     },
 
-    requestImageDescription: function(fileName) {
+    requestMediaDescription: function(fileName, mediaType) {
         return new Promise(resolve => {
             const overlay = document.createElement('div');
             overlay.className = 'fixed inset-0 z-[100] bg-slate-950/50 flex items-center justify-center p-4';
@@ -1813,14 +1813,17 @@ window.Dashboard.rag = {
 
             const title = document.createElement('h3');
             title.className = 'text-lg font-bold text-slate-900 mb-2';
-            title.textContent = 'وصف صورة قاعدة المعرفة';
+            const mediaLabel = mediaType === 'audio' ? 'الملف الصوتي' : 'الصورة';
+            title.textContent = `وصف ${mediaLabel} في قاعدة المعرفة`;
             const hint = document.createElement('p');
             hint.className = 'text-sm text-slate-500 mb-4';
-            hint.textContent = `اكتب وصفاً دقيقاً للصورة ${fileName} ليتمكن الذكاء من العثور عليها وإرسالها.`;
+            hint.textContent = `اكتب وصفاً دقيقاً لـ${mediaLabel} ${fileName} ليتمكن الذكاء من العثور عليه وإرساله.`;
             const textarea = document.createElement('textarea');
             textarea.className = 'w-full min-h-28 rounded-xl border border-slate-300 p-3 text-sm focus:border-blue-500 focus:outline-none';
             textarea.maxLength = 2000;
-            textarea.placeholder = 'مثال: صورة المنتج الأحمر من الأمام، موديل 2026';
+            textarea.placeholder = mediaType === 'audio'
+                ? 'مثال: التسجيل التعريفي بخدمات الشركة'
+                : 'مثال: صورة المنتج الأحمر من الأمام، موديل 2026';
             const error = document.createElement('p');
             error.className = 'mt-2 text-sm text-red-600 hidden';
             error.textContent = 'الوصف مطلوب ويجب أن يكون بين 3 و2000 حرف.';
@@ -1877,16 +1880,20 @@ window.Dashboard.rag = {
         }
 
         const ext = file.name.split('.').pop().toLowerCase();
-        const allowed = ['pdf', 'txt', 'docx', 'md', 'jpg', 'jpeg', 'png', 'webp'];
+        const allowed = [
+            'pdf', 'txt', 'docx', 'md', 'jpg', 'jpeg', 'png', 'webp',
+            'mp3', 'ogg', 'wav', 'm4a'
+        ];
         if (!allowed.includes(ext)) {
-            alert('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD, JPG, PNG, WEBP');
+            alert('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD, JPG, PNG, WEBP, MP3, OGG, WAV, M4A');
             return;
         }
 
         const isImage = ['jpg', 'jpeg', 'png', 'webp'].includes(ext);
+        const isAudio = ['mp3', 'ogg', 'wav', 'm4a'].includes(ext);
         let mediaDescription = '';
-        if (isImage) {
-            mediaDescription = await this.requestImageDescription(file.name);
+        if (isImage || isAudio) {
+            mediaDescription = await this.requestMediaDescription(file.name, isAudio ? 'audio' : 'image');
             if (mediaDescription === null) return;
         }
 
@@ -1900,7 +1907,7 @@ window.Dashboard.rag = {
 
             const formData = new FormData();
             formData.append('file', file);
-            if (isImage) formData.append('mediaDescription', mediaDescription);
+            if (isImage || isAudio) formData.append('mediaDescription', mediaDescription);
             if (overwriteAction) {
                 formData.append('overwriteAction', overwriteAction);
             }

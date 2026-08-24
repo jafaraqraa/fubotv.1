@@ -159,7 +159,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     const profiler = new PipelineProfiler();
 
     const isImage = messageType === 'image' || (mediaObj && mediaObj.mimeType && mediaObj.mimeType.startsWith('image/'));
-    const isAudio = messageType === 'audio' || (mediaObj && mediaObj.mimeType && mediaObj.mimeType.startsWith('audio/'));
+    const isAudio = ['audio', 'voice'].includes(messageType)
+        || (mediaObj && mediaObj.mimeType && mediaObj.mimeType.startsWith('audio/'));
     const activeTask = isImage ? 'vision' : 'text_generation';
 
     // Image Input Validation if active task is vision
@@ -173,7 +174,12 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     }
 
     // Speech-To-Text Transcription Pipeline Integration
-    if (isAudio && mediaObj) {
+    if (isAudio) {
+        if (!mediaObj?.localPath) {
+            const error = new Error('تعذّر العثور على ملف الرسالة الصوتية.');
+            error.code = 'AUDIO_MEDIA_MISSING';
+            throw error;
+        }
         profiler.startStage('Speech to Text');
         const { getAIProviderForTask } = require('./aiProviders');
         const sttProvider = getAIProviderForTask('speech_to_text');
@@ -198,26 +204,30 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         addLog(`جاري تفريغ الصوت عبر المهمة [speech_to_text] باستخدام [${sttModel}]...`);
 
         const sttStartTime = Date.now();
-        let transcribedText = '';
-        if (sttProvider && typeof sttProvider.transcribe === 'function') {
-            transcribedText = await sttProvider.transcribe(mediaObj);
-        } else {
-            console.warn(`[STT Warning] Configured STT provider does not support transcription or is not initialized.`);
+        if (!sttProvider || typeof sttProvider.transcribe !== 'function') {
+            const error = new Error('مزوّد تحليل الصوت غير مهيأ بشكل صحيح.');
+            error.code = 'STT_PROVIDER_UNAVAILABLE';
+            throw error;
         }
+        const transcribedText = String(await sttProvider.transcribe(mediaObj) || '').trim();
         const sttDuration = Date.now() - sttStartTime;
         profiler.recordDuration('Speech to Text', sttDuration);
 
-        console.log(`🎙️ [SPEECH-TO-TEXT RESULT] Transcribed text: "${transcribedText || ''}", Execution Time: [${sttDuration} ms]`);
-        addLog(`اكتمل التفريغ الصوتي بنجاح: "${transcribedText || ''}" (${sttDuration}ms)`);
+        if (!transcribedText) {
+            const error = new Error('لم يتمكن موديل الصوت من استخراج نص من التسجيل.');
+            error.code = 'EMPTY_AUDIO_TRANSCRIPT';
+            throw error;
+        }
+
+        console.log(`🎙️ [SPEECH-TO-TEXT RESULT] Completed characters=${transcribedText.length} durationMs=${sttDuration}`);
+        addLog(`اكتمل تفريغ الرسالة الصوتية بنجاح (${sttDuration}ms)`);
         profiler.endStage('Speech to Text');
 
         // Overwrite userText with transcribed text
-        userText = transcribedText || '';
+        userText = transcribedText;
 
         // Compare raw provider text with final text passed to RAG pipeline (Audit verification 7)
-        console.log(`🎙️ [SPEECH-TO-TEXT QUALITY AUDIT]`);
-        console.log(`  • Raw Provider Transcribed Text: "${transcribedText || ''}"`);
-        console.log(`  • Final Text Passed to RAG Pipeline: "${userText}"`);
+        console.log(`🎙️ [SPEECH-TO-TEXT HANDOFF] task=text_generation characters=${userText.length}`);
     }
 
     // 1. Fetch system prompt personality, rules, safety
@@ -292,8 +302,9 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     profiler.setApiDetails({ model: activeModel, provider: activeProviderName });
 
     // Explicit Vision Routing Log
-    console.log(`🔍 [VISION ROUTING] Detected content type: [${isImage ? 'image' : 'text'}], Selected task: [${activeTask}], Selected provider: [${activeProviderName}], Selected model: [${activeModel}]`);
-    addLog(`معالجة رسالة [${isImage ? 'صورة' : 'نص'}] عبر المهمة [${activeTask}] باستخدام [${activeModel}]`);
+    const routedContentType = isImage ? 'image' : (isAudio ? 'transcribed_audio' : 'text');
+    console.log(`🤖 [AI TASK ROUTING] Content type: [${routedContentType}], Selected task: [${activeTask}], Selected provider: [${activeProviderName}], Selected model: [${activeModel}]`);
+    addLog(`معالجة رسالة [${isImage ? 'صورة' : (isAudio ? 'صوت' : 'نص')}] عبر المهمة [${activeTask}] باستخدام [${activeModel}]`);
 
     const apiStart = Date.now();
     console.log(`🤖 AI Provider API Request started at: ${new Date(apiStart).toISOString()}`);

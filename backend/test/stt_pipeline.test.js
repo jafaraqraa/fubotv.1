@@ -193,3 +193,58 @@ test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline hand
         global.fetch = originalFetch;
     }
 });
+
+test('Speech-to-Text Pipeline - voice messages use the configured audio model', async () => {
+    const originalFetch = global.fetch;
+    const requestedModels = [];
+    global.fetch = async (url, config = {}) => {
+        const urlString = String(url);
+        if (urlString.includes('/audio/transcriptions')) {
+            return { ok: true, json: async () => ({ text: 'كيفك اليوم؟' }) };
+        }
+        if (urlString.includes('/chat/completions')) {
+            const body = JSON.parse(config.body);
+            requestedModels.push(body.model);
+            assert.ok(body.messages.at(-1).content.includes('كيفك اليوم؟'));
+            return {
+                ok: true,
+                json: async () => ({ choices: [{ message: { content: 'الرد بناءً على الصوت' } }] })
+            };
+        }
+        if (urlString.includes('/points/search')) {
+            return { ok: true, json: async () => ({ result: [] }) };
+        }
+        return { ok: true, json: async () => ({ embedding: [1, ...Array(767).fill(0)] }) };
+    };
+
+    try {
+        const response = await getAIResponse('voice-user', '', 'voice', {
+            localPath: tempAudioPath,
+            mimeType: 'audio/ogg',
+            fileName: 'voice.ogg'
+        }, { tenantId: 'default', knowledgeBaseOnly: false });
+        assert.strictEqual(response, 'الرد بناءً على الصوت');
+        assert.deepStrictEqual(requestedModels, ['gpt-test-text-model']);
+    } finally {
+        global.fetch = originalFetch;
+    }
+});
+
+test('Speech-to-Text Pipeline - empty transcription fails safely', async () => {
+    const originalFetch = global.fetch;
+    global.fetch = async url => String(url).includes('/audio/transcriptions')
+        ? { ok: true, json: async () => ({ text: '' }) }
+        : { ok: true, json: async () => ({}) };
+    try {
+        await assert.rejects(
+            () => getAIResponse('silent-user', '', 'audio', {
+                localPath: tempAudioPath,
+                mimeType: 'audio/ogg',
+                fileName: 'silent.ogg'
+            }, { tenantId: 'default' }),
+            error => error.code === 'EMPTY_AUDIO_TRANSCRIPT'
+        );
+    } finally {
+        global.fetch = originalFetch;
+    }
+});

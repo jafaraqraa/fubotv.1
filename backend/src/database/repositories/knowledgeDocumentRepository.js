@@ -13,13 +13,13 @@ function insertDocument(doc) {
             language, status, is_enabled, chunk_count, vector_count, index_fingerprint,
             version, tenant_id, logical_document_id, version_id, is_active,
             embedding_model, vector_dimension, cleanup_error, tenant_ownership_status,
-            media_description, ai_send_enabled,
+            media_description, ai_send_enabled, media_transcript, media_analysis_model,
             created_at, updated_at
         ) VALUES (
             ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?,
             ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
         )
     `);
 
@@ -50,7 +50,9 @@ function insertDocument(doc) {
         doc.cleanup_error || null,
         'verified',
         doc.media_description || null,
-        doc.ai_send_enabled === 1 ? 1 : 0
+        doc.ai_send_enabled === 1 ? 1 : 0,
+        doc.media_transcript || null,
+        doc.media_analysis_model || null
     );
 
     return result.lastInsertRowid;
@@ -82,7 +84,8 @@ function updateDocument(tenantId, id, updates) {
         'vector_dimension', 'cleanup_error', 'tenant_ownership_status',
         'reconciliation_status', 'reconciliation_error', 'fencing_token', 'operation_id',
         'storage_name', 'storage_path', 'file_size', 'content_hash', 'original_name',
-        'source_type', 'mime_type', 'media_description', 'ai_send_enabled'
+        'source_type', 'mime_type', 'media_description', 'ai_send_enabled',
+        'media_transcript', 'media_analysis_model'
     ]);
     const invalidKey = keys.find(key => !allowedColumns.has(key));
     if (invalidKey) {

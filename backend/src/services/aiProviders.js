@@ -182,8 +182,7 @@ Adapter Used: OpenRouterProvider`);
 
             const data = await response.json();
 
-            // Log raw transcription response from provider before post-processing
-            console.log(`🎙️ [OpenRouter STT RAW RESPONSE]`, JSON.stringify(data));
+            console.log(`🎙️ [OpenRouter STT] Response received hasText=${Boolean(String(data.text || '').trim())}`);
 
             if (data.error) {
                 reportError("OpenRouter STT API", data.error.message || JSON.stringify(data.error));
@@ -303,7 +302,7 @@ Adapter Used: OpenAIProvider`);
             const data = await response.json();
 
             // Log raw transcription response from provider before post-processing
-            console.log(`🎙️ [OpenAI STT RAW RESPONSE]`, JSON.stringify(data));
+            console.log(`🎙️ [OpenAI STT] Response received hasText=${Boolean(String(data.text || '').trim())}`);
 
             if (data.error) {
                 reportError("OpenAI STT API", data.error.message || JSON.stringify(data.error));
