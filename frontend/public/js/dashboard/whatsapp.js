@@ -63,14 +63,16 @@ window.Dashboard.whatsapp = {
                     }
                 }
 
-                window.toggleWhatsAppProviderUI();
+                // Loading saved configuration must only render the UI. Persisting
+                // here restarted an already-connected WhatsApp Web client.
+                window.Dashboard.whatsapp.toggleWhatsAppProviderUI(false);
             }
         } catch (err) {
             console.error('Failed to load WhatsApp configuration:', err.message);
         }
     },
 
-    toggleWhatsAppProviderUI: async function() {
+    toggleWhatsAppProviderUI: async function(persistSelection = true) {
         const select = document.getElementById('wa-provider-select');
         if (!select) return;
 
@@ -84,6 +86,8 @@ window.Dashboard.whatsapp = {
         } else {
             if (webSection) webSection.classList.remove('hidden');
             if (cloudSection) cloudSection.classList.add('hidden');
+
+            if (!persistSelection) return;
 
             // If switching to web, automatically save/persist the provider selection to the backend
             if (window.Dashboard.whatsapp.isSaving) return;

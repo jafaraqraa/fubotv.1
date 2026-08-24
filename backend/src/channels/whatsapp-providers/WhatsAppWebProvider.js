@@ -14,6 +14,12 @@ const { EVENTS } = require('../../realtime/events');
 
 const uploadsDir = path.join(__dirname, '..', '..', '..', 'public', 'uploads');
 
+function extractExternalMessageId(sentMessage) {
+    const id = sentMessage?.id || sentMessage?._data?.id;
+    if (typeof id === 'string') return id.trim();
+    return String(id?.id || id?._serialized || '').trim();
+}
+
 class WhatsAppWebProvider extends WhatsAppProvider {
     constructor(tenantId, config) {
         super(tenantId, config);
@@ -21,6 +27,7 @@ class WhatsAppWebProvider extends WhatsAppProvider {
         this.waStatus = "جاري التحميل...";
         this.lastQrCodeUrl = "";
         this.reconnectTimeout = null;
+        this.reconnectPromise = null;
         this.initializePromise = null;
         this.initialized = false;
         this.lifecycleGeneration = 0;
@@ -28,6 +35,7 @@ class WhatsAppWebProvider extends WhatsAppProvider {
         this.hasProcessLease = false;
         this.exitLeaseHandler = null;
         this.profileImageCache = new Map();
+        this.reconnectDelayMs = 10000;
     }
 
     _getProcessIdentity(pid = process.pid) {
@@ -116,6 +124,37 @@ class WhatsAppWebProvider extends WhatsAppProvider {
             process.removeListener('exit', this.exitLeaseHandler);
             this.exitLeaseHandler = null;
         }
+    }
+
+    _scheduleReconnect(client, generation) {
+        if (this.reconnectPromise || this.reconnectTimeout) return;
+
+        this.reconnectTimeout = setTimeout(() => {
+            this.reconnectTimeout = null;
+            this.reconnectPromise = (async () => {
+                if (generation !== this.lifecycleGeneration || this.waClient !== client) return;
+
+                // Invalidate every callback from the retired page before destroying
+                // it. whatsapp-web.js must never bind a new QR handler to that page.
+                this.lifecycleGeneration += 1;
+                this.waClient = null;
+                this.initialized = false;
+                try {
+                    await this._destroyClient(client);
+                } catch (_) {
+                    // A disconnected Chromium page may already be closed.
+                }
+
+                const pendingInitialization = this.initializePromise;
+                if (pendingInitialization) await pendingInitialization.catch(() => {});
+                this._releaseProcessLease();
+                await this.initialize();
+            })().catch(error => {
+                reportError(`إعادة تهيئة واتساب ويب لـ ${this.tenantId}`, error.message);
+            }).finally(() => {
+                this.reconnectPromise = null;
+            });
+        }, this.reconnectDelayMs);
     }
 
     async _destroyClient(client, timeoutMs = 10000) {
@@ -208,30 +247,20 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 this.waStatus = "غير متصل";
                 this.lastQrCodeUrl = "";
                 this.initialized = false;
-                this.waClient = null;
                 addLog(`[WhatsApp] tenantId: ${this.tenantId} | provider: web | operation: disconnect | executionTime: ${Date.now() - startTime} ms | details: WhatsApp disconnected: ${reason}`);
                 publish(EVENTS.WHATSAPP_STATUS_UPDATED, { status: this.waStatus, qr: "", tenantId: this.tenantId });
 
-                // Automatic reconnection, coalesced through initialize().
-                if (this.reconnectTimeout) clearTimeout(this.reconnectTimeout);
-                this.reconnectTimeout = setTimeout(async () => {
-                    if (generation !== this.lifecycleGeneration) return;
-                    try {
-                        await this._destroyClient(client);
-                    } catch (_) {
-                        // The disconnected browser may already be gone.
-                    }
-                    if (generation === this.lifecycleGeneration) {
-                        this.initialize().catch(err => {
-                            reportError(`إعادة تهيئة واتساب ويب لـ ${this.tenantId}`, err.message);
-                        });
-                    }
-                }, 10000);
+                this._scheduleReconnect(client, generation);
             });
 
             client.on('message', async (msg) => {
                 if (this.waClient !== client || generation !== this.lifecycleGeneration) return;
                 if (msg.from.includes('@g.us')) return;
+                if (!String(msg.body || '').trim() && !msg.hasMedia) {
+                    // WhatsApp Web emits protocol/reaction notifications through the
+                    // message channel. They are not customer messages.
+                    return;
+                }
 
                 const rxStartTime = Date.now();
                 const userId = msg.from;
@@ -240,6 +269,24 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 let fileExt = '';
 
                 const contact = await msg.getContact();
+                let resolvedPhoneNumber = null;
+                if (/@lid$/i.test(userId) && typeof client.getContactLidAndPhone === 'function') {
+                    try {
+                        const mappings = await Promise.race([
+                            client.getContactLidAndPhone([userId]),
+                            new Promise((_, reject) => setTimeout(
+                                () => reject(new Error('WhatsApp LID phone resolution timed out')),
+                                5000
+                            ))
+                        ]);
+                        const phoneWid = Array.isArray(mappings) ? mappings[0]?.pn : null;
+                        if (/@(?:c\.us|s\.whatsapp\.net)$/i.test(String(phoneWid || ''))) {
+                            resolvedPhoneNumber = String(phoneWid).split('@')[0];
+                        }
+                    } catch (error) {
+                        console.warn(`[WhatsApp] Could not resolve LID to phone tenant=${this.tenantId}: ${error.message}`);
+                    }
+                }
                 let profileImageRemoteUrl = null;
                 const cachedProfileImage = this.profileImageCache.get(userId);
                 if (cachedProfileImage && cachedProfileImage.expiresAt > Date.now()) {
@@ -273,9 +320,12 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                             else mediaType = 'document';
                         }
                     } catch (err) {
-                        reportError(`تحميل وسائط واتساب لـ ${this.tenantId}`, err.message);
+                        const detail = err?.message || String(err || 'unknown media download error');
+                        reportError(`تحميل وسائط واتساب لـ ${this.tenantId}`, detail);
                     }
                 }
+
+                if (!String(userText || '').trim() && mediaType === 'text') return;
 
                 const normalized = normalizeWhatsAppMessage(
                     msg,
@@ -283,7 +333,8 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                     msg.hasMedia ? userText : null,
                     mediaType,
                     fileExt,
-                    profileImageRemoteUrl
+                    profileImageRemoteUrl,
+                    resolvedPhoneNumber
                 );
                 normalized.metadata = normalized.metadata || {};
                 normalized.metadata.tenantId = this.tenantId;
@@ -314,7 +365,9 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 this.waClient = null;
             }
             this._releaseProcessLease();
-            reportError(`تشغيل محرك واتساب ويب لـ ${this.tenantId}`, error.message);
+            if (generation === this.lifecycleGeneration) {
+                reportError(`تشغيل محرك واتساب ويب لـ ${this.tenantId}`, error.message);
+            }
             throw error;
         }
     }
@@ -324,6 +377,10 @@ class WhatsAppWebProvider extends WhatsAppProvider {
         if (this.reconnectTimeout) {
             clearTimeout(this.reconnectTimeout);
             this.reconnectTimeout = null;
+        }
+        if (this.reconnectPromise) {
+            await this.reconnectPromise.catch(() => {});
+            this.reconnectPromise = null;
         }
         this.initialized = false;
         this.waStatus = "غير متصل";
@@ -372,18 +429,21 @@ class WhatsAppWebProvider extends WhatsAppProvider {
             sentMsg = await this.waClient.sendMessage(recipientId, content);
         }
 
-        const externalMessageId = sentMsg && sentMsg.id ? String(sentMsg.id.id || '') : '';
-        if (!externalMessageId) {
-            throw new Error('WhatsApp Web accepted no verifiable message identifier');
+        const externalMessageId = extractExternalMessageId(sentMsg);
+        const acceptedUnverified = !externalMessageId;
+        if (acceptedUnverified) {
+            console.warn(`[WhatsApp] Provider resolved send without a message ID tenant=${this.tenantId}; preserving the accepted reply with unverified delivery metadata.`);
         }
 
         addLog(`[WhatsApp] tenantId: ${this.tenantId} | provider: web | operation: send_message | executionTime: ${Date.now() - txStartTime} ms | details: Sent ${messageType} message to ${recipientId}`);
 
         return {
             success: true,
-            externalMessageId
+            externalMessageId: externalMessageId || null,
+            acceptedUnverified
         };
     }
 }
 
 module.exports = WhatsAppWebProvider;
+module.exports._test = { extractExternalMessageId };

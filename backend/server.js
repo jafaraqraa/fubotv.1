@@ -63,7 +63,9 @@ async function startBackgroundServices() {
             }));
         }
     } catch (err) {
-        await reportError('تهيئة تيليجرام عند بدء الخادم', err.message);
+        if (!/Telegram startup timed out/i.test(err.message)) {
+            await reportError('تهيئة تيليجرام عند بدء الخادم', err.message);
+        }
         console.warn(JSON.stringify({
             level: 'warn',
             event: 'telegram_startup_degraded',

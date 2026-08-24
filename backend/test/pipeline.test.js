@@ -42,6 +42,7 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
         assert.strictEqual(normalized.customer.username, 'ahmed_tg');
         assert.strictEqual(normalized.messageType, 'text');
         assert.strictEqual(normalized.content, 'مرحبا بكم');
+        assert.strictEqual(normalized.metadata.tenantId, 'default');
         assert.ok(normalized.timestamp);
     });
 
@@ -70,6 +71,22 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
             mimeType: 'image/jpeg',
             caption: 'صورة الشحن'
         });
+        assert.strictEqual(normalized.customer.phoneNumber, '970599123456');
+    });
+
+    await t.test('3b. WhatsApp LID is never exported as a phone number without provider resolution', () => {
+        const lidMsg = {
+            from: '58970521772124@lid', body: 'مرحبا', hasMedia: false,
+            id: { id: 'wa-lid-1' }, timestamp: 1783880100
+        };
+        const contact = { number: '58970521772124', pushname: 'LID User' };
+        const unresolved = normalizeWhatsAppMessage(lidMsg, contact);
+        assert.strictEqual(unresolved.customer.phoneNumber, null);
+
+        const resolved = normalizeWhatsAppMessage(
+            lidMsg, contact, null, 'text', '', null, '972599123456@c.us'
+        );
+        assert.strictEqual(resolved.customer.phoneNumber, '972599123456');
     });
 
     await t.test('4. Validator rejects invalid or missing fields', () => {

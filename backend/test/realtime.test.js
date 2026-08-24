@@ -139,9 +139,16 @@ test('Socket.IO Real-Time Core Integration & Security Suite', async (t) => {
             assert.match(txt, /"message":"Bad request"/, 'Response must report bad request / unauthorized');
         });
 
-        await st.test('f. Deleted or invalidated session is rejected', async () => {
-            // Purge sessions from database
-            db.prepare('DELETE FROM sessions').run();
+        await st.test('f. Deleted administrator is logged out and rejected by Socket.IO', async () => {
+            db.prepare("DELETE FROM administrators WHERE username = 'realtime-admin'").run();
+
+            const meRes = await fetch(`${baseUrl}/api/v1/auth/me`, {
+                headers: { 'Cookie': cookieVal }
+            });
+            assert.strictEqual(meRes.status, 401,
+                'A session belonging to a deleted administrator must be rejected immediately');
+            assert.strictEqual((await meRes.json()).authenticated, false);
+
             const handshakeRes = await fetch(`${baseUrl}/socket.io/?EIO=4&transport=polling`, {
                 headers: { 'Cookie': cookieVal }
             });

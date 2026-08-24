@@ -41,6 +41,7 @@ function normalizeTelegramMessage(
         media,
         timestamp: new Date(message.date * 1000 || Date.now()).toISOString(),
         metadata: {
+            tenantId: 'default',
             chatId: String(ctx.chat ? ctx.chat.id : '')
         }
     };

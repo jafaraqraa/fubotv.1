@@ -51,6 +51,37 @@ test('WhatsAppProvider Interface Constraints', (t) => {
     }, /Cannot instantiate abstract class WhatsAppProvider directly/);
 });
 
+test('WhatsApp Web accepts every supported message ID representation', () => {
+    const { extractExternalMessageId } = WhatsAppWebProvider._test;
+    assert.strictEqual(extractExternalMessageId({ id: { id: 'plain-id' } }), 'plain-id');
+    assert.strictEqual(
+        extractExternalMessageId({ id: { _serialized: 'true_remote_serialized-id' } }),
+        'true_remote_serialized-id'
+    );
+    assert.strictEqual(extractExternalMessageId({ id: 'string-id' }), 'string-id');
+    assert.strictEqual(
+        extractExternalMessageId({ _data: { id: { _serialized: 'fallback-id' } } }),
+        'fallback-id'
+    );
+    assert.strictEqual(extractExternalMessageId({}), '');
+});
+
+test('WhatsApp Web preserves a provider-accepted reply even when no external ID is returned', async () => {
+    const provider = new WhatsAppWebProvider('unverified_send_tenant', {});
+    provider.waStatus = 'متصل';
+    provider.waClient = { sendMessage: async () => undefined };
+
+    const result = await provider.sendMessage({
+        recipientId: '972599123456@c.us',
+        messageType: 'text',
+        content: 'رد الذكاء الاصطناعي'
+    });
+
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.externalMessageId, null);
+    assert.strictEqual(result.acceptedUnverified, true);
+});
+
 test('WhatsApp web process lease permits only one owner per tenant', () => {
     const leaseBase = path.join(__dirname, '..', 'data', 'test_whatsapp_process_lease');
     const first = new WhatsAppWebProvider('lease_tenant', {});
@@ -92,6 +123,33 @@ test('WhatsApp web process lease recovers from a stale or reused PID', () => {
         provider._releaseProcessLease();
         fs.rmSync(leasePath, { recursive: true, force: true });
     }
+});
+
+test('WhatsApp reconnect fully retires one client before initializing exactly one replacement', async () => {
+    const provider = new WhatsAppWebProvider('reconnect_tenant', {});
+    const client = new EventEmitter();
+    const sequence = [];
+    provider.waClient = client;
+    provider.lifecycleGeneration = 4;
+    provider.reconnectDelayMs = 0;
+    provider._destroyClient = async target => {
+        assert.strictEqual(target, client);
+        sequence.push('destroy-start');
+        await new Promise(resolve => setTimeout(resolve, 5));
+        sequence.push('destroy-end');
+    };
+    provider._releaseProcessLease = () => sequence.push('lease-release');
+    provider.initialize = async () => sequence.push('initialize');
+
+    provider._scheduleReconnect(client, 4);
+    provider._scheduleReconnect(client, 4);
+    await new Promise(resolve => setTimeout(resolve, 25));
+
+    assert.deepStrictEqual(sequence, [
+        'destroy-start', 'destroy-end', 'lease-release', 'initialize'
+    ]);
+    assert.strictEqual(provider.lifecycleGeneration, 5);
+    assert.strictEqual(provider.waClient, null);
 });
 
 test('WhatsApp initialization is concurrency-safe per manager and tenant', async () => {
@@ -287,6 +345,26 @@ test('Outgoing Message Routing to WhatsApp Provider', async (t) => {
     assert.strictEqual(result.externalMessageId, 'mock_external_id_777');
     assert.strictEqual(receivedPayload.recipientId, '966500000000@c.us');
     assert.strictEqual(receivedPayload.content, 'مرحباً بك في نظام المتجر السحابي!');
+
+    provider.sendMessage = async () => ({
+        success: true,
+        externalMessageId: null,
+        acceptedUnverified: true
+    });
+    const unverifiedResult = await sendOutgoingMessage({
+        ...outgoingMsg,
+        content: 'رد محفوظ بدون معرف خارجي'
+    });
+    assert.strictEqual(unverifiedResult.success, true);
+    assert.strictEqual(unverifiedResult.status, 'sent_unverified');
+    const savedUnverified = db.prepare(`
+        SELECT content, external_message_id, delivery_status, metadata
+        FROM messages WHERE content = ? ORDER BY created_at DESC LIMIT 1
+    `).get('رد محفوظ بدون معرف خارجي');
+    assert.ok(savedUnverified);
+    assert.strictEqual(savedUnverified.external_message_id, null);
+    assert.strictEqual(savedUnverified.delivery_status, 'sent');
+    assert.strictEqual(JSON.parse(savedUnverified.metadata).externalMessageIdVerified, false);
 
     // Cleanup
     await manager.destroyAll();

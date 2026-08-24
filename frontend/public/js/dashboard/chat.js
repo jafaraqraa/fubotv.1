@@ -281,7 +281,7 @@ window.Dashboard.chat = {
             video.className = 'message-video';
             video.controls = true;
             video.preload = 'metadata';
-            video.src = resolvedUrl;
+            window.Dashboard.utils.setAuthenticatedMediaSource(video, resolvedUrl);
             return video;
         }
         if ((message.type === 'audio' || message.type === 'voice' || window.Dashboard.utils.isAudio(lower)) && this.isSafeMediaUrl(resolvedUrl)) {
@@ -289,7 +289,7 @@ window.Dashboard.chat = {
             const audio = document.createElement('audio');
             audio.controls = true;
             audio.preload = 'metadata';
-            audio.src = resolvedUrl;
+            window.Dashboard.utils.setAuthenticatedMediaSource(audio, resolvedUrl);
             voice.append(window.Dashboard.utils.createElement('span', { className: 'voice-icon', text: '◉' }), audio);
             return voice;
         }
@@ -304,7 +304,7 @@ window.Dashboard.chat = {
             className,
             attributes: { alt, loading: 'lazy', decoding: 'async' }
         });
-        image.src = url;
+        window.Dashboard.utils.setAuthenticatedMediaSource(image, url);
         return image;
     },
 

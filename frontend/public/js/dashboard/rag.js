@@ -1288,9 +1288,9 @@ window.Dashboard.rag = {
 
         const statusEl = document.getElementById('rag-panel-doc-status');
         if (statusEl) {
-            statusEl.innerText = doc.status === 'indexed' ? 'مفهرس' : (doc.status === 'failed' ? 'فشل' : doc.status);
+            statusEl.innerText = ['indexed', 'active'].includes(doc.status) ? 'مفهرس ونشط' : (doc.status === 'failed' ? 'فشل' : doc.status);
             statusEl.className = `px-2 py-0.5 rounded border text-[9px] font-bold ` +
-                (doc.status === 'indexed' ? 'bg-green-50 text-green-700 border-green-200' :
+                (['indexed', 'active'].includes(doc.status) ? 'bg-green-50 text-green-700 border-green-200' :
                  (doc.status === 'failed' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'));
         }
 
@@ -1329,12 +1329,16 @@ window.Dashboard.rag = {
                 method: 'POST'
             });
             const data = await res.json();
-            if (res.ok && data.success && data.document?.status === 'indexed') {
+            const terminalStatus = data.document?.status || data.status;
+            if (res.ok && data.success && ['indexed', 'active'].includes(terminalStatus)) {
                 window.Dashboard.settings.showToast('اكتملت إعادة فهرسة المستند دلالياً بنجاح.');
                 window.Dashboard.rag.addTimelineLog('إعادة الفهرسة', `إعادة فهرسة المستند ${docId}`);
                 await window.Dashboard.rag.fetchOverviewAndDocuments();
             } else {
-                window.Dashboard.settings.showToast('فشل إعادة الفهرسة: ' + data.error, 'error');
+                window.Dashboard.settings.showToast(
+                    'فشل إعادة الفهرسة: ' + (data.error || data.message || `استجابة غير متوقعة من الخادم (${res.status})`),
+                    'error'
+                );
             }
         } catch (e) {
             window.Dashboard.settings.showToast(`فشل إعادة الفهرسة: ${e.message}`, 'error');
@@ -1351,11 +1355,15 @@ window.Dashboard.rag = {
                 method: 'POST'
             });
             const data = await res.json();
-            if (res.ok && data.success && data.document?.status === 'indexed') {
+            const terminalStatus = data.document?.status || data.status;
+            if (res.ok && data.success && ['indexed', 'active'].includes(terminalStatus)) {
                 window.Dashboard.settings.showToast('اكتملت إعادة معالجة المستند وفهرسته بنجاح.');
                 await window.Dashboard.rag.fetchOverviewAndDocuments();
             } else {
-                window.Dashboard.settings.showToast('فشل المحاولة: ' + data.error, 'error');
+                window.Dashboard.settings.showToast(
+                    'فشل المحاولة: ' + (data.error || data.message || `استجابة غير متوقعة من الخادم (${res.status})`),
+                    'error'
+                );
             }
         } catch (e) {
             window.Dashboard.settings.showToast(`فشلت إعادة المعالجة: ${e.message}`, 'error');
@@ -1471,7 +1479,7 @@ window.Dashboard.rag = {
                 ids,
                 id => `/api/rag/documents/${id}/reindex`,
                 'POST',
-                data => data.document?.status === 'indexed'
+                data => ['indexed', 'active'].includes(data.document?.status || data.status)
             );
             window.Dashboard.rag.hideIndexingProgress();
             if (failures.length) {
@@ -1493,7 +1501,7 @@ window.Dashboard.rag = {
                 ids,
                 id => `/api/rag/documents/${id}/retry`,
                 'POST',
-                data => data.document?.status === 'indexed'
+                data => ['indexed', 'active'].includes(data.document?.status || data.status)
             );
             if (failures.length) {
                 window.Dashboard.settings.showToast(
@@ -1870,7 +1878,7 @@ window.Dashboard.rag = {
     },
 
     // M. File Upload with Version Conflict Checks (Goal 5 & Goal 7)
-    handleFileUpload: async function(files, overwriteAction = '') {
+    handleFileUpload: async function(files, overwriteAction = '', mediaDescriptionOverride = null) {
         if (!files || files.length === 0) return;
         const file = files[0];
 
@@ -1893,7 +1901,9 @@ window.Dashboard.rag = {
         const isAudio = ['mp3', 'ogg', 'wav', 'm4a'].includes(ext);
         let mediaDescription = '';
         if (isImage || isAudio) {
-            mediaDescription = await this.requestMediaDescription(file.name, isAudio ? 'audio' : 'image');
+            mediaDescription = typeof mediaDescriptionOverride === 'string'
+                ? mediaDescriptionOverride
+                : await this.requestMediaDescription(file.name, isAudio ? 'audio' : 'image');
             if (mediaDescription === null) return;
         }
 
@@ -1930,9 +1940,9 @@ window.Dashboard.rag = {
                 let data = {};
                 try { data = JSON.parse(responseText); } catch (e) {}
 
-                if (xhr.status === 400 && data.code === 'DUPLICATE_UPLOAD') {
+                if (xhr.status === 409 && data.code === 'DUPLICATE_UPLOAD') {
                     // Show Versioning Modal Dialog (Goal 5)
-                    window.Dashboard.rag.showVersioningModal(file, data.existing);
+                    window.Dashboard.rag.showVersioningModal(file, data.existing, mediaDescription);
                 } else if (
                     xhr.status >= 200 && xhr.status < 300
                     && data.success === true
@@ -1942,7 +1952,7 @@ window.Dashboard.rag = {
                     window.Dashboard.rag.addTimelineLog('رفع مستند', `تم رفع وتضمين المستند ${file.name}`);
                     window.Dashboard.rag.fetchOverviewAndDocuments();
                 } else {
-                    alert('خطأ في الرفع: ' + (data.error || 'فشلت معالجة الخادم للمستند.'));
+                    alert('خطأ في الرفع: ' + (data.error || data.message || 'فشلت معالجة الخادم للمستند.'));
                 }
                 window.Dashboard.rag.hideIndexingProgress();
             };
@@ -1957,7 +1967,7 @@ window.Dashboard.rag = {
         }
     },
 
-    showVersioningModal: function(file, existing) {
+    showVersioningModal: function(file, existing, mediaDescription = null) {
         const modal = document.getElementById('rag-version-modal');
         if (!modal) return;
 
@@ -1968,12 +1978,12 @@ window.Dashboard.rag = {
         // Bind options (Replace, Keep Both)
         document.getElementById('rag-version-replace-btn').onclick = function() {
             modal.classList.add('hidden');
-            window.Dashboard.rag.handleFileUpload([file], 'replace');
+            window.Dashboard.rag.handleFileUpload([file], 'replace', mediaDescription);
         };
 
         document.getElementById('rag-version-keep-btn').onclick = function() {
             modal.classList.add('hidden');
-            window.Dashboard.rag.handleFileUpload([file], 'keep_both');
+            window.Dashboard.rag.handleFileUpload([file], 'keep_both', mediaDescription);
         };
 
         modal.classList.remove('hidden');

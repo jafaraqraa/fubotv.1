@@ -21,6 +21,7 @@ async function sendOutgoingMessage(outgoingMsg) {
         }
 
         let externalMessageId = null;
+        let acceptedUnverified = false;
         let finalPath = media ? media.localPath : null;
 
         // Internal notes do not get dispatched to any external channels
@@ -88,6 +89,7 @@ async function sendOutgoingMessage(outgoingMsg) {
                 });
                 if (sendResult && sendResult.success) {
                     externalMessageId = sendResult.externalMessageId;
+                    acceptedUnverified = sendResult.acceptedUnverified === true;
                 } else {
                     throw new Error('Failed to send WhatsApp message through provider');
                 }
@@ -178,7 +180,7 @@ async function sendOutgoingMessage(outgoingMsg) {
             }
         }
 
-        if (!externalMessageId) {
+        if (!externalMessageId && !acceptedUnverified) {
             throw new Error(`${channel} provider returned no verifiable message identifier`);
         }
 
@@ -194,14 +196,20 @@ async function sendOutgoingMessage(outgoingMsg) {
             const textToSave = finalPath ? finalPath : content;
             saveMessage(externalUserId, senderType, textToSave, messageType, false, externalMessageId, {
                 channel,
-                tenantId
+                tenantId,
+                deliveryStatus: 'sent',
+                metadata: acceptedUnverified ? {
+                    providerAccepted: true,
+                    externalMessageIdVerified: false
+                } : undefined
             });
         }
 
         return {
             success: true,
-            status: 'sent',
+            status: acceptedUnverified ? 'sent_unverified' : 'sent',
             externalMessageId,
+            acceptedUnverified,
             tenantId: tenantId || null
         };
 

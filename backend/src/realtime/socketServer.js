@@ -6,6 +6,7 @@ const app = require('../app');
 const { getOriginPolicy } = require('../security/originPolicy');
 const runtimeState = require('../runtime/runtimeState');
 const { getMemberships } = require('../security/accessControl');
+const adminRepo = require('../database/repositories/adminRepository');
 
 let io = null;
 
@@ -53,9 +54,13 @@ function initializeSocketServer(httpServer) {
     // 2. Register custom Engine.IO handshake validation to reject unauthenticated requests immediately (Task 7)
     io.engine.use((req, res, next) => {
         const session = req.session;
-        if (session && session.userId) {
+        const admin = session?.userId ? adminRepo.findAdminById(session.userId) : null;
+        const absoluteExpiresAt = Number(session?.absoluteExpiresAt || 0);
+        if (admin?.isActive && (!absoluteExpiresAt || absoluteExpiresAt > Date.now())) {
             return next();
         }
+
+        if (session?.userId) session.destroy(() => {});
 
         // Reject Engine.IO handshake with a standard error
         const err = new Error('unauthorized');
@@ -66,7 +71,8 @@ function initializeSocketServer(httpServer) {
     // 3. Namespace connection handler
     io.on('connection', (socket) => {
         const session = socket.request.session;
-        if (!session || !session.userId) {
+        const admin = session?.userId ? adminRepo.findAdminById(session.userId) : null;
+        if (!admin?.isActive) {
             console.warn('⚠️ Rejected socket connection with missing session context.');
             return socket.disconnect(true);
         }
@@ -81,11 +87,22 @@ function initializeSocketServer(httpServer) {
 
         // Bind validated administrator properties to the socket instance (Task 6)
         socket.admin = {
-            userId: session.userId,
-            username: session.username,
-            displayName: session.displayName,
+            userId: admin.id,
+            username: admin.username,
+            displayName: admin.displayName,
             memberships
         };
+
+        // Database-side account deletion/deactivation must revoke an already-open
+        // browser without waiting for its next API request.
+        const accountValidationTimer = setInterval(() => {
+            const current = adminRepo.findAdminById(socket.admin.userId);
+            if (current?.isActive) return;
+            socket.emit('auth:revoked', { reason: 'account_removed' });
+            socket.request.session?.destroy(() => {});
+            socket.disconnect(true);
+        }, 5000);
+        accountValidationTimer.unref?.();
 
         for (const membership of memberships) {
             socket.join(`tenant:${membership.tenantId}`);
@@ -110,6 +127,7 @@ function initializeSocketServer(httpServer) {
         });
 
         socket.on('disconnect', () => {
+            clearInterval(accountValidationTimer);
             console.log(`🔌 Secure administrator socket disconnected: ${session.username}`);
         });
     });

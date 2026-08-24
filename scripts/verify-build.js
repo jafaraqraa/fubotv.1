@@ -9,6 +9,7 @@ const roots = [
 ];
 const requiredAssets = [
     path.join(projectRoot, 'backend', 'server.js'),
+    path.join(projectRoot, 'frontend', 'node_modules', 'dompurify', 'dist', 'purify.min.js'),
     path.join(projectRoot, 'frontend', 'public', 'dashboard.html'),
     path.join(projectRoot, 'frontend', 'public', 'login.html')
 ];

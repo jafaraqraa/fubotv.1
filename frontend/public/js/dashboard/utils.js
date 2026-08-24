@@ -62,14 +62,57 @@ window.Dashboard.utils = {
             .replace(/'/g, '&#039;');
     },
 
-    // Resolves relative /uploads/ media paths to the decoupled backend server
+    // Resolves protected API media and legacy upload paths to the decoupled backend.
     resolveUrl: function(url) {
         if (!url) return '';
+        if (url.startsWith('/api/media/')) return url;
+        if (url.startsWith('/api/') && window.Dashboard.api
+            && typeof window.Dashboard.api.resolveUrl === 'function') {
+            return window.Dashboard.api.resolveUrl(url);
+        }
         if (url.startsWith('/uploads/')) {
             const socketUrl = window.ENV ? window.ENV.SOCKET_URL : '';
             return `${socketUrl}${url}`;
         }
         return url;
+    },
+
+    isProtectedApiUrl: function(url) {
+        if (!url || !window.Dashboard.api) return false;
+        if (String(url).startsWith('/api/media/')) return true;
+        return String(url).startsWith(window.Dashboard.api.resolveUrl('/'));
+    },
+
+    setAuthenticatedMediaSource: async function(element, url) {
+        if (!element || !url) return;
+        if (!this.isProtectedApiUrl(url)) {
+            element.src = url;
+            return;
+        }
+        try {
+            let response;
+            if (String(url).startsWith('/api/media/')) {
+                const sessionId = localStorage.getItem('futh_session_id');
+                response = await fetch(url, {
+                    credentials: 'include',
+                    headers: sessionId ? { 'X-Session-ID': sessionId } : {}
+                });
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+            } else {
+                response = await window.Dashboard.api.request(url);
+            }
+            if (!response.ok) throw new Error(`Media request failed (${response.status})`);
+            const objectUrl = URL.createObjectURL(await response.blob());
+            const release = () => URL.revokeObjectURL(objectUrl);
+            element.addEventListener('load', release, { once: true });
+            element.addEventListener('error', release, { once: true });
+            element.src = objectUrl;
+        } catch (error) {
+            element.dataset.mediaError = error.message;
+        }
     },
 
     createCustomerAvatar: function(user, className, fallbackText) {

@@ -27,6 +27,8 @@ function mapCustomerRow(row) {
     return {
         id: row.id,
         name: row.name,
+        username: row.username || null,
+        phoneNumber: row.phone_number || null,
         platform: row.platform,
         tenantId: row.tenant_id,
         avatarUrl: profileData.avatarUrl || null,
@@ -37,7 +39,7 @@ function mapCustomerRow(row) {
     };
 }
 
-function registerCustomerUser(userId, name, platform, tenantId = null, profileData = null) {
+function registerCustomerUser(userId, name, platform, tenantId = null, profileData = null, contactData = null) {
     const scopedTenantId = tenantId || (platform === 'whatsapp' ? null : 'default');
     if (platform === 'whatsapp' && !scopedTenantId) {
         throw new Error('Missing tenantId for WhatsApp customer');
@@ -51,6 +53,12 @@ function registerCustomerUser(userId, name, platform, tenantId = null, profileDa
 
     const safeProfileData = sanitizeProfileData(profileData);
     const serializedProfileData = safeProfileData ? JSON.stringify(safeProfileData) : null;
+    const username = contactData && typeof contactData.username === 'string'
+        ? contactData.username.trim().slice(0, 255) || null
+        : null;
+    const phoneNumber = contactData && typeof contactData.phoneNumber === 'string'
+        ? contactData.phoneNumber.replace(/[^0-9+]/g, '').slice(0, 32) || null
+        : null;
 
     if (!existing) {
         const customerId = crypto.randomUUID();
@@ -61,8 +69,8 @@ function registerCustomerUser(userId, name, platform, tenantId = null, profileDa
             INSERT INTO customers (id, display_name) VALUES (?, ?)
         `);
         const insertAccount = db.prepare(`
-            INSERT INTO channel_accounts (id, customer_id, channel, external_user_id, username, profile_data)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO channel_accounts (id, customer_id, channel, external_user_id, username, phone_number, profile_data)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `);
         const insertConversation = db.prepare(`
             INSERT INTO conversations (id, customer_id, channel_account_id, channel, tenant_id, is_ai_enabled, assignee, unread_count, last_message_at)
@@ -71,7 +79,7 @@ function registerCustomerUser(userId, name, platform, tenantId = null, profileDa
 
         db.transaction(() => {
             insertCustomer.run(customerId, name);
-            insertAccount.run(accountId, customerId, platform, String(userId), name, serializedProfileData);
+            insertAccount.run(accountId, customerId, platform, String(userId), username || name, phoneNumber, serializedProfileData);
             insertConversation.run(conversationId, customerId, accountId, platform, scopedTenantId, new Date().toISOString());
         })();
 
@@ -116,10 +124,11 @@ function registerCustomerUser(userId, name, platform, tenantId = null, profileDa
         if (tenantCount === 1) {
             db.prepare(`
                 UPDATE channel_accounts
-                SET username = ?, profile_data = COALESCE(?, profile_data),
+                SET username = COALESCE(?, username), phone_number = COALESCE(?, phone_number),
+                    profile_data = COALESCE(?, profile_data),
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?
-            `).run(name, serializedProfileData, account.id);
+            `).run(username, phoneNumber, serializedProfileData, account.id);
             db.prepare(`
                 UPDATE customers SET display_name = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE id = (SELECT customer_id FROM channel_accounts WHERE id = ?)
@@ -150,6 +159,7 @@ function findCustomerUser(userId, platform, tenantId = null) {
     if (platform === 'whatsapp' && !scopedTenantId) return null;
     const row = db.prepare(`
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+               ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca
@@ -166,6 +176,7 @@ function findCustomerUserByIdOnly(userId, tenantId) {
     if (!tenantId) return null;
     const row = db.prepare(`
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+               ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca
@@ -182,6 +193,7 @@ function listCustomerUsers(tenantId) {
     if (!tenantId) throw new Error('tenantId is required');
     const rows = db.prepare(`
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+               ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
         FROM channel_accounts ca

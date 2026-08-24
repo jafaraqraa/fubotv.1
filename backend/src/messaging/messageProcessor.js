@@ -86,12 +86,16 @@ async function processIncomingMessage(normalizedMsg) {
         validateNormalizedMessage(normalizedMsg);
 
         const { channel, externalMessageId, externalUserId, customer, messageType, content } = normalizedMsg;
-        const tenantId = normalizedMsg.metadata && normalizedMsg.metadata.tenantId;
+        const suppliedTenantId = normalizedMsg.metadata && normalizedMsg.metadata.tenantId;
 
-        if (channel === 'whatsapp' && !tenantId) {
+        if (channel === 'whatsapp' && !suppliedTenantId) {
             console.error(`[Outgoing Message] Missing tenantId for WhatsApp message. Sending aborted. messageId=${externalMessageId || 'unknown'} channel=${channel}`);
             throw new Error('Missing tenantId for WhatsApp message');
         }
+        // Telegram currently belongs to the platform's default tenant. Normalize
+        // the context once so persistence, AI retrieval and RAG media lookup all
+        // operate inside the same tenant boundary.
+        const tenantId = suppliedTenantId || 'default';
 
         // 2. Prevent duplicate processing (Task 8)
         if (externalMessageId && await existsByExternalId(channel, externalMessageId, tenantId)) {
@@ -112,7 +116,11 @@ async function processIncomingMessage(normalizedMsg) {
 
         // 4. Centralized customer profile lookup and register. Avatar retrieval is
         // intentionally non-blocking and cannot delay message processing or replies.
-        registerCustomerUser(externalUserId, customer.displayName, channel, tenantId, profileData);
+        const contactData = {
+            username: customer.username || null,
+            phoneNumber: customer.phoneNumber || null
+        };
+        registerCustomerUser(externalUserId, customer.displayName, channel, tenantId, profileData, contactData);
         if (profileImageRemoteUrl) {
             materializeProfileImage({
                 channel,
@@ -126,7 +134,8 @@ async function processIncomingMessage(normalizedMsg) {
                         customer.displayName,
                         channel,
                         tenantId,
-                        { avatarUrl }
+                        { avatarUrl },
+                        contactData
                     );
                 }
             }).catch(() => {
@@ -143,7 +152,7 @@ async function processIncomingMessage(normalizedMsg) {
                 ...(normalizedMsg.media ? { media: normalizedMsg.media } : {})
             }
         });
-        incrementUnreadCount(externalUserId, tenantId || 'default');
+        incrementUnreadCount(externalUserId, tenantId);
         addLog(`رسالة جديدة من ${customer.displayName} عبر ${channel}`);
 
         // 6. Check AI automation status (Task 6)
@@ -176,7 +185,7 @@ async function processIncomingMessage(normalizedMsg) {
                 textToProcess || '',
                 messageType,
                 normalizedMsg.media,
-                { tenantId: tenantId || 'default', channel, retrievalTelemetry }
+                { tenantId, channel, retrievalTelemetry }
             );
             if (!aiResponse || !String(aiResponse).trim()) {
                 throw new Error('AI provider returned an empty response');

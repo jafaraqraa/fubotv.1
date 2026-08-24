@@ -152,13 +152,25 @@ class WhatsAppProviderManager {
                 await pendingInit.catch(() => {});
             }
 
+            const requestedConfig = config || {};
+            const storedRow = db.prepare(
+                'SELECT provider_type, config_json FROM whatsapp_tenant_configs WHERE tenant_id = ?'
+            ).get(tenantId);
+            const storedConfig = storedRow ? JSON.parse(storedRow.config_json || '{}') : null;
+            const currentProvider = this.providers.get(tenantId);
+            if (currentProvider && storedRow?.provider_type === providerType
+                && JSON.stringify(storedConfig) === JSON.stringify(requestedConfig)) {
+                addLog(`✅ [Tenant: ${tenantId}] إعدادات واتساب لم تتغير؛ تم الإبقاء على الاتصال الحالي.`);
+                return currentProvider;
+            }
+
             const oldProvider = this.providers.get(tenantId);
             this.providers.delete(tenantId);
             if (oldProvider) {
                 await oldProvider.destroy();
             }
 
-            const configJson = JSON.stringify(config || {});
+            const configJson = JSON.stringify(requestedConfig);
             db.prepare(`
                 INSERT INTO whatsapp_tenant_configs (tenant_id, provider_type, config_json, enabled, updated_at)
                 VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)

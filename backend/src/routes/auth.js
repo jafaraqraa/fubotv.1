@@ -149,12 +149,22 @@ router.post(['/api/auth/logout', '/api/v1/auth/logout'], (req, res) => {
 // 4. GET /api/auth/me and /api/v1/auth/me -> Returns authenticated status (Section 6)
 router.get(['/api/auth/me', '/api/v1/auth/me'], (req, res) => {
     if (req.session && req.session.userId) {
+        const admin = adminRepo.findAdminById(req.session.userId);
+        const absoluteExpiresAt = Number(req.session.absoluteExpiresAt || 0);
+        if (!admin?.isActive || (absoluteExpiresAt && absoluteExpiresAt <= Date.now())) {
+            const actorId = req.session.userId;
+            require('../realtime/socketServer').disconnectAdministrator(actorId);
+            return req.session.destroy(() => {
+                res.clearCookie('connect.sid', getSessionCookieClearOptions());
+                res.status(401).json({ authenticated: false });
+            });
+        }
         return res.json({
             authenticated: true,
             user: {
-                id: req.session.userId,
-                username: req.session.username,
-                displayName: req.session.displayName,
+                id: admin.id,
+                username: admin.username,
+                displayName: admin.displayName,
                 tenantId: req.session.tenantId,
                 role: req.session.rolesByTenant?.[req.session.tenantId]
             }

@@ -69,6 +69,11 @@ window.Dashboard.realtime = {
             }
         });
 
+        socket.on('auth:revoked', () => {
+            localStorage.removeItem('futh_session_id');
+            window.location.replace('/login');
+        });
+
         // Register central message, configuration, and errors subscription events
         window.Dashboard.realtime.registerSubscribers(socket);
     },

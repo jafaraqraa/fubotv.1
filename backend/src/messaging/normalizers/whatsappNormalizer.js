@@ -4,11 +4,16 @@ function normalizeWhatsAppMessage(
     localPath = null,
     mediaType = 'text',
     fileExt = '',
-    profileImageRemoteUrl = null
+    profileImageRemoteUrl = null,
+    resolvedPhoneNumber = null
 ) {
     const userId = String(msg.from || '');
-    const phoneNumber = contact.number || userId.split('@')[0];
-    const displayName = contact.pushname || contact.name || `+${phoneNumber}`;
+    const isPhoneWid = /@(?:c\.us|s\.whatsapp\.net)$/i.test(userId);
+    const rawPhoneNumber = resolvedPhoneNumber || (isPhoneWid ? userId.split('@')[0] : null);
+    const phoneNumber = rawPhoneNumber
+        ? String(rawPhoneNumber).replace(/@(?:c\.us|s\.whatsapp\.net)$/i, '').replace(/\D/g, '') || null
+        : null;
+    const displayName = contact.pushname || contact.name || (phoneNumber ? `+${phoneNumber}` : 'عميل واتساب');
     const userText = localPath || msg.body || '';
 
     let media = null;

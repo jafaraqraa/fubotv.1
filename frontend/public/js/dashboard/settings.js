@@ -1286,12 +1286,16 @@ window.Dashboard.settings = {
             });
             const result = await response.json();
 
-            if (response.ok && result.success && result.document?.status === 'indexed') {
+            const terminalStatus = result.document?.status || result.status;
+            if (response.ok && result.success && ['indexed', 'active'].includes(terminalStatus)) {
                 window.Dashboard.settings.showToast('تمت إعادة فهرسة المستند بنجاح.');
                 window.Dashboard.settings.loadDocumentsList();
                 window.Dashboard.settings.refreshRagStatus();
             } else {
-                window.Dashboard.settings.showToast('فشلت إعادة الفهرسة: ' + result.error, 'error');
+                window.Dashboard.settings.showToast(
+                    'فشلت إعادة الفهرسة: ' + (result.error || result.message || `استجابة غير متوقعة من الخادم (${response.status})`),
+                    'error'
+                );
             }
         } catch (err) {
             console.error(err);
@@ -1307,12 +1311,16 @@ window.Dashboard.settings = {
             });
             const result = await response.json();
 
-            if (response.ok && result.success && result.document?.status === 'indexed') {
+            const terminalStatus = result.document?.status || result.status;
+            if (response.ok && result.success && ['indexed', 'active'].includes(terminalStatus)) {
                 window.Dashboard.settings.showToast('اكتملت إعادة معالجة المستند وفهرسته بنجاح.');
                 window.Dashboard.settings.loadDocumentsList();
                 window.Dashboard.settings.refreshRagStatus();
             } else {
-                window.Dashboard.settings.showToast('تعذرت المحاولة: ' + result.error, 'error');
+                window.Dashboard.settings.showToast(
+                    'تعذرت المحاولة: ' + (result.error || result.message || `استجابة غير متوقعة من الخادم (${response.status})`),
+                    'error'
+                );
             }
         } catch (err) {
             console.error(err);

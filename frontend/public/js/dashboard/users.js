@@ -17,6 +17,55 @@ window.Dashboard.users = {
                 this.renderUsersList();
             });
         }
+        const exportButton = document.getElementById('export-customers-btn');
+        if (exportButton) exportButton.addEventListener('click', () => this.exportCustomersCsv());
+    },
+
+    getFilteredUsers: function() {
+        let users = [...window.Dashboard.state.usersCache];
+        if (window.Dashboard.state.currentChatFilter !== 'all') {
+            users = users.filter(user => user.platform === window.Dashboard.state.currentChatFilter);
+        }
+        if (window.Dashboard.state.showUnreadOnly) {
+            users = users.filter(user => Number(user.unreadCount) > 0);
+        }
+        if (this.searchQuery) {
+            users = users.filter(user =>
+                [user.name, user.id, user.username, user.phoneNumber]
+                    .some(value => String(value || '').toLowerCase().includes(this.searchQuery))
+            );
+        }
+        return users;
+    },
+
+    exportCustomersCsv: function() {
+        const users = this.getFilteredUsers();
+        if (!users.length) {
+            window.Dashboard.settings.showToast('لا توجد بيانات زبائن مطابقة للتصدير.', 'error');
+            return;
+        }
+        const protectSpreadsheetValue = value => {
+            const text = String(value ?? '');
+            return /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+        };
+        const quote = value => `"${protectSpreadsheetValue(value).replace(/"/g, '""')}"`;
+        const rows = [
+            ['الاسم', 'رقم الهاتف', 'اسم المستخدم', 'معرف القناة', 'القناة', 'المسؤول', 'الرد الآلي', 'آخر تواصل'],
+            ...users.map(user => [
+                user.name, user.phoneNumber, user.username, user.id, user.platform,
+                user.assignee, user.isAIEnabled ? 'مفعّل' : 'متوقف', user.lastSeen
+            ])
+        ];
+        const csv = `\uFEFF${rows.map(row => row.map(quote).join(',')).join('\r\n')}`;
+        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `customers_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        window.Dashboard.settings.showToast(`تم تنزيل بيانات ${users.length} زبون.`);
     },
 
     setChatFilter: function(filter) {
@@ -43,20 +92,7 @@ window.Dashboard.users = {
         const listContainer = document.getElementById('users-list');
         if (!listContainer) return;
 
-        let filteredUsers = window.Dashboard.state.usersCache;
-        if (window.Dashboard.state.currentChatFilter !== 'all') {
-            filteredUsers = window.Dashboard.state.usersCache.filter(u => u.platform === window.Dashboard.state.currentChatFilter);
-        }
-
-        if (window.Dashboard.state.showUnreadOnly) {
-            filteredUsers = filteredUsers.filter(u => u.unreadCount > 0);
-        }
-        if (this.searchQuery) {
-            filteredUsers = filteredUsers.filter(user =>
-                String(user.name || '').toLowerCase().includes(this.searchQuery)
-                || String(user.id || '').toLowerCase().includes(this.searchQuery)
-            );
-        }
+        const filteredUsers = this.getFilteredUsers();
 
         const platformColors = {
             telegram: 'bg-blue-400',
