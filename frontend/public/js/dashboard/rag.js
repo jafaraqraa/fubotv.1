@@ -122,7 +122,7 @@ window.Dashboard.rag = {
                 if (data.chunks.length === 0) {
                     const row = document.createElement('tr');
                     row.appendChild(window.Dashboard.utils.createElement('td', {
-                        className: 'text-slate-400 text-center p-8 font-arabic text-[11px]',
+                        className: 'text-slate-400 text-center p-8 font-arabic text-[12px]',
                         text: '⚠️ لا توجد مقاطع متوفرة مطابقة لخيارات الفلترة الحالية.',
                         attributes: { colspan: '7' }
                     }));
@@ -133,14 +133,14 @@ window.Dashboard.rag = {
                         const row = dom.createElement('tr', { className: 'hover:bg-slate-50 transition cursor-pointer' });
                         row.addEventListener('click', () => window.Dashboard.rag.openChunkDetailsModal(c.chunkId));
                         const actionCell = dom.createElement('td', { className: 'p-3 text-center' });
-                        actionCell.appendChild(dom.createElement('button', { className: 'px-2 py-1 bg-slate-100 border border-slate-200 rounded font-bold text-[9px] hover:bg-slate-200', text: 'عرض' }));
+                        actionCell.appendChild(dom.createElement('button', { className: 'px-2 py-1 bg-slate-100 border border-slate-200 rounded font-bold text-[12px] hover:bg-slate-200', text: 'عرض' }));
                         row.append(
-                            dom.createElement('td', { className: 'p-3 text-slate-800 font-mono text-[10px] break-all', text: c.chunkId }),
+                            dom.createElement('td', { className: 'p-3 text-slate-800 font-mono text-[12px] break-all', text: c.chunkId }),
                             dom.createElement('td', { className: 'p-3 text-slate-600 truncate max-w-[150px]', text: c.source, attributes: { title: c.source } }),
                             dom.createElement('td', { className: 'p-3 font-semibold text-blue-600', text: `${c.chunkIndex + 1} / ${c.totalChunks}` }),
                             dom.createElement('td', { className: 'p-3 font-mono text-slate-500', text: String(c.text || '').length }),
                             dom.createElement('td', { className: 'p-3 font-mono text-purple-600 font-bold', text: Math.ceil(String(c.text || '').split(/\s+/).length * 1.3) }),
-                            dom.createElement('td', { className: 'p-3 text-green-600 font-bold font-arabic text-[10px]', text: 'مفهرس' }),
+                            dom.createElement('td', { className: 'p-3 text-green-600 font-bold font-arabic text-[12px]', text: 'مفهرس' }),
                             actionCell
                         );
                         return row;
@@ -393,7 +393,7 @@ window.Dashboard.rag = {
                 const row = document.createElement('tr');
                 const cell = document.createElement('td');
                 cell.colSpan = 12;
-                cell.className = 'text-red-500 text-center p-8 font-arabic text-[11px]';
+                cell.className = 'text-red-500 text-center p-8 font-arabic text-[12px]';
                 cell.textContent = 'تعذر تحميل مستودع المستندات. أعد المحاولة أو راجع حالة الخادم.';
                 row.appendChild(cell);
                 tbody.replaceChildren(row);
@@ -490,7 +490,7 @@ window.Dashboard.rag = {
         if (docs.length === 0) {
             const emptyHTML = `
                 <tr>
-                    <td colspan="12" class="text-slate-400 text-center p-8 font-arabic text-[11px] leading-relaxed">
+                    <td colspan="12" class="text-slate-400 text-center p-8 font-arabic text-[12px] leading-relaxed">
                         ⚠️ لا توجد مستندات مطابقة لخيارات البحث والتصفية الحالية.
                     </td>
                 </tr>
@@ -498,7 +498,7 @@ window.Dashboard.rag = {
             window.Dashboard.utils.setSanitizedTableRows(tbody, emptyHTML);
             if (mobileContainer) {
                 window.Dashboard.utils.setSanitizedHTML(mobileContainer, `
-                    <div class="text-slate-400 text-center p-6 bg-white border border-slate-200 rounded-xl font-arabic text-[11px] leading-relaxed">
+                    <div class="text-slate-400 text-center p-6 bg-white border border-slate-200 rounded-xl font-arabic text-[12px] leading-relaxed">
                         ⚠️ لا توجد مستندات مطابقة لخيارات البحث والتصفية الحالية.
                     </div>
                 `);
@@ -551,7 +551,7 @@ window.Dashboard.rag = {
                     </td>
                     <td class="p-3 font-mono text-slate-500 whitespace-nowrap">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</td>
                     <td class="p-3">
-                        <span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold ${srcBadgeClass}">${srcLabelAr}</span>
+                        <span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[12px] font-bold ${srcBadgeClass}">${srcLabelAr}</span>
                     </td>
                     <td class="p-3 font-mono text-slate-600 font-bold">${window.Dashboard.utils.escapeHTML(String(d.version || 1))}</td>
                     <td class="p-3 font-mono text-slate-600">-</td>
@@ -560,12 +560,12 @@ window.Dashboard.rag = {
                     <td class="p-3 text-slate-500 whitespace-nowrap">nomic-embed</td>
                     <td class="p-3 text-slate-500 font-mono whitespace-nowrap">${formattedDate}</td>
                     <td class="p-3">
-                        <span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeClass}">
+                        <span class="inline-block whitespace-nowrap px-2.5 py-0.5 rounded-full border text-[12px] font-bold ${badgeClass}">
                             ${window.Dashboard.utils.escapeHTML(String(statusText || ''))}
                         </span>
                     </td>
                     <td class="p-3 text-center">
-                        <button type="button" data-document-details="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="whitespace-nowrap px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[10px] transition font-arabic">عرض التفاصيل</button>
+                        <button type="button" data-document-details="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="whitespace-nowrap px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded border border-slate-200 text-[12px] transition font-arabic">عرض التفاصيل</button>
                     </td>
                 </tr>
             `;
@@ -577,9 +577,9 @@ window.Dashboard.rag = {
                             <input type="checkbox" data-id="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="rag-doc-row-chk rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${checkedAttr}>
                             <span class="text-xs font-bold text-slate-800 truncate max-w-[150px]" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">${fileIcon} ${window.Dashboard.utils.escapeHTML(d.originalFilename)}</span>
                         </div>
-                        <span class="px-2.5 py-0.5 rounded-full border text-[9px] font-bold ${badgeClass}">${window.Dashboard.utils.escapeHTML(String(statusText || ''))}</span>
+                        <span class="px-2.5 py-0.5 rounded-full border text-[12px] font-bold ${badgeClass}">${window.Dashboard.utils.escapeHTML(String(statusText || ''))}</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-[10px] text-slate-500 font-mono">
+                    <div class="grid grid-cols-3 gap-2 text-[12px] text-slate-500 font-mono">
                         <div>النوع: <strong class="text-slate-700 block">${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</strong></div>
                         <div>الحجم: <strong class="text-slate-700 block">${window.Dashboard.utils.escapeHTML(String(formattedSize))}</strong></div>
                         <div>المقاطع: <strong class="text-slate-700 block font-bold text-blue-600">${window.Dashboard.utils.escapeHTML(String(d.chunkCount ?? 0))}</strong></div>
@@ -945,11 +945,11 @@ window.Dashboard.rag = {
 
                 modal.classList.remove('hidden');
             } else {
-                alert('فشل جلب المعاينة: ' + data.error);
+                window.Dashboard.feedback.notify('فشل جلب المعاينة: ' + data.error);
             }
         } catch (err) {
             console.error(err);
-            alert('حدث خطأ بالاتصال لتوليد معاينة المستند.');
+            window.Dashboard.feedback.notify('حدث خطأ بالاتصال لتوليد معاينة المستند.');
         }
     },
 
@@ -1289,7 +1289,7 @@ window.Dashboard.rag = {
         const statusEl = document.getElementById('rag-panel-doc-status');
         if (statusEl) {
             statusEl.innerText = ['indexed', 'active'].includes(doc.status) ? 'مفهرس ونشط' : (doc.status === 'failed' ? 'فشل' : doc.status);
-            statusEl.className = `px-2 py-0.5 rounded border text-[9px] font-bold ` +
+            statusEl.className = `px-2 py-0.5 rounded border text-[12px] font-bold ` +
                 (['indexed', 'active'].includes(doc.status) ? 'bg-green-50 text-green-700 border-green-200' :
                  (doc.status === 'failed' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'));
         }
@@ -1450,7 +1450,12 @@ window.Dashboard.rag = {
         if (ids.length === 0) return;
 
         if (action === 'delete') {
-            const proceed = confirm(`هل أنت متأكد من حذف عدد [${ids.length}] مستندات محددة من الـ RAG؟ لا يمكن التراجع.`);
+            const proceed = await window.Dashboard.feedback.confirm({
+                title: 'حذف المستندات المحددة',
+                description: `سيتم حذف ${ids.length} مستندات وإزالتها من قاعدة المعرفة، ولن يستخدمها المساعد في الإجابات القادمة. لا يمكن التراجع عن ذلك.`,
+                confirmLabel: 'حذف المستندات',
+                destructive: true
+            });
             if (!proceed) return;
 
             window.Dashboard.settings.showToast('جاري حذف المستندات جماعياً...');
@@ -1650,7 +1655,7 @@ window.Dashboard.rag = {
         const question = queryInp.value.trim();
 
         if (question === '') {
-            alert('يرجى كتابة سؤال للاستعلام.');
+            window.Dashboard.feedback.notify('يرجى كتابة سؤال للاستعلام.');
             return;
         }
 
@@ -1718,11 +1723,11 @@ window.Dashboard.rag = {
 
                 window.Dashboard.rag.addTimelineLog('Playground Query', `تم تنفيذ استعلام تجريبي: "${question.substring(0, 30)}..."`);
             } else {
-                alert('فشل تجربة Playground: ' + data.error);
+                window.Dashboard.feedback.notify('فشل تجربة Playground: ' + data.error);
             }
         } catch (err) {
             console.error(err);
-            alert('خطأ أثناء معالجة استعلام Playground.');
+            window.Dashboard.feedback.notify('خطأ أثناء معالجة استعلام Playground.');
         } finally {
             if (askBtn) {
                 askBtn.disabled = false;
@@ -1751,7 +1756,7 @@ window.Dashboard.rag = {
 
         if (filtered.length === 0) {
             pChunksList.replaceChildren(window.Dashboard.utils.createElement('div', {
-                className: 'text-[10px] text-slate-400 font-arabic p-2',
+                className: 'text-[12px] text-slate-400 font-arabic p-2',
                 text: '⚠️ لا توجد مقاطع مسترجعة تطابق الفلاتر النشطة حالياً.'
             }));
             return;
@@ -1764,9 +1769,9 @@ window.Dashboard.rag = {
 
         const dom = window.Dashboard.utils;
         const cards = filtered.map((c, i) => {
-            const card = dom.createElement('div', { className: 'p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 font-arabic select-text text-[11px] hover:border-slate-300 transition' });
-            const header = dom.createElement('div', { className: 'flex justify-between items-center text-[10px] font-bold text-slate-500 flex-wrap gap-1 border-b border-slate-100 pb-1 mb-1' });
-            const scores = dom.createElement('div', { className: 'flex gap-1.5 font-mono text-[9px]' });
+            const card = dom.createElement('div', { className: 'p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 font-arabic select-text text-[12px] hover:border-slate-300 transition' });
+            const header = dom.createElement('div', { className: 'flex justify-between items-center text-[12px] font-bold text-slate-500 flex-wrap gap-1 border-b border-slate-100 pb-1 mb-1' });
+            const scores = dom.createElement('div', { className: 'flex gap-1.5 font-mono text-[12px]' });
             const scoreValues = isDebugMode
                 ? [`Similarity: ${(c.similarityScore || 0).toFixed(4)}`, `Keyword: ${(c.keywordScore || 0).toFixed(4)}`, `Rerank: ${(c.rerankScore || 0).toFixed(4)}`, `الترتيب النهائي: #${c.finalRankOrder || i + 1}`]
                 : [`درجة التشابه: ${(c.similarityScore || 0).toFixed(4)}`, `درجة الترتيب: ${(c.rerankScore || 0).toFixed(4)}`];
@@ -1803,8 +1808,8 @@ window.Dashboard.rag = {
         const content = document.createElement('div');
         content.append(
             dom.createElement('div', { className: 'font-bold text-slate-850', text: title }),
-            dom.createElement('div', { className: 'text-[10px] text-slate-500 leading-relaxed mt-0.5', text: desc }),
-            dom.createElement('div', { className: 'text-[9px] text-slate-400 font-mono mt-1', text: time })
+            dom.createElement('div', { className: 'text-[12px] text-slate-500 leading-relaxed mt-0.5', text: desc }),
+            dom.createElement('div', { className: 'text-[12px] text-slate-400 font-mono mt-1', text: time })
         );
         row.append(dom.createElement('span', { className: 'w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 mt-1 relative z-10 -mr-[17px]' }), content);
         return row;
@@ -1883,7 +1888,7 @@ window.Dashboard.rag = {
         const file = files[0];
 
         if (file.size > 10 * 1024 * 1024) {
-            alert('حجم الملف كبير جداً. الحد الأقصى هو 10 ميجابايت.');
+            window.Dashboard.feedback.notify('حجم الملف كبير جداً. الحد الأقصى هو 10 ميجابايت.');
             return;
         }
 
@@ -1893,7 +1898,7 @@ window.Dashboard.rag = {
             'mp3', 'ogg', 'wav', 'm4a'
         ];
         if (!allowed.includes(ext)) {
-            alert('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD, JPG, PNG, WEBP, MP3, OGG, WAV, M4A');
+            window.Dashboard.feedback.notify('الصيغة غير مدعومة. الصيغ المدعومة: PDF, TXT, DOCX, MD, JPG, PNG, WEBP, MP3, OGG, WAV, M4A');
             return;
         }
 
@@ -1952,7 +1957,7 @@ window.Dashboard.rag = {
                     window.Dashboard.rag.addTimelineLog('رفع مستند', `تم رفع وتضمين المستند ${file.name}`);
                     window.Dashboard.rag.fetchOverviewAndDocuments();
                 } else {
-                    alert('خطأ في الرفع: ' + (data.error || data.message || 'فشلت معالجة الخادم للمستند.'));
+                    window.Dashboard.feedback.notify('خطأ في الرفع: ' + (data.error || data.message || 'فشلت معالجة الخادم للمستند.'));
                 }
                 window.Dashboard.rag.hideIndexingProgress();
             };
@@ -2005,7 +2010,7 @@ window.Dashboard.rag = {
     copyPlaygroundAnswer: function() {
         const answer = document.getElementById('rag-playground-answer')?.innerText;
         if (!answer || answer === '-') {
-            alert('لا توجد إجابة لنسخها حالياً.');
+            window.Dashboard.feedback.notify('لا توجد إجابة لنسخها حالياً.');
             return;
         }
 
@@ -2013,7 +2018,7 @@ window.Dashboard.rag = {
             window.Dashboard.settings.showToast('تم نسخ إجابة المساعد للذاكرة!');
         }).catch(err => {
             console.error(err);
-            alert('تعذر النسخ التلقائي للذاكرة.');
+            window.Dashboard.feedback.notify('تعذر النسخ التلقائي للذاكرة.');
         });
     }
 };

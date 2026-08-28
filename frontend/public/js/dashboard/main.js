@@ -3,13 +3,46 @@ window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.main = {
     init: function() {
-        console.log("🎨 Initializing FUThing Dashboard Frontend Workspace...");
+        console.log("🎨 Initializing FuBot Dashboard Frontend Workspace...");
+
+        const accessibleNames = {
+            'rag-doc-select-all': 'تحديد جميع مستندات قاعدة المعرفة',
+            'rag-opt-default-top-k': 'العدد الافتراضي للنتائج المسترجعة',
+            'rag-opt-similarity-threshold': 'الحد الأدنى لتشابه النتائج',
+            'rag-opt-chunk-size': 'حجم مقطع المعرفة',
+            'rag-opt-chunk-overlap': 'مقدار التداخل بين المقاطع',
+            'rag-opt-embedding-model': 'اسم نموذج تمثيل النص',
+            'rag-opt-embedding-provider': 'مزود نموذج تمثيل النص',
+            'rag-opt-collection': 'اسم مجموعة المتجهات',
+            'rag-opt-context-budget': 'الحد الأقصى لسياق المعرفة',
+            'rag-opt-min-top-k': 'الحد الأدنى لعدد النتائج',
+            'rag-opt-max-top-k': 'الحد الأعلى لعدد النتائج',
+            'rag-opt-semantic-weight': 'وزن البحث الدلالي',
+            'rag-opt-keyword-weight': 'وزن البحث بالكلمات',
+            'rag-opt-neighbor-expansion': 'توسيع المقاطع المجاورة',
+            'rag-opt-hybrid-search': 'تفعيل البحث الهجين',
+            'rag-opt-distance-metric': 'مقياس المسافة المتجهية',
+            'rag-opt-separator-strategy': 'استراتيجية فصل المقاطع',
+            'rag-opt-arabic-norm': 'إصدار معالجة اللغة العربية',
+            'rag-opt-cleaner-ver': 'إصدار تنظيف المحتوى',
+            'rag-opt-embedding-dimension': 'أبعاد تمثيل النص'
+        };
+        Object.entries(accessibleNames).forEach(([id, label]) => {
+            const control = document.getElementById(id);
+            if (control && !control.getAttribute('aria-label')) control.setAttribute('aria-label', label);
+        });
 
         // 1. Initial state pull via authoritative REST endpoints (Task 15)
         window.Dashboard.analytics.fetchStatsAndUsers();
         if (window.Dashboard.users && window.Dashboard.users.init) window.Dashboard.users.init();
         if (window.Dashboard.chat && window.Dashboard.chat.init) window.Dashboard.chat.init();
         if (window.Dashboard.composer && window.Dashboard.composer.init) window.Dashboard.composer.init();
+        if (window.Dashboard.whatsapp && window.Dashboard.whatsapp.syncStatusOnStartup) {
+            window.Dashboard.whatsapp.syncStatusOnStartup();
+        }
+        if (window.Dashboard.navigation && window.Dashboard.navigation.restoreLastSection) {
+            window.Dashboard.navigation.restoreLastSection();
+        }
         const assignee = document.getElementById('chat-assignee-select');
         if (assignee) {
             assignee.addEventListener('change', () => {

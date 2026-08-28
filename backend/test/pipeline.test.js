@@ -18,11 +18,19 @@ const { normalizeWhatsAppMessage } = require('../src/messaging/normalizers/whats
 const { normalizeMetaMessage } = require('../src/messaging/normalizers/metaNormalizer');
 const { validateNormalizedMessage } = require('../src/messaging/validateMessage');
 const { processIncomingMessage } = require('../src/messaging/messageProcessor');
+const messageProcessorTest = require('../src/messaging/messageProcessor')._test;
 const { sendOutgoingMessage } = require('../src/messaging/outgoingMessageService');
 const customerRepo = require('../src/database/repositories/customerRepository');
 const messageRepo = require('../src/database/repositories/messageRepository');
 
 test('Unified Message Pipeline & Normalizers Suite', async (t) => {
+
+    await t.test('0. Management request and unknown-answer escalation detection', () => {
+        assert.strictEqual(messageProcessorTest.requestsManagement('بدي أحكي مع الإدارة'), true);
+        assert.strictEqual(messageProcessorTest.requestsManagement('كم سعر المنتج؟'), false);
+        assert.strictEqual(messageProcessorTest.aiSignalsUnknown('لا أستطيع تحديد هوية الشخص في الصورة.'), true);
+        assert.strictEqual(messageProcessorTest.aiSignalsUnknown('سعر المنتج هو 20 شيكل.'), false);
+    });
 
     await t.test('1. Setup database schemas', () => {
         initializeDatabase();
@@ -120,10 +128,12 @@ test('Unified Message Pipeline & Normalizers Suite', async (t) => {
         const result1 = await processIncomingMessage(normalized);
         assert.strictEqual(
             result1.status,
-            'ai_failed',
-            'A persisted incoming message must distinguish AI failure from webhook persistence failure'
+            'escalated_to_management',
+            'An empty AI response must preserve the message and escalate it to management'
         );
-        assert.match(result1.error, /empty or null response|empty response/i);
+        assert.strictEqual(result1.escalationReason, 'ai_provider_failure');
+        assert.strictEqual(result1.assignee, 'ai', 'Management notification must not change assignment');
+        assert.strictEqual(result1.aiEnabled, true, 'Management notification must keep AI enabled');
         assert.ok(result1.messageId, 'The durable incoming message ID must be retained');
         assert.strictEqual(result1.duplicate, false);
 

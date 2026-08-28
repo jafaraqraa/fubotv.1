@@ -51,6 +51,19 @@ window.Dashboard.utils = {
         return element;
     },
 
+    userFacingError: function(error, fallback = 'تعذر إكمال العملية. حاول مرة أخرى.') {
+        const raw = typeof error === 'string' ? error : error?.message;
+        if (!raw) return fallback;
+        const value = String(raw).trim();
+        if (/\b(?:ECONNREFUSED|ETIMEDOUT|EADDRINUSE|Internal Server Error|TypeError|undefined|\[object Object\])\b/i.test(value)) {
+            return fallback;
+        }
+        if (/^HTTP\s*\d+$/i.test(value) || /Unexpected token|Failed to fetch|NetworkError/i.test(value)) {
+            return 'تعذر الاتصال بالخادم. تحقق من الاتصال ثم حاول مرة أخرى.';
+        }
+        return value.length > 220 ? `${value.slice(0, 217)}…` : value;
+    },
+
     // Escapes potentially dangerous text characters to mitigate dynamic XSS risks
     escapeHTML: function(str) {
         if (!str) return '';

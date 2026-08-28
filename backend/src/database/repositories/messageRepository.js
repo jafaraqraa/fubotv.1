@@ -141,7 +141,7 @@ function listMessages(userId, tenantId = 'default', channel = null) {
     if (!conversationId) return [];
 
     const rows = db.prepare(`
-        SELECT sender_type as sender, content as text, message_type as type,
+        SELECT id, sender_type as sender, content as text, message_type as type,
                is_internal_note as isNote, delivery_status as deliveryStatus,
                metadata, media_url as mediaUrl, media_name as mediaName,
                mime_type as mimeType, created_at as createdAt,
@@ -159,6 +159,7 @@ function listMessages(userId, tenantId = 'default', channel = null) {
         const formattedTime = dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
 
         return {
+            id: row.id,
             userId: String(userId),
             sender: row.sender === 'ai' ? 'admin' : row.sender, // Keep admin/user compatibility for dashboard UI
             text: row.text,
@@ -179,6 +180,42 @@ function listMessages(userId, tenantId = 'default', channel = null) {
             time: formattedTime
         };
     });
+}
+
+function markMessageForManagement(messageId, tenantId, reason) {
+    const row = db.prepare(
+        'SELECT metadata FROM messages WHERE id = ? AND tenant_id = ?'
+    ).get(messageId, tenantId);
+    if (!row) return false;
+    let metadata = {};
+    try {
+        metadata = row.metadata ? JSON.parse(row.metadata) : {};
+    } catch (_) {
+        metadata = {};
+    }
+    metadata.managementEscalation = true;
+    metadata.managementEscalationReason = String(reason || 'unspecified');
+    return db.prepare(
+        'UPDATE messages SET metadata = ? WHERE id = ? AND tenant_id = ?'
+    ).run(JSON.stringify(metadata), messageId, tenantId).changes === 1;
+}
+
+function resolveManagementRequest(userId, tenantId = 'default', channel = null) {
+    const conversationId = getConversationIdByUserId(userId, tenantId, channel);
+    if (!conversationId) return false;
+    const rows = db.prepare(`
+        SELECT id, metadata FROM messages
+        WHERE conversation_id = ? AND metadata LIKE '%"managementEscalation":true%'
+    `).all(conversationId);
+    const update = db.prepare('UPDATE messages SET metadata = ? WHERE id = ?');
+    db.transaction(() => rows.forEach(row => {
+        let metadata = {};
+        try { metadata = JSON.parse(row.metadata || '{}'); } catch (_) { metadata = {}; }
+        metadata.managementEscalation = false;
+        metadata.managementResolvedAt = new Date().toISOString();
+        update.run(JSON.stringify(metadata), row.id);
+    }))();
+    return rows.length > 0;
 }
 
 function existsByExternalId(channel, externalMsgId, tenantId = null) {
@@ -267,6 +304,8 @@ function markOutboundReadThrough(externalUserId, channel, tenantId, watermark) {
 
 module.exports = {
     saveMessage,
+    markMessageForManagement,
+    resolveManagementRequest,
     updateMessageDelivery,
     listMessages,
     existsByExternalId,

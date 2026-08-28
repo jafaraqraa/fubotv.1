@@ -35,7 +35,8 @@ const {
     listMessages,
     getMessagesCount,
     getMessageForRetry,
-    updateMessageDelivery
+    updateMessageDelivery,
+    resolveManagementRequest
 } = require('../database/repositories/messageRepository');
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
 const { CAPABILITIES, assertMediaCapability, categoryForMime } = require('../messaging/mediaCapabilities');
@@ -100,6 +101,17 @@ router.post('/chat/assign', requirePermission('conversations:write'), (req, res)
     } else {
         res.status(404).json({ success: false, error: 'المستخدم غير موجود بالذاكرة.' });
     }
+});
+
+router.post('/chat/management/resolve', requirePermission('conversations:write'), (req, res) => {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ success: false, error: 'معرف العميل مطلوب.' });
+    const user = findCustomerUserByIdOnly(userId, req.tenantId);
+    if (!user) return res.status(404).json({ success: false, error: 'المستخدم غير موجود.' });
+    resolveManagementRequest(userId, user.tenantId, user.platform);
+    updateAssignee(userId, 'ai', user.tenantId);
+    addLog(`تمت معالجة طلب الإدارة للعميل ${user.name} وإعادة الإسناد للذكاء الاصطناعي.`);
+    return res.json({ success: true, assignee: 'ai', isAIEnabled: true, managementRequested: false });
 });
 
 // 2. تحديث وتطوير مسار إرسال الرسائل الفردية والملاحظات والوسائط (Rich Media & Notes Support) - uses outgoingMessageService (Task 14)
@@ -210,6 +222,13 @@ async function sendDirectHandler(req, res) {
         });
 
         if (outgoingResult.success) {
+            // A successful direct reply from an administrator fulfills any
+            // pending escalation for this conversation. Internal notes do not.
+            const managementResolved = resolveManagementRequest(
+                userId,
+                user.tenantId,
+                user.platform
+            );
             audit({
                 actorId: req.session.userId, tenantId: user.tenantId,
                 action: 'media_send', resourceType: user.platform,
@@ -220,7 +239,9 @@ async function sendDirectHandler(req, res) {
                 success: true,
                 messageId: outgoingResult.externalMessageId || null,
                 attachmentId: mediaMetadata?.attachmentId || null,
-                deliveryStatus: outgoingResult.status
+                deliveryStatus: outgoingResult.status,
+                managementRequested: false,
+                managementResolved
             });
         } else {
             audit({
@@ -329,12 +350,23 @@ router.post('/media/:attachmentId/retry', requirePermission('messages:send'), as
     if (!result.success) {
         return res.status(502).json({ success: false, error: result.error, retryable: true });
     }
+    const managementResolved = resolveManagementRequest(
+        message.external_user_id,
+        req.tenantId,
+        message.channel
+    );
     audit({
         actorId: req.session.userId, tenantId: req.tenantId,
         action: 'media_retry', resourceType: message.channel,
         resourceId: attachment.id, outcome: 'success'
     });
-    return res.json({ success: true, attachmentId: attachment.id, messageId: result.externalMessageId });
+    return res.json({
+        success: true,
+        attachmentId: attachment.id,
+        messageId: result.externalMessageId,
+        managementRequested: false,
+        managementResolved
+    });
 });
 
 router.delete('/media/:attachmentId', requirePermission('messages:send'), (req, res) => {

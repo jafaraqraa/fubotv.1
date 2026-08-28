@@ -2,19 +2,45 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.navigation = {
-    showSection: function(sectionId) {
+    sectionIds: ['chat-section', 'errors-section', 'settings-section', 'whatsapp-section', 'analytics-section', 'rag-section', 'aimodels-section', 'usage-section'],
+    storageKey: 'futh_dashboard_active_section',
+
+    rememberSection: function(sectionId) {
+        if (!this.sectionIds.includes(sectionId)) return;
+        try { localStorage.setItem(this.storageKey, sectionId); } catch (_) { /* storage is optional */ }
+    },
+
+    restoreLastSection: function() {
+        let sectionId = 'chat-section';
+        try { sectionId = localStorage.getItem(this.storageKey) || sectionId; } catch (_) { /* storage is optional */ }
+        if (!this.sectionIds.includes(sectionId) || !document.getElementById(sectionId)) {
+            sectionId = 'chat-section';
+        }
+        this.showSection(sectionId, { skipUnsavedCheck: true });
+    },
+
+    showSection: async function(sectionId, options = {}) {
         // Guard if we already are on this section
         const activeSection = [...document.querySelectorAll('main > div')].find(el => !el.classList.contains('hidden'));
-        if (activeSection && activeSection.id === sectionId) return;
+        if (activeSection && activeSection.id === sectionId) {
+            window.Dashboard.navigation.rememberSection(sectionId);
+            window.Dashboard.navigation.closeMobileMenu();
+            return;
+        }
 
         // check if there are any unsaved changes
-        if (window.Dashboard.navigation.hasUnsavedChanges()) {
-            const leave = confirm("You have unsaved changes. Leave anyway? / لديك تعديلات غير محفوظة. هل تريد المغادرة على أي حال؟");
+        if (!options.skipUnsavedCheck && window.Dashboard.navigation.hasUnsavedChanges()) {
+            const leave = await window.Dashboard.feedback.confirm({
+                title: 'تغييرات غير محفوظة',
+                description: 'إذا غادرت الآن ستفقد التعديلات التي لم تحفظها في هذه الصفحة.',
+                confirmLabel: 'مغادرة دون حفظ',
+                destructive: true
+            });
             if (!leave) return;
             window.Dashboard.navigation.discardUnsavedChanges();
         }
 
-        const sections = ['chat-section', 'errors-section', 'settings-section', 'whatsapp-section', 'analytics-section', 'rag-section', 'aimodels-section', 'usage-section'];
+        const sections = window.Dashboard.navigation.sectionIds;
         sections.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -30,6 +56,7 @@ window.Dashboard.navigation = {
             const btn = document.getElementById(id);
             if (btn) {
                 btn.className = "w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition";
+                btn.removeAttribute('aria-current');
             }
         });
 
@@ -42,6 +69,7 @@ window.Dashboard.navigation = {
         const activeBtn = document.getElementById(`btn-${btnSuffix}`);
         if (activeBtn) {
             activeBtn.className = "w-full text-right flex items-center gap-3 py-2.5 px-4 rounded-lg bg-blue-600 text-white font-semibold transition shadow-md shadow-blue-600/10";
+            activeBtn.setAttribute('aria-current', 'page');
         }
 
         if (sectionId === 'chat-section') {
@@ -91,6 +119,31 @@ window.Dashboard.navigation = {
             window.Dashboard.analytics.fetchStatsAndUsers();
         }
         if (sectionId !== 'chat-section' && subtitleElement) subtitleElement.classList.add('hidden');
+        if (titleElement) document.title = `${titleElement.innerText} — FuBot`;
+        window.Dashboard.navigation.rememberSection(sectionId);
+        window.Dashboard.navigation.closeMobileMenu();
+    },
+
+    closeMobileMenu: function() {
+        const sidebar = document.getElementById('dashboard-sidebar');
+        const backdrop = document.getElementById('mobile-menu-backdrop');
+        const trigger = document.getElementById('mobile-menu-button');
+        if (sidebar) sidebar.classList.remove('is-mobile-open');
+        if (backdrop) backdrop.classList.remove('is-visible');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('mobile-menu-open');
+    },
+
+    toggleMobileMenu: function() {
+        const sidebar = document.getElementById('dashboard-sidebar');
+        const backdrop = document.getElementById('mobile-menu-backdrop');
+        const trigger = document.getElementById('mobile-menu-button');
+        if (!sidebar || !backdrop || !trigger) return;
+        const willOpen = !sidebar.classList.contains('is-mobile-open');
+        sidebar.classList.toggle('is-mobile-open', willOpen);
+        backdrop.classList.toggle('is-visible', willOpen);
+        trigger.setAttribute('aria-expanded', String(willOpen));
+        document.body.classList.toggle('mobile-menu-open', willOpen);
     },
 
     hasUnsavedChanges: function() {
@@ -122,3 +175,16 @@ window.Dashboard.navigation = {
 
 // Bind to global namespace for inline compatibility
 window.showSection = window.Dashboard.navigation.showSection;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('mobile-menu-button');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
+    if (trigger) trigger.addEventListener('click', window.Dashboard.navigation.toggleMobileMenu);
+    if (backdrop) backdrop.addEventListener('click', window.Dashboard.navigation.closeMobileMenu);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') window.Dashboard.navigation.closeMobileMenu();
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) window.Dashboard.navigation.closeMobileMenu();
+    });
+});

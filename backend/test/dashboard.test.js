@@ -67,8 +67,7 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
             'current-chat-user', 'current-chat-id', 'chat-assignee-select',
             'assignee-container', 'chat-box', 'media-preview-container',
             'media-filename', 'media-upload-input', 'canned-responses-overlay',
-            'direct-msg-input', 'send-btn', 'stat-users',
-            'stat-messages', 'stat-status', 'live-logs-box', 'errors-table-body',
+            'direct-msg-input', 'send-btn', 'errors-table-body',
             'platformChart', 'messageChart', 'wa-connection-badge', 'wa-qr-container',
             'wa-logout-btn', 'knowledge-input', 'confirm-modal'
         ];

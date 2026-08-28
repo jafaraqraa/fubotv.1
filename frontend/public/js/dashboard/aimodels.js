@@ -398,7 +398,7 @@ async function deleteCustomModelFlow(modelId, provider) {
     const isCustom = (window.Dashboard.state.customModels || [])
         .some(m => m.provider === provider && m.id === modelId);
     if (!isCustom) {
-        alert('يمكن فقط حذف الموديلات المخصصة المنشأة بواسطة المستخدم.');
+        window.Dashboard.feedback.notify('يمكن فقط حذف الموديلات المخصصة المنشأة بواسطة المستخدم.');
         return;
     }
 
@@ -416,7 +416,7 @@ async function deleteCustomModelFlow(modelId, provider) {
                     const meta = window.Dashboard.aimodels.tasksMetadata[t.task];
                     return meta ? meta.title : t.task;
                 });
-                alert(`عذراً، هذا النموذج المخصص مستخدم حالياً للمهام التالية: [${taskTitles.join('، ')}].\nيرجى تحديد وتعيين نموذج آخر لهذه المهام قبل حذفه.`);
+                window.Dashboard.feedback.notify(`عذراً، هذا النموذج المخصص مستخدم حالياً للمهام التالية: [${taskTitles.join('، ')}].\nيرجى تحديد وتعيين نموذج آخر لهذه المهام قبل حذفه.`);
                 return;
             }
         }
@@ -486,24 +486,24 @@ async function deleteCustomModelFlow(modelId, provider) {
                     if (window.Dashboard.settings && window.Dashboard.settings.showToast) {
                         window.Dashboard.settings.showToast('تم حذف النموذج المخصص بنجاح وإزالته من جميع القوائم المتاحة.');
                     } else {
-                        alert('تم حذف النموذج المخصص بنجاح!');
+                        window.Dashboard.feedback.notify('تم حذف النموذج المخصص بنجاح!');
                     }
                 } else {
                     window.Dashboard.state.customModels = previousModels;
                     confirmBtn.disabled = false;
                     confirmBtn.textContent = 'حذف الموديل';
-                    alert(`فشل الحفظ بالسيرفر: ${settingsResult.error}`);
+                    window.Dashboard.feedback.notify(`فشل الحفظ بالسيرفر: ${settingsResult.error}`);
                 }
             } catch (err) {
                 window.Dashboard.state.customModels = previousModels;
                 confirmBtn.disabled = false;
                 confirmBtn.textContent = 'حذف الموديل';
-                alert(`خطأ في الاتصال: ${err.message}`);
+                window.Dashboard.feedback.notify(`خطأ في الاتصال: ${err.message}`);
             }
         });
 
     } catch (err) {
-        alert(`حدث خطأ أثناء فحص تعيينات النموذج: ${err.message}`);
+        window.Dashboard.feedback.notify(`حدث خطأ أثناء فحص تعيينات النموذج: ${err.message}`);
     }
 }
 
@@ -530,7 +530,7 @@ window.saveAIModelCustomModel = async function() {
     const provider = document.getElementById('aimodels-modal-provider').value;
 
     if (!name || !id) {
-        alert('يرجى إدخال اسم العرض ومعرّف النموذج المخصص.');
+        window.Dashboard.feedback.notify('يرجى إدخال اسم العرض ومعرّف النموذج المخصص.');
         return;
     }
 
@@ -539,7 +539,7 @@ window.saveAIModelCustomModel = async function() {
     const isDuplicateStandard = (window.Dashboard.aimodels.standardModels[provider] || [])
         .some(m => m.id === id);
     if (isDuplicateCustom || isDuplicateStandard) {
-        alert(`عذراً، هذا المعرّف (${id}) موجود مسبقاً لهذا المزود.`);
+        window.Dashboard.feedback.notify(`عذراً، هذا المعرّف (${id}) موجود مسبقاً لهذا المزود.`);
         return;
     }
 
@@ -591,17 +591,17 @@ window.saveAIModelCustomModel = async function() {
             document.getElementById('aimodels-modal-custom-name').value = '';
             document.getElementById('aimodels-modal-custom-id').value = '';
 
-            alert('تمت إضافة النموذج المخصص وجعله متاحاً للتحديد فوراً!');
+            window.Dashboard.feedback.notify('تمت إضافة النموذج المخصص وجعله متاحاً للتحديد فوراً!');
         } else {
             window.Dashboard.state.customModels = (window.Dashboard.state.customModels || [])
                 .filter(m => !(m.provider === provider && m.id === id));
-            alert(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
+            window.Dashboard.feedback.notify(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
         }
     } catch (err) {
         window.Dashboard.state.customModels = (window.Dashboard.state.customModels || [])
             .filter(m => !(m.provider === provider && m.id === id));
         console.error("Failed to persist custom model:", err);
-        alert(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
+        window.Dashboard.feedback.notify(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
     }
 };
 
@@ -611,7 +611,7 @@ window.saveAIModelTaskConfig = async function() {
     const model = document.getElementById('aimodels-modal-model').value;
 
     if (!model) {
-        alert('الرجاء اختيار أو إضافة نموذج للبدء.');
+        window.Dashboard.feedback.notify('الرجاء اختيار أو إضافة نموذج للبدء.');
         return;
     }
 
@@ -650,13 +650,13 @@ window.saveAIModelTaskConfig = async function() {
             window.hideAIModelModal();
             // Refresh grid
             await window.Dashboard.aimodels.loadTasks();
-            alert('تم حفظ إعداد الموديل الذكي للمهمة المحددة بنجاح!');
+            window.Dashboard.feedback.notify('تم حفظ إعداد الموديل الذكي للمهمة المحددة بنجاح!');
         } else {
-            alert(`فشل الحفظ: ${data.error}`);
+            window.Dashboard.feedback.notify(`فشل الحفظ: ${data.error}`);
         }
     } catch (err) {
         console.error("Failed to save task config:", err);
-        alert(`خطأ في الاتصال: ${err.message}`);
+        window.Dashboard.feedback.notify(`خطأ في الاتصال: ${err.message}`);
     }
 };
 
@@ -728,7 +728,7 @@ window.saveAICardCustomModel = async function() {
 
         if (!settingsResult.success) {
             window.Dashboard.state.customModels = previousModels;
-            alert(`فشل حفظ النموذج المخصص بالسيرفر: ${settingsResult.error}`);
+            window.Dashboard.feedback.notify(`فشل حفظ النموذج المخصص بالسيرفر: ${settingsResult.error}`);
             return;
         }
         customPersisted = true;
@@ -787,13 +787,13 @@ window.saveAICardCustomModel = async function() {
                 await window.Dashboard.settings.populateModelsDropdown(provider);
             }
 
-            alert('تمت إضافة النموذج المخصص وتعيينه بنجاح لهذه المهمة دون الحاجة لإعادة تحميل الصفحة!');
+            window.Dashboard.feedback.notify('تمت إضافة النموذج المخصص وتعيينه بنجاح لهذه المهمة دون الحاجة لإعادة تحميل الصفحة!');
         } else {
-            alert(`فشل تعيين النموذج للمهمة: ${taskResult.error}`);
+            window.Dashboard.feedback.notify(`فشل تعيين النموذج للمهمة: ${taskResult.error}`);
         }
     } catch (err) {
         if (!customPersisted) window.Dashboard.state.customModels = previousModels;
         console.error("Failed to complete save flow for custom model:", err);
-        alert(`خطأ في الاتصال أثناء حفظ الموديل: ${err.message}`);
+        window.Dashboard.feedback.notify(`خطأ في الاتصال أثناء حفظ الموديل: ${err.message}`);
     }
 };

@@ -35,6 +35,7 @@ function mapCustomerRow(row) {
         isAIEnabled: row.is_ai_enabled === 1,
         unreadCount: row.unread_count,
         assignee: row.assignee,
+        managementRequested: row.management_requested === 1,
         lastSeen: row.lastSeen
     };
 }
@@ -161,7 +162,8 @@ function findCustomerUser(userId, platform, tenantId = null) {
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
-               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
+               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
+               EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = c.id AND m.metadata LIKE '%"managementEscalation":true%') as management_requested
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
         LEFT JOIN tenant_channel_profiles tcp
@@ -178,7 +180,8 @@ function findCustomerUserByIdOnly(userId, tenantId) {
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
-               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
+               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
+               EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = c.id AND m.metadata LIKE '%"managementEscalation":true%') as management_requested
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
         LEFT JOIN tenant_channel_profiles tcp
@@ -195,7 +198,8 @@ function listCustomerUsers(tenantId) {
         SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
-               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id
+               c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
+               EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = c.id AND m.metadata LIKE '%"managementEscalation":true%') as management_requested
         FROM channel_accounts ca
         JOIN conversations c ON c.channel_account_id = ca.id
         LEFT JOIN tenant_channel_profiles tcp

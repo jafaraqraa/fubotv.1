@@ -2,6 +2,7 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.conversationControls = {
+    returnFocusTo: null,
     openConfirmModal: function(userId, userName, currentAIState) {
         window.Dashboard.state.pendingToggleUserId = userId;
         const modal = document.getElementById('confirm-modal');
@@ -11,18 +12,19 @@ window.Dashboard.conversationControls = {
         const yesBtn = document.getElementById('confirm-yes-btn');
 
         if (!modal || !title || !text || !icon || !yesBtn) return;
+        this.returnFocusTo = document.activeElement;
 
         icon.innerText = "AI";
         if (currentAIState) {
             title.innerText = "تعطيل وكيل الذكاء الاصطناعي؟";
             text.innerText = `تغيير حالة الرد الآلي للعميل ${userName} إلى الرد اليدوي بالكامل.`;
-            yesBtn.className = "w-full bg-red-500 hover:bg-red-600 text-white font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg";
-            yesBtn.innerText = "PAUSE AI";
+            yesBtn.className = "w-full bg-red-500 hover:bg-red-600 text-white font-bold text-[12px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg";
+            yesBtn.innerText = "إيقاف الرد الآلي";
         } else {
             title.innerText = "تفعيل وكيل الذكاء الاصطناعي؟";
             text.innerText = `تفعيل الرد التلقائي بالذكاء الاصطناعي للعميل ${userName} بناء على سياق قاعدة المعرفة.`;
-            yesBtn.className = "w-full bg-slate-900 hover:bg-black text-white font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg";
-            yesBtn.innerText = "ACTIVATE AI";
+            yesBtn.className = "w-full bg-slate-900 hover:bg-black text-white font-bold text-[12px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg";
+            yesBtn.innerText = "تفعيل الرد الآلي";
         }
 
         yesBtn.onclick = window.Dashboard.conversationControls.executeToggleAI;
@@ -32,6 +34,7 @@ window.Dashboard.conversationControls = {
             modal.classList.remove('opacity-0');
             const subDiv = modal.querySelector('div');
             if (subDiv) subDiv.classList.remove('scale-95');
+            yesBtn.focus();
         }, 10);
     },
 
@@ -46,12 +49,13 @@ window.Dashboard.conversationControls = {
         const yesBtn = document.getElementById('confirm-yes-btn');
 
         if (!modal || !title || !text || !icon || !yesBtn) return;
+        this.returnFocusTo = document.activeElement;
 
         icon.innerText = iconLabel;
         title.innerText = titleText;
         text.innerText = descText;
-        yesBtn.className = `${btnColorClass} text-white font-bold text-[10px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg`;
-        yesBtn.innerText = "CONFIRM SYNC";
+        yesBtn.className = `${btnColorClass} text-white font-bold text-[12px] py-3 px-8 rounded-lg transition uppercase tracking-widest shadow-lg`;
+        yesBtn.innerText = "حفظ التغييرات";
         yesBtn.onclick = window.Dashboard.settings.executeSaveSettings;
 
         modal.classList.remove('hidden');
@@ -59,6 +63,7 @@ window.Dashboard.conversationControls = {
             modal.classList.remove('opacity-0');
             const subDiv = modal.querySelector('div');
             if (subDiv) subDiv.classList.remove('scale-95');
+            yesBtn.focus();
         }, 10);
     },
 
@@ -70,6 +75,8 @@ window.Dashboard.conversationControls = {
         if (subDiv) subDiv.classList.add('scale-95');
         setTimeout(() => {
             modal.classList.add('hidden');
+            if (this.returnFocusTo && typeof this.returnFocusTo.focus === 'function') this.returnFocusTo.focus();
+            this.returnFocusTo = null;
         }, 300);
         window.Dashboard.state.pendingToggleUserId = null;
         window.Dashboard.state.pendingSettingsPayload = null;
@@ -103,10 +110,10 @@ window.Dashboard.conversationControls = {
                 }
                 window.Dashboard.analytics.fetchStatsAndUsers();
             } else {
-                alert('خطأ: ' + result.error);
+                window.Dashboard.settings.showToast(result.error || 'تعذر تغيير حالة الرد الآلي.', 'error');
             }
         } catch (err) {
-            alert('فشل الاتصال بالسيرفر لتغيير حالة الذكاء.');
+            window.Dashboard.settings.showToast('تعذر الاتصال بالخادم لتغيير حالة الرد الآلي.', 'error');
         }
     }
 };
@@ -116,3 +123,10 @@ window.openConfirmModal = window.Dashboard.conversationControls.openConfirmModal
 window.openSettingsConfirmModal = window.Dashboard.conversationControls.openSettingsConfirmModal;
 window.closeConfirmModal = window.Dashboard.conversationControls.closeConfirmModal;
 window.executeToggleAI = window.Dashboard.conversationControls.executeToggleAI;
+
+document.addEventListener('keydown', event => {
+    const modal = document.getElementById('confirm-modal');
+    if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        window.Dashboard.conversationControls.closeConfirmModal();
+    }
+});

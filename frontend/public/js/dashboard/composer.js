@@ -122,7 +122,7 @@ window.Dashboard.composer = {
         if (bar) bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
         if (label) {
             label.textContent = status;
-            label.className = `block text-[10px] mt-1 ${isError ? 'text-red-600' : 'text-slate-500'}`;
+            label.className = `block text-[12px] mt-1 ${isError ? 'text-red-600' : 'text-slate-500'}`;
         }
     },
 
@@ -191,7 +191,7 @@ window.Dashboard.composer = {
                     row.append(
                         dom.createElement('span', { className: 'font-bold text-slate-800', text: resp.text }),
                         dom.createElement('span', {
-                            className: 'text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono font-bold',
+                            className: 'text-[12px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono font-bold',
                             text: `/${resp.trigger}`
                         })
                     );
@@ -283,6 +283,10 @@ window.Dashboard.composer = {
                 result = await response.json();
             }
             if (result.success) {
+                if (result.managementRequested === false && selectedUser) {
+                    window.Dashboard.chat.clearManagementEscalationUI(selectedUser);
+                    window.Dashboard.analytics.fetchStatsAndUsers();
+                }
                 this.setUploadProgress(100, 'تم الإرسال');
                 input.value = '';
                 window.Dashboard.composer.clearMediaUpload();
@@ -364,6 +368,13 @@ window.Dashboard.composer = {
             );
             const result = await response.json();
             if (!result.success) throw new Error(result.error || 'فشلت إعادة المحاولة.');
+            const selectedUser = window.Dashboard.state.usersCache.find(
+                user => String(user.id) === String(window.Dashboard.state.selectedUserId)
+            );
+            if (result.managementRequested === false && selectedUser) {
+                window.Dashboard.chat.clearManagementEscalationUI(selectedUser);
+                window.Dashboard.analytics.fetchStatsAndUsers();
+            }
             this.setUploadProgress(100, 'تم الإرسال');
             await window.Dashboard.chat.fetchChatHistory();
             setTimeout(() => this.clearMediaUpload(), 500);

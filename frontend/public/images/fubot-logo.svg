@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" role="img" aria-labelledby="title description">
+  <title id="title">FuBot</title><desc id="description">FuBot AI Messenger Assistant</desc>
+  <defs><linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00b94f"/><stop offset="1" stop-color="#58dd36"/></linearGradient></defs>
+  <g transform="translate(14 8)">
+    <path d="M101 18h48c39 0 70 30 70 67 0 38-31 68-70 68h-45l-30 18 4-28C51 132 33 109 33 82c0-36 30-64 68-64Z" fill="none" stroke="url(#green)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="70" y="49" width="116" height="69" rx="32" fill="#071018"/>
+    <path d="M91 85c3-14 22-14 25 0M141 85c3-14 22-14 25 0" fill="none" stroke="#27d84c" stroke-width="8" stroke-linecap="round"/>
+    <path d="M158 18V2" stroke="url(#green)" stroke-width="9" stroke-linecap="round"/><circle cx="158" cy="2" r="9" fill="#11c752"/>
+    <path d="M217 69h31m-31 19h42m-42 19h26" stroke="url(#green)" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <text x="276" y="103" font-family="Poppins,Arial,sans-serif" font-size="64" font-weight="800" fill="#071018">Fu<tspan fill="#12c64c">Bot</tspan></text>
+  <text x="280" y="137" font-family="Arial,sans-serif" font-size="14" letter-spacing="5" fill="#334155">AI MESSENGER ASSISTANT</text>
+</svg>

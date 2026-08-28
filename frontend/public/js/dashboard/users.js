@@ -23,7 +23,9 @@ window.Dashboard.users = {
 
     getFilteredUsers: function() {
         let users = [...window.Dashboard.state.usersCache];
-        if (window.Dashboard.state.currentChatFilter !== 'all') {
+        if (window.Dashboard.state.currentChatFilter === 'management') {
+            users = users.filter(user => user.managementRequested);
+        } else if (window.Dashboard.state.currentChatFilter !== 'all') {
             users = users.filter(user => user.platform === window.Dashboard.state.currentChatFilter);
         }
         if (window.Dashboard.state.showUnreadOnly) {
@@ -70,10 +72,14 @@ window.Dashboard.users = {
 
     setChatFilter: function(filter) {
         window.Dashboard.state.currentChatFilter = filter;
-        ['all', 'telegram', 'whatsapp', 'messenger', 'instagram'].forEach(plat => {
+        ['all', 'telegram', 'whatsapp', 'messenger', 'instagram', 'management'].forEach(plat => {
             const btn = document.getElementById(`filter-${plat}`);
             if (btn) {
-                if (plat === filter) {
+                if (plat === 'management' && plat === filter) {
+                    btn.className = "w-full flex items-center justify-between py-2.5 px-3 rounded-lg bg-violet-600 text-white border border-violet-600 shadow-sm transition font-bold text-[12px]";
+                } else if (plat === 'management') {
+                    btn.className = "w-full flex items-center justify-between py-2.5 px-3 rounded-lg bg-white hover:bg-violet-100 text-violet-700 border border-violet-200 transition font-bold text-[12px]";
+                } else if (plat === filter) {
                     btn.className = "flex-1 py-1.5 px-2 text-center rounded bg-blue-600 text-white shadow-sm transition";
                 } else {
                     btn.className = "flex-1 py-1.5 px-2 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition";
@@ -91,6 +97,12 @@ window.Dashboard.users = {
     renderUsersList: function() {
         const listContainer = document.getElementById('users-list');
         if (!listContainer) return;
+
+        const managementCount = window.Dashboard.state.usersCache.filter(
+            user => user.managementRequested
+        ).length;
+        const managementCountBadge = document.getElementById('management-messages-count');
+        if (managementCountBadge) managementCountBadge.textContent = managementCount;
 
         const filteredUsers = this.getFilteredUsers();
 
@@ -122,25 +134,45 @@ window.Dashboard.users = {
             );
             const metadata = dom.createElement('div', { className: 'flex items-center gap-2 mt-1.5' });
             metadata.appendChild(dom.createElement('span', {
-                className: 'text-[9px] text-slate-400 font-inter uppercase tracking-widest',
+                className: 'text-[12px] text-slate-400 font-inter uppercase tracking-widest',
                 text: user.platform
             }));
+            // AI assignment is the default and does not need a visual badge in the
+            // compact conversation list. Keep only exceptional manual assignments.
             if (!user.isAIEnabled) {
                 metadata.appendChild(dom.createElement('span', {
-                    className: 'bg-slate-100 text-slate-700 text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider font-inter',
-                    text: 'Manual'
+                    className: 'bg-slate-100 text-slate-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                    text: user.assignee === 'admin' ? 'الإدارة' : 'يدوي'
+                }));
+            }
+            if (user.managementRequested) {
+                metadata.appendChild(dom.createElement('span', {
+                    className: 'bg-violet-100 text-violet-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                    text: '🔔 طلب إدارة'
                 }));
             }
             details.append(titleRow, metadata);
 
-            const activity = dom.createElement('div', { className: 'flex flex-col items-end gap-1 shrink-0 font-inter' });
-            activity.appendChild(dom.createElement('span', {
-                className: 'text-[9px] text-slate-400',
-                text: user.lastSeen
-            }));
+            const activity = dom.createElement('div', { className: 'chat-customer-activity flex flex-col items-end gap-1 shrink-0 font-inter' });
+            const rawLastSeen = String(user.lastSeen || '').trim();
+            const timestampMatch = rawLastSeen.match(/^(\d{2}):(\d{2})(?::\d{2})?\s+(\d{4})-(\d{2})-(\d{2})$/);
+            const activityTime = dom.createElement('time', {
+                className: 'chat-customer-timestamp text-[12px] text-slate-400',
+                attributes: { dir: 'ltr' }
+            });
+            if (timestampMatch) {
+                activityTime.dateTime = `${timestampMatch[3]}-${timestampMatch[4]}-${timestampMatch[5]}T${timestampMatch[1]}:${timestampMatch[2]}`;
+                activityTime.append(
+                    dom.createElement('span', { className: 'chat-customer-date', text: `${timestampMatch[5]}/${timestampMatch[4]}/${timestampMatch[3]}` }),
+                    dom.createElement('span', { className: 'chat-customer-time', text: `${timestampMatch[1]}:${timestampMatch[2]}` })
+                );
+            } else {
+                activityTime.textContent = rawLastSeen || '—';
+            }
+            activity.appendChild(activityTime);
             if (Number(user.unreadCount) > 0) {
                 activity.appendChild(dom.createElement('span', {
-                    className: 'bg-blue-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full',
+                    className: 'bg-blue-600 text-white text-[12px] font-bold px-1.5 py-0.5 rounded-full',
                     text: user.unreadCount
                 }));
             }
@@ -151,7 +183,9 @@ window.Dashboard.users = {
         if (rows.length === 0) {
             rows.push(dom.createElement('p', {
                 className: 'text-slate-400 text-center p-6 text-xs font-inter',
-                text: 'No matching users'
+                text: window.Dashboard.state.currentChatFilter === 'management'
+                    ? 'لا توجد رسائل بانتظار الإدارة حالياً'
+                    : 'لا توجد محادثات مطابقة'
             }));
         }
         listContainer.replaceChildren(...rows);

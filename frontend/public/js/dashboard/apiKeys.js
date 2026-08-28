@@ -44,11 +44,11 @@ window.Dashboard.apiKeys = {
             // Connected / Invalid / Missing status
             let statusBadge = '';
             if (!isConfigured) {
-                statusBadge = `<span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-arabic">غير مضاف</span>`;
+                statusBadge = `<span class="text-[12px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-arabic">غير مضاف</span>`;
             } else if (hasError) {
-                statusBadge = `<span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-650 border border-red-200 font-arabic">غير صالح</span>`;
+                statusBadge = `<span class="text-[12px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-650 border border-red-200 font-arabic">غير صالح</span>`;
             } else {
-                statusBadge = `<span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 font-arabic">متصل</span>`;
+                statusBadge = `<span class="text-[12px] font-bold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 font-arabic">متصل</span>`;
             }
 
             // Masked key value for input field
@@ -68,11 +68,11 @@ window.Dashboard.apiKeys = {
                             <!-- Large Readable Numbers -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                                    <span class="text-[10px] text-slate-400 font-arabic block mb-1">الرصيد المتبقي (Remaining)</span>
+                                    <span class="text-[12px] text-slate-400 font-arabic block mb-1">الرصيد المتبقي (Remaining)</span>
                                     <span class="text-xl font-bold text-blue-650 font-mono">$${remainingVal.toFixed(4)}</span>
                                 </div>
                                 <div class="bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                                    <span class="text-[10px] text-slate-400 font-arabic block mb-1">الاستخدام (Usage)</span>
+                                    <span class="text-[12px] text-slate-400 font-arabic block mb-1">الاستخدام (Usage)</span>
                                     <span class="text-xl font-bold text-slate-800 font-mono">$${usageVal.toFixed(4)}</span>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@ window.Dashboard.apiKeys = {
                             <!-- Progress Bar (Only if limit is returned and > 0) -->
                             ${limitVal > 0 ? `
                                 <div class="space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                                    <div class="flex justify-between items-center text-[12px] text-slate-400 font-mono">
                                         <span>حد المفتاح (Key Quota Limit): $${limitVal.toFixed(2)}</span>
                                         <span>نسبة الاستهلاك: ${percentage}%</span>
                                     </div>
@@ -91,7 +91,7 @@ window.Dashboard.apiKeys = {
                             ` : ''}
 
                             <!-- Reset Date & Last Sync -->
-                            <div class="flex justify-between text-[10px] text-slate-400 bg-slate-50/50 p-2 rounded-lg border border-slate-100 font-mono">
+                            <div class="flex justify-between text-[12px] text-slate-400 bg-slate-50/50 p-2 rounded-lg border border-slate-100 font-mono">
                                 <span>إعادة التعيين: ${key.resetDate || 'N/A'}</span>
                                 <span>آخر مزامنة: ${key.lastSyncSuccess ? new Date(key.lastSyncSuccess).toLocaleTimeString('ar-EG') : 'N/A'}</span>
                             </div>
@@ -102,7 +102,7 @@ window.Dashboard.apiKeys = {
                     metricsHtml = `
                         <div class="bg-amber-50/40 p-4 rounded-xl border border-amber-100/60 text-center text-xs font-arabic text-amber-700 leading-relaxed pt-2 border-t border-slate-100 mt-2">
                             API Key usage information is not available from this provider.
-                            <div class="text-[10px] text-slate-400 mt-1 font-mono">
+                            <div class="text-[12px] text-slate-400 mt-1 font-mono">
                                 آخر مزامنة: ${key.lastSyncSuccess ? new Date(key.lastSyncSuccess).toLocaleTimeString('ar-EG') : 'N/A'}
                             </div>
                         </div>
@@ -111,7 +111,7 @@ window.Dashboard.apiKeys = {
 
                 if (hasError) {
                     metricsHtml += `
-                        <div class="text-[10px] text-red-500 leading-relaxed font-arabic mt-2 bg-red-50/50 p-2.5 rounded-lg border border-red-100">
+                        <div class="text-[12px] text-red-500 leading-relaxed font-arabic mt-2 bg-red-50/50 p-2.5 rounded-lg border border-red-100">
                             خطأ المزامنة: ${window.Dashboard.utils.escapeHTML(String(key.errorMessage || ''))}
                         </div>
                     `;
@@ -125,7 +125,7 @@ window.Dashboard.apiKeys = {
             }
 
             html += `
-                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+                <div class="usage-provider-card bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
                     <div class="space-y-4">
                         <!-- Card Header -->
                         <div class="flex justify-between items-center pb-1">
@@ -138,7 +138,7 @@ window.Dashboard.apiKeys = {
 
                         <!-- One API Key Input -->
                         <div class="space-y-2">
-                            <label class="block text-[10px] font-bold text-slate-500 font-arabic">مفتاح الـ API (API Key)</label>
+                            <label class="block text-[12px] font-bold text-slate-500 font-arabic">مفتاح الـ API (API Key)</label>
                             <div class="flex gap-2">
                                 <input type="password" id="key-input-${prov}" class="futh-input bg-slate-50/40 text-xs flex-1"
                                     placeholder="${isConfigured ? '••••••••••••••••' : 'أدخل المفتاح هنا...'}"
@@ -184,9 +184,12 @@ window.Dashboard.apiKeys = {
 
         const apiKey = input.value.trim();
         if (!apiKey) {
-            alert('يرجى كتابة مفتاح الـ API أولاً قبل الحفظ.');
+            input.setAttribute('aria-invalid', 'true');
+            input.focus();
+            window.Dashboard.settings.showToast('يرجى كتابة مفتاح API أولاً قبل الحفظ.', 'error');
             return;
         }
+        input.removeAttribute('aria-invalid');
 
         try {
             const response = await window.Dashboard.api.request('/api/providers/api-keys', {
@@ -212,11 +215,11 @@ window.Dashboard.apiKeys = {
                 }
                 this.loadApiKeys();
             } else {
-                alert('فشل حفظ المفتاح: ' + result.error);
+                window.Dashboard.settings.showToast(result.error || 'تعذر حفظ المفتاح.', 'error');
             }
         } catch (err) {
             console.error('Failed to save inline key:', err);
-            alert('حدث خطأ أثناء حفظ المفتاح البرمجي.');
+            window.Dashboard.settings.showToast('تعذر حفظ مفتاح API. حاول مرة أخرى.', 'error');
         }
     },
 
@@ -237,10 +240,11 @@ window.Dashboard.apiKeys = {
                 }
                 this.loadApiKeys();
             } else {
-                alert('فشلت المزامنة: ' + result.error);
+                window.Dashboard.settings.showToast(result.error || 'تعذرت مزامنة بيانات المزود.', 'error');
             }
         } catch (err) {
             console.error(err);
+            window.Dashboard.settings.showToast('تعذرت مزامنة بيانات المزود.', 'error');
         } finally {
             if (btn) {
                 btn.disabled = false;

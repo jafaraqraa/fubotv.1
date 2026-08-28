@@ -20,9 +20,11 @@ const {
 test('Phase 5 database and data-integrity contracts', async (t) => {
     await t.test('clean migration reaches latest schema and is rerunnable', () => {
         initializeDatabase();
+        const expectedMigrationCount = fs.readdirSync(path.join(__dirname, '..', 'src', 'database', 'migrations'))
+            .filter(file => file.endsWith('.sql')).length;
         assert.equal(
             db.prepare('SELECT COUNT(*) count FROM schema_migrations').get().count,
-            29
+            expectedMigrationCount
         );
         assert.equal(
             db.prepare('SELECT COUNT(*) count FROM schema_migrations WHERE checksum IS NULL').get().count,

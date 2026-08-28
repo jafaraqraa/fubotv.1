@@ -1,13 +1,16 @@
 {
-  "name": "telegram-bot-project",
+  "name": "fubot",
   "version": "1.0.0",
-  "description": "Telegram Bot and Landing Page Project",
+  "description": "FuBot AI Messenger Assistant",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
     "build": "node scripts/verify-build.js",
     "dev": "node backend/server.js",
-    "test": "npm test --prefix backend"
+    "test": "npm test --prefix backend",
+    "test:frontend": "npm test --prefix frontend",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test frontend/e2e/visual-regression.spec.js --update-snapshots"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -26,5 +29,9 @@
   },
   "overrides": {
     "@puppeteer/browsers": "3.2.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "axe-core": "^4.13.0"
   }
 }

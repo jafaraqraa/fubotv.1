@@ -1,6 +1,6 @@
 const { validateNormalizedMessage } = require('./validateMessage');
 const { registerCustomerUser, findCustomerUser, incrementUnreadCount } = require('../database/repositories/customerRepository');
-const { saveMessage, existsByExternalId } = require('../database/repositories/messageRepository');
+const { saveMessage, existsByExternalId, markMessageForManagement } = require('../database/repositories/messageRepository');
 const { addLog, reportError } = require('../services/logger');
 const { getAIResponse } = require('../services/ai');
 const { materializeProfileImage } = require('../services/profileImageService');
@@ -18,6 +18,17 @@ function requestedKnowledgeMediaType(text) {
     if (new RegExp(`${action}.{0,80}${audio}|${audio}.{0,80}${action}`, 'i').test(value)) return 'audio';
     if (new RegExp(`${action}.{0,80}${image}|${image}.{0,80}${action}`, 'i').test(value)) return 'image';
     return null;
+}
+
+function requestsManagement(text) {
+    const value = String(text || '').normalize('NFKC').toLowerCase();
+    return /(?:بدي|اريد|أريد|احكي|أحكي|حولني|حوّلني|وصلني|خليني|ممكن|can i|let me|connect me|transfer me).{0,45}(?:الاداره|الإدارة|الادارة|مدير|مسؤول|موظف|بني آدم|انسان|إنسان|human|manager|supervisor|agent)/i.test(value)
+        || /(?:الاداره|الإدارة|الادارة|مدير|مسؤول|موظف|human|manager|supervisor).{0,35}(?:يرد|يحكي|يتواصل|يساعدني|please|help|speak|talk)/i.test(value);
+}
+
+function aiSignalsUnknown(answer) {
+    const value = String(answer || '').normalize('NFKC').toLowerCase();
+    return /(?:لا أستطيع|لا استطيع|لا يمكنني|لا أعلم|لا اعلم|لست متأكد|لست متاكدا|غير متأكد|غير متاكد|ما عندي معلومات|ليس لدي معلومات|لا تتوفر لدي معلومات|لا أملك معلومات|لا املك معلومات|i don'?t know|i am not sure|i can'?t determine|i cannot determine|insufficient information)/i.test(value);
 }
 
 function selectRetrievedRagMedia(tenantId, telemetry, requestedType) {
@@ -173,6 +184,37 @@ async function processIncomingMessage(normalizedMsg) {
             };
         }
 
+        const { sendOutgoingMessage } = require('./outgoingMessageService');
+        const escalateToManagement = async reason => {
+            markMessageForManagement(persistedMessageId, tenantId, reason);
+            addLog(`🔔 تم إشعار الإدارة بطلب ${customer.displayName}: ${reason}`);
+            const acknowledgement = 'تم إشعار الإدارة بطلبك، وسيقوم أحد الموظفين بمتابعته قريباً. هل ترغب بأي مساعدة أخرى؟';
+            const result = await sendOutgoingMessage({
+                channel,
+                externalUserId,
+                direction: 'outgoing',
+                senderType: 'ai',
+                messageType: 'text',
+                content: acknowledgement,
+                tenantId
+            });
+            return {
+                status: 'escalated_to_management',
+                duplicate: false,
+                channel,
+                externalUserId,
+                aiEnabled: true,
+                assignee,
+                escalationReason: reason,
+                responseSent: result.success,
+                messageId: persistedMessageId
+            };
+        };
+
+        if (messageType === 'text' && requestsManagement(content)) {
+            return await escalateToManagement('customer_requested_management');
+        }
+
         // 7. AI automation mode is active
         let replyText = '';
         let replyMedia = null;
@@ -180,17 +222,26 @@ async function processIncomingMessage(normalizedMsg) {
 
         if (textToProcess || messageType === 'image' || messageType === 'audio' || messageType === 'voice') {
             const retrievalTelemetry = {};
-            const aiResponse = await getAIResponse(
-                externalUserId,
-                textToProcess || '',
-                messageType,
-                normalizedMsg.media,
-                { tenantId, channel, retrievalTelemetry }
-            );
+            let aiResponse;
+            try {
+                aiResponse = await getAIResponse(
+                    externalUserId,
+                    textToProcess || '',
+                    messageType,
+                    normalizedMsg.media,
+                    { tenantId, channel, retrievalTelemetry }
+                );
+            } catch (aiError) {
+                addLog(`⚠️ تعذر على الذكاء الاصطناعي معالجة رسالة ${customer.displayName}: ${aiError.message}`);
+                return await escalateToManagement('ai_provider_failure');
+            }
             if (!aiResponse || !String(aiResponse).trim()) {
-                throw new Error('AI provider returned an empty response');
+                return await escalateToManagement('ai_empty_response');
             }
             replyText = String(aiResponse).trim();
+            if (aiSignalsUnknown(replyText)) {
+                return await escalateToManagement('ai_unknown_answer');
+            }
             const requestedMediaType = messageType === 'text'
                 ? requestedKnowledgeMediaType(textToProcess)
                 : null;
@@ -217,7 +268,6 @@ async function processIncomingMessage(normalizedMsg) {
         }
 
         // 8. Dispatch AI response through unified outgoing handler
-        const { sendOutgoingMessage } = require('./outgoingMessageService');
         const outgoingResult = await sendOutgoingMessage({
             channel,
             externalUserId,
@@ -256,6 +306,8 @@ module.exports = {
     processIncomingMessage,
     _test: {
         requestedKnowledgeMediaType,
+        requestsManagement,
+        aiSignalsUnknown,
         selectRetrievedRagMedia,
         createOutgoingMediaFromRagDocument,
         requestsKnowledgeImage: text => requestedKnowledgeMediaType(text) === 'image',

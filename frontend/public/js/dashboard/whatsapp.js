@@ -3,6 +3,7 @@ window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.whatsapp = {
     isSaving: false,
+    startupSyncTimer: null,
 
     showToast: function(message, type = 'success') {
         if (window.Dashboard.settings && window.Dashboard.settings.showToast) {
@@ -15,12 +16,31 @@ window.Dashboard.whatsapp = {
     fetchWhatsAppStatus: async function() {
         try {
             // Then query status
-            const response = await window.Dashboard.api.request('/api/whatsapp/status');
+            const response = await window.Dashboard.api.request('/api/whatsapp/status', { cache: 'no-store' });
             const data = await response.json();
+            if (!response.ok || !data || typeof data.status !== 'string') {
+                throw new Error(data?.error || `WhatsApp status unavailable (${response.status})`);
+            }
             window.Dashboard.whatsapp.renderWhatsAppStatusDirect(data);
+            return true;
         } catch (err) {
             console.error('Failed to fetch WhatsApp status:', err.message);
+            return false;
         }
+    },
+
+    syncStatusOnStartup: function(attempt = 0) {
+        if (this.startupSyncTimer) clearTimeout(this.startupSyncTimer);
+        this.fetchWhatsAppStatus().then(success => {
+            if (success || attempt >= 10) {
+                this.startupSyncTimer = null;
+                return;
+            }
+            this.startupSyncTimer = setTimeout(
+                () => this.syncStatusOnStartup(attempt + 1),
+                Math.min(1500 + (attempt * 500), 5000)
+            );
+        });
     },
 
     loadWhatsAppConfig: async function() {
@@ -189,31 +209,38 @@ window.Dashboard.whatsapp = {
     renderWhatsAppStatusDirect: function(data) {
         const badge = document.getElementById('wa-connection-badge');
         const sidebarBadge = document.getElementById('badge-wa-status');
+        const settingsBadge = document.getElementById('badge-whatsapp');
         const container = document.getElementById('wa-qr-container');
         const logoutBtn = document.getElementById('wa-logout-btn');
 
-        if (!badge || !container) return;
-
-        badge.innerText = data.status.toUpperCase();
+        if (badge) badge.innerText = data.status.toUpperCase();
 
         const select = document.getElementById('wa-provider-select');
         const isCloud = select && select.value === 'cloud';
 
         if (data.status === "متصل") {
-            badge.className = "text-[10px] px-3 py-1 rounded-full font-bold bg-green-100 text-green-700 uppercase";
+            if (badge) badge.className = "text-[12px] px-3 py-1 rounded-full font-bold bg-green-100 text-green-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-green-500";
+            if (settingsBadge) {
+                settingsBadge.innerText = 'متصل';
+                settingsBadge.className = 'badge-status active';
+            }
             if (logoutBtn) logoutBtn.classList.remove('hidden');
 
-            if (isCloud) {
+            if (container && isCloud) {
                 container.replaceChildren(this.createStatusMessage('Cloud Gateway Active', 'WhatsApp Cloud API is configured and ready'));
-            } else {
+            } else if (container) {
                 container.replaceChildren(this.createStatusMessage('Web Gateway Active', 'Ready for incoming traffic'));
             }
         } else if (data.status === "انتظار المسح" && !isCloud) {
-            badge.className = "text-[10px] px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700 uppercase";
+            if (badge) badge.className = "text-[12px] px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-yellow-500";
+            if (settingsBadge) {
+                settingsBadge.innerText = 'غير مكتمل';
+                settingsBadge.className = 'badge-status warning';
+            }
             if (logoutBtn) logoutBtn.classList.add('hidden');
-            if (data.qr) {
+            if (container && data.qr) {
                 const wrapper = window.Dashboard.utils.createElement('div', { className: 'space-y-4' });
                 const image = window.Dashboard.utils.createElement('img', {
                     className: 'w-56 h-56 mx-auto border border-slate-200 p-2 bg-white rounded-lg shadow-sm',
@@ -223,17 +250,21 @@ window.Dashboard.whatsapp = {
                     image.src = data.qr;
                 }
                 wrapper.append(image, window.Dashboard.utils.createElement('p', {
-                    className: 'text-[10px] text-slate-400 uppercase tracking-wider font-semibold',
+                    className: 'text-[12px] text-slate-400 uppercase tracking-wider font-semibold',
                     text: 'Scanning required...'
                 }));
                 container.replaceChildren(wrapper);
             }
         } else {
-            badge.className = "text-[10px] px-3 py-1 rounded-full font-bold bg-red-100 text-red-700 uppercase";
+            if (badge) badge.className = "text-[12px] px-3 py-1 rounded-full font-bold bg-red-100 text-red-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-red-500";
+            if (settingsBadge) {
+                settingsBadge.innerText = 'غير متصل';
+                settingsBadge.className = 'badge-status danger';
+            }
             if (logoutBtn) logoutBtn.classList.add('hidden');
-            container.replaceChildren(window.Dashboard.utils.createElement('p', {
-                className: 'text-[10px] text-red-500 uppercase tracking-wider',
+            if (container) container.replaceChildren(window.Dashboard.utils.createElement('p', {
+                className: 'text-[12px] text-red-500 uppercase tracking-wider',
                 text: 'Gateway offline...'
             }));
         }
@@ -243,11 +274,11 @@ window.Dashboard.whatsapp = {
         const wrapper = window.Dashboard.utils.createElement('div', { className: 'text-center space-y-2' });
         wrapper.append(
             window.Dashboard.utils.createElement('div', {
-                className: 'font-bold text-green-600 uppercase tracking-widest text-[10px]',
+                className: 'font-bold text-green-600 uppercase tracking-widest text-[12px]',
                 text: title
             }),
             window.Dashboard.utils.createElement('p', {
-                className: 'text-[9px] text-slate-400 mt-2',
+                className: 'text-[12px] text-slate-400 mt-2',
                 text: detail
             })
         );
@@ -259,7 +290,12 @@ window.Dashboard.whatsapp = {
         const isCloud = select && select.value === 'cloud';
 
         if (isCloud) {
-            if (!confirm("هل تريد إيقاف وتعطيل اتصال بوابة الـ Cloud API؟")) return;
+            if (!await window.Dashboard.feedback.confirm({
+                title: 'فصل قناة WhatsApp Cloud',
+                description: 'سيتم فصل القناة السحابية وقد يتوقف استقبال رسائل WhatsApp حتى إعادة ربطها.',
+                confirmLabel: 'فصل القناة',
+                destructive: true
+            })) return;
             try {
                 // Switch back default tenant config to 'web' with empty config
                 const payload = {
@@ -283,12 +319,17 @@ window.Dashboard.whatsapp = {
             return;
         }
 
-        if (!confirm("Terminate gateway connection?")) return;
+        if (!await window.Dashboard.feedback.confirm({
+            title: 'فصل اتصال WhatsApp',
+            description: 'سيتم إنهاء جلسة WhatsApp الحالية وقد يتوقف استقبال الرسائل حتى مسح الرمز وإعادة الربط.',
+            confirmLabel: 'إنهاء الاتصال',
+            destructive: true
+        })) return;
         try {
             const response = await window.Dashboard.api.request('/api/whatsapp/logout', { method: 'POST' });
             const result = await response.json();
             if (result.success) {
-                window.Dashboard.whatsapp.showToast('WhatsApp connection terminated.');
+                window.Dashboard.whatsapp.showToast('تم إنهاء اتصال WhatsApp.');
                 window.Dashboard.whatsapp.fetchWhatsAppStatus();
             }
         } catch (e) {

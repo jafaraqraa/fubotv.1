@@ -15,6 +15,8 @@ window.Dashboard.settings = {
 
         const toast = document.createElement('div');
         toast.className = `futh-toast ${type}`;
+        toast.setAttribute('role', type === 'success' ? 'status' : 'alert');
+        toast.setAttribute('aria-live', type === 'success' ? 'polite' : 'assertive');
 
         const icon = document.createElement('div');
         icon.className = `flex-shrink-0 ${type === 'success' ? 'text-green-500' : 'text-red-500'}`;
@@ -25,10 +27,12 @@ window.Dashboard.settings = {
         content.className = 'flex flex-col';
         const title = document.createElement('div');
         title.className = 'text-xs font-bold text-slate-800';
-        title.textContent = type === 'success' ? 'تم حفظ الإعدادات بنجاح' : 'حدث خطأ أثناء الحفظ';
+        title.textContent = type === 'success' ? 'تمت العملية بنجاح' : 'تعذر إكمال العملية';
         const details = document.createElement('div');
-        details.className = 'text-[10px] text-slate-500 mt-0.5';
-        details.textContent = String(message ?? '');
+        details.className = 'text-[12px] text-slate-500 mt-0.5';
+        details.textContent = type === 'success'
+            ? String(message ?? '')
+            : window.Dashboard.utils.userFacingError(message);
         content.append(title, details);
         toast.replaceChildren(icon, content);
 
@@ -837,7 +841,11 @@ window.Dashboard.settings = {
     // Trigger vector reindexing
     triggerRagReindex: async function() {
         const confirmText = 'سيتم تحديث الفهرس المتجهي لقاعدة المعرفة. قد تستغرق العملية بعض الوقت حسب حجم المحتوى. هل تريد المتابعة؟';
-        const proceed = confirm(confirmText);
+        const proceed = await window.Dashboard.feedback.confirm({
+            title: 'إعادة فهرسة قاعدة المعرفة',
+            description: confirmText,
+            confirmLabel: 'بدء إعادة الفهرسة'
+        });
         if (!proceed) return;
 
         const btn = document.getElementById('rag-btn-reindex');
@@ -893,23 +901,23 @@ window.Dashboard.settings = {
 
         // Perform front-end validation
         if (isNaN(chunkSize) || chunkSize < 200 || chunkSize > 4000) {
-            alert('حجم المقطع يجب أن يكون بين 200 و 4000 حرف.');
+            window.Dashboard.feedback.notify('حجم المقطع يجب أن يكون بين 200 و 4000 حرف.');
             return;
         }
         if (isNaN(chunkOverlap) || chunkOverlap < 0 || chunkOverlap > 1000) {
-            alert('التداخل يجب أن يكون بين 0 و 1000 حرف.');
+            window.Dashboard.feedback.notify('التداخل يجب أن يكون بين 0 و 1000 حرف.');
             return;
         }
         if (chunkOverlap >= chunkSize) {
-            alert('يجب أن يكون تداخل المقاطع أصغر من حجم المقطع نفسه.');
+            window.Dashboard.feedback.notify('يجب أن يكون تداخل المقاطع أصغر من حجم المقطع نفسه.');
             return;
         }
         if (isNaN(ragMinTopK) || isNaN(ragDefaultTopK) || isNaN(ragMaxTopK) || ragMinTopK > ragDefaultTopK || ragDefaultTopK > ragMaxTopK) {
-            alert('الرجاء التأكد من صحة Top-K (يجب أن يكون الأدنى <= الافتراضي <= الأعلى).');
+            window.Dashboard.feedback.notify('الرجاء التأكد من صحة Top-K (يجب أن يكون الأدنى <= الافتراضي <= الأعلى).');
             return;
         }
         if (isNaN(ragSemanticWeight) || isNaN(ragKeywordWeight) || Math.abs(ragSemanticWeight + ragKeywordWeight - 1.0) > 0.01) {
-            alert('مجموع وزن البحث الدلالي والوزن بالكلمات يجب أن يكون مساوياً لـ 1.0 تقريباً.');
+            window.Dashboard.feedback.notify('مجموع وزن البحث الدلالي والوزن بالكلمات يجب أن يكون مساوياً لـ 1.0 تقريباً.');
             return;
         }
 
@@ -976,7 +984,7 @@ window.Dashboard.settings = {
             if (data.success && data.documents) {
                 if (data.documents.length === 0) {
                     window.Dashboard.utils.setSanitizedHTML(listContainer, `
-                        <div class="text-slate-400 text-center py-6 text-[10px] font-arabic leading-relaxed">
+                        <div class="text-slate-400 text-center py-6 text-[12px] font-arabic leading-relaxed">
                             لا يوجد مستندات مرفوعة حالياً.
                         </div>
                     `);
@@ -1047,13 +1055,13 @@ window.Dashboard.settings = {
                     let actionButtons = '';
                     if (d.status === 'failed') {
                         actionButtons += `
-                            <button type="button" data-document-retry="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 shadow-sm">
+                            <button type="button" data-document-retry="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[12px] font-bold transition font-arabic flex items-center gap-1 shadow-sm">
                                 <span>إعادة المحاولة</span>
                             </button>
                         `;
                     } else if (d.status !== 'deleting') {
                         actionButtons += `
-                            <button type="button" data-document-reindex="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-slate-200">
+                            <button type="button" data-document-reindex="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[12px] font-bold transition font-arabic flex items-center gap-1 border border-slate-200">
                                 <span>إعادة الفهرسة</span>
                             </button>
                         `;
@@ -1061,7 +1069,7 @@ window.Dashboard.settings = {
 
                     if (d.status !== 'deleting') {
                         actionButtons += `
-                            <button type="button" data-document-delete="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" data-document-name="${window.Dashboard.utils.escapeHTML(String(d.originalFilename || ''))}" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-[10px] font-bold transition font-arabic flex items-center gap-1 border border-red-200">
+                            <button type="button" data-document-delete="${window.Dashboard.utils.escapeHTML(String(d.documentId))}" data-document-name="${window.Dashboard.utils.escapeHTML(String(d.originalFilename || ''))}" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-[12px] font-bold transition font-arabic flex items-center gap-1 border border-red-200">
                                 <span>حذف</span>
                             </button>
                         `;
@@ -1069,7 +1077,7 @@ window.Dashboard.settings = {
 
                     // Failure message tooltip
                     const failureTooltip = d.indexingError ? `
-                        <div class="text-[9px] text-red-500 font-semibold mt-1 font-arabic border-t border-red-100 pt-1">
+                        <div class="text-[12px] text-red-500 font-semibold mt-1 font-arabic border-t border-red-100 pt-1">
                             الخطأ: ${window.Dashboard.utils.escapeHTML(d.indexingError)}
                         </div>
                     ` : '';
@@ -1084,7 +1092,7 @@ window.Dashboard.settings = {
                                     <div class="text-xs font-bold text-slate-800 truncate font-arabic" title="${window.Dashboard.utils.escapeHTML(d.originalFilename)}">
                                         ${window.Dashboard.utils.escapeHTML(d.originalFilename)}
                                     </div>
-                                    <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono mt-0.5">
+                                    <div class="flex items-center gap-2 text-[12px] text-slate-400 font-mono mt-0.5">
                                         <span>${window.Dashboard.utils.escapeHTML(String(d.fileType || ''))}</span>
                                         <span>•</span>
                                         <span>${window.Dashboard.utils.escapeHTML(String(formattedSize || ''))}</span>
@@ -1093,7 +1101,7 @@ window.Dashboard.settings = {
                                     </div>
                                 </div>
                                 <div class="shrink-0 flex flex-col items-end gap-1">
-                                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeClass}">
+                                    <span class="text-[12px] font-bold px-2 py-0.5 rounded-full border ${badgeClass}">
                                         ${window.Dashboard.utils.escapeHTML(String(statusText || ''))}
                                     </span>
                                 </div>
@@ -1123,7 +1131,7 @@ window.Dashboard.settings = {
         } catch (err) {
             console.error('Failed to load documents list:', err);
             window.Dashboard.utils.setSanitizedHTML(listContainer, `
-                <div class="text-red-500 text-center py-6 text-[10px] font-arabic">
+                <div class="text-red-500 text-center py-6 text-[12px] font-arabic">
                     تعذر تحميل قائمة المستندات حالياً.
                 </div>
             `);
@@ -1173,7 +1181,7 @@ window.Dashboard.settings = {
         // 1. Basic frontend size check (10MB limit)
         const maxSize = 10 * 1024 * 1024;
         if (file.size > maxSize) {
-            alert('حجم الملف كبير جداً. الحد الأقصى المسموح به هو 10 ميجابايت.');
+            window.Dashboard.feedback.notify('حجم الملف كبير جداً. الحد الأقصى المسموح به هو 10 ميجابايت.');
             return;
         }
 
@@ -1181,7 +1189,7 @@ window.Dashboard.settings = {
         const ext = file.name.split('.').pop().toLowerCase();
         const allowed = ['pdf', 'txt', 'docx', 'md'];
         if (!allowed.includes(ext)) {
-            alert('نوع الملف غير مدعوم. الصيغ المدعومة: PDF, TXT, DOCX, MD.');
+            window.Dashboard.feedback.notify('نوع الملف غير مدعوم. الصيغ المدعومة: PDF, TXT, DOCX, MD.');
             return;
         }
 
@@ -1254,14 +1262,14 @@ window.Dashboard.settings = {
                     window.Dashboard.settings.loadDocumentsList();
                     window.Dashboard.settings.refreshRagStatus();
                 } else {
-                    alert('فشل الرفع: ' + (result.error || 'خطأ غير معروف'));
+                    window.Dashboard.feedback.notify('فشل الرفع: ' + (result.error || 'خطأ غير معروف'));
                 }
             };
 
             xhr.onerror = function() {
                 if (uploadInput) uploadInput.disabled = false;
                 if (progressContainer) progressContainer.classList.add('hidden');
-                alert('حدث خطأ في الاتصال بالخادم أثناء رفع الملف.');
+                window.Dashboard.feedback.notify('حدث خطأ في الاتصال بالخادم أثناء رفع الملف.');
             };
 
             xhr.send(formData);
@@ -1270,14 +1278,18 @@ window.Dashboard.settings = {
             if (uploadInput) uploadInput.disabled = false;
             if (progressContainer) progressContainer.classList.add('hidden');
             console.error('Upload failed:', err);
-            alert('فشل الرفع: ' + err.message);
+            window.Dashboard.feedback.notify('فشل الرفع: ' + err.message);
         }
     },
 
     // D. Reindex Document
     reindexDocumentUI: async function(docId) {
         const confirmText = 'سيتم إعادة بناء المتجهات والمقاطع لهذا المستند بالاعتماد على إعدادات الـ RAG الحالية. هل تريد المتابعة؟';
-        const proceed = confirm(confirmText);
+        const proceed = await window.Dashboard.feedback.confirm({
+            title: 'إعادة فهرسة المستند',
+            description: confirmText,
+            confirmLabel: 'إعادة الفهرسة'
+        });
         if (!proceed) return;
 
         try {
@@ -1331,7 +1343,12 @@ window.Dashboard.settings = {
     // F. Delete Document
     deleteDocumentUI: async function(docId, docName) {
         const confirmText = `سيتم حذف مستند "${docName}" وجميع مقاطعه ومتجهاته من قاعدة المعرفة بشكل نهائي. لا يمكن التراجع عن هذا الإجراء. هل تريد المتابعة؟`;
-        const proceed = confirm(confirmText);
+        const proceed = await window.Dashboard.feedback.confirm({
+            title: 'حذف المستند',
+            description: confirmText,
+            confirmLabel: 'حذف المستند',
+            destructive: true
+        });
         if (!proceed) return;
 
         try {
@@ -1553,7 +1570,7 @@ window.saveCustomModelUI = async function() {
         ? window.Dashboard.aimodels.validateCustomModel(provider, name, id)
         : { valid: Boolean(name && id), error: 'يرجى إدخال اسم العرض ومعرّف النموذج.' };
     if (!validation.valid) {
-        alert(validation.error);
+        window.Dashboard.feedback.notify(validation.error);
         return;
     }
 
@@ -1612,12 +1629,12 @@ window.saveCustomModelUI = async function() {
             window.Dashboard.settings.showToast('تمت إضافة النموذج المخصص بنجاح وجعله متاحاً فوراً.');
         } else {
             window.Dashboard.state.customModels = previousModels;
-            alert(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
+            window.Dashboard.feedback.notify(`فشل حفظ النموذج المخصص بالسيرفر: ${data.error}`);
         }
     } catch (err) {
         window.Dashboard.state.customModels = previousModels;
         console.error("Failed to persist custom model:", err);
-        alert(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
+        window.Dashboard.feedback.notify(`خطأ في الاتصال بحفظ النموذج المخصص: ${err.message}`);
     }
 };
 

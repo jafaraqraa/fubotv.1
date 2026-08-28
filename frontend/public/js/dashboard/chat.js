@@ -6,6 +6,7 @@ window.Dashboard.chat = {
     visibleMessageLimit: 100,
     requestSequence: 0,
     lastRenderFingerprint: '',
+    focusManagementEscalation: false,
 
     init: function() {
         const chatBox = document.getElementById('chat-box');
@@ -26,6 +27,8 @@ window.Dashboard.chat = {
         window.Dashboard.state.selectedUserId = userId;
         const user = window.Dashboard.state.usersCache.find(item => String(item.id) === String(userId));
         if (!user) return;
+
+        this.focusManagementEscalation = window.Dashboard.state.currentChatFilter === 'management';
 
         const theme = window.Dashboard.chatThemes.apply(user.platform);
         this.visibleMessageLimit = 100;
@@ -65,17 +68,79 @@ window.Dashboard.chat = {
             });
             search.addEventListener('click', () => this.toggleSearch());
 
+            const assignmentStatus = dom.createElement('span', {
+                className: 'text-[12px] font-bold px-2 py-1 rounded-lg bg-blue-50 text-blue-700',
+                text: user.isAIEnabled ? 'مسند للذكاء الصناعي' : 'رد يدوي'
+            });
+            const managementActions = [];
+            if (user.managementRequested) {
+                managementActions.push(
+                    dom.createElement('span', {
+                        className: 'text-[12px] font-bold px-2 py-1 rounded-lg bg-violet-100 text-violet-700',
+                        text: '🔔 طلب إدارة'
+                    })
+                );
+                const resolveButton = dom.createElement('button', {
+                    className: 'channel-automation-button management-resolve-button',
+                    text: 'تمت المعالجة — إبقاء AI',
+                    attributes: { type: 'button', title: 'إنهاء إشعار الإدارة وإسناد المحادثة للذكاء الصناعي' }
+                });
+                resolveButton.addEventListener('click', () => this.resolveManagementRequest(user));
+                managementActions.push(resolveButton);
+            }
+
             if (user.platform === 'instagram' && user.capabilities && user.capabilities.calls) {
                 actions.replaceChildren(
                     this.createHeaderIcon('☎', 'مكالمة'),
                     this.createHeaderIcon('▣', 'مكالمة فيديو'),
+                    assignmentStatus,
+                    ...managementActions,
                     search,
                     this.createAutomationButton(user)
                 );
             } else {
-                actions.replaceChildren(search, this.createAutomationButton(user));
+                actions.replaceChildren(assignmentStatus, ...managementActions, search, this.createAutomationButton(user));
             }
         }
+    },
+
+    resolveManagementRequest: async function(user) {
+        try {
+            const response = await window.Dashboard.api.request('/api/chat/management/resolve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, tenantId: user.tenantId })
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر إنهاء الطلب');
+            user.assignee = 'ai';
+            user.isAIEnabled = true;
+            this.clearManagementEscalationUI(user);
+            window.Dashboard.analytics.fetchStatsAndUsers();
+            window.Dashboard.settings.showToast('تمت معالجة طلب الإدارة وبقيت المحادثة مسندة للذكاء الصناعي.');
+        } catch (error) {
+            window.Dashboard.settings.showToast(error.message || 'تعذر إنهاء طلب الإدارة.', 'error');
+        }
+    },
+
+    clearManagementEscalationUI: function(user) {
+        if (!user) return;
+        user.managementRequested = false;
+        this.focusManagementEscalation = false;
+        this.currentMessages = this.currentMessages.map(message => {
+            if (!message.metadata || !message.metadata.managementEscalation) return message;
+            return {
+                ...message,
+                metadata: {
+                    ...message.metadata,
+                    managementEscalation: false
+                }
+            };
+        });
+        this.lastRenderFingerprint = '';
+        this.renderConversationHeader(user, window.Dashboard.chatThemes.apply(user.platform));
+        this.renderMessageList(this.currentMessages, user.platform);
+        window.Dashboard.users.renderUsersList();
     },
 
     createHeaderIcon: function(text, label) {
@@ -112,20 +177,34 @@ window.Dashboard.chat = {
 
     assignChat: async function(userId, assignee) {
         if (!userId) return;
+        const select = document.getElementById('chat-assignee-select');
+        const user = window.Dashboard.state.usersCache.find(item => String(item.id) === String(userId));
+        const previousAssignee = user ? (user.isAIEnabled ? 'ai' : (user.assignee || 'ai')) : 'ai';
+        if (select) select.disabled = true;
         try {
-            const user = window.Dashboard.state.usersCache.find(item => String(item.id) === String(userId));
             const response = await window.Dashboard.api.request('/api/chat/assign', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, assignee, tenantId: user ? user.tenantId : undefined })
             });
             const result = await response.json();
-            if (result.success && user) {
-                user.assignee = assignee;
-                window.Dashboard.analytics.fetchStatsAndUsers();
-            }
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر تغيير الإسناد');
+            if (!user) return;
+            user.assignee = assignee;
+            user.isAIEnabled = result.isAIEnabled === true;
+            if (select) select.value = assignee;
+            this.renderConversationHeader(user, window.Dashboard.chatThemes.apply(user.platform));
+            window.Dashboard.users.renderUsersList();
+            window.Dashboard.analytics.fetchStatsAndUsers();
+            window.Dashboard.settings.showToast(
+                assignee === 'ai' ? 'تم إسناد المحادثة لوكيل الذكاء الاصطناعي.' : 'تم تغيير إسناد المحادثة بنجاح.'
+            );
         } catch (error) {
             console.error('Unable to assign conversation:', error);
+            if (select) select.value = previousAssignee;
+            window.Dashboard.settings.showToast(error.message || 'تعذر تغيير الإسناد.', 'error');
+        } finally {
+            if (select) select.disabled = false;
         }
     },
 
@@ -142,7 +221,10 @@ window.Dashboard.chat = {
             const tenantQuery = selectedUser.tenantId
                 ? `?tenantId=${encodeURIComponent(selectedUser.tenantId)}`
                 : '';
-            const response = await window.Dashboard.api.request(`/api/chat/${encodeURIComponent(selectedUserId)}${tenantQuery}`);
+            const response = await window.Dashboard.api.request(
+                `/api/chat/${encodeURIComponent(selectedUserId)}${tenantQuery}`,
+                { cache: 'no-store' }
+            );
             const messages = await response.json();
             if (sequence !== this.requestSequence || !Array.isArray(messages)) return;
             const fingerprint = JSON.stringify(messages);
@@ -159,6 +241,17 @@ window.Dashboard.chat = {
         const chatBox = document.getElementById('chat-box');
         if (!chatBox) return;
         const wasNearBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 80;
+        if (this.focusManagementEscalation) {
+            const escalationIndex = messages.findLastIndex(
+                message => message.metadata && message.metadata.managementEscalation
+            );
+            if (escalationIndex >= 0) {
+                this.visibleMessageLimit = Math.max(
+                    this.visibleMessageLimit,
+                    messages.length - escalationIndex + 20
+                );
+            }
+        }
         const visible = messages.slice(-this.visibleMessageLimit);
         const nodes = [];
         let previous = null;
@@ -187,7 +280,13 @@ window.Dashboard.chat = {
             }));
         }
         chatBox.replaceChildren(...nodes);
-        if (wasNearBottom || messages.length <= this.visibleMessageLimit) {
+        const escalationTarget = this.focusManagementEscalation
+            ? chatBox.querySelector('.is-management-escalation:last-of-type')
+            : null;
+        if (escalationTarget) {
+            escalationTarget.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            this.focusManagementEscalation = false;
+        } else if (wasNearBottom || messages.length <= this.visibleMessageLimit) {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     },
@@ -201,6 +300,10 @@ window.Dashboard.chat = {
         const wrapper = dom.createElement('article', {
             className: `channel-message ${outgoing ? 'is-outgoing' : 'is-incoming'} ${grouped ? 'is-grouped' : ''}`
         });
+        if (message.id) wrapper.dataset.messageId = String(message.id);
+        if (message.metadata && message.metadata.managementEscalation) {
+            wrapper.classList.add('is-management-escalation');
+        }
         wrapper.dataset.messageType = String(message.type || 'text');
 
         if (!outgoing && !grouped && (channel === 'telegram' || channel === 'messenger' || channel === 'instagram')) {

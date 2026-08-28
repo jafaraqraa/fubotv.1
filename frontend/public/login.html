@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول — FUThing</title>
+    <title>تسجيل الدخول — FuBot</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@750&display=swap" rel="stylesheet">
     <script src="/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,6 +27,9 @@
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .brand-title { font-family: 'Poppins', sans-serif; font-weight: 750; }
+        .text-slate-400 { color: #64748b !important; }
+        :focus-visible { outline: 3px solid rgba(37, 99, 235, .45); outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
     </style>
 </head>
 <body class="bg-futh_bg text-slate-800 min-h-screen flex items-center justify-center p-6">
@@ -35,39 +38,35 @@
 
         <!-- Logo and Brand -->
         <div class="flex flex-col items-center text-center space-y-2">
-            <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 brand-title text-xl">F</div>
-            <div class="flex flex-col">
-                <span class="brand-title text-2xl tracking-wide text-slate-900">FUThing</span>
-                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Secure Access Gateway</span>
-            </div>
+            <img src="/images/fubot-logo.svg" alt="FuBot — AI Messenger Assistant" class="w-64 max-w-full h-auto">
         </div>
 
         <h2 class="text-center text-sm font-bold text-slate-800 border-b border-slate-100 pb-4">تسجيل الدخول للوحة التحكم</h2>
 
         <!-- Error Alerts -->
-        <div id="error-alert" class="hidden bg-red-55/70 border border-red-200 text-red-600 text-xs font-semibold p-4 rounded-xl text-center leading-relaxed">
+        <div id="error-alert" role="alert" aria-live="assertive" class="hidden bg-red-50/70 border border-red-200 text-red-600 text-xs font-semibold p-4 rounded-xl text-center leading-relaxed">
             اسم المستخدم أو كلمة المرور غير صحيحة.
         </div>
 
         <!-- Login Form -->
         <form id="login-form" class="space-y-4" novalidate>
             <div>
-                <label for="username" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">اسم المستخدم</label>
-                <input id="username" name="username" type="text" autocomplete="username" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="admin">
+                <label for="username" class="block text-[12px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">اسم المستخدم</label>
+                <input id="username" name="username" type="text" autocomplete="username" required aria-required="true" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="admin">
             </div>
 
             <div>
-                <label for="password" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">كلمة المرور</label>
-                <input id="password" name="password" type="password" autocomplete="current-password" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="••••••••">
+                <label for="password" class="block text-[12px] font-bold text-slate-400 uppercase mb-1.5 tracking-wider">كلمة المرور</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required aria-required="true" class="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50/50 focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="••••••••">
             </div>
 
             <button type="submit" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-md shadow-blue-500/10 flex items-center justify-center gap-2">
-                <span>دخول الآمن</span>
+                <span>تسجيل الدخول</span>
             </button>
         </form>
 
-        <div class="text-center text-[10px] text-slate-400">
-            FUThing Corporation &copy; 2026. All rights reserved.
+        <div class="text-center text-[12px] text-slate-400">
+            FuBot &copy; 2026. جميع الحقوق محفوظة.
         </div>
     </div>
 
@@ -85,15 +84,21 @@
             }
             const username = userIn.value.trim();
             const password = passIn.value;
+            userIn.removeAttribute('aria-invalid');
+            passIn.removeAttribute('aria-invalid');
 
             if (!username || !password) {
                 alertBox.innerText = 'الرجاء ملء جميع الحقول المطلوبة.';
                 alertBox.classList.remove('hidden');
+                const invalidInput = !username ? userIn : passIn;
+                invalidInput.setAttribute('aria-invalid', 'true');
+                invalidInput.focus();
                 return;
             }
 
             // Show loading state
             btn.setAttribute('disabled', 'true');
+            btn.setAttribute('aria-busy', 'true');
             const spinner = document.createElement('span');
             spinner.className = 'inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin';
             btn.replaceChildren(spinner, document.createTextNode(' جاري التحقق...'));
@@ -119,20 +124,27 @@
                     // Redirect to dashboard on successful authentication
                     window.location.href = '/dashboard';
                 } else {
-                    alertBox.innerText = result.error || 'فشل تسجيل الدخول. الرجاء التحقق من المدخلات.';
+                    alertBox.innerText = 'تعذر تسجيل الدخول. تحقق من اسم المستخدم وكلمة المرور.';
                     alertBox.classList.remove('hidden');
-                    btn.removeAttribute('disabled');
-                    btn.textContent = 'دخول الآمن';
+                    userIn.setAttribute('aria-invalid', 'true');
+                    passIn.setAttribute('aria-invalid', 'true');
+                    userIn.focus();
                 }
             } catch (err) {
                 alertBox.innerText = 'حدث خطأ في الاتصال بالخادم. الرجاء المحاولة لاحقاً.';
                 alertBox.classList.remove('hidden');
+            } finally {
                 btn.removeAttribute('disabled');
-                btn.textContent = 'دخول الآمن';
+                btn.removeAttribute('aria-busy');
+                btn.textContent = 'تسجيل الدخول';
             }
         }
 
         document.getElementById('login-form').addEventListener('submit', submitLogin);
+        document.querySelectorAll('#login-form input').forEach(input => input.addEventListener('input', () => {
+            input.removeAttribute('aria-invalid');
+            document.getElementById('error-alert').classList.add('hidden');
+        }));
     </script>
 </body>
 </html>

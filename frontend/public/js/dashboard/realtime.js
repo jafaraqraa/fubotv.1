@@ -184,7 +184,7 @@ window.Dashboard.realtime = {
                         text: `[${log.time}]`
                     }),
                     window.Dashboard.utils.createElement('span', {
-                        className: 'text-cyan-400 mr-2 break-all text-[9px]',
+                        className: 'text-cyan-400 mr-2 break-all text-[12px]',
                         text: log.action
                     })
                 );

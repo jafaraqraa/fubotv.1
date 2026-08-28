@@ -45,6 +45,29 @@ test('customer export uses filtered tenant-scoped API data and protects CSV form
     assert.match(source, /phoneNumber/);
 });
 
+test('conversation timestamps keep date and time readable in RTL layouts', () => {
+    const source = fs.readFileSync(path.join(dashboardJs, 'users.js'), 'utf8');
+    assert.match(source, /chat-customer-timestamp/);
+    assert.match(source, /attributes: \{ dir: 'ltr' \}/);
+    assert.match(source, /chat-customer-date/);
+    assert.match(source, /chat-customer-time/);
+});
+
+test('management inbox filters notified conversations without relying on assignment and displays a live count', () => {
+    const html = fs.readFileSync(path.join(__dirname, '..', 'public', 'dashboard.html'), 'utf8');
+    const source = fs.readFileSync(path.join(dashboardJs, 'users.js'), 'utf8');
+    assert.match(html, /id="filter-management"/);
+    assert.match(html, /id="management-messages-count"/);
+    assert.match(source, /currentChatFilter === 'management'/);
+    assert.match(source, /user\.managementRequested/);
+    assert.match(source, /لا توجد رسائل بانتظار الإدارة حالياً/);
+    const chatSource = fs.readFileSync(path.join(dashboardJs, 'chat.js'), 'utf8');
+    assert.match(chatSource, /managementEscalation/);
+    assert.match(chatSource, /scrollIntoView/);
+    assert.match(chatSource, /تمت المعالجة — إبقاء AI/);
+    assert.match(chatSource, /resolveManagementRequest/);
+});
+
 test('protected message media URLs resolve through the backend API origin', () => {
     const source = fs.readFileSync(path.join(dashboardJs, 'utils.js'), 'utf8');
     assert.match(source, /url\.startsWith\('\/api\/'\)/);

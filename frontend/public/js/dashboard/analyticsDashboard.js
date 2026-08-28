@@ -123,7 +123,10 @@ window.Dashboard.analyticsDashboard = (function() {
             if (elMonthReq) elMonthReq.innerText = Number(monthRequests).toLocaleString();
             if (elTokens) elTokens.innerText = Number(totalTokens).toLocaleString();
             if (elCost) elCost.innerText = `$${Number(totalCost).toFixed(4)}`;
-            if (elLatency) elLatency.innerText = `${avgLatency} ms`;
+            if (elLatency) {
+                const latencySeconds = Number(avgLatency) / 1000;
+                elLatency.innerText = `${latencySeconds.toFixed(2)} ثانية`;
+            }
         }
 
         // 2. Render individual provider cards
@@ -192,7 +195,7 @@ window.Dashboard.analyticsDashboard = (function() {
                     const row = dom.createElement('tr', { className: 'hover:bg-slate-50 transition font-mono' });
                     const successCell = dom.createElement('td', { className: 'p-3' });
                     successCell.appendChild(dom.createElement('span', {
-                        className: `px-2 py-0.5 rounded-full text-[10px] font-bold ${m.successRate >= 95 ? 'bg-green-50 text-green-700' : (m.successRate >= 85 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')}`,
+                        className: `px-2 py-0.5 rounded-full text-[12px] font-bold ${m.successRate >= 95 ? 'bg-green-50 text-green-700' : (m.successRate >= 85 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')}`,
                         text: `${m.successRate}%`
                     }));
                     row.append(
@@ -212,8 +215,8 @@ window.Dashboard.analyticsDashboard = (function() {
             } else {
                 const row = document.createElement('tr');
                 row.appendChild(window.Dashboard.utils.createElement('td', {
-                    className: 'text-slate-400 text-center p-8 uppercase font-inter text-[10px] tracking-widest',
-                    text: 'No model usage statistics found.',
+                    className: 'text-slate-400 text-center p-8 uppercase font-inter text-[12px] tracking-widest',
+                    text: 'لا توجد إحصاءات لاستخدام النماذج حتى الآن.',
                     attributes: { colspan: '9' }
                 }));
                 tbody.replaceChildren(row);
@@ -535,7 +538,7 @@ window.Dashboard.analytics = {
                         });
                         row.append(
                             window.Dashboard.utils.createElement('span', { className: 'text-cyan-600 opacity-50', text: `[${log.time}]` }),
-                            window.Dashboard.utils.createElement('span', { className: 'text-cyan-400 mr-2 break-all text-[9px]', text: log.action })
+                            window.Dashboard.utils.createElement('span', { className: 'text-cyan-400 mr-2 break-all text-[12px]', text: log.action })
                         );
                         return row;
                     });
