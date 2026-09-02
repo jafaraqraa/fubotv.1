@@ -228,8 +228,10 @@ async function sendOutgoingMessage(outgoingMsg) {
                 // Preserve the provider error when secondary status persistence fails.
             }
         }
-        reportError(`إرسال رسالة صادرة (${channel})`, err.message);
         const details = err.deliveryDetails || {};
+        if (!details.reported) {
+            reportError(`إرسال رسالة صادرة (${channel})`, err.message);
+        }
         return {
             success: false,
             status: 'failed',

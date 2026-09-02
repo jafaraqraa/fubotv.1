@@ -436,22 +436,34 @@ window.Dashboard.aiUsage = {
 
 // Also map old general analytics functions
 window.Dashboard.analytics = {
-    renderAnalyticsCharts: function(platforms, messagesCount) {
+    renderAnalyticsCharts: function(platforms, weeklyMessages = []) {
         const ctxPlatform = document.getElementById('platformChart')?.getContext('2d');
         const ctxMessage = document.getElementById('messageChart')?.getContext('2d');
         if (!ctxPlatform || !ctxMessage) return;
+
+        const platformData = [
+            Number(platforms.telegram || 0), Number(platforms.whatsapp || 0),
+            Number(platforms.messenger || 0), Number(platforms.instagram || 0)
+        ];
+        const platformEmpty = document.getElementById('platformChartEmpty');
+        const hasPlatformData = platformData.some(value => value > 0);
+        if (platformEmpty) {
+            platformEmpty.classList.toggle('hidden', hasPlatformData);
+            platformEmpty.classList.toggle('flex', !hasPlatformData);
+        }
+        ctxPlatform.canvas.classList.toggle('hidden', !hasPlatformData);
 
         if (window.Dashboard.state.platformChartInstance) {
             window.Dashboard.state.platformChartInstance.destroy();
         }
 
-        if (window.Chart) {
+        if (window.Chart && hasPlatformData) {
             window.Dashboard.state.platformChartInstance = new window.Chart(ctxPlatform, {
                 type: 'doughnut',
                 data: {
                     labels: ['Telegram', 'WhatsApp', 'Messenger', 'Instagram'],
                     datasets: [{
-                        data: [platforms.telegram, platforms.whatsapp, platforms.messenger, platforms.instagram],
+                        data: platformData,
                         backgroundColor: ['#2563EB', '#10B981', '#6366F1', '#EC4899'],
                         borderWidth: 0
                     }]
@@ -471,15 +483,25 @@ window.Dashboard.analytics = {
             window.Dashboard.state.messageChartInstance.destroy();
         }
 
-        const dynamicMsgData = [12, 19, 6, 8, 11, 14, messagesCount];
-        if (window.Chart) {
+        const history = Array.isArray(weeklyMessages) ? weeklyMessages : [];
+        const messageLabels = history.map(item => new Date(`${item.day}T12:00:00`).toLocaleDateString('ar', { weekday: 'short' }));
+        const messageData = history.map(item => Number(item.count || 0));
+        const messageEmpty = document.getElementById('messageChartEmpty');
+        const hasMessageData = messageData.some(value => value > 0);
+        if (messageEmpty) {
+            messageEmpty.classList.toggle('hidden', hasMessageData);
+            messageEmpty.classList.toggle('flex', !hasMessageData);
+        }
+        ctxMessage.canvas.classList.toggle('hidden', !hasMessageData);
+
+        if (window.Chart && hasMessageData) {
             window.Dashboard.state.messageChartInstance = new window.Chart(ctxMessage, {
                 type: 'bar',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: messageLabels,
                     datasets: [{
                         label: 'Traffic',
-                        data: dynamicMsgData,
+                        data: messageData,
                         backgroundColor: '#2563EB',
                         borderRadius: 4
                     }]
@@ -526,7 +548,7 @@ window.Dashboard.analytics = {
             if (elAnMsgs) elAnMsgs.innerText = stats.messagesCount;
 
             if (stats.platformsCount) {
-                window.Dashboard.analytics.renderAnalyticsCharts(stats.platformsCount, stats.messagesCount);
+                window.Dashboard.analytics.renderAnalyticsCharts(stats.platformsCount, stats.weeklyMessages);
             }
 
             const logsBox = document.getElementById('live-logs-box');
@@ -666,6 +688,8 @@ window.Dashboard.analytics = {
                 if (metaVerifyInput) metaVerifyInput.value = stats.metaVerifyToken;
                 const metaAppSecretInput = document.getElementById('meta-app-secret-input');
                 if (metaAppSecretInput) metaAppSecretInput.value = stats.metaAppSecret || '';
+                const instagramAppSecretInput = document.getElementById('instagram-app-secret-input');
+                if (instagramAppSecretInput) instagramAppSecretInput.value = stats.instagramAppSecret || '';
                 window.Dashboard.state.isMetaVerifyLoaded = true;
             }
             if (stats.messengerToken !== undefined && !window.Dashboard.state.isMessengerLoaded) {

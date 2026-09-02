@@ -4,6 +4,25 @@ window.Dashboard = window.Dashboard || {};
 window.Dashboard.users = {
     searchQuery: '',
 
+    parseConversationTimestamp: function(value) {
+        const raw = String(value || '').trim();
+        const timeFirst = raw.match(/^(\d{2}):(\d{2})(?::(\d{2}))?\s+(\d{4})-(\d{2})-(\d{2})$/);
+        if (timeFirst) return new Date(`${timeFirst[4]}-${timeFirst[5]}-${timeFirst[6]}T${timeFirst[1]}:${timeFirst[2]}:${timeFirst[3] || '00'}`);
+        const parsed = new Date(raw.replace(' ', 'T'));
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    },
+
+    formatContextualTimestamp: function(value, now = new Date()) {
+        const date = this.parseConversationTimestamp(value);
+        if (!date) return '—';
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const dayDifference = Math.round((startOfToday - startOfDate) / 86400000);
+        if (dayDifference === 0) return new Intl.DateTimeFormat('ar', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date);
+        if (dayDifference === 1) return 'أمس';
+        return new Intl.DateTimeFormat('ar', { day: 'numeric', month: 'short' }).format(date);
+    },
+
     init: function() {
         document.querySelectorAll('[data-chat-filter]').forEach(button => {
             button.addEventListener('click', () => this.setChatFilter(button.dataset.chatFilter));
@@ -37,7 +56,11 @@ window.Dashboard.users = {
                     .some(value => String(value || '').toLowerCase().includes(this.searchQuery))
             );
         }
-        return users;
+        return users.sort((left, right) => {
+            const leftDate = this.parseConversationTimestamp(left.lastSeen);
+            const rightDate = this.parseConversationTimestamp(right.lastSeen);
+            return (rightDate ? rightDate.getTime() : 0) - (leftDate ? leftDate.getTime() : 0);
+        });
     },
 
     exportCustomersCsv: function() {
@@ -75,6 +98,7 @@ window.Dashboard.users = {
         ['all', 'telegram', 'whatsapp', 'messenger', 'instagram', 'management'].forEach(plat => {
             const btn = document.getElementById(`filter-${plat}`);
             if (btn) {
+                btn.setAttribute('aria-selected', String(plat === filter));
                 if (plat === 'management' && plat === filter) {
                     btn.className = "w-full flex items-center justify-between py-2.5 px-3 rounded-lg bg-violet-600 text-white border border-violet-600 shadow-sm transition font-bold text-[12px]";
                 } else if (plat === 'management') {
@@ -115,8 +139,15 @@ window.Dashboard.users = {
 
         const dom = window.Dashboard.utils;
         const rows = filteredUsers.map(user => {
-            const row = dom.createElement('div', {
-                className: `chat-customer-row p-4 hover:bg-slate-50 cursor-pointer transition flex justify-between items-center ${String(window.Dashboard.state.selectedUserId) === String(user.id) ? 'is-selected bg-blue-50/50 border-r-2 border-blue-600' : ''}`
+            const isSelected = String(window.Dashboard.state.selectedUserId) === String(user.id);
+            const row = dom.createElement('button', {
+                className: `chat-customer-row p-4 hover:bg-slate-50 cursor-pointer transition flex justify-between items-center ${isSelected ? 'is-selected bg-blue-50/50 border-r-2 border-blue-600' : ''}`,
+                attributes: {
+                    type: 'button',
+                    'aria-label': `فتح محادثة ${user.name || 'عميل'} عبر ${user.platform}`,
+                    'aria-current': isSelected ? 'true' : 'false',
+                    'data-customer-id': user.id
+                }
             });
             row.addEventListener('click', () => window.Dashboard.chat.selectUser(user.id));
 
@@ -126,45 +157,71 @@ window.Dashboard.users = {
                 `chat-customer-avatar is-${user.platform}`,
                 initials || '?'
             );
-            const details = dom.createElement('div', { className: 'flex-1 min-w-0 ml-2' });
-            const titleRow = dom.createElement('div', { className: 'flex items-center gap-2' });
+            const details = dom.createElement('div', { className: 'chat-customer-details flex-1 min-w-0 ml-2' });
+            const titleRow = dom.createElement('div', { className: 'chat-customer-title-row flex items-center gap-2' });
             titleRow.append(
                 dom.createElement('span', { className: `w-1.5 h-1.5 rounded-full ${platformColors[user.platform] || 'bg-slate-400'}` }),
                 dom.createElement('h4', { className: 'font-semibold text-xs text-slate-900 truncate', text: user.name })
             );
-            const metadata = dom.createElement('div', { className: 'flex items-center gap-2 mt-1.5' });
+            const metadata = dom.createElement('div', { className: 'chat-customer-metadata flex items-center gap-2 mt-1.5' });
             metadata.appendChild(dom.createElement('span', {
-                className: 'text-[12px] text-slate-400 font-inter uppercase tracking-widest',
+                className: 'chat-customer-platform text-[12px] text-slate-400 font-inter',
                 text: user.platform
+            }));
+            const latestPreview = String(user.lastMessagePreview || user.lastMessage || user.preview || '').trim();
+            metadata.appendChild(dom.createElement('span', {
+                className: 'chat-customer-preview',
+                text: latestPreview || `آخر تواصل عبر ${user.platform}`
             }));
             // AI assignment is the default and does not need a visual badge in the
             // compact conversation list. Keep only exceptional manual assignments.
             if (!user.isAIEnabled) {
-                metadata.appendChild(dom.createElement('span', {
-                    className: 'bg-slate-100 text-slate-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                const manualState = dom.createElement('span', {
+                    className: 'chat-customer-state is-manual bg-slate-100 text-slate-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                    attributes: { title: 'رد يدوي', 'aria-label': 'رد يدوي' }
+                });
+                manualState.appendChild(dom.createElement('span', {
+                    className: 'chat-customer-state-label',
                     text: user.assignee === 'admin' ? 'الإدارة' : 'يدوي'
                 }));
+                metadata.appendChild(manualState);
             }
             if (user.managementRequested) {
-                metadata.appendChild(dom.createElement('span', {
-                    className: 'bg-violet-100 text-violet-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                const managementState = dom.createElement('span', {
+                    className: 'chat-customer-state is-management bg-violet-100 text-violet-700 text-[12px] font-bold px-1.5 py-0.5 rounded',
+                    attributes: { title: 'طلب إدارة', 'aria-label': 'طلب إدارة' }
+                });
+                managementState.appendChild(dom.createElement('span', {
+                    className: 'chat-customer-state-label',
                     text: '🔔 طلب إدارة'
                 }));
+                metadata.appendChild(managementState);
             }
             details.append(titleRow, metadata);
 
             const activity = dom.createElement('div', { className: 'chat-customer-activity flex flex-col items-end gap-1 shrink-0 font-inter' });
             const rawLastSeen = String(user.lastSeen || '').trim();
-            const timestampMatch = rawLastSeen.match(/^(\d{2}):(\d{2})(?::\d{2})?\s+(\d{4})-(\d{2})-(\d{2})$/);
+            activity.appendChild(dom.createElement('time', {
+                className: 'chat-customer-context-time',
+                text: this.formatContextualTimestamp(rawLastSeen),
+                attributes: { datetime: this.parseConversationTimestamp(rawLastSeen)?.toISOString() || '' }
+            }));
+            const timeFirstMatch = rawLastSeen.match(/^(\d{2}):(\d{2})(?::\d{2})?\s+(\d{4})-(\d{2})-(\d{2})$/);
+            const dateFirstMatch = rawLastSeen.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::\d{2})?$/);
+            const timestampParts = timeFirstMatch
+                ? { hour: timeFirstMatch[1], minute: timeFirstMatch[2], year: timeFirstMatch[3], month: timeFirstMatch[4], day: timeFirstMatch[5] }
+                : dateFirstMatch
+                    ? { hour: dateFirstMatch[4], minute: dateFirstMatch[5], year: dateFirstMatch[1], month: dateFirstMatch[2], day: dateFirstMatch[3] }
+                    : null;
             const activityTime = dom.createElement('time', {
                 className: 'chat-customer-timestamp text-[12px] text-slate-400',
                 attributes: { dir: 'ltr' }
             });
-            if (timestampMatch) {
-                activityTime.dateTime = `${timestampMatch[3]}-${timestampMatch[4]}-${timestampMatch[5]}T${timestampMatch[1]}:${timestampMatch[2]}`;
+            if (timestampParts) {
+                activityTime.dateTime = `${timestampParts.year}-${timestampParts.month}-${timestampParts.day}T${timestampParts.hour}:${timestampParts.minute}`;
                 activityTime.append(
-                    dom.createElement('span', { className: 'chat-customer-date', text: `${timestampMatch[5]}/${timestampMatch[4]}/${timestampMatch[3]}` }),
-                    dom.createElement('span', { className: 'chat-customer-time', text: `${timestampMatch[1]}:${timestampMatch[2]}` })
+                    dom.createElement('span', { className: 'chat-customer-date', text: `${timestampParts.day}/${timestampParts.month}/${timestampParts.year}` }),
+                    dom.createElement('span', { className: 'chat-customer-time', text: `${timestampParts.hour}:${timestampParts.minute}` })
                 );
             } else {
                 activityTime.textContent = rawLastSeen || '—';

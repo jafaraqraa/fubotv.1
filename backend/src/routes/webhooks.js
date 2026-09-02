@@ -25,6 +25,56 @@ const META_MEDIA_HOSTS = [
     'cdninstagram.com'
 ];
 
+function isTrustedMetaMediaUrl(value) {
+    try {
+        const parsed = value instanceof URL ? value : new URL(value);
+        const hostname = parsed.hostname.toLowerCase();
+        return parsed.protocol === 'https:'
+            && META_MEDIA_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`));
+    } catch (_) {
+        return false;
+    }
+}
+
+async function fetchMetaMedia(rawUrl, maxAttempts = 3) {
+    let currentUrl = new URL(rawUrl);
+    for (let redirectCount = 0; redirectCount <= 4; redirectCount += 1) {
+        if (!isTrustedMetaMediaUrl(currentUrl)) {
+            throw Object.assign(new Error('Meta attachment URL is not trusted'), { code: 'UNTRUSTED_MEDIA_URL' });
+        }
+
+        let response;
+        let lastError;
+        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+            try {
+                response = await fetch(currentUrl, {
+                    redirect: 'manual',
+                    signal: AbortSignal.timeout(15000)
+                });
+                break;
+            } catch (error) {
+                lastError = error;
+                if (attempt < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, attempt * 500));
+                }
+            }
+        }
+        if (!response) {
+            const cause = lastError?.cause?.code || lastError?.cause?.message || lastError?.message || 'network error';
+            throw new Error(`Meta media download failed: ${cause}`);
+        }
+
+        if (response.status >= 300 && response.status < 400) {
+            const location = response.headers.get('location');
+            if (!location) throw new Error(`Meta media redirect ${response.status} has no location`);
+            currentUrl = new URL(location, currentUrl);
+            continue;
+        }
+        return response;
+    }
+    throw new Error('Meta media download exceeded the safe redirect limit');
+}
+
 async function readBoundedResponse(response, maxBytes) {
     if (!response.body?.getReader) {
         const fallback = Buffer.from(await response.arrayBuffer());
@@ -53,12 +103,11 @@ async function materializeMetaAttachment(webhookEvent, platform, tenantId = 'def
     const rawUrl = attachment?.payload?.url;
     if (!rawUrl) return null;
     const parsed = new URL(rawUrl);
-    const hostname = parsed.hostname.toLowerCase();
-    if (parsed.protocol !== 'https:' || !META_MEDIA_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`))) {
-        console.warn(`[Meta Webhook] Rejected attachment host: ${hostname || 'invalid'}`);
+    if (!isTrustedMetaMediaUrl(parsed)) {
+        console.warn(`[Meta Webhook] Rejected attachment host: ${parsed.hostname || 'invalid'}`);
         throw Object.assign(new Error('Meta attachment URL is not trusted'), { code: 'UNTRUSTED_MEDIA_URL' });
     }
-    const response = await fetch(parsed, { redirect: 'error', signal: AbortSignal.timeout(15000) });
+    const response = await fetchMetaMedia(parsed);
     if (!response.ok) throw new Error(`Meta media download failed with HTTP ${response.status}`);
     const declaredLength = Number(response.headers.get('content-length') || 0);
     if (declaredLength > MAX_MEDIA_BYTES) throw Object.assign(new Error('Meta media is too large'), { code: 'MEDIA_TOO_LARGE' });
@@ -159,7 +208,7 @@ function releaseReplayReservation(req) {
     }
 }
 
-function verifySignedWebhook({ secretEnvNames, scope }) {
+function verifySignedWebhook({ secretEnvNames, resolveSecretEnvNames, scope }) {
     return function signedWebhookVerification(req, res, next) {
         const signatureHeader = req.headers['x-hub-signature-256'];
         if (!signatureHeader) {
@@ -167,14 +216,17 @@ function verifySignedWebhook({ secretEnvNames, scope }) {
             return res.status(401).json({ success: false, error: 'Signature missing' });
         }
 
-        const appSecret = secretEnvNames
+        const resolvedSecretEnvNames = resolveSecretEnvNames
+            ? resolveSecretEnvNames(req)
+            : secretEnvNames;
+        const appSecret = resolvedSecretEnvNames
             .map(name => process.env[name])
             .find(value => typeof value === 'string' && value.length > 0);
         const signatureMatch = signatureHeader.match(/^sha256=([A-Fa-f0-9]{64})$/);
         const rawBody = req.rawBody;
 
         if (!appSecret) {
-            console.error(`[Webhook] Required signing secret is missing: ${secretEnvNames.join(' or ')}.`);
+            console.error(`[Webhook] Required signing secret is missing: ${resolvedSecretEnvNames.join(' or ')}.`);
             return res.status(503).json({ success: false, error: 'Webhook verification unavailable' });
         }
         if (!signatureMatch || !Buffer.isBuffer(rawBody)) {
@@ -204,7 +256,9 @@ function verifySignedWebhook({ secretEnvNames, scope }) {
 
 // Cryptographic verification middleware for Meta Webhook POST requests (Task 3)
 const verifyMetaSignature = verifySignedWebhook({
-    secretEnvNames: ['META_APP_SECRET'],
+    resolveSecretEnvNames: req => req.body?.object === 'instagram'
+        ? ['INSTAGRAM_APP_SECRET', 'META_APP_SECRET']
+        : ['META_APP_SECRET'],
     scope: 'meta'
 });
 
@@ -294,8 +348,19 @@ router.post('/webhook', verifyMetaSignature, async (req, res) => {
                         console.log("فشل جلب ملف حساب ميتّا الشخصي.");
                     }
 
-                    const materializedMedia = await materializeMetaAttachment(webhookEvent, platform);
+                    let materializedMedia = null;
+                    let mediaDownloadError = null;
+                    try {
+                        materializedMedia = await materializeMetaAttachment(webhookEvent, platform);
+                    } catch (error) {
+                        mediaDownloadError = error;
+                        await reportError(`تحميل مرفق Meta (${platform})`, error.message);
+                    }
                     const normalized = normalizeMetaMessage(webhookEvent, platform, profile, 'default', materializedMedia);
+                    if (mediaDownloadError && !normalized.content) {
+                        normalized.content = 'أرسل العميل مرفقًا، لكن تعذر تنزيله من Meta مؤقتًا.';
+                        normalized.metadata.mediaDownloadFailed = true;
+                    }
                     const result = await processIncomingMessage(normalized);
                     if (materializedMedia?.attachmentId && result?.messageId) {
                         mediaAttachmentRepo.updateAttachment(materializedMedia.attachmentId, 'default', {
@@ -486,4 +551,5 @@ router.post('/whatsapp/:tenantId', verifyWhatsAppSignature, (req, res, next) => 
 });
 
 router.applyMetaDeliveryUpdate = applyMetaDeliveryUpdate;
+router.fetchMetaMedia = fetchMetaMedia;
 module.exports = router;

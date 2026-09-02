@@ -12,6 +12,7 @@ const db = require('../src/database/connection');
 require('../src/database/initialize').initializeDatabase();
 const access = require('../src/security/accessControl');
 const customerRepo = require('../src/database/repositories/customerRepository');
+const messageRepo = require('../src/database/repositories/messageRepository');
 const adminRepo = require('../src/database/repositories/adminRepository');
 
 function responseRecorder() {
@@ -81,6 +82,54 @@ test('Phase 6 authorization and tenant-isolation contracts', async t => {
         assert.equal(customerRepo.listCustomerUsers('tenant-a').length, 1);
         assert.equal(customerRepo.listCustomerUsers('tenant-b').length, 1);
         assert.equal(customerRepo.findCustomerUserByIdOnly('same-user'), null);
+    });
+
+    await t.test('conversation deletion is tenant scoped and cascades only its messages', () => {
+        const tenantA = customerRepo.findCustomerUser('same-user', 'whatsapp', 'tenant-a');
+        const tenantB = customerRepo.findCustomerUser('same-user', 'whatsapp', 'tenant-b');
+        db.prepare(`
+            INSERT INTO messages (
+                id, conversation_id, tenant_id, channel, direction, sender_type,
+                role, content, delivery_status
+            ) VALUES ('delete-a-message', ?, 'tenant-a', 'whatsapp', 'inbound', 'customer',
+                'user', 'A only', 'delivered')
+        `).run(tenantA.conversationId);
+        db.prepare(`
+            INSERT INTO messages (
+                id, conversation_id, tenant_id, channel, direction, sender_type,
+                role, content, delivery_status
+            ) VALUES ('keep-b-message', ?, 'tenant-b', 'whatsapp', 'inbound', 'customer',
+                'user', 'B remains', 'delivered')
+        `).run(tenantB.conversationId);
+
+        assert.equal(customerRepo.deleteConversation(tenantA.conversationId, 'tenant-b'), null);
+        const deleted = customerRepo.deleteConversation(tenantA.conversationId, 'tenant-a');
+        assert.equal(deleted.conversationId, tenantA.conversationId);
+        assert.equal(db.prepare("SELECT COUNT(*) count FROM messages WHERE id='delete-a-message'").get().count, 0);
+        assert.equal(db.prepare("SELECT COUNT(*) count FROM messages WHERE id='keep-b-message'").get().count, 1);
+        assert.equal(customerRepo.findCustomerUser('same-user', 'whatsapp', 'tenant-a'), null);
+        assert.equal(customerRepo.findCustomerUser('same-user', 'whatsapp', 'tenant-b').conversationId, tenantB.conversationId);
+    });
+
+    await t.test('only tenant-owned internal notes can be edited or deleted', () => {
+        const tenantB = customerRepo.findCustomerUser('same-user', 'whatsapp', 'tenant-b');
+        db.prepare(`
+            INSERT INTO messages (
+                id, conversation_id, tenant_id, channel, direction, sender_type,
+                role, message_type, content, is_internal_note, delivery_status
+            ) VALUES ('tenant-b-note', ?, 'tenant-b', 'whatsapp', 'outbound', 'admin',
+                'assistant', 'note', 'Original note', 1, 'delivered')
+        `).run(tenantB.conversationId);
+
+        assert.equal(messageRepo.updateInternalNote('tenant-b-note', 'tenant-a', 'forged'), null);
+        assert.equal(messageRepo.updateInternalNote('keep-b-message', 'tenant-b', 'not a note'), null);
+        const updated = messageRepo.updateInternalNote('tenant-b-note', 'tenant-b', 'Updated note');
+        assert.equal(updated.content, 'Updated note');
+        assert.equal(db.prepare("SELECT content FROM messages WHERE id='tenant-b-note'").get().content, 'Updated note');
+        assert.equal(messageRepo.deleteInternalNote('tenant-b-note', 'tenant-a'), null);
+        assert.equal(messageRepo.deleteInternalNote('tenant-b-note', 'tenant-b').id, 'tenant-b-note');
+        assert.equal(db.prepare("SELECT COUNT(*) count FROM messages WHERE id='tenant-b-note'").get().count, 0);
+        assert.equal(db.prepare("SELECT COUNT(*) count FROM messages WHERE id='keep-b-message'").get().count, 1);
     });
 
     await t.test('realtime publisher emits tenant data only to its tenant room', () => {

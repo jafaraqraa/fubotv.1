@@ -9,16 +9,7 @@ const path = require('path');
 const knowledgeDocumentRepo = require('../database/repositories/knowledgeDocumentRepository');
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
 const { persistMediaBuffer, removeStoredMedia } = require('../services/outgoingMediaStorage');
-
-function requestedKnowledgeMediaType(text) {
-    const value = String(text || '').normalize('NFKC').toLowerCase();
-    const action = '(?:ابعث|ارسل|أرسل|اعرض|ورجيني|فرجيني|شغل|بدي|اريد|أريد|send|show|play)';
-    const image = '(?:صوره|صورة|صور|image|photo|picture)';
-    const audio = '(?:صوت|صوتي|تسجيل|اغنيه|أغنية|انشوده|أنشودة|audio|voice|recording)';
-    if (new RegExp(`${action}.{0,80}${audio}|${audio}.{0,80}${action}`, 'i').test(value)) return 'audio';
-    if (new RegExp(`${action}.{0,80}${image}|${image}.{0,80}${action}`, 'i').test(value)) return 'image';
-    return null;
-}
+const { requestedKnowledgeMediaType } = require('../rag/intelligence/mediaRequestDetector');
 
 function requestsManagement(text) {
     const value = String(text || '').normalize('NFKC').toLowerCase();

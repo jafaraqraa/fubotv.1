@@ -226,6 +226,16 @@ app.get('/vendor/dompurify.min.js', (req, res) => {
     res.sendFile(require.resolve('dompurify/dist/purify.min.js'));
 });
 
+// Serve Chart.js locally so analytics remain available under the strict CSP
+// and do not depend on a third-party CDN at runtime.
+app.get('/vendor/chart.umd.min.js', (req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    const chartEntry = require.resolve('chart.js', {
+        paths: [path.join(__dirname, '..', '..', 'frontend')]
+    });
+    res.sendFile(path.join(path.dirname(chartEntry), 'chart.umd.min.js'));
+});
+
 // Serve static assets
 app.use(express.static(frontendPublicDir));
 

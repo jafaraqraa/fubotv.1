@@ -3,11 +3,50 @@ const { addLog, reportError, setTelegramNotifier } = require('../services/logger
 const { downloadRemoteFile } = require('../utils/helpers');
 const { normalizeTelegramMessage } = require('../messaging/normalizers/telegramNormalizer');
 const { processIncomingMessage } = require('../messaging/messageProcessor');
+const { acquireTelegramPollingLease } = require('./telegramPollingLease');
 
 let bot;
+let pollingLease;
+let startPromise;
+let pollingPromise;
 let botToken = process.env.BOT_TOKEN;
 let isValidToken = botToken && /^[0-9]+:[a-zA-Z0-9_-]+$/.test(botToken);
 const profileImageCache = new Map();
+
+function isTransientTelegramError(error) {
+    const message = String(error?.message || error || '');
+    return /ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENETUNREACH|socket hang up|network|fetch failed/i.test(message);
+}
+
+async function launchWithRetry(telegrafBot, attempts = 3) {
+    let lastError;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            await new Promise((resolve, reject) => {
+                let ready = false;
+                const activePolling = telegrafBot.launch({}, () => {
+                    ready = true;
+                    resolve();
+                });
+                telegrafBot.__fubotPollingPromise = activePolling;
+                activePolling.then(() => {
+                    if (!ready) reject(new Error('Telegram polling stopped before startup completed'));
+                }, reject);
+            });
+            return true;
+        } catch (error) {
+            lastError = error;
+            if (!isTransientTelegramError(error) || attempt === attempts) throw error;
+            const delayMs = attempt * 750;
+            console.warn(JSON.stringify({
+                level: 'warn', event: 'telegram_startup_retry', attempt,
+                maxAttempts: attempts, delayMs, message: String(error?.message || error)
+            }));
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+    }
+    throw lastError;
+}
 
 async function getTelegramProfileImageUrl(ctx) {
     const userId = String(ctx.from?.id || '');
@@ -42,11 +81,32 @@ setTelegramNotifier(async (type, date, time, message) => {
     }
 });
 
-async function startBot(token) {
-    try {
-        if (bot) {
-            try { bot.stop('RESTART'); } catch (e) {}
+async function stopBot(signal = 'STOP') {
+    const activeBot = bot;
+    bot = undefined;
+    if (activeBot) {
+        try { await activeBot.stop(signal); } finally {
+            pollingLease?.release();
+            pollingLease = undefined;
         }
+    } else {
+        pollingLease?.release();
+        pollingLease = undefined;
+    }
+    if (pollingPromise) {
+        await pollingPromise.catch(() => {});
+        pollingPromise = undefined;
+    }
+}
+
+async function startBot(token) {
+    if (startPromise) return startPromise;
+    startPromise = (async () => {
+      try {
+        if (bot) {
+            await stopBot('RESTART');
+        }
+        pollingLease = acquireTelegramPollingLease(token);
         bot = new Telegraf(token);
 
         bot.start(async (ctx) => {
@@ -120,23 +180,39 @@ async function startBot(token) {
             await processIncomingMessage(normalized);
         });
 
-        await bot.launch();
+        await launchWithRetry(bot);
+        pollingPromise = bot.__fubotPollingPromise;
+        delete bot.__fubotPollingPromise;
+        pollingPromise.catch(async error => {
+            if (bot) {
+                isValidToken = false;
+                pollingLease?.release();
+                pollingLease = undefined;
+                await reportError('تشغيل Telegram polling', error?.message || String(error));
+            }
+        });
         console.log("🤖 تم تشغيل البوت بنجاح.");
         addLog("تم تشغيل البوت بنجاح");
         isValidToken = true;
 
         const { listErrors, solveError } = require('../database/repositories/logRepository');
-        const tokenError = listErrors().find(e => e.type === "توكن تيليجرام مفقود" && !e.solved);
-        if (tokenError) {
-            solveError(tokenError.id);
-            addLog("✅ تم حل عطل توكن تيليجرام تلقائياً!");
-        }
+        const resolvedTelegramErrors = listErrors().filter(e => !e.solved && (
+            e.type === "توكن تيليجرام مفقود"
+            || (e.type === "إقلاع البوت الداخلي" && isTransientTelegramError(e.message))
+        ));
+        resolvedTelegramErrors.forEach(error => solveError(error.id));
+        if (resolvedTelegramErrors.length) addLog("✅ تم استعادة اتصال تيليجرام تلقائياً.");
         return true;
-    } catch (e) {
+      } catch (e) {
+        try { await stopBot('START_FAILURE'); } catch (_) { /* preserve startup error */ }
         await reportError("إقلاع البوت الداخلي", e.message);
         isValidToken = false;
         return false;
-    }
+      } finally {
+        startPromise = undefined;
+      }
+    })();
+    return startPromise;
 }
 
 // initialize bot on start if token is valid
@@ -155,5 +231,7 @@ module.exports = {
     getIsValidToken: () => isValidToken,
     setIsValidToken: (val) => { isValidToken = val; },
     startBot,
-    initializeTelegramOnStartup
+    stopBot,
+    initializeTelegramOnStartup,
+    _test: { isTransientTelegramError, launchWithRetry }
 };

@@ -82,6 +82,9 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
     const tenantId = requireTenantId(cacheContext.tenantId, 'hybrid-retrieval');
     require('../security/tenantRagSafety').assertTenantRagEnabled(tenantId);
     const embeddingModel = getConfig('RAG_EMBEDDING_MODEL');
+    const requestedMediaType = ['image', 'audio'].includes(cacheContext.requestedMediaType)
+        ? cacheContext.requestedMediaType
+        : null;
     const reranker = process.env.RAG_CROSS_ENCODER_MODEL
         || process.env.RAG_CROSS_ENCODER_URL
         || 'none';
@@ -179,7 +182,17 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
             ],
             must_not: [
                 { key: 'lifecycle', match: { value: 'staging' } },
-                { key: 'lifecycle', match: { value: 'archived' } }
+                { key: 'lifecycle', match: { value: 'archived' } },
+                {
+                    key: 'ragMediaType',
+                    match: {
+                        any: requestedMediaType === 'image'
+                            ? ['audio']
+                            : requestedMediaType === 'audio'
+                                ? ['image']
+                                : ['image', 'audio']
+                    }
+                }
             ],
             should: activeKnowledgeVersion
                 ? [
@@ -216,6 +229,10 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
     for (const res of searchResults) {
         if (res.payload?.tenantId !== tenantId) {
             console.error(`[RAG Tenant] Qdrant returned mismatched tenant payload. Result discarded. tenant=${tenantId} point=${res.id}`);
+            continue;
+        }
+        const candidateMediaType = res.payload?.ragMediaType || null;
+        if (candidateMediaType && candidateMediaType !== requestedMediaType) {
             continue;
         }
         const chunkText = res.payload?.text ?? res.payload?.content ?? res.payload?.pageContent ?? '';

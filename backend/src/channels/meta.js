@@ -5,6 +5,34 @@ const { reliableFetch } = require('../utils/reliableFetch');
 
 const META_GRAPH_VERSION = process.env.META_GRAPH_VERSION || 'v23.0';
 const MEDIA_TYPES = new Set(['image', 'video', 'audio', 'file']);
+const META_TEXT_LIMIT = 2000;
+
+function splitMetaText(value, limit = META_TEXT_LIMIT) {
+    const text = String(value || '');
+    if (Array.from(text).length <= limit) return [text];
+    const parts = [];
+    let remaining = text;
+    while (Array.from(remaining).length > limit) {
+        const chars = Array.from(remaining);
+        const window = chars.slice(0, limit).join('');
+        const candidates = [window.lastIndexOf('\n\n'), window.lastIndexOf('\n'), window.lastIndexOf(' ')]
+            .filter(index => index >= Math.floor(limit * 0.55));
+        const cut = candidates.length ? Math.max(...candidates) : window.length;
+        parts.push(window.slice(0, cut).trimEnd());
+        remaining = window.slice(cut).trimStart() + chars.slice(limit).join('');
+    }
+    if (remaining) parts.push(remaining);
+    return parts.filter(Boolean);
+}
+
+function graphHostFor(platform) {
+    // Tokens issued by the current "Instagram API with Instagram Login" flow
+    // are valid on graph.instagram.com, not graph.facebook.com. Messenger keeps
+    // using the Facebook Graph host.
+    return platform === 'instagram'
+        ? 'https://graph.instagram.com'
+        : 'https://graph.facebook.com';
+}
 
 function accountIdFor(platform) {
     return platform === 'messenger'
@@ -46,7 +74,7 @@ async function getMetaUserProfile(psid, platform) {
             ? 'first_name,last_name,profile_pic'
             : 'name,username,profile_picture_url';
         const response = await fetch(
-            `https://graph.facebook.com/v19.0/${encodeURIComponent(psid)}`
+            `${graphHostFor(platform)}/${META_GRAPH_VERSION}/${encodeURIComponent(psid)}`
             + `?fields=${encodeURIComponent(fields)}&access_token=${encodeURIComponent(accessToken)}`
         );
         if (response.ok) {
@@ -93,7 +121,7 @@ async function uploadMetaAttachment(media, platform, accessToken) {
     let response;
     try {
         response = await reliableFetch(
-            `https://graph.facebook.com/${META_GRAPH_VERSION}/${encodeURIComponent(accountIdFor(platform))}`
+            `${graphHostFor(platform)}/${META_GRAPH_VERSION}/${encodeURIComponent(accountIdFor(platform))}`
             + `/message_attachments?access_token=${encodeURIComponent(accessToken)}`,
             { method: 'POST', body: form },
             {
@@ -148,23 +176,40 @@ async function sendMetaMessage(recipientId, text, platform, media = null) {
         } else {
             message = { text };
         }
-        const response = await reliableFetch(
-            `https://graph.facebook.com/${META_GRAPH_VERSION}/${encodeURIComponent(accountIdFor(platform))}`
-            + `/messages?access_token=${encodeURIComponent(accessToken)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                recipient: { id: recipientId },
-                message
-            })
-        }, {
-            timeoutMs: Number(process.env.META_REQUEST_TIMEOUT_MS) || 15000,
-            maxAttempts: Number(process.env.META_MAX_ATTEMPTS) || 3
-        });
+        const messages = media || (platform === 'instagram' && media?.shareUrl)
+            ? [message]
+            : splitMetaText(text).map(part => ({ text: part }));
+        const messageIds = [];
+        let lastResponse = null;
+        let lastData = null;
+        for (const outboundMessage of messages) {
+            const response = await reliableFetch(
+                `${graphHostFor(platform)}/${META_GRAPH_VERSION}/${encodeURIComponent(accountIdFor(platform))}`
+                + `/messages?access_token=${encodeURIComponent(accessToken)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipient: { id: recipientId }, message: outboundMessage })
+            }, {
+                timeoutMs: Number(process.env.META_REQUEST_TIMEOUT_MS) || 15000,
+                maxAttempts: Number(process.env.META_MAX_ATTEMPTS) || 3
+            });
+            const data = await parseMetaResponse(response);
+            lastResponse = response;
+            lastData = data;
 
-        const data = await parseMetaResponse(response);
-
-        if (response.ok) {
+            if (!response.ok) {
+                const metaError = data && data.error ? data.error : {};
+                const errorMsg = metaError.message || `Meta Graph API request failed with HTTP ${response.status}`;
+                reportError(`إرسال ميتّا (${platform})`, errorMsg);
+                return {
+                    success: false, error: errorMsg, statusCode: response.status,
+                    metaErrorCode: metaError.code === undefined ? null : metaError.code,
+                    metaErrorSubcode: metaError.error_subcode === undefined ? null : metaError.error_subcode,
+                    isTransient: Boolean(metaError.is_transient) || response.status === 429 || response.status >= 500,
+                    attachmentId: uploaded?.attachmentId || null, provider: 'meta', rawResponse: data,
+                    messageIds, reported: true
+                };
+            }
             const messageId = String(data.message_id || (data.messages && data.messages[0] && data.messages[0].id) || '');
             if (!messageId) {
                 const errorMsg = 'Meta Graph API returned success without a message ID';
@@ -175,33 +220,21 @@ async function sendMetaMessage(recipientId, text, platform, media = null) {
                     statusCode: response.status,
                     metaErrorCode: null,
                     provider: 'meta',
-                    rawResponse: data
+                    rawResponse: data,
+                    reported: true
                 };
             }
-            console.log(`✅ تم إرسال الرد للعميل على منصة [${platform}] بنجاح!`);
-            return {
-                success: true,
-                messageId,
-                provider: 'meta',
-                statusCode: response.status,
-                attachmentId: uploaded?.attachmentId || null,
-                rawResponse: data
-            };
+            messageIds.push(messageId);
         }
-
-        const metaError = data && data.error ? data.error : {};
-        const errorMsg = metaError.message || `Meta Graph API request failed with HTTP ${response.status}`;
-        reportError(`إرسال ميتّا (${platform})`, errorMsg);
+        console.log(`✅ تم إرسال الرد للعميل على منصة [${platform}] بنجاح (${messageIds.length} جزء).`);
         return {
-            success: false,
-            error: errorMsg,
-            statusCode: response.status,
-            metaErrorCode: metaError.code === undefined ? null : metaError.code,
-            metaErrorSubcode: metaError.error_subcode === undefined ? null : metaError.error_subcode,
-            isTransient: Boolean(metaError.is_transient) || response.status === 429 || response.status >= 500,
+            success: true,
+            messageId: messageIds[messageIds.length - 1],
+            messageIds,
+            statusCode: lastResponse.status,
             attachmentId: uploaded?.attachmentId || null,
             provider: 'meta',
-            rawResponse: data
+            rawResponse: lastData
         };
     } catch (error) {
         const errorMsg = error?.code === 'PROVIDER_TIMEOUT' || error?.name === 'AbortError'
@@ -214,7 +247,8 @@ async function sendMetaMessage(recipientId, text, platform, media = null) {
             statusCode: null,
             metaErrorCode: null,
             provider: 'meta',
-            rawResponse: null
+            rawResponse: null,
+            reported: true
         };
     }
 }
@@ -222,5 +256,6 @@ async function sendMetaMessage(recipientId, text, platform, media = null) {
 module.exports = {
     getMetaUserProfile,
     uploadMetaAttachment,
-    sendMetaMessage
+    sendMetaMessage,
+    splitMetaText
 };

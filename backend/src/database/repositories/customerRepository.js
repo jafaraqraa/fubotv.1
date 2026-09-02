@@ -26,6 +26,7 @@ function mapCustomerRow(row) {
     const profileData = parseProfileData(row.profile_data);
     return {
         id: row.id,
+        conversationId: row.conversation_id,
         name: row.name,
         username: row.username || null,
         phoneNumber: row.phone_number || null,
@@ -159,7 +160,7 @@ function findCustomerUser(userId, platform, tenantId = null) {
     const scopedTenantId = tenantId || (platform === 'whatsapp' ? null : 'default');
     if (platform === 'whatsapp' && !scopedTenantId) return null;
     const row = db.prepare(`
-        SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+        SELECT ca.external_user_id as id, c.id as conversation_id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
@@ -177,7 +178,7 @@ function findCustomerUser(userId, platform, tenantId = null) {
 function findCustomerUserByIdOnly(userId, tenantId) {
     if (!tenantId) return null;
     const row = db.prepare(`
-        SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+        SELECT ca.external_user_id as id, c.id as conversation_id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
@@ -195,7 +196,7 @@ function findCustomerUserByIdOnly(userId, tenantId) {
 function listCustomerUsers(tenantId) {
     if (!tenantId) throw new Error('tenantId is required');
     const rows = db.prepare(`
-        SELECT ca.external_user_id as id, COALESCE(tcp.display_name, ca.username) as name,
+        SELECT ca.external_user_id as id, c.id as conversation_id, COALESCE(tcp.display_name, ca.username) as name,
                ca.username, ca.phone_number,
                ca.channel as platform, COALESCE(tcp.profile_data, ca.profile_data) as profile_data,
                c.is_ai_enabled, c.unread_count, c.assignee, c.last_message_at as lastSeen, c.tenant_id,
@@ -265,6 +266,48 @@ function clearUnreadCount(userId, tenantId = 'default') {
     publish(EVENTS.UNREAD_UPDATED, { userId: String(userId), unreadCount: 0, tenantId });
 }
 
+function deleteConversation(conversationId, tenantId) {
+    if (!conversationId || !tenantId) return null;
+    return db.transaction(() => {
+        const conversation = db.prepare(`
+            SELECT c.id, c.channel, ca.external_user_id
+            FROM conversations c
+            JOIN channel_accounts ca ON ca.id = c.channel_account_id
+            WHERE c.id = ? AND c.tenant_id = ?
+        `).get(String(conversationId), tenantId);
+        if (!conversation) return null;
+
+        const attachments = db.prepare(`
+            SELECT id, storage_path
+            FROM media_attachments
+            WHERE tenant_id = ? AND (
+                conversation_id = ? OR message_id IN (
+                    SELECT id FROM messages WHERE conversation_id = ? AND tenant_id = ?
+                )
+            )
+        `).all(tenantId, conversation.id, conversation.id, tenantId);
+
+        db.prepare(`
+            DELETE FROM media_attachments
+            WHERE tenant_id = ? AND (
+                conversation_id = ? OR message_id IN (
+                    SELECT id FROM messages WHERE conversation_id = ? AND tenant_id = ?
+                )
+            )
+        `).run(tenantId, conversation.id, conversation.id, tenantId);
+        const deleted = db.prepare(
+            'DELETE FROM conversations WHERE id = ? AND tenant_id = ?'
+        ).run(conversation.id, tenantId);
+        if (deleted.changes !== 1) return null;
+        return {
+            conversationId: conversation.id,
+            userId: conversation.external_user_id,
+            channel: conversation.channel,
+            storagePaths: attachments.map(item => item.storage_path).filter(Boolean)
+        };
+    })();
+}
+
 module.exports = {
     registerCustomerUser,
     findCustomerUser,
@@ -273,5 +316,6 @@ module.exports = {
     updateAIEnabled,
     updateAssignee,
     incrementUnreadCount,
-    clearUnreadCount
+    clearUnreadCount,
+    deleteConversation
 };

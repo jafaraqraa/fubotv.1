@@ -125,6 +125,7 @@ window.Dashboard.utils = {
             element.src = objectUrl;
         } catch (error) {
             element.dataset.mediaError = error.message;
+            element.dispatchEvent(new Event('error'));
         }
     },
 

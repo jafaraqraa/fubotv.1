@@ -53,6 +53,22 @@ window.Dashboard.main = {
         if (search) search.addEventListener('input', () => window.Dashboard.chat.filterCurrentConversation(search.value));
         const mobileBack = document.getElementById('conversation-mobile-back');
         if (mobileBack) mobileBack.addEventListener('click', () => window.Dashboard.chat.closeConversationOnMobile());
+        const mobileChatActions = document.getElementById('mobile-chat-actions-toggle');
+        if (mobileChatActions) {
+            mobileChatActions.addEventListener('click', () => {
+                const controls = mobileChatActions.closest('.channel-header-controls');
+                const isOpen = controls?.classList.toggle('is-mobile-actions-open') || false;
+                mobileChatActions.setAttribute('aria-expanded', String(isOpen));
+            });
+        }
+        const ragAdvancedToggle = document.getElementById('rag-advanced-toggle');
+        if (ragAdvancedToggle) {
+            ragAdvancedToggle.addEventListener('click', () => {
+                const section = document.getElementById('rag-section');
+                const isOpen = section?.classList.toggle('is-advanced-open') || false;
+                ragAdvancedToggle.setAttribute('aria-expanded', String(isOpen));
+            });
+        }
 
         // Initialize redesigned API keys limits dashboard and management list
         if (window.Dashboard.apiKeys && typeof window.Dashboard.apiKeys.init === 'function') {

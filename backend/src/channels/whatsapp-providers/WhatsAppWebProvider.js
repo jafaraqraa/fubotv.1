@@ -11,6 +11,7 @@ const { normalizeWhatsAppMessage } = require('../../messaging/normalizers/whatsa
 const { processIncomingMessage } = require('../../messaging/messageProcessor');
 const { publish } = require('../../realtime/eventPublisher');
 const { EVENTS } = require('../../realtime/events');
+const { updateDeliveryByExternalId } = require('../../database/repositories/messageRepository');
 
 const uploadsDir = path.join(__dirname, '..', '..', '..', 'public', 'uploads');
 
@@ -18,6 +19,37 @@ function extractExternalMessageId(sentMessage) {
     const id = sentMessage?.id || sentMessage?._data?.id;
     if (typeof id === 'string') return id.trim();
     return String(id?.id || id?._serialized || '').trim();
+}
+
+async function downloadMediaWithRetry(message, attempts = 3) {
+    // Current WhatsApp Web exposes the serialized key as `$1`, while
+    // whatsapp-web.js 1.34.7 still reads `_serialized` in downloadMedia().
+    // Reconstruct the compatible key before entering the library method.
+    if (message?.id && !message.id._serialized) {
+        const serialized = message.id.$1
+            || `${String(message.id.fromMe)}_${message.id.remote}_${message.id.id}`;
+        try {
+            message.id._serialized = serialized;
+        } catch (_) {
+            Object.defineProperty(message.id, '_serialized', {
+                value: serialized, configurable: true, enumerable: false
+            });
+        }
+    }
+    let lastError = null;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            const media = await message.downloadMedia();
+            if (media?.data && media?.mimetype) return media;
+            lastError = new Error('WhatsApp returned empty media data');
+        } catch (error) {
+            lastError = error instanceof Error ? error : new Error(String(error || 'WhatsApp media download failed'));
+        }
+        if (attempt < attempts) {
+            await new Promise(resolve => setTimeout(resolve, attempt * 500));
+        }
+    }
+    throw lastError || new Error('WhatsApp media download failed');
 }
 
 class WhatsAppWebProvider extends WhatsAppProvider {
@@ -253,6 +285,33 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 this._scheduleReconnect(client, generation);
             });
 
+            client.on('message_ack', async (message, ack) => {
+                if (this.waClient !== client || generation !== this.lifecycleGeneration) return;
+                const externalMessageId = extractExternalMessageId(message);
+                if (!externalMessageId) return;
+
+                // whatsapp-web.js: 1=server, 2=device, 3=read, 4=played.
+                const deliveryStatus = ack >= 3 ? 'read' : ack === 2 ? 'delivered' : ack === -1 ? 'failed' : null;
+                if (!deliveryStatus) return;
+                try {
+                    // The acknowledgement can race the database write immediately
+                    // after sendMessage resolves. Retry briefly instead of dropping it.
+                    for (const delayMs of [0, 150, 600]) {
+                        if (delayMs) await new Promise(resolve => setTimeout(resolve, delayMs));
+                        const updated = updateDeliveryByExternalId(
+                            externalMessageId,
+                            'whatsapp',
+                            this.tenantId,
+                            deliveryStatus,
+                            { provider: 'whatsapp-web', acknowledgement: ack }
+                        );
+                        if (updated) break;
+                    }
+                } catch (error) {
+                    reportError(`تحديث حالة قراءة واتساب لـ ${this.tenantId}`, error.message);
+                }
+            });
+
             client.on('message', async (msg) => {
                 if (this.waClient !== client || generation !== this.lifecycleGeneration) return;
                 if (msg.from.includes('@g.us')) return;
@@ -267,6 +326,10 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 let userText = msg.body;
                 let mediaType = 'text';
                 let fileExt = '';
+                let localMediaPath = null;
+                const providerMessageType = String(msg.type || '').toLowerCase();
+                if (providerMessageType === 'ptt') mediaType = 'voice';
+                else if (providerMessageType === 'audio') mediaType = 'audio';
 
                 const contact = await msg.getContact();
                 let resolvedPhoneNumber = null;
@@ -305,23 +368,29 @@ class WhatsAppWebProvider extends WhatsAppProvider {
 
                 if (msg.hasMedia) {
                     try {
-                        const media = await msg.downloadMedia();
+                        const media = await downloadMediaWithRetry(msg);
                         if (media) {
-                            fileExt = getExtensionFromMime(media.mimetype);
+                            const normalizedMime = String(media.mimetype || '').split(';')[0].trim().toLowerCase();
+                            fileExt = getExtensionFromMime(normalizedMime);
                             const fileName = `${Date.now()}_whatsapp_${this.tenantId}.${fileExt}`;
                             const destPath = path.join(uploadsDir, fileName);
 
                             fs.writeFileSync(destPath, Buffer.from(media.data, 'base64'));
                             userText = `/uploads/${fileName}`;
+                            localMediaPath = userText;
 
-                            if (media.mimetype.startsWith('image/')) mediaType = 'image';
-                            else if (media.mimetype.startsWith('audio/')) mediaType = 'audio';
-                            else if (media.mimetype.startsWith('video/')) mediaType = 'video';
+                            if (normalizedMime.startsWith('image/')) mediaType = 'image';
+                            else if (normalizedMime.startsWith('audio/')) {
+                                mediaType = providerMessageType === 'ptt' ? 'voice' : 'audio';
+                            }
+                            else if (normalizedMime.startsWith('video/')) mediaType = 'video';
                             else mediaType = 'document';
                         }
                     } catch (err) {
                         const detail = err?.message || String(err || 'unknown media download error');
                         reportError(`تحميل وسائط واتساب لـ ${this.tenantId}`, detail);
+                        mediaType = providerMessageType === 'ptt' ? 'voice' : 'document';
+                        userText = 'تعذّر تحميل التسجيل الصوتي من واتساب. يرجى طلب إعادة إرساله.';
                     }
                 }
 
@@ -330,11 +399,12 @@ class WhatsAppWebProvider extends WhatsAppProvider {
                 const normalized = normalizeWhatsAppMessage(
                     msg,
                     contact,
-                    msg.hasMedia ? userText : null,
+                    localMediaPath,
                     mediaType,
                     fileExt,
                     profileImageRemoteUrl,
-                    resolvedPhoneNumber
+                    resolvedPhoneNumber,
+                    userText
                 );
                 normalized.metadata = normalized.metadata || {};
                 normalized.metadata.tenantId = this.tenantId;
@@ -412,24 +482,49 @@ class WhatsAppWebProvider extends WhatsAppProvider {
         }
 
         let sentMsg;
+        let resolveCreatedMessageId;
+        const createdMessageId = new Promise(resolve => { resolveCreatedMessageId = resolve; });
+        const onMessageCreated = message => {
+            const fromMe = message?.fromMe ?? message?.id?.fromMe ?? message?._data?.id?.fromMe;
+            if (fromMe === false) return;
+            const target = String(message?.to || message?.id?.remote || message?._data?.to || '');
+            if (target && target !== String(recipientId)) return;
+            const id = extractExternalMessageId(message);
+            if (id) resolveCreatedMessageId(id);
+        };
+        const canCaptureCreatedMessage = typeof this.waClient.on === 'function'
+            && typeof this.waClient.removeListener === 'function';
+        if (canCaptureCreatedMessage) this.waClient.on('message_create', onMessageCreated);
         let finalPath = media ? media.localPath : null;
 
-        if (finalPath) {
-            const absolutePath = finalPath.startsWith('/') && !finalPath.startsWith('/uploads')
-                ? finalPath
-                : path.join(__dirname, '..', '..', '..', 'public', finalPath);
+        try {
+            if (finalPath) {
+                const absolutePath = finalPath.startsWith('/') && !finalPath.startsWith('/uploads')
+                    ? finalPath
+                    : path.join(__dirname, '..', '..', '..', 'public', finalPath);
 
-            if (fs.existsSync(absolutePath)) {
-                const mediaFile = MessageMedia.fromFilePath(absolutePath);
-                sentMsg = await this.waClient.sendMessage(recipientId, mediaFile, { caption: content || '' });
+                if (fs.existsSync(absolutePath)) {
+                    const mediaFile = MessageMedia.fromFilePath(absolutePath);
+                    sentMsg = await this.waClient.sendMessage(recipientId, mediaFile, { caption: content || '' });
+                } else {
+                    throw new Error(`Media file not found at: ${absolutePath}`);
+                }
             } else {
-                throw new Error(`Media file not found at: ${absolutePath}`);
+                sentMsg = await this.waClient.sendMessage(recipientId, content);
             }
-        } else {
-            sentMsg = await this.waClient.sendMessage(recipientId, content);
+        } catch (error) {
+            if (canCaptureCreatedMessage) this.waClient.removeListener('message_create', onMessageCreated);
+            throw error;
         }
 
-        const externalMessageId = extractExternalMessageId(sentMsg);
+        let externalMessageId = extractExternalMessageId(sentMsg);
+        if (!externalMessageId && canCaptureCreatedMessage) {
+            externalMessageId = await Promise.race([
+                createdMessageId,
+                new Promise(resolve => setTimeout(() => resolve(''), 1500))
+            ]);
+        }
+        if (canCaptureCreatedMessage) this.waClient.removeListener('message_create', onMessageCreated);
         const acceptedUnverified = !externalMessageId;
         if (acceptedUnverified) {
             console.warn(`[WhatsApp] Provider resolved send without a message ID tenant=${this.tenantId}; preserving the accepted reply with unverified delivery metadata.`);
@@ -446,4 +541,4 @@ class WhatsAppWebProvider extends WhatsAppProvider {
 }
 
 module.exports = WhatsAppWebProvider;
-module.exports._test = { extractExternalMessageId };
+module.exports._test = { extractExternalMessageId, downloadMediaWithRetry };

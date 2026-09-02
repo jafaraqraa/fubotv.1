@@ -8,8 +8,9 @@
     "test": "node --test test/*.test.js"
   },
   "dependencies": {
+    "chart.js": "^4.5.0",
     "dompurify": "3.4.14",
-    "express": "^4.19.2",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
   }
 }

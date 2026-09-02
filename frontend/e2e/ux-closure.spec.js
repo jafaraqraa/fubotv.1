@@ -56,8 +56,88 @@ test('conversation controls remain reachable on mobile and assignment sends feed
         const assignee = document.getElementById('assignee-container');
         assignee?.classList.remove('hidden');
     });
+    await page.locator('#mobile-chat-actions-toggle').click();
     await expect(page.locator('#chat-assignee-select')).toBeVisible();
     await expect(page.locator('#chat-header-actions')).toBeVisible();
+});
+
+test('conversation deletion requires confirmation and removes the selected thread', async ({ page }) => {
+    let deleted = false;
+    let deleteRequest = null;
+    const user = {
+        id: 'delete-user', conversationId: 'conversation-delete-1', name: 'عميل الحذف',
+        platform: 'telegram', tenantId: 'default', unreadCount: 1,
+        isAIEnabled: true, assignee: 'ai', lastSeen: new Date().toISOString()
+    };
+    await openDashboard(page, 'chat-section', {
+        '/users': route => route.fulfill({
+            status: 200, contentType: 'application/json',
+            body: JSON.stringify(deleted ? [] : [user])
+        }),
+        '/chat/delete-user': route => route.fulfill({
+            status: 200, contentType: 'application/json', body: '[]'
+        }),
+        '/conversations/conversation-delete-1': (route, request) => {
+            deleteRequest = request.method();
+            deleted = true;
+            return route.fulfill({
+                status: 200, contentType: 'application/json',
+                body: JSON.stringify({ success: true, conversationId: user.conversationId })
+            });
+        }
+    });
+
+    await page.locator('[data-customer-id="delete-user"]').click();
+    await page.getByRole('button', { name: 'حذف محادثة عميل الحذف' }).click();
+    await expect(page.locator('#ux-confirm-title')).toHaveText('حذف المحادثة؟');
+    await expect(page.locator('#ux-confirm-description')).toContainText('وجميع رسائلها ومرفقاتها');
+    await page.locator('#ux-confirm-accept').click();
+    await expect.poll(() => deleteRequest).toBe('DELETE');
+    await expect(page.locator('[data-customer-id="delete-user"]')).toHaveCount(0);
+    await expect(page.locator('#chat-box')).toContainText('اختر محادثة');
+});
+
+test('internal notes can be edited and deleted with explicit controls', async ({ page }) => {
+    let content = 'ملاحظة قديمة';
+    let deleted = false;
+    const user = {
+        id: 'note-user', conversationId: 'conversation-note-1', name: 'عميل الملاحظات',
+        platform: 'whatsapp', tenantId: 'default', unreadCount: 0,
+        isAIEnabled: true, assignee: 'ai', lastSeen: new Date().toISOString()
+    };
+    await openDashboard(page, 'chat-section', {
+        '/users': route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([user]) }),
+        '/chat/note-user': route => route.fulfill({
+            status: 200, contentType: 'application/json',
+            body: JSON.stringify(deleted ? [] : [{ id: 'note-1', type: 'note', isNote: true, text: content, time: '10:00' }])
+        }),
+        '/messages/note-1/note': (route, request) => {
+            if (request.method() === 'PATCH') {
+                content = request.postDataJSON().content;
+                return route.fulfill({
+                    status: 200, contentType: 'application/json',
+                    body: JSON.stringify({ success: true, messageId: 'note-1', content })
+                });
+            }
+            deleted = true;
+            return route.fulfill({
+                status: 200, contentType: 'application/json',
+                body: JSON.stringify({ success: true, messageId: 'note-1' })
+            });
+        }
+    });
+
+    await page.locator('[data-customer-id="note-user"]').click();
+    await page.getByRole('button', { name: 'تعديل الملاحظة الداخلية' }).click();
+    const editor = page.getByRole('textbox', { name: 'محتوى الملاحظة الداخلية' });
+    await editor.fill('ملاحظة معدّلة');
+    await page.getByRole('button', { name: 'حفظ', exact: true }).click();
+    await expect(page.locator('.channel-internal-note p')).toHaveText('ملاحظة معدّلة');
+
+    await page.getByRole('button', { name: 'حذف الملاحظة الداخلية' }).click();
+    await expect(page.locator('#ux-confirm-title')).toHaveText('حذف الملاحظة الداخلية؟');
+    await page.locator('#ux-confirm-accept').click();
+    await expect(page.locator('.channel-internal-note')).toHaveCount(0);
 });
 
 test('RAG destructive action has contextual copy and no browser dialog', async ({ page }) => {

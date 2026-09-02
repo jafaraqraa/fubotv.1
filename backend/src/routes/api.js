@@ -4,6 +4,9 @@ router.parsePagination = parsePagination;
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const { execFile } = require('node:child_process');
+const os = require('node:os');
+const crypto = require('node:crypto');
 const { addLog, reportError, getRecentLogs, listErrors, getActiveErrorsCount, solveError } = require('../services/logger');
 const { getIsValidToken, startBot } = require('../channels/telegram');
 const { getWaClient, getWaStatus, setWaStatus, getLastQrCodeUrl, setLastQrCodeUrl } = require('../channels/whatsapp');
@@ -12,6 +15,25 @@ const { requireRagTenant } = require('../rag/security/tenantContext');
 const { getManualKnowledgePath } = require('../rag/storage/tenantKnowledgeStorage');
 const { requirePermission } = require('../security/accessControl');
 const { audit } = require('../security/accessControl');
+const bcrypt = require('bcryptjs');
+
+const RAG_ACCESS_TTL_MS = 30 * 60 * 1000;
+const RAG_ACCESS_PASSWORD_HASH = process.env.RAG_ACCESS_PASSWORD_HASH
+    || '$2b$12$YiRtO7SdgHveh9roBE9riu0K1TjYPSJbq3KAk7kt/hqWkWHQtINpG';
+
+function hasActiveRagAccess(req) {
+    const unlockedAt = Number(req.session?.ragAccessUnlockedAt || 0);
+    return unlockedAt > 0 && Date.now() - unlockedAt < RAG_ACCESS_TTL_MS;
+}
+
+function requireRagAccess(req, res, next) {
+    if (hasActiveRagAccess(req)) return next();
+    return res.status(423).json({
+        success: false,
+        code: 'RAG_ACCESS_LOCKED',
+        error: 'إعدادات RAG محمية بكلمة مرور.'
+    });
+}
 
 function addRAGAuditLog(user, action, target, result) {
     try {
@@ -27,7 +49,8 @@ const {
     listCustomerUsers,
     updateAssignee,
     updateAIEnabled,
-    clearUnreadCount
+    clearUnreadCount,
+    deleteConversation
 } = require('../database/repositories/customerRepository');
 
 const {
@@ -36,7 +59,9 @@ const {
     getMessagesCount,
     getMessageForRetry,
     updateMessageDelivery,
-    resolveManagementRequest
+    resolveManagementRequest,
+    updateInternalNote,
+    deleteInternalNote
 } = require('../database/repositories/messageRepository');
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
 const { CAPABILITIES, assertMediaCapability, categoryForMime } = require('../messaging/mediaCapabilities');
@@ -48,6 +73,51 @@ const {
 } = require('../services/outgoingMediaStorage');
 const { saveSetting, getSetting, maskSecret, isMaskedPlaceholder } = require('../services/settingsService');
 const budgetService = require('../services/budgetService');
+
+const productionBackupRoot = path.join(__dirname, '..', '..', 'data', 'backups', 'production');
+const productionBackupRunner = path.join(__dirname, '..', '..', 'scripts', 'run-scheduled-backup.js');
+const productionBackupVerifier = path.join(__dirname, '..', '..', 'scripts', 'verify-production-backup.js');
+const { markerPath: pendingRestoreMarker } = require('../services/pendingRestoreService');
+let productionBackupInProgress = false;
+let productionBackupLastError = null;
+const restoreUpload = multer({
+    dest: path.join(os.tmpdir(), 'fubot-restore-uploads'),
+    limits: { fileSize: 1024 * 1024 * 1024, files: 1 }
+});
+
+function directorySize(directory) {
+    return fs.readdirSync(directory, { withFileTypes: true }).reduce((total, entry) => {
+        const target = path.join(directory, entry.name);
+        return total + (entry.isDirectory() ? directorySize(target) : fs.statSync(target).size);
+    }, 0);
+}
+
+function latestBackupSummary() {
+    if (!fs.existsSync(productionBackupRoot)) return null;
+    const candidates = fs.readdirSync(productionBackupRoot, { withFileTypes: true })
+        .filter(entry => entry.isDirectory() && /^futhing-\d{8}T\d{6}Z$/.test(entry.name))
+        .map(entry => entry.name)
+        .sort()
+        .reverse();
+    for (const id of candidates) {
+        const directory = path.join(productionBackupRoot, id);
+        const manifestPath = path.join(directory, 'manifest.json');
+        if (!fs.existsSync(manifestPath)) continue;
+        try {
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            return {
+                id,
+                createdAt: manifest.createdAt,
+                sizeBytes: directorySize(directory),
+                files: Array.isArray(manifest.files) ? manifest.files.length : 0,
+                qdrantIncluded: manifest.qdrant?.skipped === false,
+                verified: manifest.database?.integrity?.includes('ok')
+                    && manifest.database?.foreignKeyViolations === 0
+            };
+        } catch (_) { /* Ignore incomplete or unreadable directories. */ }
+    }
+    return null;
+}
 
 const privateMediaDir = path.join(__dirname, '..', '..', 'data', 'private-media');
 const mediaUpload = multer({
@@ -112,6 +182,90 @@ router.post('/chat/management/resolve', requirePermission('conversations:write')
     updateAssignee(userId, 'ai', user.tenantId);
     addLog(`تمت معالجة طلب الإدارة للعميل ${user.name} وإعادة الإسناد للذكاء الاصطناعي.`);
     return res.json({ success: true, assignee: 'ai', isAIEnabled: true, managementRequested: false });
+});
+
+router.delete('/conversations/:conversationId', requirePermission('conversations:write'), (req, res) => {
+    const deleted = deleteConversation(req.params.conversationId, req.tenantId);
+    if (!deleted) {
+        return res.status(404).json({ success: false, error: 'المحادثة غير موجودة.' });
+    }
+
+    const allowedRoots = [privateMediaDir, path.join(__dirname, '..', '..', 'public', 'uploads')]
+        .map(root => path.resolve(root));
+    for (const storagePath of deleted.storagePaths) {
+        const resolved = path.resolve(storagePath);
+        const isOwnedPath = allowedRoots.some(root => resolved.startsWith(`${root}${path.sep}`));
+        if (!isOwnedPath) continue;
+        try {
+            if (fs.existsSync(resolved)) fs.unlinkSync(resolved);
+        } catch (error) {
+            reportError('تنظيف ملفات المحادثة المحذوفة', error.message);
+        }
+    }
+
+    audit({
+        actorId: req.session.userId,
+        tenantId: req.tenantId,
+        action: 'conversation_delete',
+        resourceType: 'conversation',
+        resourceId: deleted.conversationId,
+        outcome: 'success',
+        metadata: { channel: deleted.channel }
+    });
+    const { EVENTS } = require('../realtime/events');
+    const { publish, publishStats } = require('../realtime/eventPublisher');
+    publish(EVENTS.CONVERSATION_DELETED, {
+        conversationId: deleted.conversationId,
+        userId: deleted.userId,
+        tenantId: req.tenantId
+    }, { tenantId: req.tenantId });
+    publishStats(req.tenantId);
+    return res.json({ success: true, conversationId: deleted.conversationId });
+});
+
+router.patch('/messages/:messageId/note', requirePermission('conversations:write'), (req, res) => {
+    const content = typeof req.body?.content === 'string' ? req.body.content.trim() : '';
+    if (!content || content.length > 5000) {
+        return res.status(400).json({
+            success: false,
+            error: content ? 'الملاحظة تتجاوز 5000 حرف.' : 'محتوى الملاحظة فارغ.'
+        });
+    }
+    const note = updateInternalNote(req.params.messageId, req.tenantId, content);
+    if (!note) {
+        return res.status(404).json({ success: false, error: 'الملاحظة الداخلية غير موجودة.' });
+    }
+    audit({
+        actorId: req.session.userId, tenantId: req.tenantId,
+        action: 'internal_note_update', resourceType: 'message',
+        resourceId: note.id, outcome: 'success'
+    });
+    const { EVENTS } = require('../realtime/events');
+    require('../realtime/eventPublisher').publish(EVENTS.MESSAGE_UPDATED, {
+        messageId: note.id, userId: note.external_user_id,
+        content, isNote: true, tenantId: req.tenantId
+    }, { tenantId: req.tenantId });
+    return res.json({ success: true, messageId: note.id, content });
+});
+
+router.delete('/messages/:messageId/note', requirePermission('conversations:write'), (req, res) => {
+    const note = deleteInternalNote(req.params.messageId, req.tenantId);
+    if (!note) {
+        return res.status(404).json({ success: false, error: 'الملاحظة الداخلية غير موجودة.' });
+    }
+    audit({
+        actorId: req.session.userId, tenantId: req.tenantId,
+        action: 'internal_note_delete', resourceType: 'message',
+        resourceId: note.id, outcome: 'success'
+    });
+    const { EVENTS } = require('../realtime/events');
+    const publisher = require('../realtime/eventPublisher');
+    publisher.publish(EVENTS.MESSAGE_DELETED, {
+        messageId: note.id, userId: note.external_user_id,
+        isNote: true, tenantId: req.tenantId
+    }, { tenantId: req.tenantId });
+    publisher.publishStats(req.tenantId);
+    return res.json({ success: true, messageId: note.id });
 });
 
 // 2. تحديث وتطوير مسار إرسال الرسائل الفردية والملاحظات والوسائط (Rich Media & Notes Support) - uses outgoingMessageService (Task 14)
@@ -402,7 +556,7 @@ router.delete('/media/:attachmentId', requirePermission('messages:send'), (req, 
 router.post('/config/settings', requirePermission('system:manage'), async (req, res) => {
     const {
         token, openrouterKey, model, systemPrompt, adminId, waAutoReply,
-        messengerToken, instagramToken, metaVerifyToken, metaAppSecret,
+        messengerToken, instagramToken, metaVerifyToken, metaAppSecret, instagramAppSecret,
         messengerAutoReply, instagramAutoReply,
         ragChunkSize, ragChunkOverlap, ragEmbeddingModel, qdrantCollection,
         ragIndexOnStartup, qdrantUrl, ollamaBaseUrl,
@@ -414,10 +568,21 @@ router.post('/config/settings', requirePermission('system:manage'), async (req, 
         budgetOpenrouter, budgetOpenai, budgetGemini, budgetOllama
     } = req.body;
 
+    const containsRagSettings = Object.keys(req.body || {}).some(key => key.startsWith('rag')
+        || ['qdrantCollection', 'qdrantUrl', 'ollamaBaseUrl'].includes(key));
+    if (containsRagSettings && !hasActiveRagAccess(req)) {
+        return res.status(423).json({
+            success: false,
+            code: 'RAG_ACCESS_LOCKED',
+            error: 'أدخل كلمة مرور RAG قبل تعديل هذه الإعدادات.'
+        });
+    }
+
     const { validateSetting, validateAllSettings, getConfig } = require('../rag');
 
     try {
         let normalizedMetaAppSecret = null;
+        let normalizedInstagramAppSecret = null;
         if (metaAppSecret !== undefined && metaAppSecret !== '') {
             if (typeof metaAppSecret !== 'string') {
                 return res.status(400).json({
@@ -439,6 +604,12 @@ router.post('/config/settings', requirePermission('system:manage'), async (req, 
                     success: false,
                     error: 'Meta App Secret غير صالح.'
                 });
+            }
+        }
+        if (instagramAppSecret !== undefined && instagramAppSecret !== '' && !isMaskedPlaceholder(instagramAppSecret)) {
+            normalizedInstagramAppSecret = String(instagramAppSecret).trim();
+            if (normalizedInstagramAppSecret.length < 16 || normalizedInstagramAppSecret.length > 256 || /[\r\n\0]/.test(normalizedInstagramAppSecret)) {
+                return res.status(400).json({ success: false, error: 'Instagram App Secret غير صالح.' });
             }
         }
         const metaSettingsRequested = metaVerifyToken !== undefined || metaAppSecret !== undefined;
@@ -723,6 +894,10 @@ router.post('/config/settings', requirePermission('system:manage'), async (req, 
             saveSetting('META_APP_SECRET', normalizedMetaAppSecret);
             updateEnvFile('META_APP_SECRET', normalizedMetaAppSecret);
         }
+        if (normalizedInstagramAppSecret !== null) {
+            saveSetting('INSTAGRAM_APP_SECRET', normalizedInstagramAppSecret);
+            updateEnvFile('INSTAGRAM_APP_SECRET', normalizedInstagramAppSecret);
+        }
 
         // 11. تعديل حالة الرد الآلي لماسينجر
         if (messengerAutoReply !== undefined) {
@@ -766,6 +941,102 @@ router.post('/config/settings', requirePermission('system:manage'), async (req, 
     }
 });
 
+router.get('/backups/status', requirePermission('system:manage'), (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.json({
+        success: true,
+        inProgress: productionBackupInProgress,
+        restorePending: fs.existsSync(pendingRestoreMarker),
+        lastError: productionBackupLastError,
+        latest: latestBackupSummary()
+    });
+});
+
+router.get('/backups/latest/download', requirePermission('system:manage'), (req, res) => {
+    const latest = latestBackupSummary();
+    if (!latest) return res.status(404).json({ success: false, error: 'لا توجد نسخة احتياطية جاهزة للتنزيل.' });
+    const archive = path.join(productionBackupRoot, `${latest.id}.tar.gz`);
+    if (!fs.existsSync(archive)) {
+        return res.status(404).json({ success: false, error: 'ملف تنزيل آخر نسخة غير موجود. أنشئ نسخة جديدة أولاً.' });
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    return res.download(archive, `FuBot-backup-${latest.id.replace('futhing-', '')}.tar.gz`);
+});
+
+router.post('/backups', requirePermission('system:manage'), (req, res) => {
+    if (productionBackupInProgress) {
+        return res.status(409).json({ success: false, error: 'يوجد نسخ احتياطي قيد التنفيذ حالياً.' });
+    }
+    productionBackupInProgress = true;
+    productionBackupLastError = null;
+    execFile(process.execPath, [productionBackupRunner], {
+        cwd: path.join(__dirname, '..', '..', '..'),
+        env: {
+            ...process.env,
+            QDRANT_URL: process.env.QDRANT_URL || 'http://127.0.0.1:6333',
+            QDRANT_COLLECTION: process.env.QDRANT_COLLECTION || 'futhing_knowledge'
+        },
+        timeout: 5 * 60 * 1000,
+        maxBuffer: 2 * 1024 * 1024
+    }, (error) => {
+        productionBackupInProgress = false;
+        if (error) {
+            productionBackupLastError = 'تعذر إنشاء آخر نسخة احتياطية. راجع سجل النظام ثم أعد المحاولة.';
+            reportError('إنشاء نسخة احتياطية يدوية', error.message);
+            return;
+        }
+        productionBackupLastError = null;
+        addLog('تم إنشاء نسخة احتياطية يدوية متحققة من لوحة الإعدادات.');
+    });
+    return res.status(202).json({ success: true, inProgress: true, message: 'بدأ إنشاء النسخة الاحتياطية.' });
+});
+
+router.post('/backups/restore', requirePermission('system:manage'), restoreUpload.single('backup'), (req, res) => {
+    if (!req.file) return res.status(400).json({ success: false, error: 'اختر ملف النسخة الاحتياطية أولاً.' });
+    const stagingRoot = path.join(__dirname, '..', '..', 'data', 'restore-staging');
+    const staging = path.join(stagingRoot, crypto.randomUUID());
+    try {
+        fs.mkdirSync(staging, { recursive: true, mode: 0o700 });
+        const listing = require('node:child_process').spawnSync('tar', ['-tzf', req.file.path], { encoding: 'utf8' });
+        if (listing.status !== 0) throw new Error('الملف ليس نسخة FuBot صالحة.');
+        const entries = listing.stdout.split(/\r?\n/).filter(Boolean);
+        if (!entries.length || entries.some(name => name.startsWith('/') || name.split('/').includes('..'))) {
+            throw new Error('النسخة تحتوي مسارات غير آمنة.');
+        }
+        const extract = require('node:child_process').spawnSync('tar', [
+            '-xzf', req.file.path, '--no-same-owner', '-C', staging
+        ], { encoding: 'utf8' });
+        if (extract.status !== 0) throw new Error('تعذر فك النسخة الاحتياطية.');
+        const roots = fs.readdirSync(staging, { withFileTypes: true }).filter(entry => entry.isDirectory());
+        if (roots.length !== 1) throw new Error('بنية ملف النسخة غير صحيحة.');
+        const backupDirectory = path.join(staging, roots[0].name);
+        const verify = require('node:child_process').spawnSync(process.execPath, [productionBackupVerifier, backupDirectory], {
+            encoding: 'utf8', timeout: 5 * 60 * 1000
+        });
+        if (verify.status !== 0) throw new Error('فشل فحص سلامة النسخة الاحتياطية.');
+        fs.mkdirSync(path.dirname(pendingRestoreMarker), { recursive: true });
+        fs.writeFileSync(pendingRestoreMarker, JSON.stringify({ backupDirectory, requestedAt: new Date().toISOString() }), { mode: 0o600 });
+        addLog('تم رفع وفحص نسخة احتياطية وتجهيزها للاستعادة عند إعادة التشغيل.');
+        const autoRestart = process.env.FUBOT_SUPERVISED === 'true';
+        res.json({
+            success: true,
+            restartRequired: !autoRestart,
+            autoRestart,
+            message: autoRestart
+                ? 'النسخة سليمة. سيُعاد تشغيل FuBot تلقائيًا وتُطبّق الاستعادة.'
+                : 'النسخة سليمة وجاهزة. أعد تشغيل FuBot لتطبيق الاستعادة.'
+        });
+        if (autoRestart) setTimeout(() => process.emit('fubot:restore-ready'), 1000).unref();
+        return;
+    } catch (error) {
+        fs.rmSync(staging, { recursive: true, force: true });
+        reportError('رفع نسخة للاستعادة', error.message);
+        return res.status(400).json({ success: false, error: error.message });
+    } finally {
+        fs.rmSync(req.file.path, { force: true });
+    }
+});
+
 // 4. جلب الإحصائيات مع الحماية التامة وحظر إرسال التوكنات كاملة للواجهة لمنع الاختراق
 router.get('/stats', requirePermission('settings:manage'), (req, res) => {
     const { getConfig } = require('../rag/config/ragConfig');
@@ -784,10 +1055,26 @@ router.get('/stats', requirePermission('settings:manage'), (req, res) => {
     const waUsers = usersArray.filter(u => u.platform === 'whatsapp').length;
     const msgUsers = usersArray.filter(u => u.platform === 'messenger').length;
     const igUsers = usersArray.filter(u => u.platform === 'instagram').length;
+    const db = require('../database/connection');
+    const weeklyMessages = db.prepare(`
+        WITH RECURSIVE days(day) AS (
+            SELECT date('now', 'localtime', '-6 days')
+            UNION ALL
+            SELECT date(day, '+1 day') FROM days WHERE day < date('now', 'localtime')
+        )
+        SELECT days.day, COUNT(messages.id) AS count
+        FROM days
+        LEFT JOIN messages
+          ON date(messages.created_at, 'localtime') = days.day
+         AND messages.tenant_id = ?
+        GROUP BY days.day
+        ORDER BY days.day ASC
+    `).all(req.tenantId);
 
     res.json({
         usersCount: usersArray.length,
         messagesCount: getMessagesCount(req.tenantId),
+        weeklyMessages,
         logs: getRecentLogs(),
         status: getIsValidToken() ? "نشط" : "غير مفعّل",
         currentModel: process.env.OPENROUTER_MODEL || "openrouter/free",
@@ -828,6 +1115,7 @@ router.get('/stats', requirePermission('settings:manage'), (req, res) => {
         instagramToken: maskSecret(process.env.INSTAGRAM_ACCESS_TOKEN),
         metaVerifyToken: maskSecret(process.env.META_VERIFY_TOKEN),
         metaAppSecret: maskSecret(process.env.META_APP_SECRET),
+        instagramAppSecret: maskSecret(process.env.INSTAGRAM_APP_SECRET),
 
         aiProvider: textGenerationConfig?.provider || process.env.AI_PROVIDER || 'openrouter',
         aiModel: textGenerationConfig?.model || process.env.AI_MODEL || process.env.OPENROUTER_MODEL || 'openrouter/free',
@@ -975,6 +1263,58 @@ router.use('/rag', (req, res, next) => {
         ? 'knowledge:read'
         : 'knowledge:manage';
     return requirePermission(permission)(req, res, next);
+});
+
+router.get('/rag/access/status', (req, res) => {
+    res.json({ success: true, unlocked: hasActiveRagAccess(req) });
+});
+
+router.post('/rag/access/unlock', (req, res) => {
+    const now = Date.now();
+    const blockedUntil = Number(req.session.ragAccessBlockedUntil || 0);
+    if (blockedUntil > now) {
+        return res.status(429).json({
+            success: false,
+            error: 'محاولات كثيرة. حاول مرة أخرى بعد دقائق قليلة.'
+        });
+    }
+
+    const password = typeof req.body?.password === 'string' ? req.body.password : '';
+    if (!password || !bcrypt.compareSync(password, RAG_ACCESS_PASSWORD_HASH)) {
+        req.session.ragAccessFailedAttempts = Number(req.session.ragAccessFailedAttempts || 0) + 1;
+        if (req.session.ragAccessFailedAttempts >= 5) {
+            req.session.ragAccessBlockedUntil = now + (5 * 60 * 1000);
+            req.session.ragAccessFailedAttempts = 0;
+        }
+        audit({
+            actorId: req.session.userId, tenantId: req.ragTenantId,
+            action: 'rag_access_unlock', resourceType: 'rag', outcome: 'failure'
+        });
+        return res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
+    }
+
+    req.session.ragAccessUnlockedAt = now;
+    req.session.ragAccessFailedAttempts = 0;
+    req.session.ragAccessBlockedUntil = 0;
+    audit({
+        actorId: req.session.userId, tenantId: req.ragTenantId,
+        action: 'rag_access_unlock', resourceType: 'rag', outcome: 'success'
+    });
+    return res.json({ success: true, unlocked: true, expiresInSeconds: RAG_ACCESS_TTL_MS / 1000 });
+});
+
+router.use('/rag', (req, res, next) => {
+    if (['GET', 'HEAD'].includes(req.method)) return next();
+
+    // Knowledge files and every reindex flow stay available to authorized
+    // administrators without the secondary settings password.
+    const relativePath = String(req.path || '');
+    const isDocumentOperation = relativePath.startsWith('/rag/documents');
+    const isReindexOperation = relativePath === '/rag/reindex'
+        || relativePath === '/rag/reconciliation/reindex';
+    if (isDocumentOperation || isReindexOperation) return next();
+
+    return requireRagAccess(req, res, next);
 });
 
 // Authenticated by the parent API router and tenant-authorized here. Values are

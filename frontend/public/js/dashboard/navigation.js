@@ -4,6 +4,7 @@ window.Dashboard = window.Dashboard || {};
 window.Dashboard.navigation = {
     sectionIds: ['chat-section', 'errors-section', 'settings-section', 'whatsapp-section', 'analytics-section', 'rag-section', 'aimodels-section', 'usage-section'],
     storageKey: 'futh_dashboard_active_section',
+    mobileMenuReturnFocus: null,
 
     rememberSection: function(sectionId) {
         if (!this.sectionIds.includes(sectionId)) return;
@@ -74,9 +75,9 @@ window.Dashboard.navigation = {
 
         if (sectionId === 'chat-section') {
             if (activeEl) activeEl.classList.add('flex');
-            if (titleElement) titleElement.innerText = "إدارة الدعم والمحادثات المباشرة";
+            if (titleElement) titleElement.innerText = "المحادثات النشطة";
             if (subtitleElement) {
-                subtitleElement.innerText = "تواصل مع عملائك عبر القنوات المفعّلة في النظام من مكان واحد";
+                subtitleElement.innerText = "إدارة العملاء والرد الذكي";
                 subtitleElement.classList.remove('hidden');
             }
         } else if (sectionId === 'errors-section') {
@@ -128,10 +129,15 @@ window.Dashboard.navigation = {
         const sidebar = document.getElementById('dashboard-sidebar');
         const backdrop = document.getElementById('mobile-menu-backdrop');
         const trigger = document.getElementById('mobile-menu-button');
+        const wasOpen = sidebar?.classList.contains('is-mobile-open');
         if (sidebar) sidebar.classList.remove('is-mobile-open');
         if (backdrop) backdrop.classList.remove('is-visible');
         if (trigger) trigger.setAttribute('aria-expanded', 'false');
         document.body.classList.remove('mobile-menu-open');
+        if (wasOpen && this.mobileMenuReturnFocus instanceof HTMLElement) {
+            this.mobileMenuReturnFocus.focus({ preventScroll: true });
+        }
+        this.mobileMenuReturnFocus = null;
     },
 
     toggleMobileMenu: function() {
@@ -140,10 +146,32 @@ window.Dashboard.navigation = {
         const trigger = document.getElementById('mobile-menu-button');
         if (!sidebar || !backdrop || !trigger) return;
         const willOpen = !sidebar.classList.contains('is-mobile-open');
+        if (willOpen) this.mobileMenuReturnFocus = document.activeElement;
         sidebar.classList.toggle('is-mobile-open', willOpen);
         backdrop.classList.toggle('is-visible', willOpen);
         trigger.setAttribute('aria-expanded', String(willOpen));
         document.body.classList.toggle('mobile-menu-open', willOpen);
+        if (willOpen) {
+            requestAnimationFrame(() => sidebar.querySelector('button, a[href]')?.focus({ preventScroll: true }));
+        }
+
+    },
+
+    trapMobileMenuFocus: function(event) {
+        const sidebar = document.getElementById('dashboard-sidebar');
+        if (event.key !== 'Tab' || !sidebar?.classList.contains('is-mobile-open')) return;
+        const focusable = [...sidebar.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+            .filter(element => element.getClientRects().length > 0);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
     },
 
     hasUnsavedChanges: function() {
@@ -179,10 +207,11 @@ window.showSection = window.Dashboard.navigation.showSection;
 document.addEventListener('DOMContentLoaded', () => {
     const trigger = document.getElementById('mobile-menu-button');
     const backdrop = document.getElementById('mobile-menu-backdrop');
-    if (trigger) trigger.addEventListener('click', window.Dashboard.navigation.toggleMobileMenu);
-    if (backdrop) backdrop.addEventListener('click', window.Dashboard.navigation.closeMobileMenu);
+    if (trigger) trigger.addEventListener('click', () => window.Dashboard.navigation.toggleMobileMenu());
+    if (backdrop) backdrop.addEventListener('click', () => window.Dashboard.navigation.closeMobileMenu());
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') window.Dashboard.navigation.closeMobileMenu();
+        else window.Dashboard.navigation.trapMobileMenuFocus(event);
     });
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) window.Dashboard.navigation.closeMobileMenu();

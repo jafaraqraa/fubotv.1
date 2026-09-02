@@ -1,4 +1,6 @@
 const path = require('path');
+const restoreResult = require('./src/services/pendingRestoreService').applyPendingRestore();
+if (restoreResult) console.log(JSON.stringify({ level: 'info', event: 'backup_restore_applied', ...restoreResult }));
 const {
     installProcessOutputGuards,
     isDetachedOutputError
@@ -39,7 +41,7 @@ const { initializeSocketServer, closeSocketServer } = require('./src/realtime/so
 initializeSocketServer(httpServer);
 
 const { reportError } = require('./src/services/logger');
-const { initializeTelegramOnStartup, getBot } = require('./src/channels/telegram');
+const { initializeTelegramOnStartup, stopBot } = require('./src/channels/telegram');
 const { startWhatsApp } = require('./src/channels/whatsapp');
 const whatsappManager = require('./src/channels/whatsapp-providers/WhatsAppProviderManager');
 const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
@@ -188,13 +190,10 @@ async function gracefulShutdown(signal, exitCode = 0, cause = null) {
             console.error(JSON.stringify({ level: 'error', event: 'socket_shutdown_failed', error: e.message }));
         }
 
-        const bot = getBot();
-        if (bot) {
-            try {
-                await withTimeout(bot.stop(signal), 5000, 'Telegram shutdown');
-            } catch (e) {
-                console.error(JSON.stringify({ level: 'error', event: 'telegram_shutdown_failed', error: e.message }));
-            }
+        try {
+            await withTimeout(stopBot(signal), 5000, 'Telegram shutdown');
+        } catch (e) {
+            console.error(JSON.stringify({ level: 'error', event: 'telegram_shutdown_failed', error: e.message }));
         }
 
         try {
@@ -241,6 +240,7 @@ process.on('unhandledRejection', (reason) => {
 });
 process.on('SIGINT', () => void gracefulShutdown('SIGINT', 0));
 process.on('SIGTERM', () => void gracefulShutdown('SIGTERM', 0));
+process.on('fubot:restore-ready', () => void gracefulShutdown('RESTORE_REQUESTED', 75));
 
 function listenHttpServer() {
     return new Promise((resolve, reject) => {

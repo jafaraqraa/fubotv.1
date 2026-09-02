@@ -39,6 +39,12 @@ node backend/scripts/production-backup.js --output=/secure/backups/futhing-YYYYM
 node backend/scripts/verify-production-backup.js /secure/backups/futhing-YYYYMMDD
 ```
 
+For the single-host deployment, `npm run backup` creates and verifies a full
+SQLite/uploads/Qdrant backup under `backend/data/backups/production` and keeps
+14 days by default. Override the destination and retention with
+`FUTHING_BACKUP_DIR` and `FUTHING_BACKUP_RETENTION_DAYS`. WhatsApp session
+storage is intentionally excluded unless the backup destination is encrypted.
+
 The backup is successful only after the verifier passes. It contains a
 WAL-consistent SQLite backup, uploads, checksums, and a downloaded Qdrant
 collection snapshot. Also back up WhatsApp session storage only if the storage

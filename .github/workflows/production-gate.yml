@@ -19,9 +19,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Install Playwright Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
       - run: npm audit --omit=dev --audit-level=critical
       - run: npm test
         env:
           SESSION_SECRET: ci_session_secret_with_at_least_32_characters
       - run: npm run build
+      - name: Run complete Playwright suite
+        run: npx playwright test
       - run: docker build --tag futhing:${{ github.sha }} .

@@ -47,6 +47,7 @@ async function downloadRemoteFile(url, fileName) {
 }
 
 function getExtensionFromMime(mimetype) {
+    const normalizedMime = String(mimetype || '').split(';')[0].trim().toLowerCase();
     const map = {
         'image/jpeg': 'jpg',
         'image/png': 'png',
@@ -59,7 +60,7 @@ function getExtensionFromMime(mimetype) {
         'audio/amr': 'amr',
         'application/pdf': 'pdf'
     };
-    return map[mimetype] || 'bin';
+    return map[normalizedMime] || 'bin';
 }
 
 module.exports = {

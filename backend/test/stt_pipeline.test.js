@@ -102,6 +102,40 @@ test('STT Provider - OpenRouter transcription formatting and call', async (t) =>
     }
 });
 
+test('STT Provider - Gemini sends inline audio and returns Arabic text', async () => {
+    const { GeminiProvider } = require('../src/services/aiProviders');
+    const gemini = new GeminiProvider('gemini-2.5-flash', 'mock-gemini-key');
+    const originalFetch = global.fetch;
+    let requestedUrl = '';
+    let requestedBody = null;
+
+    global.fetch = async (url, config) => {
+        requestedUrl = String(url);
+        requestedBody = JSON.parse(config.body);
+        return {
+            ok: true,
+            json: async () => ({
+                candidates: [{ content: { parts: [{ text: 'مساء الخير' }] } }]
+            })
+        };
+    };
+
+    try {
+        const transcript = await gemini.transcribe({
+            localPath: tempAudioPath,
+            mimeType: 'audio/ogg',
+            fileName: 'temp_test_audio.ogg'
+        });
+        assert.strictEqual(transcript, 'مساء الخير');
+        assert.ok(requestedUrl.includes('/models/gemini-2.5-flash:generateContent'));
+        const inlineData = requestedBody.contents[0].parts[1].inlineData;
+        assert.strictEqual(inlineData.mimeType, 'audio/ogg');
+        assert.ok(inlineData.data.length > 0);
+    } finally {
+        global.fetch = originalFetch;
+    }
+});
+
 test('Speech-to-Text Pipeline - Audio detection, routing, and text-pipeline handoff', async (t) => {
     // Configure text_generation and speech_to_text tasks in SQLite or defaults
     const { saveTaskConfig } = require('../src/database/repositories/aiTaskRepository');

@@ -19,8 +19,11 @@ window.Dashboard.composer = {
         });
         const input = document.getElementById('direct-msg-input');
         if (input) {
-            input.addEventListener('keyup', event => this.handleInputKey(event));
-            input.addEventListener('input', () => this.detectCannedResponseTrigger(input));
+            input.addEventListener('keydown', event => this.handleInputKey(event));
+            input.addEventListener('input', () => {
+                this.detectCannedResponseTrigger(input);
+                this.resizeInput(input);
+            });
         }
         const dropZone = document.getElementById('input-wrapper');
         if (dropZone) {
@@ -151,13 +154,20 @@ window.Dashboard.composer = {
         if (!input || !sendBtn) return;
 
         if (type === 'note') {
+            tabNote?.setAttribute('aria-selected', 'true');
+            tabReply?.setAttribute('aria-selected', 'false');
             if (tabNote) tabNote.className = "text-amber-600 border-b-2 border-amber-500 pb-1.5 transition";
             if (tabReply) tabReply.className = "text-slate-400 hover:text-slate-600 pb-1.5 transition";
-            input.placeholder = "اكتب ملاحظة داخلية سرية هنا... لن تظهر للعميل.";
+            input.placeholder = "اكتب ملاحظة داخلية...";
             input.className = "flex-1 p-3 border border-amber-200 bg-amber-50/50 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-amber-500 transition";
             sendBtn.className = "bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm font-cairo";
-            sendBtn.innerText = "حفظ الملاحظة";
+            sendBtn.querySelector('.send-button-label').textContent = "حفظ الملاحظة";
+            document.getElementById('media-upload-btn')?.setAttribute('aria-hidden', 'true');
+            document.getElementById('media-upload-btn')?.classList.add('composer-attachment-disabled');
+            this.clearMediaUpload();
         } else {
+            tabReply?.setAttribute('aria-selected', 'true');
+            tabNote?.setAttribute('aria-selected', 'false');
             if (tabReply) tabReply.className = "text-blue-600 border-b-2 border-blue-600 pb-1.5 transition";
             if (tabNote) tabNote.className = "text-slate-400 hover:text-slate-600 pb-1.5 transition";
             const selectedUser = window.Dashboard.state.usersCache.find(
@@ -165,11 +175,21 @@ window.Dashboard.composer = {
             );
             input.placeholder = selectedUser
                 ? window.Dashboard.chatThemes.get(selectedUser.platform).composerPlaceholder
-                : "اكتب ردك هنا... اكتب / لعرض الردود الجاهزة";
+                : "اكتب ردك للعميل...";
             input.className = "flex-1 p-3 border border-slate-200 bg-white rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition";
             sendBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm font-cairo";
-            sendBtn.innerText = "إرسال";
+            sendBtn.querySelector('.send-button-label').textContent = "إرسال";
+            document.getElementById('media-upload-btn')?.removeAttribute('aria-hidden');
+            document.getElementById('media-upload-btn')?.classList.remove('composer-attachment-disabled');
         }
+        this.resizeInput(input);
+    },
+
+    resizeInput: function(input = document.getElementById('direct-msg-input')) {
+        if (!input) return;
+        input.style.height = 'auto';
+        input.style.height = `${Math.min(Math.max(input.scrollHeight, 44), 120)}px`;
+        input.style.overflowY = input.scrollHeight > 120 ? 'auto' : 'hidden';
     },
 
     detectCannedResponseTrigger: function(element) {
@@ -218,7 +238,8 @@ window.Dashboard.composer = {
     },
 
     handleInputKey: function(event) {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+            event.preventDefault();
             window.Dashboard.composer.sendDirectMessage();
         }
     },
@@ -233,7 +254,12 @@ window.Dashboard.composer = {
         if (!message && !window.Dashboard.state.selectedMediaFile) return;
 
         try {
-            if (sendBtn) sendBtn.disabled = true;
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.setAttribute('aria-busy', 'true');
+                sendBtn.querySelector('.send-button-label')?.classList.add('hidden');
+                sendBtn.querySelector('.send-button-progress')?.classList.remove('hidden');
+            }
             const selectedUser = window.Dashboard.state.usersCache.find(
                 user => String(user.id) === String(window.Dashboard.state.selectedUserId)
             );
@@ -289,6 +315,7 @@ window.Dashboard.composer = {
                 }
                 this.setUploadProgress(100, 'تم الإرسال');
                 input.value = '';
+                this.resizeInput(input);
                 window.Dashboard.composer.clearMediaUpload();
                 window.Dashboard.composer.setMessageType('reply');
                 await window.Dashboard.chat.fetchChatHistory();
@@ -308,7 +335,12 @@ window.Dashboard.composer = {
         } finally {
             this.activeAbortController = null;
             this.activeXhr = null;
-            if (sendBtn) sendBtn.disabled = false;
+            if (sendBtn) {
+                sendBtn.disabled = false;
+                sendBtn.removeAttribute('aria-busy');
+                sendBtn.querySelector('.send-button-label')?.classList.remove('hidden');
+                sendBtn.querySelector('.send-button-progress')?.classList.add('hidden');
+            }
         }
     },
 

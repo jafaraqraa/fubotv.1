@@ -7,6 +7,7 @@ window.Dashboard.chat = {
     requestSequence: 0,
     lastRenderFingerprint: '',
     focusManagementEscalation: false,
+    mobileListScrollTop: 0,
 
     init: function() {
         const chatBox = document.getElementById('chat-box');
@@ -96,10 +97,17 @@ window.Dashboard.chat = {
                     assignmentStatus,
                     ...managementActions,
                     search,
-                    this.createAutomationButton(user)
+                    this.createAutomationButton(user),
+                    this.createDeleteButton(user)
                 );
             } else {
-                actions.replaceChildren(assignmentStatus, ...managementActions, search, this.createAutomationButton(user));
+                actions.replaceChildren(
+                    assignmentStatus,
+                    ...managementActions,
+                    search,
+                    this.createAutomationButton(user),
+                    this.createDeleteButton(user)
+                );
             }
         }
     },
@@ -161,6 +169,77 @@ window.Dashboard.chat = {
             window.Dashboard.conversationControls.openConfirmModal(user.id, user.name, user.isAIEnabled);
         });
         return button;
+    },
+
+    createDeleteButton: function(user) {
+        const button = window.Dashboard.utils.createElement('button', {
+            className: 'channel-icon-button is-destructive',
+            text: '🗑',
+            attributes: {
+                type: 'button',
+                title: 'حذف المحادثة',
+                'aria-label': `حذف محادثة ${user.name || 'العميل'}`
+            }
+        });
+        button.addEventListener('click', () => this.confirmDeleteConversation(user, button));
+        return button;
+    },
+
+    confirmDeleteConversation: async function(user, trigger) {
+        if (!user?.conversationId) {
+            window.Dashboard.feedback.notify('تعذّر تحديد المحادثة.', 'error');
+            return;
+        }
+        const confirmed = await window.Dashboard.feedback.confirm({
+            title: 'حذف المحادثة؟',
+            description: `سيتم حذف محادثة ${user.name || 'هذا العميل'} وجميع رسائلها ومرفقاتها نهائياً.`,
+            confirmLabel: 'حذف المحادثة',
+            cancelLabel: 'إلغاء',
+            destructive: true
+        });
+        if (!confirmed) return;
+        trigger.disabled = true;
+        try {
+            const response = await window.Dashboard.api.request(`/api/conversations/${encodeURIComponent(user.conversationId)}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر حذف المحادثة');
+            this.handleConversationDeleted(user.conversationId, user.id);
+            window.Dashboard.feedback.notify('تم حذف المحادثة.');
+            window.Dashboard.analytics.fetchStatsAndUsers();
+        } catch (error) {
+            trigger.disabled = false;
+            window.Dashboard.feedback.notify(error.message || 'تعذر حذف المحادثة.', 'error');
+        }
+    },
+
+    handleConversationDeleted: function(conversationId, userId) {
+        window.Dashboard.state.usersCache = window.Dashboard.state.usersCache.filter(user =>
+            String(user.conversationId) !== String(conversationId)
+        );
+        if (String(window.Dashboard.state.selectedUserId) === String(userId)) {
+            window.Dashboard.state.selectedUserId = null;
+            this.currentMessages = [];
+            this.requestSequence += 1;
+            document.getElementById('chat-user-header-info')?.replaceChildren(
+                window.Dashboard.utils.createElement('div', { text: 'اختر محادثة للبدء' })
+            );
+            document.getElementById('chat-box')?.replaceChildren(
+                window.Dashboard.utils.createElement('p', {
+                    className: 'text-slate-400 text-center my-auto text-[12px]',
+                    text: 'اختر محادثة لعرض الرسائل'
+                })
+            );
+            document.getElementById('assignee-container')?.classList.add('hidden');
+            document.getElementById('chat-header-actions')?.replaceChildren();
+            ['direct-msg-input', 'send-btn', 'media-upload-btn'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.disabled = true;
+            });
+            this.closeConversationOnMobile();
+        }
+        window.Dashboard.users.renderUsersList();
     },
 
     configureConversationControls: function(user) {
@@ -280,6 +359,11 @@ window.Dashboard.chat = {
             }));
         }
         chatBox.replaceChildren(...nodes);
+        if (wasNearBottom || messages.length <= this.visibleMessageLimit) {
+            chatBox.querySelectorAll('.message-media-frame.is-loading').forEach(frame => {
+                frame.dataset.stickToBottom = 'true';
+            });
+        }
         const escalationTarget = this.focusManagementEscalation
             ? chatBox.querySelector('.is-management-escalation:last-of-type')
             : null;
@@ -349,13 +433,129 @@ window.Dashboard.chat = {
 
     createInternalNote: function(message) {
         const dom = window.Dashboard.utils;
-        const note = dom.createElement('aside', { className: 'channel-internal-note' });
+        const note = dom.createElement('aside', {
+            className: 'channel-internal-note',
+            attributes: { 'aria-label': 'ملاحظة داخلية لا تظهر للعميل' }
+        });
+        if (message.id) note.dataset.messageId = String(message.id);
+        const text = dom.createElement('p', { text: message.text });
+        const actions = dom.createElement('div', { className: 'internal-note-actions' });
+        const edit = dom.createElement('button', {
+            text: 'تعديل',
+            attributes: { type: 'button', 'aria-label': 'تعديل الملاحظة الداخلية' }
+        });
+        const remove = dom.createElement('button', {
+            className: 'is-danger', text: 'حذف',
+            attributes: { type: 'button', 'aria-label': 'حذف الملاحظة الداخلية' }
+        });
+        edit.addEventListener('click', () => this.openInternalNoteEditor(note, message));
+        remove.addEventListener('click', () => this.confirmDeleteInternalNote(message));
+        actions.append(edit, remove);
         note.append(
-            dom.createElement('strong', { text: 'ملاحظة داخلية · Staff only' }),
-            dom.createElement('p', { text: message.text }),
-            dom.createElement('time', { text: message.time || '' })
+            dom.createElement('strong', { text: 'ملاحظة داخلية' }),
+            text,
+            dom.createElement('time', { text: message.time || '' }),
+            actions
         );
         return note;
+    },
+
+    openInternalNoteEditor: function(noteElement, message) {
+        if (!message.id || noteElement.querySelector('.internal-note-editor')) return;
+        const dom = window.Dashboard.utils;
+        const original = noteElement.querySelector('p');
+        const actions = noteElement.querySelector('.internal-note-actions');
+        const editor = dom.createElement('div', { className: 'internal-note-editor' });
+        const textarea = dom.createElement('textarea', {
+            attributes: {
+                rows: '3', maxlength: '5000',
+                'aria-label': 'محتوى الملاحظة الداخلية'
+            }
+        });
+        textarea.value = String(message.text || '');
+        const controls = dom.createElement('div', { className: 'internal-note-editor-actions' });
+        const save = dom.createElement('button', { text: 'حفظ', attributes: { type: 'button' } });
+        const cancel = dom.createElement('button', { text: 'إلغاء', attributes: { type: 'button' } });
+        const close = () => {
+            editor.remove();
+            original?.classList.remove('hidden');
+            actions?.classList.remove('hidden');
+        };
+        cancel.addEventListener('click', close);
+        save.addEventListener('click', async () => {
+            const content = textarea.value.trim();
+            if (!content) {
+                window.Dashboard.feedback.notify('محتوى الملاحظة فارغ.', 'error');
+                textarea.focus();
+                return;
+            }
+            save.disabled = true;
+            cancel.disabled = true;
+            try {
+                const response = await window.Dashboard.api.request(`/api/messages/${encodeURIComponent(message.id)}/note`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.error || 'تعذر تعديل الملاحظة');
+                this.applyInternalNoteUpdate(message.id, content);
+                window.Dashboard.feedback.notify('تم تعديل الملاحظة.');
+            } catch (error) {
+                save.disabled = false;
+                cancel.disabled = false;
+                window.Dashboard.feedback.notify(error.message || 'تعذر تعديل الملاحظة.', 'error');
+            }
+        });
+        controls.append(save, cancel);
+        editor.append(textarea, controls);
+        original?.classList.add('hidden');
+        actions?.classList.add('hidden');
+        noteElement.appendChild(editor);
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    },
+
+    confirmDeleteInternalNote: async function(message) {
+        if (!message.id) return;
+        const confirmed = await window.Dashboard.feedback.confirm({
+            title: 'حذف الملاحظة الداخلية؟',
+            description: 'سيتم حذف هذه الملاحظة نهائياً، ولن تظهر للمشرفين بعد ذلك.',
+            confirmLabel: 'حذف الملاحظة',
+            cancelLabel: 'إلغاء',
+            destructive: true
+        });
+        if (!confirmed) return;
+        try {
+            const response = await window.Dashboard.api.request(`/api/messages/${encodeURIComponent(message.id)}/note`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر حذف الملاحظة');
+            this.applyInternalNoteDelete(message.id);
+            window.Dashboard.feedback.notify('تم حذف الملاحظة.');
+        } catch (error) {
+            window.Dashboard.feedback.notify(error.message || 'تعذر حذف الملاحظة.', 'error');
+        }
+    },
+
+    applyInternalNoteUpdate: function(messageId, content) {
+        const message = this.currentMessages.find(item => String(item.id) === String(messageId));
+        if (message) message.text = content;
+        this.lastRenderFingerprint = '';
+        const user = window.Dashboard.state.usersCache.find(
+            item => String(item.id) === String(window.Dashboard.state.selectedUserId)
+        );
+        this.renderMessageList(this.currentMessages, user?.platform || 'messenger');
+    },
+
+    applyInternalNoteDelete: function(messageId) {
+        this.currentMessages = this.currentMessages.filter(item => String(item.id) !== String(messageId));
+        this.lastRenderFingerprint = '';
+        const user = window.Dashboard.state.usersCache.find(
+            item => String(item.id) === String(window.Dashboard.state.selectedUserId)
+        );
+        this.renderMessageList(this.currentMessages, user?.platform || 'messenger');
     },
 
     createMessageContent: function(message, channel) {
@@ -403,12 +603,53 @@ window.Dashboard.chat = {
     },
 
     createImage: function(url, alt, className) {
+        const dom = window.Dashboard.utils;
+        const frame = dom.createElement('figure', { className: 'message-media-frame is-loading' });
         const image = window.Dashboard.utils.createElement('img', {
             className,
             attributes: { alt, loading: 'lazy', decoding: 'async' }
         });
+        const status = dom.createElement('span', {
+            className: 'message-media-status',
+            text: 'جاري تحميل الصورة…',
+            attributes: { role: 'status' }
+        });
+        const retry = dom.createElement('button', {
+            className: 'message-media-retry hidden',
+            text: 'إعادة المحاولة',
+            attributes: { type: 'button' }
+        });
+        const load = () => {
+            frame.classList.remove('is-loading', 'has-error');
+            status.classList.add('hidden');
+            retry.classList.add('hidden');
+            if (frame.dataset.stickToBottom === 'true') {
+                requestAnimationFrame(() => {
+                    const chatBox = document.getElementById('chat-box');
+                    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+                    delete frame.dataset.stickToBottom;
+                });
+            }
+        };
+        const fail = () => {
+            frame.classList.remove('is-loading');
+            frame.classList.add('has-error');
+            status.textContent = 'تعذر تحميل الصورة';
+            status.classList.remove('hidden');
+            retry.classList.remove('hidden');
+        };
+        image.addEventListener('load', load);
+        image.addEventListener('error', fail);
+        retry.addEventListener('click', () => {
+            frame.classList.add('is-loading');
+            frame.classList.remove('has-error');
+            status.textContent = 'جاري تحميل الصورة…';
+            retry.classList.add('hidden');
+            window.Dashboard.utils.setAuthenticatedMediaSource(image, url);
+        });
+        frame.append(image, status, retry);
         window.Dashboard.utils.setAuthenticatedMediaSource(image, url);
-        return image;
+        return frame;
     },
 
     createFileCard: function(url, name) {
@@ -445,16 +686,31 @@ window.Dashboard.chat = {
 
     createMessageStatus: function(status, channel) {
         const normalized = String(status || 'sent').toLowerCase();
+        const labels = {
+            pending: 'قيد الإرسال', sending: 'قيد الإرسال', sent: 'مرسلة',
+            delivered: 'مسلّمة', read: 'مقروءة', seen: 'مقروءة', failed: 'فشل الإرسال'
+        };
         let symbol = '✓';
         if (normalized === 'delivered') symbol = '✓✓';
         if (normalized === 'read' || normalized === 'seen') symbol = '✓✓';
         if (normalized === 'failed') symbol = '!';
         if (normalized === 'sending' || normalized === 'pending') symbol = '◷';
-        return window.Dashboard.utils.createElement('span', {
+        const element = window.Dashboard.utils.createElement('span', {
             className: `message-status status-${normalized} status-${channel}`,
-            text: symbol,
-            attributes: { title: normalized }
+            attributes: { title: labels[normalized] || normalized, 'aria-label': labels[normalized] || normalized }
         });
+        element.append(
+            window.Dashboard.utils.createElement('span', { className: 'message-status-symbol', text: symbol }),
+            window.Dashboard.utils.createElement('span', { className: 'message-status-label', text: labels[normalized] || normalized })
+        );
+        return element;
+    },
+
+    applyDeliveryStatus: function(messageId, status, channel) {
+        const message = document.querySelector(`[data-message-id="${CSS.escape(String(messageId))}"]`);
+        if (!message) return;
+        const current = message.querySelector('.message-status');
+        if (current) current.replaceWith(this.createMessageStatus(status, channel || window.Dashboard.state.selectedChannel));
     },
 
     createTypingIndicator: function(channel) {
@@ -559,12 +815,24 @@ window.Dashboard.chat = {
 
     showConversationOnMobile: function() {
         const section = document.getElementById('chat-section');
-        if (section) section.classList.add('mobile-conversation-open');
+        if (!section || !window.matchMedia('(max-width: 767px)').matches) return;
+        const list = document.getElementById('users-list');
+        this.mobileListScrollTop = list ? list.scrollTop : 0;
+        section.classList.add('mobile-conversation-open');
+        document.getElementById('conversation-mobile-back')?.focus({ preventScroll: true });
     },
 
     closeConversationOnMobile: function() {
         const section = document.getElementById('chat-section');
-        if (section) section.classList.remove('mobile-conversation-open');
+        if (!section) return;
+        section.classList.remove('mobile-conversation-open');
+        document.querySelector('.channel-header-controls')?.classList.remove('is-mobile-actions-open');
+        document.getElementById('mobile-chat-actions-toggle')?.setAttribute('aria-expanded', 'false');
+        requestAnimationFrame(() => {
+            const list = document.getElementById('users-list');
+            if (list) list.scrollTop = this.mobileListScrollTop;
+            document.querySelector(`[data-customer-id="${CSS.escape(String(window.Dashboard.state.selectedUserId || ''))}"]`)?.focus({ preventScroll: true });
+        });
     },
 
     isSafeMediaUrl: function(value) {

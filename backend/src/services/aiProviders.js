@@ -417,6 +417,51 @@ Adapter Used: GeminiProvider`);
             return null;
         }
     }
+
+    async transcribe(media) {
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const absolutePath = media.localPath.startsWith('/') && !media.localPath.startsWith('/uploads')
+                ? media.localPath
+                : path.join(__dirname, '..', '..', 'public', media.localPath);
+            if (!fs.existsSync(absolutePath)) return null;
+
+            const fileBuffer = fs.readFileSync(absolutePath);
+            if (fileBuffer.length > 20 * 1024 * 1024) {
+                throw new Error('Gemini inline audio is limited to 20 MB.');
+            }
+            const model = this.model || 'gemini-2.5-flash';
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
+            console.log(`🎙️ [Gemini STT] Requesting Arabic transcription using model: [${model}]...`);
+
+            const response = await reliableFetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        role: 'user',
+                        parts: [
+                            { text: 'فرّغ الكلام المسموع في هذا التسجيل بالعربية فقط. أعد النص المنطوق دون شرح أو علامات اقتباس.' },
+                            { inlineData: { mimeType: media.mimeType || 'audio/ogg', data: fileBuffer.toString('base64') } }
+                        ]
+                    }]
+                })
+            });
+            const data = await response.json();
+            if (data.error) {
+                reportError('Gemini STT API', data.error.message || JSON.stringify(data.error));
+                return null;
+            }
+            const text = data.candidates?.[0]?.content?.parts
+                ?.map(part => part.text || '').join('\n').trim();
+            console.log(`🎙️ [Gemini STT] Response received hasText=${Boolean(text)}`);
+            return text || null;
+        } catch (error) {
+            console.error('❌ [Gemini STT] Error:', error.message);
+            return null;
+        }
+    }
 }
 
 /**
@@ -635,16 +680,17 @@ function getAIProviderForTask(taskName) {
         // Enforce combination validation
         validateProviderModelCombination(providerKey, model);
 
-        // Resolve API key reference
+        // The API-key registry is authoritative because operators can rotate a
+        // key from the dashboard while an older environment value still exists.
+        // Fall back to the configured environment/setting only when the registry
+        // has no active key for this exact provider.
         let apiKey = '';
-        if (config.api_key_ref) {
-            apiKey = process.env[config.api_key_ref] || settingsRepository.getSetting(config.api_key_ref);
-        }
-        // Resolve the active key for this exact provider from the centralized
-        // API-key registry. Never fall back to another provider's credentials.
-        if (!apiKey && providerKey !== 'ollama') {
+        if (providerKey !== 'ollama') {
             const { getApiKeyForProvider } = require('./budgetService');
-            apiKey = getApiKeyForProvider(providerKey);
+            apiKey = getApiKeyForProvider(providerKey) || '';
+        }
+        if (!apiKey && config.api_key_ref) {
+            apiKey = process.env[config.api_key_ref] || settingsRepository.getSetting(config.api_key_ref) || '';
         }
 
         const baseUrl = process.env.AI_BASE_URL;

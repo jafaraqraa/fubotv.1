@@ -213,12 +213,16 @@ window.Dashboard.whatsapp = {
         const container = document.getElementById('wa-qr-container');
         const logoutBtn = document.getElementById('wa-logout-btn');
 
-        if (badge) badge.innerText = data.status.toUpperCase();
+        const localizedStatus = {
+            connected: 'متصل', disconnected: 'غير متصل', connecting: 'جارٍ الاتصال',
+            standby: 'غير نشط', failed: 'متعذر'
+        }[String(data.status || '').toLowerCase()] || data.status;
+        if (badge) badge.innerText = localizedStatus;
 
         const select = document.getElementById('wa-provider-select');
         const isCloud = select && select.value === 'cloud';
 
-        if (data.status === "متصل") {
+        if (localizedStatus === "متصل") {
             if (badge) badge.className = "text-[12px] px-3 py-1 rounded-full font-bold bg-green-100 text-green-700 uppercase";
             if (sidebarBadge) sidebarBadge.className = "w-1.5 h-1.5 rounded-full bg-green-500";
             if (settingsBadge) {
@@ -228,9 +232,9 @@ window.Dashboard.whatsapp = {
             if (logoutBtn) logoutBtn.classList.remove('hidden');
 
             if (container && isCloud) {
-                container.replaceChildren(this.createStatusMessage('Cloud Gateway Active', 'WhatsApp Cloud API is configured and ready'));
+                container.replaceChildren(this.createStatusMessage('WhatsApp Cloud API متصل', 'الحساب جاهز لاستقبال وإرسال الرسائل.'));
             } else if (container) {
-                container.replaceChildren(this.createStatusMessage('Web Gateway Active', 'Ready for incoming traffic'));
+                container.replaceChildren(this.createStatusMessage('واتساب ويب متصل', 'الحساب جاهز لاستقبال وإرسال الرسائل.'));
             }
         } else if (data.status === "انتظار المسح" && !isCloud) {
             if (badge) badge.className = "text-[12px] px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-700 uppercase";
@@ -251,7 +255,7 @@ window.Dashboard.whatsapp = {
                 }
                 wrapper.append(image, window.Dashboard.utils.createElement('p', {
                     className: 'text-[12px] text-slate-400 uppercase tracking-wider font-semibold',
-                    text: 'Scanning required...'
+                    text: 'امسح الرمز من تطبيق واتساب لإكمال الاتصال.'
                 }));
                 container.replaceChildren(wrapper);
             }
@@ -265,7 +269,7 @@ window.Dashboard.whatsapp = {
             if (logoutBtn) logoutBtn.classList.add('hidden');
             if (container) container.replaceChildren(window.Dashboard.utils.createElement('p', {
                 className: 'text-[12px] text-red-500 uppercase tracking-wider',
-                text: 'Gateway offline...'
+                text: 'الاتصال غير متاح حاليًا.'
             }));
         }
     },
@@ -274,7 +278,7 @@ window.Dashboard.whatsapp = {
         const wrapper = window.Dashboard.utils.createElement('div', { className: 'text-center space-y-2' });
         wrapper.append(
             window.Dashboard.utils.createElement('div', {
-                className: 'font-bold text-green-600 uppercase tracking-widest text-[12px]',
+                className: 'font-bold text-green-600 text-[12px]',
                 text: title
             }),
             window.Dashboard.utils.createElement('p', {

@@ -53,6 +53,67 @@ window.Dashboard.rag = {
         window.Dashboard.rag.renderActivityLogs();
     },
 
+    ensureAccess: async function() {
+        try {
+            const statusResponse = await window.Dashboard.api.request('/api/v1/rag/access/status');
+            const status = await statusResponse.json();
+            if (status.success && status.unlocked) return true;
+        } catch (_) { /* The unlock form will show a useful server error. */ }
+
+        const modal = document.getElementById('rag-access-modal');
+        const form = document.getElementById('rag-access-form');
+        const input = document.getElementById('rag-access-password');
+        const error = document.getElementById('rag-access-error');
+        const submit = document.getElementById('rag-access-submit');
+        const cancel = document.getElementById('rag-access-cancel');
+        if (!modal || !form || !input || !error || !submit) return false;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        error.classList.add('hidden');
+        error.textContent = '';
+        input.value = '';
+        window.setTimeout(() => input.focus(), 50);
+
+        return new Promise(resolve => {
+            const close = result => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                form.onsubmit = null;
+                if (cancel) cancel.onclick = null;
+                resolve(result);
+            };
+
+            if (cancel) cancel.onclick = () => {
+                close(false);
+            };
+
+            form.onsubmit = async event => {
+                event.preventDefault();
+                error.classList.add('hidden');
+                submit.disabled = true;
+                submit.textContent = 'جاري التحقق...';
+                try {
+                    const response = await window.Dashboard.api.request('/api/v1/rag/access/unlock', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: input.value })
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) throw new Error(result.error || 'تعذر فتح الإعدادات.');
+                    close(true);
+                } catch (unlockError) {
+                    error.textContent = unlockError.message;
+                    error.classList.remove('hidden');
+                    input.select();
+                } finally {
+                    submit.disabled = false;
+                    submit.textContent = 'فتح الإعدادات';
+                }
+            };
+        });
+    },
+
     // A. Fetch Expandable Source Types
     fetchSourceTypes: async function() {
         try {
@@ -1109,6 +1170,10 @@ window.Dashboard.rag = {
         const section = window.Dashboard.state.activeDirtySection;
         if (!section) return;
 
+        // Manual knowledge is treated as a knowledge file and remains available
+        // without the secondary settings password.
+        if (section !== 'manual' && !await window.Dashboard.rag.ensureAccess()) return;
+
         const payload = {
             ragDefaultTopK: parseInt(document.getElementById('rag-opt-default-top-k').value, 10),
             ragMinTopK: parseInt(document.getElementById('rag-opt-min-top-k').value, 10),
@@ -1600,6 +1665,8 @@ window.Dashboard.rag = {
             return false;
         }
 
+        if (!await window.Dashboard.rag.ensureAccess()) return false;
+
         try {
             const response = await window.Dashboard.api.request('/api/v1/rag/reconciliation/run', {
                 method: 'POST',
@@ -1650,6 +1717,7 @@ window.Dashboard.rag = {
 
     // L. Live Playground Query with optional Debug Mode (Goal 4 & Goal 7)
     queryPlayground: async function() {
+        if (!await window.Dashboard.rag.ensureAccess()) return;
         const queryInp = document.getElementById('rag-playground-query');
         if (!queryInp) return;
         const question = queryInp.value.trim();

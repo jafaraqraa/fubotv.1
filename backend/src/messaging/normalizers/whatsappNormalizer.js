@@ -5,7 +5,8 @@ function normalizeWhatsAppMessage(
     mediaType = 'text',
     fileExt = '',
     profileImageRemoteUrl = null,
-    resolvedPhoneNumber = null
+    resolvedPhoneNumber = null,
+    contentOverride = null
 ) {
     const userId = String(msg.from || '');
     const isPhoneWid = /@(?:c\.us|s\.whatsapp\.net)$/i.test(userId);
@@ -14,7 +15,7 @@ function normalizeWhatsAppMessage(
         ? String(rawPhoneNumber).replace(/@(?:c\.us|s\.whatsapp\.net)$/i, '').replace(/\D/g, '') || null
         : null;
     const displayName = contact.pushname || contact.name || (phoneNumber ? `+${phoneNumber}` : 'عميل واتساب');
-    const userText = localPath || msg.body || '';
+    const userText = localPath || contentOverride || msg.body || '';
 
     let media = null;
     if (localPath) {

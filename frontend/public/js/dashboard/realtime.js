@@ -113,6 +113,24 @@ window.Dashboard.realtime = {
             }
         });
 
+        socket.on('message:updated', (envelope) => {
+            const data = envelope.data;
+            if (!data || String(window.Dashboard.state.selectedUserId) !== String(data.userId)) return;
+            window.Dashboard.chat.applyInternalNoteUpdate(data.messageId, data.content);
+        });
+
+        socket.on('message:delivery-updated', (envelope) => {
+            const data = envelope.data;
+            if (!data || String(window.Dashboard.state.selectedUserId) !== String(data.userId)) return;
+            window.Dashboard.chat.applyDeliveryStatus(data.messageId, data.deliveryStatus, data.channel);
+        });
+
+        socket.on('message:deleted', (envelope) => {
+            const data = envelope.data;
+            if (!data || String(window.Dashboard.state.selectedUserId) !== String(data.userId)) return;
+            window.Dashboard.chat.applyInternalNoteDelete(data.messageId);
+        });
+
         // B. Unread Count Updated Event
         socket.on('unread:updated', (envelope) => {
             const data = envelope.data;
@@ -148,6 +166,13 @@ window.Dashboard.realtime = {
             if (data && String(window.Dashboard.state.selectedUserId) === String(data.userId)) {
                 window.Dashboard.chat.selectUser(data.userId);
             }
+            window.Dashboard.analytics.fetchStatsAndUsers();
+        });
+
+        socket.on('conversation:deleted', (envelope) => {
+            const data = envelope.data;
+            if (!data) return;
+            window.Dashboard.chat.handleConversationDeleted(data.conversationId, data.userId);
             window.Dashboard.analytics.fetchStatsAndUsers();
         });
 

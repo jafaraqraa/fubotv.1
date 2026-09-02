@@ -99,9 +99,14 @@ function updateMessageDelivery(messageId, deliveryStatus, details = {}) {
     }
     const metadata = Object.keys(details).length > 0 ? JSON.stringify(details) : null;
     return db.transaction(() => {
-        const current = db.prepare(
-            'SELECT delivery_status FROM messages WHERE id = ?'
-        ).get(messageId);
+        const current = db.prepare(`
+            SELECT m.delivery_status, m.tenant_id, m.channel,
+                   ca.external_user_id AS user_id
+            FROM messages m
+            JOIN conversations c ON c.id = m.conversation_id
+            JOIN channel_accounts ca ON ca.id = c.channel_account_id
+            WHERE m.id = ?
+        `).get(messageId);
         if (!current) {
             const error = new Error('Message not found.');
             error.code = 'MESSAGE_NOT_FOUND';
@@ -132,6 +137,13 @@ function updateMessageDelivery(messageId, deliveryStatus, details = {}) {
             error.code = 'MESSAGE_STATUS_CONFLICT';
             throw error;
         }
+        publish(EVENTS.MESSAGE_DELIVERY_UPDATED, {
+            messageId,
+            userId: String(current.user_id),
+            channel: current.channel,
+            deliveryStatus,
+            tenantId: current.tenant_id
+        }, { tenantId: current.tenant_id });
         return true;
     })();
 }
@@ -180,6 +192,37 @@ function listMessages(userId, tenantId = 'default', channel = null) {
             time: formattedTime
         };
     });
+}
+
+function findInternalNote(messageId, tenantId) {
+    return db.prepare(`
+        SELECT m.id, m.content, m.conversation_id, ca.external_user_id
+        FROM messages m
+        JOIN conversations c ON c.id = m.conversation_id AND c.tenant_id = m.tenant_id
+        JOIN channel_accounts ca ON ca.id = c.channel_account_id
+        WHERE m.id = ? AND m.tenant_id = ? AND m.is_internal_note = 1
+    `).get(String(messageId), tenantId);
+}
+
+function updateInternalNote(messageId, tenantId, content) {
+    const note = findInternalNote(messageId, tenantId);
+    if (!note) return null;
+    const result = db.prepare(`
+        UPDATE messages SET content = ?
+        WHERE id = ? AND tenant_id = ? AND is_internal_note = 1
+    `).run(content, String(messageId), tenantId);
+    if (result.changes !== 1) return null;
+    return { ...note, content };
+}
+
+function deleteInternalNote(messageId, tenantId) {
+    const note = findInternalNote(messageId, tenantId);
+    if (!note) return null;
+    const result = db.prepare(`
+        DELETE FROM messages
+        WHERE id = ? AND tenant_id = ? AND is_internal_note = 1
+    `).run(String(messageId), tenantId);
+    return result.changes === 1 ? note : null;
 }
 
 function markMessageForManagement(messageId, tenantId, reason) {
@@ -299,6 +342,13 @@ function markOutboundReadThrough(externalUserId, channel, tenantId, watermark) {
         WHERE id = ? AND delivery_status IN ('sent', 'delivered')
     `);
     db.transaction(() => rows.forEach(row => update.run(row.id)))();
+    rows.forEach(row => publish(EVENTS.MESSAGE_DELIVERY_UPDATED, {
+        messageId: row.id,
+        userId: String(externalUserId),
+        channel,
+        deliveryStatus: 'read',
+        tenantId
+    }, { tenantId }));
     return rows.map(row => row.external_message_id).filter(Boolean);
 }
 
@@ -308,6 +358,8 @@ module.exports = {
     resolveManagementRequest,
     updateMessageDelivery,
     listMessages,
+    updateInternalNote,
+    deleteInternalNote,
     existsByExternalId,
     getChatHistoryForAI,
     getMessagesCount,

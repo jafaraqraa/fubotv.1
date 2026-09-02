@@ -538,6 +538,7 @@ window.Dashboard.settings = {
     submitMetaVerifySettings: function() {
         const metaVerifyToken = document.getElementById('meta-verify-input').value.trim();
         const metaAppSecret = document.getElementById('meta-app-secret-input').value.trim();
+        const instagramAppSecret = document.getElementById('instagram-app-secret-input').value.trim();
 
         if (!metaVerifyToken || !metaAppSecret) {
             window.Dashboard.settings.showToast('يرجى إدخال Verify Token وMeta App Secret.', 'error');
@@ -546,7 +547,7 @@ window.Dashboard.settings = {
 
         window.Dashboard.conversationControls.openSettingsConfirmModal(
             'meta',
-            { metaVerifyToken, metaAppSecret },
+            { metaVerifyToken, metaAppSecret, instagramAppSecret },
             'مزامنة Webhook؟',
             'سيتم تحديث توكن المصافحة وسر التطبيق للتحقق من توقيع طلبات Meta Webhook.',
             'WEBHOOK',
@@ -717,6 +718,163 @@ window.Dashboard.settings = {
         } catch (e) {
             console.error('Error updating settings card badges:', e);
         }
+    },
+
+    formatBackupSize: function(bytes) {
+        if (!Number.isFinite(bytes) || bytes < 0) return '—';
+        if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    },
+
+    loadBackupStatus: async function() {
+        const badge = document.getElementById('badge-backup');
+        const status = document.getElementById('backup-card-status');
+        const button = document.getElementById('backup-download-btn');
+        if (!badge || !status || !button) return;
+        try {
+            const response = await window.Dashboard.api.request(`/api/backups/status?_=${Date.now()}`, { cache: 'no-store' });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر قراءة حالة النسخ الاحتياطي.');
+            button.disabled = Boolean(result.inProgress);
+            if (result.restorePending) {
+                button.disabled = false;
+                badge.textContent = 'بانتظار التشغيل';
+                badge.className = 'badge-status warning';
+                status.textContent = 'النسخة جاهزة؛ ستُطبّق عند إعادة تشغيل FuBot.';
+                return result;
+            }
+            if (result.inProgress) {
+                badge.textContent = 'قيد التنفيذ';
+                badge.className = 'badge-status warning';
+                status.textContent = 'يتم الآن إنشاء نسخة متحققة…';
+                return result;
+            }
+            if (result.lastError) {
+                button.disabled = false;
+                badge.textContent = 'فشل آخر نسخ';
+                badge.className = 'badge-status danger';
+                status.textContent = result.lastError;
+                return result;
+            }
+            if (!result.latest) {
+                badge.textContent = 'لا توجد نسخة';
+                badge.className = 'badge-status danger';
+                status.textContent = 'أنشئ أول نسخة احتياطية للنظام.';
+                return result;
+            }
+            const date = new Intl.DateTimeFormat('ar', { dateStyle: 'medium', timeStyle: 'short' })
+                .format(new Date(result.latest.createdAt));
+            badge.textContent = result.latest.verified ? 'نسخة سليمة' : 'تحتاج فحص';
+            badge.className = `badge-status ${result.latest.verified ? 'active' : 'warning'}`;
+            status.textContent = `آخر نسخة: ${date} · ${this.formatBackupSize(result.latest.sizeBytes)}${result.latest.qdrantIncluded ? ' · تشمل RAG' : ''}`;
+            return result;
+        } catch (error) {
+            badge.textContent = 'تعذر الفحص';
+            badge.className = 'badge-status danger';
+            status.textContent = window.Dashboard.utils.userFacingError(error);
+            return { success: false, lastError: error.message };
+        }
+    },
+
+    createBackup: async function() {
+        const button = document.getElementById('backup-download-btn');
+        const label = button?.querySelector('.backup-button-label');
+        if (!button || button.disabled) return;
+        button.disabled = true;
+        if (label) label.textContent = 'جارٍ بدء النسخ…';
+        try {
+            const response = await window.Dashboard.api.request('/api/backups', { method: 'POST' });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'تعذر بدء النسخ الاحتياطي.');
+            this.showToast('بدأ إنشاء النسخة الاحتياطية، وسيتم فحصها تلقائيًا.');
+            await this.loadBackupStatus();
+            const poll = setInterval(async () => {
+                const statusResult = await this.loadBackupStatus();
+                if (!statusResult?.inProgress) {
+                    clearInterval(poll);
+                    if (statusResult?.lastError || statusResult?.success === false) {
+                        button.disabled = false;
+                        if (label) label.textContent = 'تنزيل نسخة جديدة';
+                        this.showToast(statusResult.lastError || 'فشل إنشاء النسخة.', 'error');
+                        return;
+                    }
+                    if (label) label.textContent = 'يبدأ التنزيل الآن…';
+                    window.Dashboard.settings.downloadLatestBackup();
+                    setTimeout(() => {
+                        button.disabled = false;
+                        if (label) label.textContent = 'تنزيل نسخة جديدة';
+                    }, 1500);
+                }
+            }, 1500);
+        } catch (error) {
+            button.disabled = false;
+            if (label) label.textContent = 'تنزيل نسخة جديدة';
+            this.showToast(error.message, 'error');
+        }
+    },
+
+    chooseBackupForRestore: function() {
+        document.getElementById('backup-restore-file')?.click();
+    },
+
+    downloadLatestBackup: function() {
+        const url = window.Dashboard.api.resolveUrl('/api/backups/latest/download');
+        window.location.assign(url);
+    },
+
+    restoreBackup: async function(file) {
+        if (!file) return;
+        const confirmed = window.confirm('سيتم استبدال بيانات FuBot الحالية بمحتوى هذه النسخة بعد إعادة تشغيل الخادم. هل تريد المتابعة؟');
+        if (!confirmed) return;
+        const button = document.getElementById('backup-restore-btn');
+        const label = button?.querySelector('.backup-restore-label');
+        if (button) button.disabled = true;
+        if (label) label.textContent = 'جارٍ الرفع والفحص…';
+        try {
+            const body = new FormData();
+            body.append('backup', file);
+            const response = await window.Dashboard.api.request('/api/backups/restore', { method: 'POST', body });
+            const result = await response.json();
+            if (!response.ok || !result.success) throw new Error(result.error || 'فشل استرداد النسخة.');
+            this.showToast(result.message);
+            const status = document.getElementById('backup-card-status');
+            const badge = document.getElementById('badge-backup');
+            if (status) status.textContent = 'النسخة جاهزة؛ أعد تشغيل FuBot لإتمام الاستعادة.';
+            if (badge) { badge.textContent = 'بانتظار التشغيل'; badge.className = 'badge-status warning'; }
+            this.waitForRestoreRestart();
+        } catch (error) {
+            this.showToast(error.message, 'error');
+            if (button) button.disabled = false;
+            if (label) label.textContent = 'رفع نسخة واسترداد البيانات';
+        } finally {
+            const input = document.getElementById('backup-restore-file');
+            if (input) input.value = '';
+        }
+    },
+
+    waitForRestoreRestart: function() {
+        let observedOffline = false;
+        let attempts = 0;
+        const check = async () => {
+            attempts += 1;
+            try {
+                const response = await fetch('/api/v1/backups/status', {
+                    credentials: 'include',
+                    cache: 'no-store'
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    if (!result.restorePending && (observedOffline || attempts >= 3)) {
+                        window.location.reload();
+                        return;
+                    }
+                }
+            } catch (_) {
+                observedOffline = true;
+            }
+            if (attempts < 150) setTimeout(check, 2000);
+        };
+        setTimeout(check, 2000);
     },
 
     // 10. Utils inside Drawer
@@ -1640,6 +1798,16 @@ window.saveCustomModelUI = async function() {
 
 // Bind provider change listener on startup or when settings open
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('backup-restore-btn')?.addEventListener('click', () => {
+        window.Dashboard.settings.chooseBackupForRestore();
+    });
+    document.getElementById('backup-download-btn')?.addEventListener('click', () => {
+        window.Dashboard.settings.createBackup();
+    });
+    document.getElementById('backup-restore-file')?.addEventListener('change', event => {
+        window.Dashboard.settings.restoreBackup(event.target.files?.[0]);
+    });
+    window.Dashboard.settings.loadBackupStatus();
     const provSelect = document.getElementById('ai-provider-select');
     if (provSelect) {
         provSelect.addEventListener('change', (e) => {

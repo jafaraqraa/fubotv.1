@@ -2,6 +2,31 @@
 window.Dashboard = window.Dashboard || {};
 
 window.Dashboard.errors = {
+    friendlyError: function(error) {
+        const type = String(error?.type || '').toUpperCase();
+        const message = String(error?.message || '');
+        if (type.includes('STARTUP') || /EADDRINUSE/i.test(message)) {
+            return {
+                title: 'تعذر تشغيل إحدى خدمات النظام',
+                description: /EADDRINUSE/i.test(message)
+                    ? 'المنفذ المطلوب مستخدم من خدمة أخرى.'
+                    : 'تعذر بدء الخدمة المطلوبة، وتحتاج إلى مراجعة.'
+            };
+        }
+        if (type.includes('OPENROUTER') || type.includes('PROVIDER') || /API key/i.test(message)) {
+            return {
+                title: 'تعذر الاتصال بمزود الذكاء الاصطناعي',
+                description: /expired|invalid|key/i.test(message)
+                    ? 'بيانات الاتصال بالمزود تحتاج إلى تحديث.'
+                    : 'المزود غير متاح حاليًا أو لم يستجب للطلب.'
+            };
+        }
+        if (/timeout|timed out/i.test(message)) {
+            return { title: 'تأخرت استجابة إحدى الخدمات', description: 'لم تصل استجابة ضمن الوقت المتوقع.' };
+        }
+        return { title: 'حدث عطل يحتاج إلى المراجعة', description: 'راجع التفاصيل التقنية لمعرفة سبب العطل.' };
+    },
+
     fetchErrors: async function() {
         const tableBody = document.getElementById('errors-table-body');
         if (tableBody) {
@@ -21,6 +46,7 @@ window.Dashboard.errors = {
 
             const dom = window.Dashboard.utils;
             const rows = errors.map(err => {
+                const friendly = this.friendlyError(err);
                 const row = dom.createElement('tr', { className: 'border-b border-slate-100 font-inter text-[12px]' });
                 const timestamp = dom.createElement('td', {
                     className: 'p-4 text-slate-400 tracking-tighter uppercase'
@@ -32,7 +58,7 @@ window.Dashboard.errors = {
                 );
                 const statusCell = dom.createElement('td', { className: 'p-4' });
                 statusCell.appendChild(dom.createElement('span', {
-                    className: `px-2 py-0.5 rounded-full font-bold ${err.solved ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`,
+                    className: `px-2 py-0.5 rounded-full font-bold ${err.solved ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-700'}`,
                     text: err.solved ? 'تم الحل' : 'بحاجة للمتابعة'
                 }));
                 const actionCell = dom.createElement('td', { className: 'p-4 text-center' });
@@ -47,10 +73,27 @@ window.Dashboard.errors = {
                     button.addEventListener('click', () => window.Dashboard.errors.solveError(err.id));
                     actionCell.appendChild(button);
                 }
+                const messageCell = dom.createElement('td', { className: 'p-4 text-red-500 font-mono tracking-tighter max-w-xs break-words' });
+                messageCell.appendChild(dom.createElement('span', {
+                    className: 'error-desktop-message',
+                    text: err.message
+                }));
+                const mobilePresentation = dom.createElement('div', { className: 'error-mobile-presentation' });
+                const technicalDetails = dom.createElement('details', { className: 'error-technical-details' });
+                technicalDetails.append(
+                    dom.createElement('summary', { text: 'عرض التفاصيل التقنية' }),
+                    dom.createElement('code', { text: `${err.type || 'ERROR'}\n${err.message || ''}` })
+                );
+                mobilePresentation.append(
+                    dom.createElement('strong', { text: friendly.title }),
+                    dom.createElement('p', { text: friendly.description }),
+                    technicalDetails
+                );
+                messageCell.appendChild(mobilePresentation);
                 row.append(
                     timestamp,
                     dom.createElement('td', { className: 'p-4 font-bold text-slate-700 uppercase', text: err.type }),
-                    dom.createElement('td', { className: 'p-4 text-red-500 font-mono tracking-tighter max-w-xs break-words', text: err.message }),
+                    messageCell,
                     statusCell,
                     actionCell
                 );

@@ -17,7 +17,8 @@ const db = require('../src/database/connection');
 const { initializeDatabase } = require('../src/database/initialize');
 initializeDatabase();
 const mediaRepo = require('../src/database/repositories/mediaAttachmentRepository');
-const { sendMetaMessage } = require('../src/channels/meta');
+const { sendMetaMessage, splitMetaText } = require('../src/channels/meta');
+const webhookRouter = require('../src/routes/webhooks');
 
 const originalFetch = global.fetch;
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'futh-meta-media-'));
@@ -74,6 +75,11 @@ test('Messenger and Instagram media use attachment upload and real send response
                 assert.equal(result.messageId, `${platform}-${type}-message`);
                 assert.equal(result.attachmentId, `${platform}-${type}-attachment`);
                 assert.equal(calls.length, 2);
+                assert.ok(calls.every(call => call.url.startsWith(
+                    platform === 'instagram'
+                        ? 'https://graph.instagram.com/'
+                        : 'https://graph.facebook.com/'
+                )));
                 assert.ok(calls[0].options.body instanceof FormData);
                 const sent = JSON.parse(calls[1].options.body);
                 assert.equal(sent.message.attachment.payload.attachment_id,
@@ -150,6 +156,56 @@ test('media attachment persistence is tenant isolated', () => {
         () => mediaRepo.updateAttachment(stored.id, 'tenant-b', { status: 'failed' }),
         /not found/
     );
+});
+
+test('Messenger text longer than 2000 characters is split into ordered valid messages', async () => {
+    const longText = `${'كلمة '.repeat(700)}النهاية`;
+    const expectedParts = splitMetaText(longText);
+    const sentParts = [];
+    global.fetch = async (_url, options) => {
+        sentParts.push(JSON.parse(options.body).message.text);
+        return response(200, { message_id: `part-${sentParts.length}` });
+    };
+    try {
+        const result = await sendMetaMessage('recipient', longText, 'messenger');
+        assert.equal(result.success, true);
+        assert.ok(sentParts.length > 1);
+        assert.deepEqual(sentParts, expectedParts);
+        assert.ok(sentParts.every(part => Array.from(part).length <= 2000));
+        assert.deepEqual(result.messageIds, sentParts.map((_, index) => `part-${index + 1}`));
+        assert.equal(result.messageId, `part-${sentParts.length}`);
+    } finally {
+        global.fetch = originalFetch;
+    }
+});
+
+test('Meta media downloader follows only trusted redirects', async () => {
+    const calls = [];
+    global.fetch = async url => {
+        calls.push(String(url));
+        if (calls.length === 1) {
+            return {
+                ok: false,
+                status: 302,
+                headers: new Headers({ location: 'https://cdn.fbsbx.com/media/audio.ogg' })
+            };
+        }
+        return { ok: true, status: 200, headers: new Headers() };
+    };
+    try {
+        const result = await webhookRouter.fetchMetaMedia('https://facebook.com/attachment/1');
+        assert.equal(result.status, 200);
+        assert.deepEqual(calls, [
+            'https://facebook.com/attachment/1',
+            'https://cdn.fbsbx.com/media/audio.ogg'
+        ]);
+        await assert.rejects(
+            webhookRouter.fetchMetaMedia('https://example.com/not-meta'),
+            /not trusted/
+        );
+    } finally {
+        global.fetch = originalFetch;
+    }
 });
 
 test.after(() => {

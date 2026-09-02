@@ -28,6 +28,7 @@ const { rerankCandidates } = require('../rag/services/rerankingService');
 const { decomposeQuery } = require('../rag/intelligence/queryDecomposer');
 const { retrieveIntentAwareContext } = require('../rag/intelligence/intentRetriever');
 const { getRetrievalPlan } = require('../rag/intelligence/retrievalPlanner');
+const { requestedKnowledgeMediaType } = require('../rag/intelligence/mediaRequestDetector');
 const { EvidenceMetadata, EvidenceIndex, EvidenceBuilder, GroundingValidator } = require('../rag/intelligence/citationGrounding');
 const {
     RETRIEVAL_MODE,
@@ -113,7 +114,12 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
     }
 
     const tenantId = requireTenantId(retrievalContext.tenantId, 'context-retrieval');
-    const tenantContext = { ...retrievalContext, tenantId };
+    const tenantContext = {
+        ...retrievalContext,
+        tenantId,
+        requestedMediaType: retrievalContext.requestedMediaType
+            || requestedKnowledgeMediaType(query)
+    };
     assertPromptGuardAvailable();
     const profiling = {
         startTime: Date.now(),

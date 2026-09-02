@@ -23,4 +23,4 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD ["node", "-e", "fetch('http://127.0.0.1:3001/live').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["node", "backend/server.js"]
+CMD ["node", "backend/scripts/run-server-supervised.js"]

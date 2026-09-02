@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@750&family=Inter:wght@400;500;600&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- استدعاء مكتبة الرسوم البيانية التفاعلية المعتمدة -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/vendor/chart.umd.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -29,7 +29,7 @@
         }
     </script>
     <!-- استدعاء ملف الأنماط المنسق المستخرج -->
-    <link rel="stylesheet" href="/css/dashboard.css?v=20260828-avatar-fix">
+    <link rel="stylesheet" href="/css/dashboard.css?v=20260828-mobile-composer-fix">
     <link rel="stylesheet" href="/css/settings.css?v=20260828-mobile-settings">
 </head>
 <body class="bg-futh_bg text-slate-800 h-screen flex flex-col tech-grid">
@@ -37,11 +37,11 @@
     <div class="app-shell flex h-full overflow-hidden">
         
         <!-- الشريط الجانبي الأيمن للنظام بهوية FuBot -->
-        <aside id="dashboard-sidebar" class="dashboard-sidebar w-64 bg-slate-900 text-white flex flex-col justify-between hidden md:flex border-l border-slate-800" aria-label="التنقل الرئيسي">
+        <aside id="dashboard-sidebar" class="dashboard-sidebar w-64 bg-white text-slate-800 flex flex-col justify-between hidden md:flex border-l border-slate-200" aria-label="التنقل الرئيسي">
             <div class="p-6">
                 <!-- شعار FuBot -->
                 <div class="sidebar-brand mb-10 px-1 py-2">
-                    <img src="/images/fubot-logo-dark.svg" alt="FuBot — AI Messenger Assistant" class="w-full h-auto">
+                    <img src="/images/fubot-logo.svg" alt="FuBot — AI Messenger Assistant" class="w-full h-auto">
                 </div>
 
                 <nav class="space-y-1.5">
@@ -104,7 +104,7 @@
                     </button>
                 </nav>
             </div>
-            <div class="p-6 border-t border-slate-800 text-xs text-slate-500 font-inter">Futhing © 2026</div>
+            <div class="sidebar-footer p-6 border-t border-slate-200 text-xs text-slate-500 font-inter">Futhing © 2026</div>
         </aside>
 
         <!-- المحتوى الرئيسي (Main Panel) -->
@@ -116,8 +116,8 @@
                         <span></span><span></span><span></span>
                     </button>
                     <div>
-                    <h2 id="page-title" class="sr-only">إدارة الدعم والمحادثات المباشرة</h2>
-                    <p id="page-subtitle" class="sr-only">تواصل مع عملائك عبر القنوات المفعّلة في النظام من مكان واحد</p>
+                    <h2 id="page-title" class="sr-only">المحادثات النشطة</h2>
+                    <p id="page-subtitle" class="sr-only">إدارة العملاء والرد الذكي</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3 space-x-reverse">
@@ -130,7 +130,7 @@
             <div id="chat-section" class="flex-1 flex overflow-hidden p-8 gap-6 channel-workspace">
                 <!-- قائمة المستخدمين النشطين -->
                 <div class="chat-customers-panel w-72 bg-white rounded-xl shadow-sm border border-slate-200/60 flex flex-col overflow-hidden font-cairo">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                    <div class="chat-list-heading p-4 border-b border-slate-100 bg-slate-50/50">
                         <h3 class="font-bold text-xs text-slate-900">المحادثات النشطة</h3>
                         <p class="text-[12px] text-slate-450 mt-0.5">إدارة العملاء والرد اليدوي</p>
                     </div>
@@ -143,12 +143,12 @@
                     </div>
                     
                     <!-- أزرار الفلترة الأنيقة للمنصات -->
-                    <div class="chat-platform-filters px-4 py-2 bg-slate-50/40 border-b border-slate-100 flex flex-wrap gap-1 justify-center text-[12px] font-bold">
-                        <button data-chat-filter="all" id="filter-all" class="flex-1 py-1 px-1.5 text-center rounded bg-blue-600 text-white shadow-sm transition">الكل</button>
-                        <button data-chat-filter="telegram" id="filter-telegram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Telegram</button>
-                        <button data-chat-filter="whatsapp" id="filter-whatsapp" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">WhatsApp</button>
-                        <button data-chat-filter="messenger" id="filter-messenger" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Messenger</button>
-                        <button data-chat-filter="instagram" id="filter-instagram" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Instagram</button>
+                    <div class="chat-platform-filters px-4 py-2 bg-slate-50/40 border-b border-slate-100 flex flex-wrap gap-1 justify-center text-[12px] font-bold" role="tablist" aria-label="تصفية المحادثات حسب القناة">
+                        <button data-chat-filter="all" id="filter-all" role="tab" aria-selected="true" class="flex-1 py-1 px-1.5 text-center rounded bg-blue-600 text-white shadow-sm transition">الكل</button>
+                        <button data-chat-filter="telegram" id="filter-telegram" role="tab" aria-selected="false" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Telegram</button>
+                        <button data-chat-filter="whatsapp" id="filter-whatsapp" role="tab" aria-selected="false" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">WhatsApp</button>
+                        <button data-chat-filter="messenger" id="filter-messenger" role="tab" aria-selected="false" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Messenger</button>
+                        <button data-chat-filter="instagram" id="filter-instagram" role="tab" aria-selected="false" class="flex-1 py-1 px-1.5 text-center rounded bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition">Instagram</button>
                     </div>
 
                     <div class="chat-customer-search">
@@ -158,7 +158,7 @@
 
                     <div class="chat-export-action px-4 pb-3 bg-slate-50/60 border-b border-slate-100">
                         <button id="export-customers-btn" type="button" class="w-full py-2 px-3 rounded-lg border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[12px] font-bold transition">
-                            تنزيل بيانات الزبائن (CSV)
+                            <span aria-hidden="true">↓</span><span class="export-label-desktop">تنزيل بيانات الزبائن (CSV)</span><span class="export-label-mobile">تصدير CSV</span>
                         </button>
                     </div>
 
@@ -179,12 +179,12 @@
                 <div id="conversation-shell" data-channel="messenger" class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200/60 flex flex-col overflow-hidden relative channel-conversation-shell">
                     <!-- ترويسة المحادثة -->
                     <div class="channel-conversation-header">
-                        <button id="conversation-mobile-back" class="channel-mobile-back" type="button" aria-label="العودة للمحادثات">‹</button>
+                        <button id="conversation-mobile-back" class="channel-mobile-back" type="button" aria-label="العودة إلى قائمة المحادثات">›</button>
                         <div id="chat-user-header-info" class="channel-header-profile">
                             <h3 id="current-chat-user" class="font-bold text-xs text-slate-900">بانتظار اختيار عميل</h3>
                             <p id="current-chat-id" class="text-[12px] text-slate-400 mt-0.5 font-inter">Select a chat to begin</p>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="channel-header-controls flex items-center gap-3">
                             <!-- قائمة الموظفين المسندة إليهم المحادثة (Chat Assignment) -->
                             <div id="assignee-container" class="hidden flex items-center gap-1.5 bg-slate-100/80 px-2.5 py-1 rounded-lg border border-slate-200">
                                 <span class="text-[12px] text-slate-500 font-bold">إسناد:</span>
@@ -197,6 +197,7 @@
                             </div>
                             <!-- أزرار التحكم -->
                             <div id="chat-header-actions"></div>
+                            <button id="mobile-chat-actions-toggle" class="mobile-chat-actions-toggle" type="button" aria-label="المزيد من إجراءات المحادثة" aria-expanded="false">⋯</button>
                         </div>
                     </div>
                     <input id="conversation-search" class="hidden channel-conversation-search" type="search" placeholder="بحث في هذه المحادثة" autocomplete="off">
@@ -207,14 +208,14 @@
                     </div>
 
                     <!-- صندوق إرسال الرسائل والملاحظات والملفات المتقدمة -->
-                    <div class="border-t border-slate-200/60 bg-white p-4 space-y-3 relative">
+                    <div id="chat-composer" class="chat-composer border-t border-slate-200/60 bg-white p-4 space-y-3 relative">
                         
                         <!-- تبويبات نوع الرد (رد مباشر للعميل / ملاحظة داخلية للموظفين) -->
-                        <div class="flex items-center gap-4 text-xs font-bold border-b border-slate-100 pb-2">
-                            <button id="tab-reply" class="text-blue-600 border-b-2 border-blue-600 pb-1.5 transition">
+                        <div class="composer-mode-tabs flex items-center gap-4 text-xs font-bold border-b border-slate-100 pb-2" role="tablist" aria-label="نوع الرسالة">
+                            <button id="tab-reply" type="button" role="tab" aria-selected="true" class="text-blue-600 border-b-2 border-blue-600 pb-1.5 transition">
                                 رد مباشر للعميل
                             </button>
-                            <button id="tab-note" class="text-slate-400 hover:text-slate-600 pb-1.5 transition">
+                            <button id="tab-note" type="button" role="tab" aria-selected="false" class="text-slate-400 hover:text-slate-600 pb-1.5 transition">
                                 ملاحظة داخلية
                             </button>
                         </div>
@@ -244,7 +245,7 @@
                             <!-- توليد الردود السريعة ديناميكياً -->
                         </div>
 
-                        <div class="flex gap-2 items-center" id="input-wrapper" aria-label="اسحب الملف هنا أو اختره من زر الإرفاق">
+                        <div class="composer-input-row flex gap-2 items-end" id="input-wrapper" aria-label="اسحب الملف هنا أو اختره من زر الإرفاق">
                             <!-- حقل رفع ملفات مدمج مخفي -->
                             <input type="file" id="media-upload-input" class="hidden" accept="image/*, application/pdf, audio/*, video/*">
                             
@@ -253,8 +254,8 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                             </button>
 
-                            <input id="direct-msg-input" type="text" class="flex-1 p-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="اكتب ردك هنا... اكتب / لعرض الردود الجاهزة" disabled>
-                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm" disabled>إرسال</button>
+                            <textarea id="direct-msg-input" rows="1" class="flex-1 p-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-600 transition" placeholder="اكتب ردك للعميل..." aria-label="نص الرسالة" disabled></textarea>
+                            <button id="send-btn" type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xs transition shadow-sm" disabled><span class="send-button-label">إرسال</span><span class="send-button-progress hidden" aria-hidden="true">…</span></button>
                         </div>
                     </div>
                 </div>
@@ -262,7 +263,7 @@
             </div>
 
             <!-- التبويب الثاني: تتبع الأعطال -->
-            <div id="errors-section" class="flex-1 hidden p-8 overflow-y-auto">
+            <div id="errors-section" tabindex="0" aria-label="سجل استقرار النظام" class="flex-1 hidden p-8 overflow-y-auto">
                 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200/60 p-8 space-y-6 mt-6">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                         <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wide">تتبع وإدارة الأعطال الفنية</h3>
@@ -291,25 +292,25 @@
             </div>
 
             <!-- التبويب الثالث: تحليلات الأداء -->
-            <div id="analytics-section" class="flex-1 hidden p-10 overflow-y-auto">
+            <div id="analytics-section" tabindex="0" aria-label="تحليلات الأداء" class="flex-1 hidden p-10 overflow-y-auto">
                 <div class="max-w-5xl mx-auto space-y-6 mt-2">
                     
                     <!-- عدادات عليا -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 font-inter">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h4 class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Total Clients</h4>
+                    <div class="analytics-kpi-grid grid grid-cols-1 md:grid-cols-4 gap-6 font-inter">
+                        <div class="analytics-kpi-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 data-mobile-label="إجمالي العملاء" class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Total Clients</h4>
                             <p id="analytics-stat-users" class="text-2xl font-bold text-slate-900">0</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h4 class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Total Interactions</h4>
+                        <div class="analytics-kpi-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 data-mobile-label="إجمالي التفاعلات" class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Total Interactions</h4>
                             <p id="analytics-stat-messages" class="text-2xl font-bold text-slate-900">0</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h4 class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">AI Automation</h4>
+                        <div class="analytics-kpi-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 data-mobile-label="أتمتة الذكاء الاصطناعي" class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">AI Automation</h4>
                             <p class="text-2xl font-bold text-green-600">94.2%</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h4 class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Service Uptime</h4>
+                        <div class="analytics-kpi-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 data-mobile-label="جاهزية الخدمة" class="text-[12px] font-bold text-slate-400 mb-1 uppercase tracking-widest">Service Uptime</h4>
                             <p class="text-2xl font-bold text-blue-600">100%</p>
                         </div>
                     </div>
@@ -320,6 +321,7 @@
                             <h3 class="text-xs font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4 uppercase tracking-wide">توزيع المنصات</h3>
                             <div class="flex-1 relative">
                                 <canvas id="platformChart" class="max-h-56 mx-auto"></canvas>
+                                <p id="platformChartEmpty" class="hidden absolute inset-0 items-center justify-center text-xs text-slate-400">لا توجد بيانات منصات حتى الآن</p>
                             </div>
                         </div>
 
@@ -327,6 +329,7 @@
                             <h3 class="text-xs font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4 uppercase tracking-wide">حجم حركة الرسائل الأسبوعية</h3>
                             <div class="flex-1 relative">
                                 <canvas id="messageChart" class="max-h-56"></canvas>
+                                <p id="messageChartEmpty" class="hidden absolute inset-0 items-center justify-center text-xs text-slate-400">لا توجد رسائل خلال الأيام السبعة الأخيرة</p>
                             </div>
                         </div>
                     </div>
@@ -359,7 +362,7 @@
             </div>
 
             <!-- تبويب إدارة واتساب -->
-            <div id="whatsapp-section" class="flex-1 hidden p-8 overflow-y-auto font-cairo">
+            <div id="whatsapp-section" tabindex="0" aria-label="إعدادات واتساب" class="flex-1 hidden p-8 overflow-y-auto font-cairo">
                 <div class="max-w-2xl mx-auto space-y-6 mt-6">
                     <!-- كارت التحكم الرئيسي ونوع المزود -->
                     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 space-y-6">
@@ -374,9 +377,9 @@
                         <!-- اختيار نوع المزود -->
                         <div class="space-y-2">
                             <label class="block text-xs font-bold text-slate-700">نوع مزود الخدمة النشط:</label>
-                            <select id="wa-provider-select" data-legacy-change="toggleWhatsAppProviderUI()" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                <option value="web">واتساب ويب (QR Code Web Login)</option>
-                                <option value="cloud">بوابة WhatsApp Business Cloud API (رسمي)</option>
+                            <select id="wa-provider-select" aria-label="مزود اتصال واتساب" data-legacy-change="toggleWhatsAppProviderUI()" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                                <option value="web">واتساب ويب — ربط باستخدام QR Code</option>
+                                <option value="cloud">WhatsApp Cloud API — ربط رسمي عبر Meta</option>
                             </select>
                         </div>
 
@@ -386,12 +389,12 @@
                                 <p class="text-xs text-blue-800 leading-relaxed font-arabic">يرجى مسح رمز الاستجابة السريعة (QR Code) عبر تطبيق واتساب للهاتف لربط حساب واتساب ويب بنظام خدمة العملاء.</p>
                             </div>
 
-                            <div id="wa-qr-container" class="flex flex-col items-center justify-center border border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 min-h-[280px]">
+                            <div id="wa-qr-container" class="wa-qr-container flex flex-col items-center justify-center border border-dashed border-slate-200 rounded-xl p-8 bg-slate-50 min-h-[280px]">
                                 <p class="text-[12px] text-slate-400 uppercase tracking-[0.2em]">Requesting Gateway Access...</p>
                             </div>
 
                             <button data-legacy-click="logoutWhatsApp()" id="wa-logout-btn" class="w-full bg-red-650 hover:bg-red-750 text-white font-bold py-2.5 rounded-lg text-[12px] transition hidden uppercase tracking-widest font-inter">
-                                Disconnect & Terminate Session
+                                قطع الاتصال
                             </button>
                         </div>
 
@@ -442,7 +445,7 @@
             </div>
 
             <!-- تبويب الإعدادات المتقدمة (تصميم موحد خالي من تكرار الكروت وتشتت العناصر) -->
-            <div id="settings-section" class="flex-1 hidden p-8 overflow-y-auto settings-container font-cairo">
+            <div id="settings-section" tabindex="0" aria-label="إعدادات النظام" class="flex-1 hidden p-8 overflow-y-auto settings-container font-cairo">
                 <div class="max-w-6xl mx-auto space-y-6 mt-2">
                     
                     <!-- رأس صفحة الإعدادات -->
@@ -581,13 +584,37 @@
                                 </button>
                             </div>
 
+                            <!-- 8. النسخ الاحتياطي -->
+                            <div class="settings-card p-5" id="card-backup">
+                                <div class="settings-card-icon general" aria-hidden="true">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7M8 7V4h8v3M8 12h8m-8 4h5"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-bold text-slate-800">النسخ الاحتياطي</h3>
+                                    <p id="backup-card-status" class="text-[12px] text-slate-500 mt-1" aria-live="polite">جاري فحص آخر نسخة…</p>
+                                </div>
+                                <span class="badge-status warning" id="badge-backup">جارٍ الفحص</span>
+                                <button id="backup-download-btn" type="button" class="btn-manage-settings">
+                                    <span class="backup-button-label">تنزيل نسخة جديدة</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4M5 20h14"></path></svg>
+                                </button>
+                                <input id="backup-restore-file" type="file" accept=".gz,application/gzip" class="hidden" aria-label="اختيار نسخة FuBot لاسترداد البيانات">
+                                <button id="backup-restore-btn" type="button" class="btn-manage-settings" title="اختر نسخة محفوظة من جهازك لاسترداد بيانات FuBot">
+                                    <span class="backup-restore-label">رفع نسخة واسترداد البيانات</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20V8m0 0L8 12m4-4l4 4M5 4h14"></path></svg>
+                                </button>
+                                <p class="text-[12px] leading-5 text-amber-600 text-center mt-2" role="note">
+                                    ملاحظة: إنشاء أو رفع النسخة قد يستغرق عدة دقائق. يرجى الانتظار وعدم إغلاق الصفحة أو الضغط على الزر مرة أخرى حتى تكتمل العملية.
+                                </p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- تبويب إدارة موديلات الذكاء الاصطناعي (AI Models) -->
-            <div id="aimodels-section" data-testid="aimodels-section" class="ai-models-page flex-1 hidden overflow-y-auto font-cairo">
+            <div id="aimodels-section" tabindex="0" aria-label="إدارة موديلات الذكاء الاصطناعي" data-testid="aimodels-section" class="ai-models-page flex-1 hidden overflow-y-auto font-cairo">
 
                 <!-- رأس صفحة الموديلات -->
                 <div class="ai-models-hero">
@@ -618,7 +645,7 @@
             </div>
 
             <!-- تبويب استهلاك واستخدام الذكاء الاصطناعي (AI Usage & Billing) -->
-            <div id="usage-section" class="usage-page flex-1 hidden p-8 overflow-y-auto font-cairo space-y-6">
+            <div id="usage-section" tabindex="0" aria-label="استهلاك الذكاء الاصطناعي" class="usage-page flex-1 hidden p-8 overflow-y-auto font-cairo space-y-6">
                 <!-- رأس الصفحة وأزرار التحديث -->
                 <div class="usage-page-header flex items-center justify-between bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm flex-wrap gap-4">
                     <div class="flex items-center gap-4">
@@ -754,7 +781,20 @@
             </div>
 
             <!-- تبويب نظام المعرفة المتكامل (Knowledge Center) -->
-            <div id="rag-section" class="rag-page flex-1 hidden p-8 overflow-y-auto font-cairo space-y-6">
+            <div id="rag-section" tabindex="0" aria-label="قاعدة المعرفة" class="rag-page flex-1 hidden p-8 overflow-y-auto font-cairo space-y-6">
+
+                <div id="rag-access-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="rag-access-title" dir="rtl">
+                    <form id="rag-access-form" class="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+                        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl" aria-hidden="true">🔒</div>
+                        <h2 id="rag-access-title" class="text-center text-base font-bold text-slate-900">إعدادات RAG محمية</h2>
+                        <p class="mt-2 text-center text-xs leading-6 text-slate-500">أدخل كلمة المرور للوصول إلى ساحة التجربة وإعدادات الفهرسة.</p>
+                        <label for="rag-access-password" class="mt-5 block text-xs font-bold text-slate-700">كلمة المرور</label>
+                        <input id="rag-access-password" type="password" inputmode="numeric" autocomplete="current-password" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-base tracking-[0.25em] outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="•••••••">
+                        <p id="rag-access-error" class="mt-2 hidden text-center text-xs font-bold text-red-600" role="alert"></p>
+                        <button id="rag-access-submit" type="submit" class="mt-4 w-full rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60">فتح الإعدادات</button>
+                        <button id="rag-access-cancel" type="button" class="mt-2 w-full rounded-xl px-4 py-2.5 text-xs font-bold text-slate-500 transition hover:bg-slate-50">رجوع</button>
+                    </form>
+                </div>
 
                 <!-- رأس صفحة نظام المعرفة -->
                 <div class="rag-page-header flex items-center justify-between bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm flex-wrap gap-4">
@@ -775,8 +815,10 @@
                     </div>
                 </div>
 
+                <button id="rag-advanced-toggle" class="rag-advanced-toggle" type="button" aria-expanded="false" aria-controls="rag-advanced-status">حالة النظام المتقدمة <span aria-hidden="true">⌄</span></button>
+
                 <!-- 7. Collection Health Widget -->
-                <div class="rag-health-bar bg-slate-50/50 p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between text-xs gap-4 shrink-0 font-arabic select-none flex-wrap">
+                <div id="rag-advanced-status" class="rag-health-bar bg-slate-50/50 p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between text-xs gap-4 shrink-0 font-arabic select-none flex-wrap">
                     <div class="font-bold text-slate-700 shrink-0">🔌 حالة تكامل البنية التحتية:</div>
                     <div class="flex flex-wrap gap-4 items-center flex-1 justify-end">
                         <div class="flex items-center gap-1.5" id="rag-health-sqlite">
@@ -1805,6 +1847,11 @@
                                         <input id="meta-app-secret-input" type="password" class="futh-input pe-10" placeholder="Meta App Secret" autocomplete="new-password">
                                         <button type="button" data-legacy-click="togglePasswordVisibility('meta-app-secret-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
                                     </div>
+                                    <label class="futh-label mt-3">INSTAGRAM APP SECRET</label>
+                                    <div class="relative">
+                                        <input id="instagram-app-secret-input" type="password" class="futh-input pe-10" placeholder="Instagram App Secret" autocomplete="new-password">
+                                        <button type="button" data-legacy-click="togglePasswordVisibility('instagram-app-secret-input')" class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 hover:text-slate-600 text-xs">عرض</button>
+                                    </div>
                                     <p class="mt-1.5 text-[12px] leading-relaxed text-slate-400">من Meta Developers ← App settings ← Basic ← App secret. لن يتم عرضه كاملًا بعد الحفظ.</p>
                                 </div>
                                 <div>
@@ -2161,28 +2208,28 @@
     <script src="/config.js"></script>
     <script src="/vendor/dompurify.min.js"></script>
     <script src="/js/dashboard/state.js"></script>
-    <script src="/js/dashboard/utils.js?v=20260828-ux-audit"></script>
+    <script src="/js/dashboard/utils.js?v=20260828-mobile-composer-fix"></script>
     <script src="/js/dashboard/api.js"></script>
     <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
     <script src="/js/dashboard/realtime.js"></script>
     <script src="/js/dashboard/feedback.js?v=20260828-ux-closure"></script>
     <script src="/js/dashboard/auth.js?v=20260828-ux-closure"></script>
-    <script src="/js/dashboard/navigation.js?v=20260828-ux-closure"></script>
-    <script src="/js/dashboard/users.js?v=20260828-readable-timestamp"></script>
+    <script src="/js/dashboard/navigation.js?v=20260828-mobile-system-pass"></script>
+    <script src="/js/dashboard/users.js?v=20260828-mobile-conversations-redesign"></script>
     <script src="/js/dashboard/chatThemes.js"></script>
-    <script src="/js/dashboard/chat.js?v=20260828-mobile-assignment"></script>
-    <script src="/js/dashboard/composer.js"></script>
+    <script src="/js/dashboard/chat.js?v=20260828-mobile-composer-fix"></script>
+    <script src="/js/dashboard/composer.js?v=20260828-mobile-composer-fix"></script>
     <script src="/js/dashboard/conversationControls.js?v=20260828-ux-audit"></script>
     <script src="/js/dashboard/analyticsApi.js"></script>
     <script src="/js/dashboard/analyticsStore.js"></script>
     <script src="/js/dashboard/analyticsDashboard.js?v=20260828-ux-audit"></script>
-    <script src="/js/dashboard/errors.js?v=20260828-ux-audit"></script>
-    <script src="/js/dashboard/whatsapp.js?v=20260828-startup-status-sync"></script>
+    <script src="/js/dashboard/errors.js?v=20260828-mobile-system-pass"></script>
+    <script src="/js/dashboard/whatsapp.js?v=20260828-mobile-system-pass"></script>
     <script src="/js/dashboard/apiKeys.js?v=20260828-mobile-usage"></script>
-    <script src="/js/dashboard/settings.js?v=20260729-meta-secret"></script>
-    <script src="/js/dashboard/rag.js?v=20260825-rag-document-reindex-fix"></script>
+    <script src="/js/dashboard/settings.js?v=20260901-backup-wait-note"></script>
+    <script src="/js/dashboard/rag.js?v=20260828-rag-password-lock"></script>
     <script src="/js/dashboard/aimodels.js"></script>
     <script src="/js/dashboard/eventBindings.js"></script>
-    <script src="/js/dashboard/main.js?v=20260828-ux-closure"></script>
+    <script src="/js/dashboard/main.js?v=20260828-mobile-system-pass"></script>
 </body>
 </html>
