@@ -1,0 +1,69 @@
+{
+  "suite": "derived-provenance-holdout-v1",
+  "tenantId": "unseen-energy-coop",
+  "cases": [
+    {
+      "id": "cross-chunk-percentage",
+      "question": "كم تصبح الرسوم بعد الحسم؟",
+      "answer": "الرسوم بعد حسم 15% تصبح 306 شيقل.",
+      "evidence": [
+        { "id": "fee-premise", "text": "رسوم العضوية 360 شيقل." },
+        { "id": "rebate-premise", "text": "حسم التجديد 15% على رسوم العضوية." }
+      ],
+      "expectedDecision": "ALLOW",
+      "expectedEvidenceIds": ["fee-premise", "rebate-premise"]
+    },
+    {
+      "id": "user-value-threshold",
+      "question": "مساهمتي 1100 شيقل، هل تحقق الشرط؟",
+      "answer": "المساهمة 1100 شيقل تحقق شرط أكثر من 950 شيقل.",
+      "evidence": [
+        { "id": "eligibility-premise", "text": "الأهلية متاحة عند مساهمة أكثر من 950 شيقل." }
+      ],
+      "expectedDecision": "ALLOW",
+      "expectedEvidenceIds": ["eligibility-premise"]
+    },
+    {
+      "id": "user-base-percentage",
+      "question": "الفاتورة 275 شيقل، كم تصبح بعد التخفيض؟",
+      "answer": "الفاتورة بعد التخفيض تصبح 220 شيقل.",
+      "evidence": [
+        { "id": "reduction-premise", "text": "تخفيض الكفاءة 20% على الفاتورة." }
+      ],
+      "expectedDecision": "ALLOW",
+      "expectedEvidenceIds": ["reduction-premise"]
+    },
+    {
+      "id": "direct-control",
+      "question": "كم مدة المعالجة؟",
+      "answer": "مدة المعالجة 35 دقيقة.",
+      "evidence": [
+        { "id": "duration-premise", "text": "مدة المعالجة 35 دقيقة." }
+      ],
+      "expectedDecision": "ALLOW",
+      "expectedEvidenceIds": ["duration-premise"]
+    },
+    {
+      "id": "mixed-tenant-negative",
+      "question": "كم تصبح الرسوم بعد الحسم؟",
+      "answer": "الرسوم بعد حسم 15% تصبح 306 شيقل.",
+      "evidence": [
+        { "id": "local-fee", "text": "رسوم العضوية 360 شيقل." },
+        { "id": "foreign-rebate", "tenantId": "unseen-foreign-owner", "text": "حسم التجديد 15% على رسوم العضوية." }
+      ],
+      "expectedDecision": "BLOCK",
+      "expectedEvidenceIds": []
+    },
+    {
+      "id": "fake-id-negative",
+      "question": "كم مدة المعالجة؟",
+      "answer": "مدة المعالجة 35 دقيقة.",
+      "evidence": [
+        { "id": "real-duration", "text": "مدة المعالجة 35 دقيقة." }
+      ],
+      "mutateEvidenceIds": ["non-server-id"],
+      "expectedDecision": "BLOCK",
+      "expectedEvidenceIds": []
+    }
+  ]
+}

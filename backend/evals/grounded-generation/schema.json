@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision", "answer", "claims", "missingInformation", "clarificationQuestion"],
+  "properties": {
+    "decision": {"enum": ["ANSWER", "NO_ANSWER", "CLARIFY"]},
+    "answer": {"type": "string"},
+    "claims": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["text", "evidenceIds"], "properties": {"text": {"type": "string"}, "evidenceIds": {"type": "array", "items": {"type": "string"}}}}},
+    "missingInformation": {"type": "array", "items": {"type": "string"}},
+    "clarificationQuestion": {"type": ["string", "null"]}
+  }
+}

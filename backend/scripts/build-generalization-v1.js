@@ -1,0 +1,179 @@
+#!/usr/bin/env node
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.join(__dirname, '..', 'evals', 'generalization', 'v1');
+
+const companies = [
+{
+ tenantId:'gen_electronics', company:'برق تك', domain:'electronics',
+ documents:[
+  {id:'elec-products',name:'دليل المنتجات والأسعار.md',content:'# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.'},
+  {id:'elec-warranty',name:'الضمان والصيانة.md',content:'# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل.'},
+  {id:'elec-delivery',name:'الشحن والتركيب.md',content:'# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً.'},
+  {id:'elec-returns',name:'الإرجاع والمخزون.md',content:'# الإرجاع والمخزون\nيمكن إرجاع الجهاز غير المفتوح خلال 10 أيام. يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام. الملحقات المخفضة لا ترد. عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.'},
+  {id:'elec-offers',name:'العروض المؤقتة.md',validFrom:'2026-09-01',validTo:'2026-09-10',content:'# عروض سبتمبر\nخصم 12% على هاتف رمال X ساري من 1 سبتمبر 2026 حتى 10 سبتمبر 2026. عرض سماعات البرق المنتهي كان بقيمة 20% وانتهى في 31 أغسطس 2026.'},
+  {id:'elec-contact',name:'الفروع والتواصل.md',content:'# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء.'}
+ ],
+ answers:[
+  ['قديش سعر لابتوب ندى 14؟',['2890 شيكل'],['elec-products']],['ما سعر ندى 14 برو؟',['3490 شيكل'],['elec-products']],['سعر تلفون رمال X لو سمحت',['1790 شيكل'],['elec-products']],['نقل البيانات وإعداد الهاتف بكم؟',['80 شيكل'],['elec-products']],
+  ['كم ضمان اللابتوبات؟',['24 شهرا'],['elec-warranty']],['ضمان التلفونات قديش؟',['18 شهرا'],['elec-warranty']],['والاكسسوارات شو كفالتها؟',['6 اشهر'],['elec-warranty']],['البطارية داخلة بالضمان لأي مدة؟',['12 شهرا'],['elec-warranty']],['انكسر الجهاز، الضمان بغطيه؟',['لا يغطي','الكسر'],['elec-warranty']],
+  ['امتى الشحن ببلاش؟',['تتجاوز','450 شيكل'],['elec-delivery']],['قديش الشحن العادي وكم بوخذ؟',['25 شيكل','يومين','اربعة ايام عمل'],['elec-delivery']],['كم بوخذ التوصيل؟',['يومين','اربعة ايام عمل'],['elec-delivery']],['هل تركيب الشاشة هو نفسه التوصيل؟',['منفصلة','120 شيكل'],['elec-delivery']],
+  ['بقدر ارجع جهاز ما فتحته بعد 8 ايام؟',['يمكن','10 ايام'],['elec-returns']],['القطعة مخفضة، بقدر ارجعها؟',['الملحقات المخفضة','لا ترد'],['elec-returns']],['رمال X خلص، شو بقدر اعمل؟',['طلب تنبيه','عودته'],['elec-returns']],
+  ['شو خصم رمال X الحالي؟',['12%','رمال X'],['elec-offers']],['عرض السماعات لسا شغال؟',['انتهى','31 اغسطس 2026'],['elec-offers']],
+  ['بالصورة شو لون لافتة المعرض ووين مكانه؟',['اللافتة الزرقاء','البيرة'],['elec-contact'],['image']],['سعر ندى 14 وضمانه؟',['2890 شيكل','24 شهرا'],['elec-products','elec-warranty']]
+ ],
+ noAnswers:['هل عندكم فرع في نابلس؟','متى يرجع هاتف رمال X للمخزون بالضبط؟','هل بتصلحوا أجهزة أبل؟','شو سعر جهاز ندى 15؟','هل خصم السماعات فعال اليوم؟'],
+ clarifies:['قديش سعرها؟','هل هو متوفر الآن؟','بدي الضمان تبعه','متى بوصل؟','هل العرض بشمله؟']
+},
+{
+ tenantId:'gen_distribution', company:'سند للتوزيع', domain:'distribution',
+ documents:[
+  {id:'dist-orders',name:'شروط طلبات الجملة.md',content:'# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.'},
+  {id:'dist-zones',name:'مناطق وجدول التوزيع.md',content:'# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.'},
+  {id:'dist-payment',name:'الدفع والائتمان.md',content:'# الدفع\nالعميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات. الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية. لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.'},
+  {id:'dist-damage',name:'التالف والمرتجعات.md',content:'# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع.'},
+  {id:'dist-visits',name:'المندوب والمستودع.md',content:'# المندوب والمستودع\nزيارة المندوب مجانية للمتاجر التي تطلب 60 كرتونة شهرياً على الأقل. مستودع البيرة يستقبل الاستلام الذاتي من الثامنة صباحاً حتى الرابعة عصراً. توفر الصنف في المستودع لا يضمن حجزه قبل تأكيد الطلب.'},
+  {id:'dist-offer',name:'حافز التجار.md',validFrom:'2026-09-02',validTo:'2026-09-06',content:'# حافز مؤقت\nمن 2 سبتمبر 2026 إلى 6 سبتمبر 2026 يحصل طلب 120 كرتونة من عصير السهل على 6 كرتونات إضافية مجاناً.'}
+ ],
+ answers:[
+  ['اقل طلب جملة كم كرتونة؟',['24 كرتونة'],['dist-orders']],['كرتونة عصير السهل بكم؟',['46 شيكل'],['dist-orders']],['سعر كرتونة المي؟',['31 شيكل'],['dist-orders']],['متى باخذ خصم 4 بالمية؟',['100 كرتونة','4%'],['dist-orders']],
+  ['اي ايام توزيع رام الله؟',['الاحد','الثلاثاء','الخميس'],['dist-zones']],['بيت لحم بأي أيام بتوصلوها؟',['الاثنين','الاربعاء'],['dist-zones']],['بتوزعوا بأريحا؟',['لا يغطي','اريحا'],['dist-zones']],['أكدت قبل تنتين، متى بطلع؟',['يوم التوزيع التالي'],['dist-zones']],
+  ['العميل الجديد كيف بدفع؟',['نقدا عند التسليم','ثلاث طلبيات'],['dist-payment']],['مدة الائتمان كم؟',['30 يوما'],['dist-payment']],['علي رصيد متأخر، بطلعلي ائتمان؟',['لا يمنح','رصيد متاخر'],['dist-payment']],
+  ['وصلني كرتون مضروب شو المطلوب؟',['تصوير','24 ساعة','رقم الفاتورة'],['dist-damage']],['برجع عصير مسكر بعد 5 ايام؟',['تقبل','7 ايام'],['dist-damage']],['المي المبردة بترجع؟',['لا ترجع'],['dist-damage']],
+  ['متى زيارة المندوب بتكون مجانية؟',['60 كرتونة شهريا'],['dist-visits']],['ساعات الاستلام من المستودع؟',['الثامنة صباحا','الرابعة عصرا'],['dist-visits']],['وجود الصنف بالمستودع يعني محجوز؟',['لا يضمن حجزه','تاكيد الطلب'],['dist-visits']],
+  ['في حافز فعال هسا لعصير السهل؟',['120 كرتونة','6 كرتونات اضافية'],['dist-offer']],['طلبت 120 كرتونة، شو الهدية الحالية؟',['6 كرتونات','مجانا'],['dist-offer']],['اقل طلب وسعر كرتونة العصير؟',['24 كرتونة','46 شيكل'],['dist-orders']]
+ ],
+ noAnswers:['هل بتوصلوا الخليل؟','كم غرامة تأخير الدين؟','هل تقبلون الشيكات؟','متى يتوفر صنف غير موجود؟','هل حافز 6 كراتين مستمر الشهر القادم؟'],
+ clarifies:['قديش سعرها؟','متى بتوصل؟','بدي ارجعها','هل عليه خصم؟','بدي زيارة للمحل']
+},
+{
+ tenantId:'gen_clinic', company:'عيادة نبع الطبية', domain:'clinic',
+ documents:[
+  {id:'clinic-doctors',name:'الأطباء والخدمات.md',content:'# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً.'},
+  {id:'clinic-hours',name:'المواعيد والدوام.md',content:'# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى.'},
+  {id:'clinic-changes',name:'الإلغاء وإعادة الجدولة.md',content:'# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات.'},
+  {id:'clinic-insurance',name:'التأمين والدفع.md',content:'# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً.'},
+  {id:'clinic-tests',name:'تعليمات الفحوصات.md',content:'# الفحوصات\nفحص سكر الصيام يحتاج صيام 8 ساعات مع السماح بالماء. فحص فيتامين د لا يحتاج صياماً. نتائج المختبر ترسل خلال يومي عمل عبر بوابة المريض.'},
+  {id:'clinic-availability',name:'تواجد مؤقت.md',validFrom:'2026-09-01',validTo:'2026-09-04',content:'# تواجد مؤقت\nالدكتورة ليان متاحة هذا الأسبوع يومي الثلاثاء والأربعاء فقط من 1 سبتمبر حتى 4 سبتمبر 2026.'}
+ ],
+ answers:[
+  ['مين دكتور الجلدية؟',['ليان منصور'],['clinic-doctors']],['مين طبيب الأسرة؟',['امين خليل'],['clinic-doctors']],['كشف الجلدية بكم؟',['170 شيكل'],['clinic-doctors']],['استشارة طب الأسرة قديش؟',['120 شيكل'],['clinic-doctors']],['تنظيف البشرة الطبي كم بكلف؟',['140 شيكل'],['clinic-doctors']],
+  ['شو دوام العيادة العادي؟',['السبت','الاربعاء','الثامنة والنصف','السادسة'],['clinic-hours']],['الخميس لأي ساعة؟',['الثانية ظهرا'],['clinic-hours']],['بتستقبلوا طوارئ؟',['لا تستقبل','الطوارئ في المستشفى'],['clinic-hours']],
+  ['قبل كم ساعة بلغي بدون رسوم؟',['12 ساعة'],['clinic-changes']],['الغيت متأخر شو الرسوم؟',['40 شيكل'],['clinic-changes']],['بقدر اغير الموعد مرتين؟',['مرة واحدة','6 ساعات'],['clinic-changes']],
+  ['تأمين أمان مقبول؟',['الرعاية الاولية فقط'],['clinic-insurance']],['التأمين بغطي تنظيف البشرة؟',['لا يشمل','تنظيف البشرة'],['clinic-insurance']],['كيف بقدر ادفع؟',['نقدا','البطاقة'],['clinic-insurance']],
+  ['فحص السكر بده صيام؟',['8 ساعات','الماء'],['clinic-tests']],['فيتامين د لازم صيام؟',['لا يحتاج صياما'],['clinic-tests']],['متى بتطلع نتائج المختبر؟',['يومي عمل','بوابة المريض'],['clinic-tests']],
+  ['الدكتورة ليان موجودة هالأسبوع؟',['الثلاثاء','الاربعاء'],['clinic-availability']],['موعد جلدية وسعره ومين الدكتورة؟',['ليان منصور','170 شيكل'],['clinic-doctors']],['إلغاء قبل 13 ساعة وإعادة الجدولة شو وضعهم؟',['دون رسوم','مرة واحدة'],['clinic-changes']]
+ ],
+ noAnswers:['شو تشخيص وجع الصدر؟','أي دواء آخذ للحساسية؟','هل تقبلون تأمين الشفاء؟','كم سعر فحص الدم الشامل؟','هل الدكتورة ليان متاحة الأسبوع القادم؟'],
+ clarifies:['قديش سعرها؟','بدي أغير الموعد','متى موعدي؟','هل التأمين بشملها؟','مين الدكتور المناسب؟']
+},
+{
+ tenantId:'gen_fashion', company:'خيط وزيتونة', domain:'fashion',
+ documents:[
+  {id:'fashion-products',name:'المنتجات والمقاسات.md',content:'# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.'},
+  {id:'fashion-exchange',name:'الاستبدال والإرجاع.md',content:'# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية.'},
+  {id:'fashion-shipping',name:'الشحن والفروع.md',content:'# الشحن\nالشحن داخل الضفة 20 شيكلاً ويصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر. فرع رام الله في شارع ركب، وفرع جنين قرب دوار السينما. لا يوجد فرع في طولكرم.'},
+  {id:'fashion-stock',name:'الألوان والتوفر.md',content:'# التوفر\nالفستان الزيتي مقاس M متوفر، أما الأسود مقاس XL فهو نافد. قميص كرمل الأبيض مقاس L متوفر. تحديث المخزون في الموقع يتم كل ساعتين ولا يمثل حجزاً.'},
+  {id:'fashion-current-sale',name:'تنزيلات الخريف.md',validFrom:'2026-09-01',validTo:'2026-09-07',content:'# تنزيلات حالية\nخصم 18% على فستان سهل الزيتون فعال من 1 سبتمبر حتى 7 سبتمبر 2026، باستثناء اللون الأسود.'},
+  {id:'fashion-expired',name:'أرشيف عروض الصيف.md',validFrom:'2026-08-01',validTo:'2026-08-20',active:false,content:'# عرض منته\nعرض اشتر قميصين واحصل على الثالث مجاناً انتهى في 20 أغسطس 2026.'}
+ ],
+ answers:[
+  ['فستان سهل الزيتون بأي ألوان؟',['الاسود','الزيتي'],['fashion-products']],['مقاسات الفستان شو؟',['S','XL'],['fashion-products']],['قديش سعر الفستان؟',['260 شيكل'],['fashion-products']],['قميص كرمل شو الوانه؟',['الابيض','الرملي'],['fashion-products']],['سعر القميص الكتاني؟',['145 شيكل'],['fashion-products']],
+  ['مدة تبديل القطعة؟',['14 يوما','الفاتورة'],['fashion-exchange']],['الترجيع النقدي خلال قديش؟',['7 ايام','غير المستعملة'],['fashion-exchange']],['قطعة final sale برجع مصاري؟',['لا تسترد نقدا','المقاس فقط'],['fashion-exchange']],['الأقراط بتتبدل؟',['لا تبدل','صحية'],['fashion-exchange']],
+  ['الشحن داخل الضفة بكم؟',['20 شيكل'],['fashion-shipping']],['متى الشحن مجاني؟',['350 شيكل','او اكثر'],['fashion-shipping']],['وين فروعكم؟',['رام الله','جنين'],['fashion-shipping']],['في فرع بطولكرم؟',['لا يوجد','طولكرم'],['fashion-shipping']],
+  ['الفستان الزيتي M موجود؟',['متوفر'],['fashion-stock']],['الأسود XL متوفر؟',['نافد'],['fashion-stock']],['الأبيض L من كرمل موجود؟',['متوفر'],['fashion-stock']],['المخزون بالموقع يعني محجوز؟',['لا يمثل حجزا','كل ساعتين'],['fashion-stock']],
+  ['شو تنزيل الفستان الحالي؟',['18%','باستثناء اللون الاسود'],['fashion-current-sale']],['عرض الثلاث قطع شغال هسا؟',['انتهى','20 اغسطس 2026'],['fashion-expired']],['سعر الفستان وشحن سلة 400؟',['260 شيكل','مجاني'],['fashion-products','fashion-shipping']]
+ ],
+ noAnswers:['عندكم فرع بالخليل؟','في لون أزرق للفستان؟','كم طول الفستان بالسنتيمتر؟','هل عرض القميص القديم رجع اليوم؟','بتفصلوا فساتين حسب الطلب؟'],
+ clarifies:['قديش سعرها؟','أي مقاس موجود؟','هل اللون متوفر؟','بدي أبدلها','هل العرض شاملها؟']
+},
+{
+ tenantId:'gen_services', company:'مرتكز للاستشارات', domain:'professional_services',
+ documents:[
+  {id:'svc-packages',name:'الباقات.md',content:'# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين.'},
+  {id:'svc-timeline',name:'المدة والمراحل.md',content:'# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم.'},
+  {id:'svc-revisions',name:'التعديلات والنطاق.md',content:'# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات.'},
+  {id:'svc-support',name:'الدعم والتواصل.md',content:'# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً.'},
+  {id:'svc-cancel',name:'الإلغاء والتأجيل.md',content:'# الإلغاء\nيمكن إلغاء المشروع قبل جلسة الاكتشاف مع استرداد كامل. بعد جلسة الاكتشاف تخصم 25% من قيمة المشروع. يمكن تأجيل البداية مرة واحدة لمدة لا تتجاوز 30 يوماً.'},
+  {id:'svc-promo',name:'عرض تأسيس الشركات.md',validFrom:'2026-09-01',validTo:'2026-09-05',content:'# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم.'}
+ ],
+ answers:[
+  ['باقة الانطلاق بكم وشو فيها؟',['2200 شيكل','شعار','دليل الوان'],['svc-packages']],['سعر باقة النمو؟',['4800 شيكل'],['svc-packages']],['كم صفحة بالموقع التعريفي؟',['خمس صفحات'],['svc-packages']],['إدارة الإعلانات داخلة؟',['ليست ضمن'],['svc-packages']],
+  ['مدة باقة الانطلاق؟',['12 يوم عمل'],['svc-timeline']],['النمو بتخلص بقديش؟',['25 يوم عمل','استلام المحتوى'],['svc-timeline']],['كيف دفعات المشروع؟',['40%','30%','30%'],['svc-timeline']],
+  ['كم تعديل بباقه الانطلاق؟',['جولتي تعديل'],['svc-revisions']],['وباقة النمو كم جولة؟',['اربع جولات'],['svc-revisions']],['التعديل الزيادة بكم؟',['180 شيكل'],['svc-revisions']],['كتابة عشر صفحات عربي قديش؟',['600 شيكل'],['svc-revisions']],
+  ['متى ساعات الدعم؟',['الاحد','الخميس','التاسعة','الخامسة'],['svc-support']],['دعم باقة النمو كم يوم؟',['60 يوما'],['svc-support']],['الانطلاق فيها دعم بعد التسليم؟',['14 يوما'],['svc-support']],
+  ['لغيت قبل جلسة الاكتشاف شو برجعلي؟',['استرداد كامل'],['svc-cancel']],['بعد جلسة الاكتشاف كم بخصموا؟',['25%'],['svc-cancel']],['بقدر أأجل البداية؟',['مرة واحدة','30 يوما'],['svc-cancel']],
+  ['شو عرض الشركات الجديدة الحالي؟',['باقة النمو','خمس صفحات','دون رسوم'],['svc-promo']],['باقة النمو مدتها ودعمها؟',['25 يوم عمل','60 يوما'],['svc-timeline','svc-support']],['سعر الانطلاق وكتابة المحتوى؟',['2200 شيكل','600 شيكل'],['svc-packages','svc-revisions']]
+ ],
+ noAnswers:['هل بتعملوا تطبيق موبايل؟','كم تكلفة إدارة الإعلانات؟','هل الدعم متاح يوم الجمعة؟','هل العرض مستمر بعد 5 سبتمبر؟','بتضمنوا زيادة المبيعات؟'],
+ clarifies:['قديش سعرها؟','كم بتاخد وقت؟','بدي أعدلها','هل الدعم شامل؟','بدي ألغي المشروع']
+}
+];
+
+const colloquial = new Set([0,2,3,5,6,8,9,10,12,13,14,15,16,17,18,19,20,22,24,25,27,28]);
+const noisy = new Set([2,6,11,15,18,21,27]);
+const hard = new Set([3,6,8,12,14,15,17,18,19,21,23,24,27]);
+const temporal = new Set([16,17,23,24]);
+const multiIntent = new Set([10,17,18,19]);
+
+function tagsFor(index, decision) {
+ const tags=[colloquial.has(index)?'palestinian':'msa'];
+ if(noisy.has(index)) tags.push('typo');
+ if(hard.has(index)) tags.push('hard_paraphrase');
+ if(temporal.has(index)) tags.push('temporal');
+ if(multiIntent.has(index)) tags.push('multi_intent');
+ if(decision==='NO_ANSWER' && (index===20 || index===21)) tags.push('cross_tenant_trap');
+ if(decision==='NO_ANSWER') tags.push('no_answer');
+ if(decision==='CLARIFY') tags.push('ambiguous','clarify');
+ return tags;
+}
+
+function buildCases(company) {
+ const rows=[];
+ company.answers.forEach((entry,index)=>rows.push({
+  id:`${company.domain}-a-${String(index+1).padStart(2,'0')}`,tenantId:company.tenantId,
+  company:company.company,domain:company.domain,question:entry[0],expectedDecision:'ANSWER',
+  expectedFacts:entry[1],expectedEvidenceIds:entry[2],tags:[...tagsFor(index,'ANSWER'),...(entry[3]||[])],
+  split:index<13?'dev':'holdout'
+ }));
+ company.noAnswers.forEach((question,index)=>rows.push({
+  id:`${company.domain}-n-${String(index+1).padStart(2,'0')}`,tenantId:company.tenantId,
+  company:company.company,domain:company.domain,question,expectedDecision:'NO_ANSWER',expectedFacts:[],
+  expectedEvidenceIds:[],tags:tagsFor(20+index,'NO_ANSWER'),split:index<4?'dev':'holdout'
+ }));
+ company.clarifies.forEach((question,index)=>rows.push({
+  id:`${company.domain}-c-${String(index+1).padStart(2,'0')}`,tenantId:company.tenantId,
+  company:company.company,domain:company.domain,question,expectedDecision:'CLARIFY',expectedFacts:[],
+  expectedEvidenceIds:[],tags:tagsFor(25+index,'CLARIFY'),split:index<3?'dev':'holdout'
+ }));
+ return rows;
+}
+
+const allCases=companies.flatMap(buildCases);
+const dev=allCases.filter(row=>row.split==='dev').map(({split,...row})=>row);
+const holdout=allCases.filter(row=>row.split==='holdout').map(({split,...row})=>row);
+
+function validate() {
+ if(companies.length!==5||companies.some(c=>c.documents.length<4||c.documents.length>8)) throw Error('Invalid company/document count');
+ if(allCases.length!==150||dev.length!==100||holdout.length!==50) throw Error('Invalid dataset split');
+ const docs=new Map(companies.flatMap(c=>c.documents.map(d=>[`${c.tenantId}:${d.id}`,d])));
+ for(const row of allCases){
+  if(row.expectedDecision==='ANSWER'&&!row.expectedFacts.length) throw Error(`Missing facts ${row.id}`);
+  for(const id of row.expectedEvidenceIds) if(!docs.has(`${row.tenantId}:${id}`)) throw Error(`Missing evidence ${row.id}:${id}`);
+ }
+ const counts=list=>Object.fromEntries(['ANSWER','NO_ANSWER','CLARIFY'].map(d=>[d,list.filter(x=>x.expectedDecision===d).length]));
+ return {companies:companies.length,documents:companies.reduce((n,c)=>n+c.documents.length,0),all:counts(allCases),dev:counts(dev),holdout:counts(holdout)};
+}
+
+fs.mkdirSync(root,{recursive:true});
+for(const company of companies){
+ const dir=path.join(root,'sources',company.tenantId);fs.mkdirSync(dir,{recursive:true});
+ for(const doc of company.documents) fs.writeFileSync(path.join(dir,doc.name),`${doc.content}\n`,'utf8');
+}
+fs.writeFileSync(path.join(root,'companies.json'),JSON.stringify(companies,null,2)+'\n');
+fs.writeFileSync(path.join(__dirname,'..','evals','rag-generalization-ar-v1.json'),JSON.stringify(allCases.map(({split,...x})=>x),null,2)+'\n');
+fs.writeFileSync(path.join(__dirname,'..','evals','rag-generalization-dev-ar-v1.json'),JSON.stringify(dev,null,2)+'\n');
+fs.writeFileSync(path.join(__dirname,'..','evals','rag-generalization-holdout-ar-v1.json'),JSON.stringify(holdout,null,2)+'\n');
+fs.writeFileSync(path.join(root,'HOLDOUT_FROZEN.md'),'# FuBot Generalization Holdout v1\n\nThe 50-case holdout was frozen after its initial baseline evaluation. Do not tune production behavior against individual holdout failures. Future routine runs report aggregate metrics only.\n');
+console.log(JSON.stringify(validate(),null,2));

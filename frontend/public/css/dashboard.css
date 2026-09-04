@@ -96,6 +96,26 @@ button:disabled, input:disabled, select:disabled, textarea:disabled { cursor: no
     z-index: 12;
 }
 .channel-header-profile { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.channel-header-controls {
+    flex: 1 1 560px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+#assignee-container { flex: 0 0 auto; max-width: 100%; }
+#chat-assignee-select { min-width: 0; max-width: min(260px, 35vw); }
+#chat-header-actions {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+#chat-header-actions > * { flex: 0 0 auto; }
 .channel-avatar, .message-avatar {
     width: 38px; height: 38px; border-radius: 999px;
     display: grid; place-items: center; flex: none;

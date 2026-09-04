@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdicts"],
+  "properties": {
+    "verdicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["propositionId", "verdict", "supportingEvidenceIds", "reason"],
+        "properties": {
+          "propositionId": {"type": "string"},
+          "verdict": {"enum": ["SUPPORTED", "CONTRADICTED", "NOT_PROVEN"]},
+          "supportingEvidenceIds": {"type": "array", "items": {"type": "string"}},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

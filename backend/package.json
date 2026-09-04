@@ -4,6 +4,8 @@
   "description": "Backend services for FUThing",
   "main": "server.js",
   "scripts": {
+    "eval:rag": "node scripts/evaluate-rag.js",
+    "eval:generation": "node scripts/evaluate-generation.js",
     "start": "node server.js",
     "pretest": "node --test test/session_cookie_configuration.test.js test/phase3_runtime_stability.test.js test/webhook_processing_stability.test.js test/phase4_rag_quality.test.js test/phase5_database_integrity.test.js test/phase6_tenant_auth.test.js test/phase7_production_operations.test.js && node test/profile_image_security.test.js && node test/rag_indexing_success_contract.test.js && node test/prompt_injection_guard.test.js",
     "rag:tenant-report": "node scripts/ragTenantMigrationReport.js",

@@ -1,0 +1,69 @@
+{
+  "companies": [
+    {
+      "tenantId": "clarify_dev_archive",
+      "company": "أرشيف تجريبي",
+      "documents": [
+        {"id":"archive-access","content":"# الإتاحة\nباقة الباحث تكلف 40 شيقل وتتيح خمس زيارات. باقة المختص تكلف 70 شيقل وتتيح عشر زيارات."},
+        {"id":"archive-hours","content":"# الساعات\nقاعة الاطلاع تعمل يوم الأربعاء من 10:00 إلى 15:00. لا توجد بيانات حية عن المقاعد الشاغرة."}
+      ]
+    },
+    {
+      "tenantId": "clarify_dev_laundry",
+      "company": "مغسلة تجريبية",
+      "documents": [
+        {"id":"laundry-services","content":"# الخدمات\nتنظيف السجادة الصغيرة يكلف 25 شيقل ويستغرق يومين. تنظيف السجادة الكبيرة يكلف 45 شيقل ويستغرق ثلاثة أيام."},
+        {"id":"laundry-policy","content":"# السياسة\nيمكن طلب إعادة التنظيف خلال 48 ساعة من الاستلام. لا تتوفر بيانات حية عن مرحلة أي معاملة."}
+      ]
+    },
+    {
+      "tenantId": "clarify_dev_print",
+      "company": "مطبعة تجريبية",
+      "documents": [
+        {"id":"print-options","content":"# الخيارات\nطباعة 100 بطاقة على ورق مطفي تكلف 60 شيقل. طباعتها على ورق لامع تكلف 75 شيقل."},
+        {"id":"print-schedule","content":"# التسليم\nالطباعة العادية تستغرق ثلاثة أيام عمل. يمكن تغيير الملف قبل بدء الطباعة. لا توجد معلومات حية عن الطابور."}
+      ]
+    },
+    {
+      "tenantId": "clarify_dev_lab",
+      "company": "مختبر مواد تجريبي",
+      "documents": [
+        {"id":"lab-tests","content":"# الفحوص\nفحص الصلابة يكلف 90 شيقل ونتيجته خلال يوم عمل. فحص الرطوبة يكلف 55 شيقل ونتيجته خلال يومي عمل."},
+        {"id":"lab-hours","content":"# الاستلام\nاستلام العينات يوم الاثنين من 08:00 إلى 14:00. لا توجد بيانات حية عن جاهزية نتيجة معينة."}
+      ]
+    }
+  ],
+  "cases": [
+    {"id":"arc-c1","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"قديش تكلفتها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["unresolved_referent"]},
+    {"id":"arc-c2","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"متى؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["missing_target"]},
+    {"id":"arc-a1","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"كم تكلف باقة الباحث؟","expectedDecision":"ANSWER","expectedFacts":["40 شيقل"],"expectedEvidenceIds":["archive-access"],"tags":["specified_entity"]},
+    {"id":"arc-a2","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"متى تعمل قاعة الاطلاع يوم الأربعاء؟","expectedDecision":"ANSWER","expectedFacts":["10:00","15:00"],"expectedEvidenceIds":["archive-hours"],"tags":["specified_date"]},
+    {"id":"arc-n1","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"في مقعد فاضي بقاعة الاطلاع الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state"]},
+    {"id":"arc-n2","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"شو رقم الهاتف؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"arc-s1","tenantId":"clarify_dev_archive","company":"أرشيف تجريبي","domain":"archive","question":"مرحبا كيفك؟","expectedDecision":"ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["social_control"]},
+
+    {"id":"lau-c1","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"قديش بتاخد؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["attribute_target"]},
+    {"id":"lau-c2","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"بدي أغيرها","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["action_target"]},
+    {"id":"lau-a1","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"تنظيف السجادة الصغيرة كم يوم؟","expectedDecision":"ANSWER","expectedFacts":["يومين"],"expectedEvidenceIds":["laundry-services"],"tags":["specified_entity"]},
+    {"id":"lau-a2","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"شو سياسة إعادة التنظيف؟","expectedDecision":"ANSWER","expectedFacts":["48 ساعة"],"expectedEvidenceIds":["laundry-policy"],"tags":["information_control"]},
+    {"id":"lau-n1","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"معاملة رقم 88 وين وصلت هسا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state","specified_entity"]},
+    {"id":"lau-n2","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"بتستلموا من سلفيت؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"lau-s1","tenantId":"clarify_dev_laundry","company":"مغسلة تجريبية","domain":"laundry","question":"يعطيكم العافية","expectedDecision":"ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["social_control"]},
+
+    {"id":"pri-c1","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"شو شروطها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["unresolved_referent"]},
+    {"id":"pri-c2","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"وين وصلت؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["missing_target"]},
+    {"id":"pri-a1","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"كم سعر 100 بطاقة مطفية؟","expectedDecision":"ANSWER","expectedFacts":["60 شيقل"],"expectedEvidenceIds":["print-options"],"tags":["specified_quantity"]},
+    {"id":"pri-a2","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"بقدر أغير الملف قبل الطباعة؟","expectedDecision":"ANSWER","expectedFacts":["قبل بدء الطباعة"],"expectedEvidenceIds":["print-schedule"],"tags":["specified_action_target"]},
+    {"id":"pri-n1","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"هل الطابور فاضي حاليا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state"]},
+    {"id":"pri-n2","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"بتطبعوا على الخشب؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"pri-s1","tenantId":"clarify_dev_print","company":"مطبعة تجريبية","domain":"print","question":"شكرا إلكم","expectedDecision":"ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["social_control"]},
+
+    {"id":"lab-c1","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"بدي أعدله","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["action_target"]},
+    {"id":"lab-c2","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"قديش نتيجته؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["unresolved_referent"]},
+    {"id":"lab-a1","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"كم بكلف فحص الرطوبة؟","expectedDecision":"ANSWER","expectedFacts":["55 شيقل"],"expectedEvidenceIds":["lab-tests"],"tags":["specified_entity"]},
+    {"id":"lab-a2","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"شو ساعات استلام العينات يوم الاثنين؟","expectedDecision":"ANSWER","expectedFacts":["08:00","14:00"],"expectedEvidenceIds":["lab-hours"],"tags":["specified_date"]},
+    {"id":"lab-n1","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"نتيجة فحص الصلابة رقم 19 جاهزة الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state","specified_entity"]},
+    {"id":"lab-n2","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"هل المختبر معتمد دوليا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"lab-s1","tenantId":"clarify_dev_lab","company":"مختبر مواد تجريبي","domain":"materials_lab","question":"مسا الخير","expectedDecision":"ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["social_control"]}
+  ]
+}

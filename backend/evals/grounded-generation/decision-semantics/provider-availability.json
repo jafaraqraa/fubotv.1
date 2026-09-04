@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-09-03T16:42:32+03:00",
+  "provider": "openrouter",
+  "requiredModel": "google/gemini-2.5-flash",
+  "keyEnabled": true,
+  "limitsAvailable": true,
+  "limit": 0.3,
+  "usage": 0.3048674,
+  "remaining": 0,
+  "lastSuccessfulSync": "2026-09-03 16:42:32",
+  "availableForExperiment": false,
+  "reason": "The provider-reported remaining balance is zero. No generation request was made."
+}

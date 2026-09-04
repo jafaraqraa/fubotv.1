@@ -1,0 +1,1666 @@
+{
+  "experiment": "claim-contract",
+  "run": 1,
+  "model": "google/gemini-2.5-flash",
+  "structuredMode": "native_json_schema",
+  "policy": "safe_partial",
+  "keySource": "DB_ACTIVE_PROVIDER:12",
+  "keyFingerprint": "f763187565de",
+  "rows": [
+    {
+      "id": "electronics-c-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 50,
+        "cost": 0.0002303,
+        "calls": 1
+      },
+      "latencyMs": 1707.9,
+      "error": null
+    },
+    {
+      "id": "electronics-c-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل هو متوفر الآن؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تقصده بـ \"هو\"؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تقصده بـ \"هو\"؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 51,
+        "cost": 0.0002328,
+        "calls": 1
+      },
+      "latencyMs": 1756.5,
+      "error": null
+    },
+    {
+      "id": "electronics-c-03",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "بدي الضمان تبعه",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو الشيء الذي تريد ضمانه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو الشيء الذي تريد ضمانه؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 32,
+        "cost": 0.0001853,
+        "calls": 1
+      },
+      "latencyMs": 1567.7,
+      "error": null
+    },
+    {
+      "id": "distribution-c-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تسأل عن سعره؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تسأل عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 48,
+        "cost": 0.0002253,
+        "calls": 1
+      },
+      "latencyMs": 1641.5,
+      "error": null
+    },
+    {
+      "id": "distribution-c-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "متى بتوصل؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تقصد أن يصل؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تقصد أن يصل؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 47,
+        "cost": 0.0002225,
+        "calls": 1
+      },
+      "latencyMs": 924.1,
+      "error": null
+    },
+    {
+      "id": "distribution-c-03",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "بدي ارجعها",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تريد إرجاعه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تريد إرجاعه؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 47,
+        "cost": 0.0002225,
+        "calls": 1
+      },
+      "latencyMs": 2160.9,
+      "error": null
+    },
+    {
+      "id": "clinic-c-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تسأل عن سعره؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تسأل عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 48,
+        "cost": 0.0002253,
+        "calls": 1
+      },
+      "latencyMs": 1476.3,
+      "error": null
+    },
+    {
+      "id": "clinic-c-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "أي موعد تريد أن تغير؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "أي موعد تريد أن تغير؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 352,
+        "output": 47,
+        "cost": 0.0002231,
+        "calls": 1
+      },
+      "latencyMs": 1187.2,
+      "error": null
+    },
+    {
+      "id": "clinic-c-03",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "موعد المستخدم",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "موعد المستخدم",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يقدم معلومات عن ساعات عمل العيادة وتوافر طبيبة معينة، لكنه لا يحدد موعدًا للمستخدم."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 972,
+        "output": 162,
+        "cost": 0.0006965999999999999,
+        "calls": 2
+      },
+      "latencyMs": 1672.3,
+      "error": null
+    },
+    {
+      "id": "fashion-c-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 50,
+        "cost": 0.0002303,
+        "calls": 1
+      },
+      "latencyMs": 913.7,
+      "error": null
+    },
+    {
+      "id": "fashion-c-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "أي مقاس موجود؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "أي مقاس تقصد؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "أي مقاس تقصد؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 46,
+        "cost": 0.00022,
+        "calls": 1
+      },
+      "latencyMs": 734,
+      "error": null
+    },
+    {
+      "id": "fashion-c-03",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "هل اللون متوفر؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو اللون الذي تسأل عنه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو اللون الذي تسأل عنه؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 48,
+        "cost": 0.000225,
+        "calls": 1
+      },
+      "latencyMs": 1049.6,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 351,
+        "output": 50,
+        "cost": 0.0002303,
+        "calls": 1
+      },
+      "latencyMs": 782.7,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تقصد بـ \"كم بتاخد وقت\"؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تقصد بـ \"كم بتاخد وقت\"؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 53,
+        "cost": 0.0002375,
+        "calls": 1
+      },
+      "latencyMs": 1025.7,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-03",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "بدي أعدلها",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما الذي تريد تعديله؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما الذي تريد تعديله؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 350,
+        "output": 46,
+        "cost": 0.00022,
+        "calls": 1
+      },
+      "latencyMs": 1393.2,
+      "error": null
+    },
+    {
+      "id": "clinic-a-11",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "cohort": "GENUINE_FALSE_NO_ANSWER",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "أي موعد تقصد؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "أي موعد تقصد؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 355,
+        "output": 46,
+        "cost": 0.0002215,
+        "calls": 1
+      },
+      "latencyMs": 942.9,
+      "error": null
+    },
+    {
+      "id": "electronics-n-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "cohort": "GENUINE_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "يوجد فرع في نابلس",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يذكر فرعًا واحدًا فقط في البيرة ولا يذكر أي شيء عن وجود أو عدم وجود فروع أخرى في نابلس."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1244,
+        "output": 134,
+        "cost": 0.0007082,
+        "calls": 2
+      },
+      "latencyMs": 3064.3,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-03",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "cohort": "GENUINE_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "الدعم",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "الدعم متاح يوم الجمعة",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "CONTRADICTED",
+            "supportingEvidenceIds": [
+              "svc-support_chunk_0_19dc9459f9ae"
+            ],
+            "reason": "الدليل يذكر أن الدعم متاح من الأحد إلى الخميس، مما يتناقض مع توفره يوم الجمعة."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "الدعم غير متاح يوم الجمعة، بل هو متاح من الأحد إلى الخميس.",
+      "claims": [
+        {
+          "text": "الدعم متاح من الأحد إلى الخميس.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 2032,
+        "output": 266,
+        "cost": 0.0012746,
+        "calls": 3
+      },
+      "latencyMs": 4086.6,
+      "error": null
+    },
+    {
+      "id": "clinic-a-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "مين دكتور الجلدية؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "ليان منصور"
+      ],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "اسم دكتور الجلدية",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "SUPPORTED",
+            "supportingEvidenceIds": [
+              "clinic-doctors_chunk_0_2dff9f9e9285"
+            ],
+            "reason": "الدليل يذكر صراحة أن الدكتورة ليان منصور مختصة بالجلدية."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "اسم دكتورة الجلدية هو ليان منصور.",
+      "claims": [
+        {
+          "text": "اسم دكتورة الجلدية هو ليان منصور.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1947,
+        "output": 207,
+        "cost": 0.0011016,
+        "calls": 3
+      },
+      "latencyMs": 3486.8,
+      "error": null
+    },
+    {
+      "id": "clinic-a-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "مين طبيب الأسرة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "امين خليل"
+      ],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "ما هو تعريف طبيب الأسرة؟",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يذكر وجود طبيب أسرة لكنه لا يقدم تعريفًا لطبيب الأسرة."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1173,
+        "output": 126,
+        "cost": 0.0006669,
+        "calls": 2
+      },
+      "latencyMs": 1983.8,
+      "error": null
+    },
+    {
+      "id": "distribution-a-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "اقل طلب جملة كم كرتونة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "24 كرتونة"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو المنتج الذي تسأل عن أقل طلب جملة له؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن أقل طلب جملة له؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 355,
+        "output": 53,
+        "cost": 0.000239,
+        "calls": 1
+      },
+      "latencyMs": 729.5,
+      "error": null
+    },
+    {
+      "id": "distribution-a-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "كرتونة عصير السهل بكم؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "46 شيكل"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو نوع عصير السهل الذي تبحث عنه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو نوع عصير السهل الذي تبحث عنه؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 354,
+        "output": 52,
+        "cost": 0.0002362,
+        "calls": 1
+      },
+      "latencyMs": 918,
+      "error": null
+    },
+    {
+      "id": "electronics-a-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "قديش سعر لابتوب ندى 14؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2890 شيكل"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو لابتوب ندى 14 الذي تسأل عنه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو لابتوب ندى 14 الذي تسأل عنه؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 358,
+        "output": 55,
+        "cost": 0.0002449,
+        "calls": 1
+      },
+      "latencyMs": 949.3,
+      "error": null
+    },
+    {
+      "id": "electronics-a-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "ما سعر ندى 14 برو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "3490 شيكل"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو \"ندى 14 برو\"؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو \"ندى 14 برو\"؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 354,
+        "output": 35,
+        "cost": 0.0001937,
+        "calls": 1
+      },
+      "latencyMs": 992.9,
+      "error": null
+    },
+    {
+      "id": "fashion-a-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاسود",
+        "الزيتي"
+      ],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "فستان سهل الزيتون",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "ما هي الألوان المتوفرة لفستان سهل الزيتون؟",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "SUPPORTED",
+            "supportingEvidenceIds": [
+              "fashion-products_chunk_0_9511dd63804a"
+            ],
+            "reason": "الدليل 'fashion-products_chunk_0_9511dd63804a' يذكر صراحة أن فستان سهل الزيتون متوفر بالأسود والزيتي."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "فستان سهل الزيتون متوفر باللونين الأسود والزيتي.",
+      "claims": [
+        {
+          "text": "فستان سهل الزيتون متوفر باللونين الأسود والزيتي.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 2058,
+        "output": 333,
+        "cost": 0.0014499,
+        "calls": 3
+      },
+      "latencyMs": 3122.5,
+      "error": null
+    },
+    {
+      "id": "fashion-a-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "مقاسات الفستان شو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "S",
+        "XL"
+      ],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "أي فستان تقصد؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "أي فستان تقصد؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 352,
+        "output": 46,
+        "cost": 0.0002206,
+        "calls": 1
+      },
+      "latencyMs": 737.5,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "باقة الانطلاق بكم وشو فيها؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2200 شيكل",
+        "شعار",
+        "دليل الوان"
+      ],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "باقة الانطلاق",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "سعر باقة الانطلاق",
+            "requiredForAnswer": true
+          },
+          {
+            "id": "p2",
+            "proposition": "محتويات باقة الانطلاق",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "SUPPORTED",
+            "supportingEvidenceIds": [
+              "svc-packages_chunk_0_d8ee877512fc"
+            ],
+            "reason": "الدليل يذكر سعر باقة الانطلاق بوضوح."
+          },
+          {
+            "propositionId": "p2",
+            "verdict": "SUPPORTED",
+            "supportingEvidenceIds": [
+              "svc-packages_chunk_0_d8ee877512fc",
+              "svc-revisions_chunk_0_8b7e5fd6d9fa",
+              "svc-support_chunk_0_19dc9459f9ae"
+            ],
+            "reason": "تذكر الأدلة أن باقة الانطلاق تشمل شعارًا ودليل ألوان، وجولتي تعديل، ودعمًا فنيًا لمدة 14 يومًا."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "سعر باقة الانطلاق هو 2200 شيكل، وتشمل شعارًا، ودليل ألوان، وجولتي تعديل، ودعمًا فنيًا لمدة 14 يومًا.",
+      "claims": [
+        {
+          "text": "سعر باقة الانطلاق هو 2200 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        },
+        {
+          "text": "تشمل باقة الانطلاق شعارًا ودليل ألوان.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        },
+        {
+          "text": "تشمل باقة الانطلاق جولتي تعديل.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        },
+        {
+          "text": "تشمل باقة الانطلاق دعمًا فنيًا لمدة 14 يومًا.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 2126,
+        "output": 513,
+        "cost": 0.0019203,
+        "calls": 3
+      },
+      "latencyMs": 3844.6,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "سعر باقة النمو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "4800 شيكل"
+      ],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "باقة النمو",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "سعر باقة النمو",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "SUPPORTED",
+            "supportingEvidenceIds": [
+              "svc-packages_chunk_0_d8ee877512fc"
+            ],
+            "reason": "الدليل يذكر صراحة أن باقة النمو بسعر 4800 شيكل."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "سعر باقة النمو هو 4800 شيكل.",
+      "claims": [
+        {
+          "text": "سعر باقة النمو هو 4800 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1969,
+        "output": 254,
+        "cost": 0.0012257,
+        "calls": 3
+      },
+      "latencyMs": 2916.2,
+      "error": null
+    },
+    {
+      "id": "clinic-n-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "شو تشخيص وجع الصدر؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "وجع الصدر",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "ما هو تشخيص وجع الصدر؟",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "لا يقدم أي من الأدلة معلومات حول تشخيص وجع الصدر. الأدلة تتحدث عن فحوصات عامة، تأمين، مواعيد العيادة، الأطباء وتخصصاتهم، وتعديل المواعيد، ولا يوجد أي ربط بينها وبين تشخيص وجع الصدر."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1201,
+        "output": 176,
+        "cost": 0.0008003,
+        "calls": 2
+      },
+      "latencyMs": 2910.4,
+      "error": null
+    },
+    {
+      "id": "clinic-n-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "أي دواء آخذ للحساسية؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هي الحساسية التي تعاني منها؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هي الحساسية التي تعاني منها؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 354,
+        "output": 50,
+        "cost": 0.0002312,
+        "calls": 1
+      },
+      "latencyMs": 791,
+      "error": null
+    },
+    {
+      "id": "distribution-n-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "هل بتوصلوا الخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "latencyMs": 2130.2,
+      "usage": {
+        "input": 352,
+        "output": 88,
+        "cost": 0.0003256,
+        "calls": 2
+      },
+      "error": {
+        "stage": "stage2",
+        "name": "Error",
+        "status": null,
+        "message": "MALFORMED_SUPPORT_VERDICT"
+      }
+    },
+    {
+      "id": "distribution-n-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "كم غرامة تأخير الدين؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "AMBIGUOUS",
+        "referent": null,
+        "requestedPropositions": [],
+        "clarificationQuestion": "ما هو الدين الذي تسأل عنه؟"
+      },
+      "verdicts": null,
+      "decision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": "ما هو الدين الذي تسأل عنه؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 353,
+        "output": 48,
+        "cost": 0.0002259,
+        "calls": 1
+      },
+      "latencyMs": 836.3,
+      "error": null
+    },
+    {
+      "id": "electronics-n-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "هاتف رمال X",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "تاريخ عودة هاتف رمال X للمخزون",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "CONTRADICTED",
+            "supportingEvidenceIds": [
+              "elec-returns_chunk_0_72a86ecb5c5a"
+            ],
+            "reason": "الدليل ينص صراحة على أنه 'لا يوجد موعد ثابت لعودته' مما يعني عدم وجود تاريخ محدد لعودة هاتف رمال X للمخزون."
+          }
+        ]
+      },
+      "decision": "ANSWER",
+      "answer": "لا يوجد موعد ثابت لعودة هاتف رمال X للمخزون.",
+      "claims": [
+        {
+          "text": "لا يوجد موعد ثابت لعودة هاتف رمال X للمخزون.",
+          "evidenceIds": [
+            "elec-returns_chunk_0_72a86ecb5c5a"
+          ]
+        }
+      ],
+      "clarificationQuestion": null,
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 2144,
+        "output": 293,
+        "cost": 0.0013757,
+        "calls": 3
+      },
+      "latencyMs": 4960.1,
+      "error": null
+    },
+    {
+      "id": "electronics-n-03",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل بتصلحوا أجهزة أبل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "أنتم تصلحون أجهزة أبل",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الأدلة المتاحة لا تذكر أي معلومات عن إصلاح أجهزة أبل. المنتجات المذكورة هي حاسوب ندى وهاتف رمال X، ولا يوجد ما يشير إلى أنها من منتجات أبل أو أن المتجر يقدم خدمات إصلاح لأي أجهزة."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1245,
+        "output": 168,
+        "cost": 0.0007935,
+        "calls": 2
+      },
+      "latencyMs": 2410.8,
+      "error": null
+    },
+    {
+      "id": "fashion-n-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "عندكم فرع بالخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "يوجد فرع في الخليل",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يذكر فروع رام الله وجنين وعدم وجود فرع في طولكرم، لكنه لا يذكر شيئًا عن وجود أو عدم وجود فرع في الخليل."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1177,
+        "output": 143,
+        "cost": 0.0007106,
+        "calls": 2
+      },
+      "latencyMs": 1921,
+      "error": null
+    },
+    {
+      "id": "fashion-n-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "في لون أزرق للفستان؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": "الفستان",
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "الفستان متوفر باللون الأزرق",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يذكر أن الفستان متوفر باللونين الأسود والزيتي فقط، ولا يذكر توفره باللون الأزرق."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1161,
+        "output": 166,
+        "cost": 0.0007633,
+        "calls": 2
+      },
+      "latencyMs": 2203.4,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "أنتم تقومون بإنشاء تطبيق جوال",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الأدلة المتاحة تتحدث عن باقات تشمل شعاراً، دليلاً للألوان، وهوية، وموقعاً تعريفياً، ولا يوجد أي ذكر لإنشاء تطبيق جوال."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1209,
+        "output": 150,
+        "cost": 0.0007377,
+        "calls": 2
+      },
+      "latencyMs": 1733.4,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم تكلفة إدارة الإعلانات؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "contract": {
+        "referentStatus": "RESOLVED",
+        "referent": null,
+        "requestedPropositions": [
+          {
+            "id": "p1",
+            "proposition": "تكلفة إدارة الإعلانات",
+            "requiredForAnswer": true
+          }
+        ],
+        "clarificationQuestion": null
+      },
+      "verdicts": {
+        "verdicts": [
+          {
+            "propositionId": "p1",
+            "verdict": "NOT_PROVEN",
+            "supportingEvidenceIds": [],
+            "reason": "الدليل يذكر أن إدارة الإعلانات ليست ضمن أي من الباقتين، لكنه لا يذكر تكلفتها أو ما إذا كانت خدمة منفصلة مقدمة."
+          }
+        ]
+      },
+      "decision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "hallucinatedEvidenceIds": 0,
+      "tenantLeaks": 0,
+      "usage": {
+        "input": 1204,
+        "output": 170,
+        "cost": 0.0007861999999999999,
+        "calls": 2
+      },
+      "latencyMs": 1745.1,
+      "error": null
+    }
+  ]
+}

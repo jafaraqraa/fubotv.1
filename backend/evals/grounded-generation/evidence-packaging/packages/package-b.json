@@ -1,0 +1,669 @@
+[
+  {
+    "id": "electronics-n-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل عندكم فرع في نابلس؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "FORENSIC_FALSE_ANSWER",
+    "evidence": [
+      {
+        "id": "elec-contact_chunk_0_c37eea929623",
+        "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء.",
+        "score": 0.56460168
+      }
+    ]
+  },
+  {
+    "id": "professional_services-n-03",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "هل الدعم متاح يوم الجمعة؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "no_answer"
+    ],
+    "experimentCohort": "FORENSIC_FALSE_ANSWER",
+    "evidence": [
+      {
+        "id": "svc-support_chunk_0_19dc9459f9ae",
+        "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً.",
+        "score": 0.79447184
+      }
+    ]
+  },
+  {
+    "id": "clinic-a-01",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "مين دكتور الجلدية؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "ليان منصور"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-doctors"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "clinic-doctors_chunk_0_2dff9f9e9285",
+        "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً.",
+        "score": 0.7986764
+      }
+    ]
+  },
+  {
+    "id": "clinic-a-02",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "مين طبيب الأسرة؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "امين خليل"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-doctors"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "clinic-doctors_chunk_0_2dff9f9e9285",
+        "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً.",
+        "score": 0.7531120533333333
+      }
+    ]
+  },
+  {
+    "id": "distribution-a-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "اقل طلب جملة كم كرتونة؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "24 كرتونة"
+    ],
+    "expectedEvidenceIds": [
+      "dist-orders"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "dist-orders_chunk_0_113acd0282a6",
+        "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+        "score": 0.7498060400000001
+      }
+    ]
+  },
+  {
+    "id": "distribution-a-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "كرتونة عصير السهل بكم؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "46 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "dist-orders"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "dist-orders_chunk_0_113acd0282a6",
+        "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+        "score": 0.8549808
+      }
+    ]
+  },
+  {
+    "id": "electronics-a-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "قديش سعر لابتوب ندى 14؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2890 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "elec-products"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "elec-products_chunk_0_a742c3d593ef",
+        "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+        "score": 0.855614
+      }
+    ]
+  },
+  {
+    "id": "electronics-a-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "ما سعر ندى 14 برو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "3490 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "elec-products"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "elec-products_chunk_0_a742c3d593ef",
+        "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+        "score": 0.926222376
+      }
+    ]
+  },
+  {
+    "id": "fashion-a-01",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "فستان سهل الزيتون بأي ألوان؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "الاسود",
+      "الزيتي"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-products"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "fashion-products_chunk_0_9511dd63804a",
+        "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+        "score": 0.7505113600000001
+      }
+    ]
+  },
+  {
+    "id": "fashion-a-02",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "مقاسات الفستان شو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "S",
+      "XL"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-products"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "fashion-products_chunk_0_9511dd63804a",
+        "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+        "score": 0.6699293066666667
+      }
+    ]
+  },
+  {
+    "id": "professional_services-a-01",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "باقة الانطلاق بكم وشو فيها؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2200 شيكل",
+      "شعار",
+      "دليل الوان"
+    ],
+    "expectedEvidenceIds": [
+      "svc-packages"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "svc-packages_chunk_0_d8ee877512fc",
+        "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين.",
+        "score": 0.794048768
+      }
+    ]
+  },
+  {
+    "id": "professional_services-a-02",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "سعر باقة النمو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "4800 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "svc-packages"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "svc-packages_chunk_0_d8ee877512fc",
+        "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين.",
+        "score": 0.9081948320000001
+      }
+    ]
+  },
+  {
+    "id": "clinic-n-01",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "شو تشخيص وجع الصدر؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": []
+  },
+  {
+    "id": "clinic-n-02",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "أي دواء آخذ للحساسية؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": []
+  },
+  {
+    "id": "distribution-n-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "هل بتوصلوا الخليل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "dist-zones_chunk_0_19392d72f595",
+        "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.",
+        "score": 0.61360464
+      }
+    ]
+  },
+  {
+    "id": "distribution-n-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "كم غرامة تأخير الدين؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "dist-payment_chunk_0_a6956514b390",
+        "text": "# الدفع\nالعميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات. الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية. لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.",
+        "score": 0.577861784
+      }
+    ]
+  },
+  {
+    "id": "electronics-n-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "elec-returns_chunk_0_72a86ecb5c5a",
+        "text": "# الإرجاع والمخزون\nيمكن إرجاع الجهاز غير المفتوح خلال 10 أيام. يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام. الملحقات المخفضة لا ترد. عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+        "score": 0.8181925466666666
+      },
+      {
+        "id": "elec-products_chunk_0_a742c3d593ef",
+        "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+        "score": 0.6767767146666668
+      }
+    ]
+  },
+  {
+    "id": "electronics-n-03",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل بتصلحوا أجهزة أبل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "elec-returns_chunk_0_72a86ecb5c5a",
+        "text": "# الإرجاع والمخزون\nيمكن إرجاع الجهاز غير المفتوح خلال 10 أيام. يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام. الملحقات المخفضة لا ترد. عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+        "score": 0.5967992
+      },
+      {
+        "id": "elec-warranty_chunk_0_1ad9162a7c99",
+        "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل.",
+        "score": 0.56520464
+      }
+    ]
+  },
+  {
+    "id": "fashion-n-01",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "عندكم فرع بالخليل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": []
+  },
+  {
+    "id": "fashion-n-02",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "في لون أزرق للفستان؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "fashion-stock_chunk_0_e620e55645ff",
+        "text": "# التوفر\nالفستان الزيتي مقاس M متوفر، أما الأسود مقاس XL فهو نافد. قميص كرمل الأبيض مقاس L متوفر. تحديث المخزون في الموقع يتم كل ساعتين ولا يمثل حجزاً.",
+        "score": 0.59055796
+      },
+      {
+        "id": "fashion-products_chunk_0_9511dd63804a",
+        "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+        "score": 0.587521648
+      }
+    ]
+  },
+  {
+    "id": "professional_services-n-01",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "هل بتعملوا تطبيق موبايل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "svc-packages_chunk_0_d8ee877512fc",
+        "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين.",
+        "score": 0.675582024
+      }
+    ]
+  },
+  {
+    "id": "professional_services-n-02",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "كم تكلفة إدارة الإعلانات؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL",
+    "evidence": [
+      {
+        "id": "svc-packages_chunk_0_d8ee877512fc",
+        "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين.",
+        "score": 0.76304684
+      }
+    ]
+  },
+  {
+    "id": "electronics-c-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY",
+    "evidence": [
+      {
+        "id": "elec-delivery_chunk_0_3eb67cb4db8c",
+        "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً.",
+        "score": 0.72944088
+      },
+      {
+        "id": "elec-products_chunk_0_a742c3d593ef",
+        "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+        "score": 0.63747672
+      }
+    ]
+  },
+  {
+    "id": "electronics-c-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل هو متوفر الآن؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY",
+    "evidence": [
+      {
+        "id": "elec-products_chunk_0_a742c3d593ef",
+        "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+        "score": 0.5758932800000001
+      },
+      {
+        "id": "elec-returns_chunk_0_72a86ecb5c5a",
+        "text": "# الإرجاع والمخزون\nيمكن إرجاع الجهاز غير المفتوح خلال 10 أيام. يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام. الملحقات المخفضة لا ترد. عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+        "score": 0.5732152
+      }
+    ]
+  },
+  {
+    "id": "electronics-c-03",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "بدي الضمان تبعه",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY",
+    "evidence": [
+      {
+        "id": "elec-warranty_chunk_0_1ad9162a7c99",
+        "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل.",
+        "score": 0.7599953066666667
+      }
+    ]
+  },
+  {
+    "id": "distribution-c-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY",
+    "evidence": [
+      {
+        "id": "dist-orders_chunk_0_113acd0282a6",
+        "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+        "score": 0.65339032
+      }
+    ]
+  },
+  {
+    "id": "distribution-c-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "متى بتوصل؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY",
+    "evidence": [
+      {
+        "id": "dist-visits_chunk_0_7ad37fc86e13",
+        "text": "# المندوب والمستودع\nزيارة المندوب مجانية للمتاجر التي تطلب 60 كرتونة شهرياً على الأقل. مستودع البيرة يستقبل الاستلام الذاتي من الثامنة صباحاً حتى الرابعة عصراً. توفر الصنف في المستودع لا يضمن حجزه قبل تأكيد الطلب.",
+        "score": 0.5923349840000001
+      },
+      {
+        "id": "dist-zones_chunk_0_19392d72f595",
+        "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.",
+        "score": 0.587096592
+      }
+    ]
+  }
+]

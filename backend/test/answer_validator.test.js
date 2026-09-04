@@ -49,7 +49,7 @@ test('production evidence-based Answer Validator', async t => {
 
         assert.strictEqual(result.overallStatus, STATUS.UNSUPPORTED);
         assert.strictEqual(result.finalAnswer.split(fallback).length - 1, 1);
-        assert.ok(result.finalAnswer.includes('كيف يمكنني خدمتك اليوم؟'));
+        assert.ok(result.finalAnswer.includes(fallback));
         assert.ok(!result.finalAnswer.includes('القمر'));
         assert.ok(!result.finalAnswer.includes('المريخ'));
     });
@@ -121,6 +121,26 @@ test('production evidence-based Answer Validator', async t => {
             [{ id: 'mixed', text: 'سياسة المتجر: مدة الإرجاع هي 14 days.' }]
         );
         assert.strictEqual(result.overallStatus, STATUS.SUPPORTED);
+    });
+
+    await t.test('supported Arabic paraphrase is not converted to NO_ANSWER', () => {
+        const answer = 'يمكنك تتبع طلبك باستخدام رقم الطلب الخاص بك.';
+        const context = [{
+            id: 'tracking',
+            text: 'يمكن للعميل تتبع الطلب من خلال استخدام رقم الطلب. إذا تأخر الطلب أكثر من 48 ساعة يحصل العميل على كوبون خصم 10%.'
+        }];
+        const result = validateDetailed(answer, context);
+        assert.equal(result.overallStatus, STATUS.SUPPORTED);
+        assert.equal(result.finalAnswer, answer);
+    });
+
+    await t.test('keeps supported Arabic claim while removing unsupported multi-intent claim', () => {
+        const answer = 'يمكنك تتبع طلبك باستخدام رقم الطلب. ولدينا فرع على القمر.';
+        const context = [{ id: 'tracking', text: 'يمكن للعميل تتبع الطلب باستخدام رقم الطلب.' }];
+        const result = validateDetailed(answer, context);
+        assert.equal(result.overallStatus, STATUS.PARTIAL);
+        assert.match(result.finalAnswer, /تتبع طلبك باستخدام رقم الطلب/);
+        assert.doesNotMatch(result.finalAnswer, /فرع على القمر/);
     });
 
     await t.test('duplicate chunks are deduplicated', () => {

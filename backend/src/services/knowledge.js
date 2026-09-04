@@ -183,7 +183,9 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             // Stage 5: Multi-Query Variation & HyDE Document Synthesis
             if (profiler) profiler.startStage('HyDE');
             t0 = Date.now();
-            const queryVariations = generateMultiQueries(rewrittenQuery);
+            const queryVariations = getConfig('RAG_MULTI_QUERY_ENABLED') === 'true'
+                ? generateMultiQueries(rewrittenQuery)
+                : [rewrittenQuery];
             let hydeDoc = '';
             if (getConfig('RAG_HYDE_MODE') === 'true') {
                 hydeDoc = generateHypotheticalAnswer(query);
@@ -255,7 +257,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
             // Take Top-K
             const topChunks = filteredCandidates.slice(0, dynamicTopK);
-            const discardedChunks = filteredCandidates.slice(dynamicTopK);
+            const selectedIds = new Set(topChunks.map(item =>
+                item.chunkId || item.id || item.payload?.chunkId));
+            const discardedChunks = filteredCandidates.filter(item =>
+                !selectedIds.has(item.chunkId || item.id || item.payload?.chunkId));
 
             // Optional Neighbor Chunk Expansion
             const neighborExpansionEnabled = getConfig('RAG_NEIGHBOR_EXPANSION') === 'true';
@@ -330,6 +335,13 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             profiling.similarityThreshold = similarityThreshold;
             profiling.optimizedContext = optimizedContext;
             profiling.topChunks = expandedChunks;
+            profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                .map(reference => reference.metadata.chunkId);
+            profiling.retrievedChunks = reranked.map(item => ({
+                chunkId: item.chunkId || item.id || item.payload?.chunkId || null,
+                score: Number(item.finalScore ?? item.rerankerScore ?? item.score ?? item.semanticScore ?? 0),
+                source: item.source || item.payload?.source || null
+            }));
 
             lastRetrievalProfiling = profiling;
             const cacheWasUsed = listsOfResults.some(item => item.metadata?.cacheHit);
@@ -386,7 +398,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
             // Limit to dynamicTopK
             const selectedChunks = reranked.slice(0, dynamicTopK);
-            const discardedChunks = reranked.slice(dynamicTopK);
+            const selectedIds = new Set(selectedChunks.map(item =>
+                item.chunkId || item.id || item.payload?.chunkId));
+            const discardedChunks = reranked.filter(item =>
+                !selectedIds.has(item.chunkId || item.id || item.payload?.chunkId));
             const securityFiltered = filterRetrievedChunks(selectedChunks);
             const topChunks = securityFiltered.allowed;
 
@@ -421,6 +436,13 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             profiling.similarityThreshold = similarityThreshold;
             profiling.optimizedContext = optimizedContext;
             profiling.topChunks = topChunks;
+            profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                .map(reference => reference.metadata.chunkId);
+            profiling.retrievedChunks = reranked.map(item => ({
+                chunkId: item.chunkId || item.id || item.payload?.chunkId || null,
+                score: Number(item.finalScore ?? item.rerankerScore ?? item.score ?? item.semanticScore ?? 0),
+                source: item.source || item.payload?.source || null
+            }));
 
             lastRetrievalProfiling = profiling;
             lastRetrievalMetadata = createMetadata(rerankResult.metadata);

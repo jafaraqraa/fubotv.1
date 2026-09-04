@@ -1,0 +1,10 @@
+{
+  "falseBlocks": 15,
+  "checksAreMultiLabel": true,
+  "bySafetyCheck": {"RELEVANCE":9,"VALIDATOR_SUPPORT":7,"EVIDENCE_ID":7,"NUMERIC":2,"NEGATION_EXCLUSIVITY":1,"TENANT_INTEGRITY":0,"TEMPORAL":0,"MULTI_INTENT":0,"PROCESSING_ERROR":0,"OTHER":0},
+  "primaryCauseAssignment": {"RELEVANCE":8,"VALIDATOR_BOUNDARY_CONTRACT":7},
+  "byRootCause": {"I_RELEVANCE_FALSE_REJECTION":7,"E_SAFE_PARAPHRASE_REJECTED":1,"C_VALIDATOR_BOUNDARY_CONTRACT_MISMATCH":7},
+  "primaryFalseBlockSource": "RELEVANCE",
+  "primaryThreshold": "9/15 = 60% include a RELEVANCE failure",
+  "finding": "Two compact clusters explain all 15 confirmed false blocks; no tenant or temporal check caused a false block."
+}

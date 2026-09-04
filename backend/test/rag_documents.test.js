@@ -22,6 +22,7 @@ const docRepo = require('../src/database/repositories/knowledgeDocumentRepositor
 const kbDocService = require('../src/rag/services/knowledgeDocumentService');
 const {
     validateFilenameSecurity,
+    assertProductionKnowledgeArtifact,
     validateMimeAndMagicBytes,
     extractTextFromBuffer,
     computeSHA256,
@@ -41,6 +42,22 @@ test('RAG Knowledge Documents and Secure Library Suite', async (t) => {
     // 1. FILE & EXTENSION SECURITY VALIDATION TESTS
     // ----------------------------------------------------
     await t.test('Secure Upload Filename and Extension Validation', async (t) => {
+        await t.test('Reject evaluation artifacts but preserve ordinary authoritative names', () => {
+            for (const filename of [
+                'manual_test_questions.md', 'pricing-benchmark.txt',
+                'shipping.holdout.json.md', 'returns_regression.pdf'
+            ]) {
+                assert.throws(
+                    () => assertProductionKnowledgeArtifact(filename),
+                    error => error.code === 'RAG_EVALUATION_ARTIFACT_REJECTED'
+                );
+            }
+            assert.doesNotThrow(() => assertProductionKnowledgeArtifact('customer_testimonials.md'));
+            assert.throws(
+                () => assertProductionKnowledgeArtifact('company-facts.md', { artifactType: 'evaluation' }),
+                error => error.code === 'RAG_EVALUATION_ARTIFACT_REJECTED'
+            );
+        });
         await t.test('Reject null-byte filename', () => {
             assert.throws(() => validateFilenameSecurity('exploit\0.txt'), /يحتوي على محارف غير آمنة/);
         });

@@ -1,0 +1,1420 @@
+{
+  "variant": "C",
+  "run": 1,
+  "model": "google/gemini-2.5-flash",
+  "prompt": "Decision Semantics v2 unchanged",
+  "schema": "current",
+  "temperature": 0.2,
+  "maxTokens": 700,
+  "keySource": "DB_ACTIVE_PROVIDER:12",
+  "keyFingerprint": "f763187565de",
+  "metrics": {
+    "valid": 27,
+    "errors": 0,
+    "answerAccuracy": 0.8,
+    "noAnswerAccuracy": 0.9166666666666666,
+    "clarifyAccuracy": 1,
+    "unsupportedRate": 0.037037037037037035,
+    "falseAnswer": 1,
+    "falseNoAnswer": 0,
+    "falseClarify": 2,
+    "generationOmission": 0,
+    "evidencePresentButIgnored": 2,
+    "evidenceUnits": 93,
+    "evidenceCharacters": 4786,
+    "inputTokens": 30731
+  },
+  "rows": [
+    {
+      "variant": "C",
+      "id": "electronics-n-01",
+      "question": "هل عندكم فرع في نابلس؟",
+      "cohort": "FORENSIC_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-contact_chunk_0_c37eea929623:p1",
+          "sourceId": "elec-contact_chunk_0_c37eea929623",
+          "text": "المعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً.",
+          "sourceHeading": "# التواصل",
+          "score": 0.56460168
+        },
+        {
+          "id": "elec-contact_chunk_0_c37eea929623:p2",
+          "sourceId": "elec-contact_chunk_0_c37eea929623",
+          "text": "صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء.",
+          "sourceHeading": "# التواصل",
+          "score": 0.56460168
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد لدينا فرع في نابلس. المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يوجد لدينا فرع في نابلس. المعرض الوحيد يقع في البيرة قرب دوار المنارة.\",\n  \"claims\": [\n    {\n      \"text\": \"المعرض الوحيد يقع في البيرة قرب دوار المنارة.\",\n      \"evidenceIds\": [\n        \"elec-contact_chunk_0_c37eea929623:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1024,
+      "outputTokens": 128,
+      "cost": 0.0006272,
+      "latencyMs": 2877.2,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "professional_services-n-03",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "cohort": "FORENSIC_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "svc-support_chunk_0_19dc9459f9ae:p1",
+          "sourceId": "svc-support_chunk_0_19dc9459f9ae",
+          "text": "الدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "sourceHeading": "# الدعم",
+          "score": 0.79447184
+        },
+        {
+          "id": "svc-support_chunk_0_19dc9459f9ae:p2",
+          "sourceId": "svc-support_chunk_0_19dc9459f9ae",
+          "text": "باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً.",
+          "sourceHeading": "# الدعم",
+          "score": 0.79447184
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1022,
+      "outputTokens": 40,
+      "cost": 0.0004066,
+      "latencyMs": 1490.4,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "clinic-a-01",
+      "question": "مين دكتور الجلدية؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "ليان منصور"
+      ],
+      "evidence": [
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p1",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "الدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7986764
+        },
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p2",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7986764
+        },
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p3",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "جلسة تنظيف البشرة الطبية 140 شيكلاً.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7986764
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "دكتورة الجلدية هي ليان منصور.",
+      "claims": [
+        {
+          "text": "الدكتورة ليان منصور مختصة بالجلدية.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"دكتورة الجلدية هي ليان منصور.\",\n  \"claims\": [\n    {\n      \"text\": \"الدكتورة ليان منصور مختصة بالجلدية.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1101,
+      "outputTokens": 111,
+      "cost": 0.0006078,
+      "latencyMs": 1185.3,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "clinic-a-02",
+      "question": "مين طبيب الأسرة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "امين خليل"
+      ],
+      "evidence": [
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p1",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "الدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7531120533333333
+        },
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p2",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7531120533333333
+        },
+        {
+          "id": "clinic-doctors_chunk_0_2dff9f9e9285:p3",
+          "sourceId": "clinic-doctors_chunk_0_2dff9f9e9285",
+          "text": "جلسة تنظيف البشرة الطبية 140 شيكلاً.",
+          "sourceHeading": "# الأطباء",
+          "score": 0.7531120533333333
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "طبيب الأسرة هو الدكتور أمين خليل.",
+      "claims": [
+        {
+          "text": "الدكتور أمين خليل مختص بطب الأسرة.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"طبيب الأسرة هو الدكتور أمين خليل.\",\n  \"claims\": [\n    {\n      \"text\": \"الدكتور أمين خليل مختص بطب الأسرة.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1101,
+      "outputTokens": 113,
+      "cost": 0.0006128,
+      "latencyMs": 1238.8,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-a-01",
+      "question": "اقل طلب جملة كم كرتونة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "24 كرتونة"
+      ],
+      "evidence": [
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p1",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "الحد الأدنى للطلب 24 كرتونة.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.7498060400000001
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p2",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.7498060400000001
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p3",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.7498060400000001
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "الحد الأدنى للطلب بالجملة هو 24 كرتونة.",
+      "claims": [
+        {
+          "text": "الحد الأدنى للطلب هو 24 كرتونة.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الحد الأدنى للطلب بالجملة هو 24 كرتونة.\",\n  \"claims\": [\n    {\n      \"text\": \"الحد الأدنى للطلب هو 24 كرتونة.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1101,
+      "outputTokens": 119,
+      "cost": 0.0006278,
+      "latencyMs": 1269.8,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-a-02",
+      "question": "كرتونة عصير السهل بكم؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "46 شيكل"
+      ],
+      "evidence": [
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p1",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "الحد الأدنى للطلب 24 كرتونة.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.8549808
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p2",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.8549808
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p3",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.8549808
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6:p2"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر كرتونة عصير السهل 46 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر كرتونة عصير السهل 46 شيكلاً.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6:p2\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1100,
+      "outputTokens": 120,
+      "cost": 0.00063,
+      "latencyMs": 1295.4,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-a-01",
+      "question": "قديش سعر لابتوب ندى 14؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2890 شيكل"
+      ],
+      "evidence": [
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p1",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 بسعر 2890 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.855614
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p2",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.855614
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p3",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.855614
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p4",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.855614
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "هل تقصد حاسوب ندى 14 أم حاسوب ندى 14 برو؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"هل تقصد حاسوب ندى 14 أم حاسوب ندى 14 برو؟\"\n}",
+      "inputTokens": 1182,
+      "outputTokens": 63,
+      "cost": 0.0005121,
+      "latencyMs": 3485.3,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-a-02",
+      "question": "ما سعر ندى 14 برو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "3490 شيكل"
+      ],
+      "evidence": [
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p1",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 بسعر 2890 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.926222376
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p2",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.926222376
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p3",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.926222376
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p4",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.926222376
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "سعر حاسوب ندى 14 برو هو 3490 شيكل.",
+      "claims": [
+        {
+          "text": "سعر حاسوب ندى 14 برو هو 3490 شيكل.",
+          "evidenceIds": [
+            "elec-products_chunk_0_a742c3d593ef:p2"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر حاسوب ندى 14 برو هو 3490 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر حاسوب ندى 14 برو هو 3490 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-products_chunk_0_a742c3d593ef:p2\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1178,
+      "outputTokens": 130,
+      "cost": 0.0006784,
+      "latencyMs": 1438.3,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "fashion-a-01",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاسود",
+        "الزيتي"
+      ],
+      "evidence": [
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p1",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "فستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.7505113600000001
+        },
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p2",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.7505113600000001
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "فستان سهل الزيتون متوفر باللونين الأسود والزيتي.",
+      "claims": [
+        {
+          "text": "فستان سهل الزيتون متوفر باللونين الأسود والزيتي.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"فستان سهل الزيتون متوفر باللونين الأسود والزيتي.\",\n  \"claims\": [\n    {\n      \"text\": \"فستان سهل الزيتون متوفر باللونين الأسود والزيتي.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1038,
+      "outputTokens": 123,
+      "cost": 0.0006189,
+      "latencyMs": 1192.8,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "fashion-a-02",
+      "question": "مقاسات الفستان شو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "S",
+        "XL"
+      ],
+      "evidence": [
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p1",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "فستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.6699293066666667
+        },
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p2",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.6699293066666667
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "أي فستان تقصد؟",
+      "correct": false,
+      "decisionCorrect": false,
+      "factCorrect": false,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"أي فستان تقصد؟\"\n}",
+      "inputTokens": 1034,
+      "outputTokens": 47,
+      "cost": 0.0004277,
+      "latencyMs": 934.4,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "professional_services-a-01",
+      "question": "باقة الانطلاق بكم وشو فيها؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2200 شيكل",
+        "شعار",
+        "دليل الوان"
+      ],
+      "evidence": [
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p1",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان.",
+          "sourceHeading": "# الباقات",
+          "score": 0.794048768
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p2",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات.",
+          "sourceHeading": "# الباقات",
+          "score": 0.794048768
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p3",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "إدارة الإعلانات ليست ضمن أي من الباقتين.",
+          "sourceHeading": "# الباقات",
+          "score": 0.794048768
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "باقة الانطلاق سعرها 2200 شيكل وتشمل شعاراً ودليل ألوان.",
+      "claims": [
+        {
+          "text": "باقة الانطلاق سعرها 2200 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc:p1"
+          ]
+        },
+        {
+          "text": "باقة الانطلاق تشمل شعاراً ودليل ألوان.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc:p1"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"باقة الانطلاق سعرها 2200 شيكل وتشمل شعاراً ودليل ألوان.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة الانطلاق سعرها 2200 شيكل.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc:p1\"\n      ]\n    },\n    {\n      \"text\": \"باقة الانطلاق تشمل شعاراً ودليل ألوان.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc:p1\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1098,
+      "outputTokens": 186,
+      "cost": 0.0007944,
+      "latencyMs": 1247.1,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "professional_services-a-02",
+      "question": "سعر باقة النمو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "4800 شيكل"
+      ],
+      "evidence": [
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p1",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان.",
+          "sourceHeading": "# الباقات",
+          "score": 0.9081948320000001
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p2",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات.",
+          "sourceHeading": "# الباقات",
+          "score": 0.9081948320000001
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p3",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "إدارة الإعلانات ليست ضمن أي من الباقتين.",
+          "sourceHeading": "# الباقات",
+          "score": 0.9081948320000001
+        }
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "سعر باقة النمو هو 4800 شيكل.",
+      "claims": [
+        {
+          "text": "باقة النمو بسعر 4800 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc:p2"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر باقة النمو هو 4800 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة النمو بسعر 4800 شيكل.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc:p2\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1095,
+      "outputTokens": 115,
+      "cost": 0.000616,
+      "latencyMs": 1368,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "clinic-n-01",
+      "question": "شو تشخيص وجع الصدر؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 845,
+      "outputTokens": 40,
+      "cost": 0.0003535,
+      "latencyMs": 873.7,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "clinic-n-02",
+      "question": "أي دواء آخذ للحساسية؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 846,
+      "outputTokens": 40,
+      "cost": 0.0003538,
+      "latencyMs": 1638,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-n-01",
+      "question": "هل بتوصلوا الخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p1",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "التوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.61360464
+        },
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p2",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "لا يغطي الأسطول أريحا.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.61360464
+        },
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p3",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.61360464
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1100,
+      "outputTokens": 40,
+      "cost": 0.00043,
+      "latencyMs": 930.3,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-n-02",
+      "question": "كم غرامة تأخير الدين؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "dist-payment_chunk_0_a6956514b390:p1",
+          "sourceId": "dist-payment_chunk_0_a6956514b390",
+          "text": "العميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات.",
+          "sourceHeading": "# الدفع",
+          "score": 0.577861784
+        },
+        {
+          "id": "dist-payment_chunk_0_a6956514b390:p2",
+          "sourceId": "dist-payment_chunk_0_a6956514b390",
+          "text": "الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية.",
+          "sourceHeading": "# الدفع",
+          "score": 0.577861784
+        },
+        {
+          "id": "dist-payment_chunk_0_a6956514b390:p3",
+          "sourceId": "dist-payment_chunk_0_a6956514b390",
+          "text": "لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.",
+          "sourceHeading": "# الدفع",
+          "score": 0.577861784
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1102,
+      "outputTokens": 40,
+      "cost": 0.0004306,
+      "latencyMs": 2230.7,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-n-02",
+      "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p1",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يمكن إرجاع الجهاز غير المفتوح خلال 10 أيام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.8181925466666666
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p2",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.8181925466666666
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p3",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "الملحقات المخفضة لا ترد.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.8181925466666666
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p4",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.8181925466666666
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p1",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 بسعر 2890 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.6767767146666668
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p2",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.6767767146666668
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p3",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.6767767146666668
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p4",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.6767767146666668
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1517,
+      "outputTokens": 40,
+      "cost": 0.0005551,
+      "latencyMs": 671.5,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-n-03",
+      "question": "هل بتصلحوا أجهزة أبل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p1",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يمكن إرجاع الجهاز غير المفتوح خلال 10 أيام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5967992
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p2",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5967992
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p3",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "الملحقات المخفضة لا ترد.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5967992
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p4",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5967992
+        },
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p1",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "ضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر.",
+          "sourceHeading": "# الضمان",
+          "score": 0.56520464
+        },
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p2",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "بطارية الحاسوب مغطاة 12 شهراً.",
+          "sourceHeading": "# الضمان",
+          "score": 0.56520464
+        },
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p3",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "لا يغطي الضمان الكسر أو ضرر السوائل.",
+          "sourceHeading": "# الضمان",
+          "score": 0.56520464
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1440,
+      "outputTokens": 40,
+      "cost": 0.000532,
+      "latencyMs": 608.6,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "fashion-n-01",
+      "question": "عندكم فرع بالخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 845,
+      "outputTokens": 40,
+      "cost": 0.0003535,
+      "latencyMs": 632.7,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "fashion-n-02",
+      "question": "في لون أزرق للفستان؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "fashion-stock_chunk_0_e620e55645ff:p1",
+          "sourceId": "fashion-stock_chunk_0_e620e55645ff",
+          "text": "الفستان الزيتي مقاس M متوفر، أما الأسود مقاس XL فهو نافد.",
+          "sourceHeading": "# التوفر",
+          "score": 0.59055796
+        },
+        {
+          "id": "fashion-stock_chunk_0_e620e55645ff:p2",
+          "sourceId": "fashion-stock_chunk_0_e620e55645ff",
+          "text": "قميص كرمل الأبيض مقاس L متوفر.",
+          "sourceHeading": "# التوفر",
+          "score": 0.59055796
+        },
+        {
+          "id": "fashion-stock_chunk_0_e620e55645ff:p3",
+          "sourceId": "fashion-stock_chunk_0_e620e55645ff",
+          "text": "تحديث المخزون في الموقع يتم كل ساعتين ولا يمثل حجزاً.",
+          "sourceHeading": "# التوفر",
+          "score": 0.59055796
+        },
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p1",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "فستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.587521648
+        },
+        {
+          "id": "fashion-products_chunk_0_9511dd63804a:p2",
+          "sourceId": "fashion-products_chunk_0_9511dd63804a",
+          "text": "قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً.",
+          "sourceHeading": "# المجموعة",
+          "score": 0.587521648
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1277,
+      "outputTokens": 40,
+      "cost": 0.0004831,
+      "latencyMs": 721.1,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "professional_services-n-01",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p1",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان.",
+          "sourceHeading": "# الباقات",
+          "score": 0.675582024
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p2",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات.",
+          "sourceHeading": "# الباقات",
+          "score": 0.675582024
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p3",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "إدارة الإعلانات ليست ضمن أي من الباقتين.",
+          "sourceHeading": "# الباقات",
+          "score": 0.675582024
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "inputTokens": 1098,
+      "outputTokens": 40,
+      "cost": 0.0004294,
+      "latencyMs": 866.1,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "professional_services-n-02",
+      "question": "كم تكلفة إدارة الإعلانات؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p1",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان.",
+          "sourceHeading": "# الباقات",
+          "score": 0.76304684
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p2",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات.",
+          "sourceHeading": "# الباقات",
+          "score": 0.76304684
+        },
+        {
+          "id": "svc-packages_chunk_0_d8ee877512fc:p3",
+          "sourceId": "svc-packages_chunk_0_d8ee877512fc",
+          "text": "إدارة الإعلانات ليست ضمن أي من الباقتين.",
+          "sourceHeading": "# الباقات",
+          "score": 0.76304684
+        }
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [
+        "تكلفة إدارة الإعلانات"
+      ],
+      "clarificationQuestion": null,
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\"decision\":\"NO_ANSWER\",\"answer\":\"\",\"claims\":[],\"missingInformation\":[\"تكلفة إدارة الإعلانات\"],\"clarificationQuestion\":null}",
+      "inputTokens": 1097,
+      "outputTokens": 28,
+      "cost": 0.0003991,
+      "latencyMs": 849.1,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-c-01",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-delivery_chunk_0_3eb67cb4db8c:p1",
+          "sourceId": "elec-delivery_chunk_0_3eb67cb4db8c",
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.",
+          "sourceHeading": "# الشحن",
+          "score": 0.72944088
+        },
+        {
+          "id": "elec-delivery_chunk_0_3eb67cb4db8c:p2",
+          "sourceId": "elec-delivery_chunk_0_3eb67cb4db8c",
+          "text": "رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل.",
+          "sourceHeading": "# الشحن",
+          "score": 0.72944088
+        },
+        {
+          "id": "elec-delivery_chunk_0_3eb67cb4db8c:p3",
+          "sourceId": "elec-delivery_chunk_0_3eb67cb4db8c",
+          "text": "تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً.",
+          "sourceHeading": "# الشحن",
+          "score": 0.72944088
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p1",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 بسعر 2890 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.63747672
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p2",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.63747672
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p3",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.63747672
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p4",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.63747672
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تستفسر عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تستفسر عن سعره؟\"\n}",
+      "inputTokens": 1429,
+      "outputTokens": 52,
+      "cost": 0.0005587,
+      "latencyMs": 761.5,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-c-02",
+      "question": "هل هو متوفر الآن؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p1",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 بسعر 2890 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.5758932800000001
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p2",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.5758932800000001
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p3",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.5758932800000001
+        },
+        {
+          "id": "elec-products_chunk_0_a742c3d593ef:p4",
+          "sourceId": "elec-products_chunk_0_a742c3d593ef",
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "sourceHeading": "# المنتجات",
+          "score": 0.5758932800000001
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p1",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يمكن إرجاع الجهاز غير المفتوح خلال 10 أيام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5732152
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p2",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "يبلغ المتجر عن العيب المصنعي خلال 3 أيام من الاستلام.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5732152
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p3",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "الملحقات المخفضة لا ترد.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5732152
+        },
+        {
+          "id": "elec-returns_chunk_0_72a86ecb5c5a:p4",
+          "sourceId": "elec-returns_chunk_0_72a86ecb5c5a",
+          "text": "عند نفاد هاتف رمال X يمكن تسجيل طلب تنبيه عند عودته، ولا يوجد موعد ثابت لعودته.",
+          "sourceHeading": "# الإرجاع والمخزون",
+          "score": 0.5732152
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عنه؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عنه؟\"\n}",
+      "inputTokens": 1508,
+      "outputTokens": 49,
+      "cost": 0.0005749,
+      "latencyMs": 836.1,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "electronics-c-03",
+      "question": "بدي الضمان تبعه",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p1",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "ضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر.",
+          "sourceHeading": "# الضمان",
+          "score": 0.7599953066666667
+        },
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p2",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "بطارية الحاسوب مغطاة 12 شهراً.",
+          "sourceHeading": "# الضمان",
+          "score": 0.7599953066666667
+        },
+        {
+          "id": "elec-warranty_chunk_0_1ad9162a7c99:p3",
+          "sourceId": "elec-warranty_chunk_0_1ad9162a7c99",
+          "text": "لا يغطي الضمان الكسر أو ضرر السوائل.",
+          "sourceHeading": "# الضمان",
+          "score": 0.7599953066666667
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن ضمانه؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن ضمانه؟\"\n}",
+      "inputTokens": 1103,
+      "outputTokens": 51,
+      "cost": 0.0004584,
+      "latencyMs": 942.8,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-c-01",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p1",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "الحد الأدنى للطلب 24 كرتونة.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.65339032
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p2",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.65339032
+        },
+        {
+          "id": "dist-orders_chunk_0_113acd0282a6:p3",
+          "sourceId": "dist-orders_chunk_0_113acd0282a6",
+          "text": "يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+          "sourceHeading": "# طلبات الجملة",
+          "score": 0.65339032
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تستفسر عن سعره؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تستفسر عن سعره؟\"\n}",
+      "inputTokens": 1097,
+      "outputTokens": 52,
+      "cost": 0.0004591,
+      "latencyMs": 8363.9,
+      "error": null
+    },
+    {
+      "variant": "C",
+      "id": "distribution-c-02",
+      "question": "متى بتوصل؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "evidence": [
+        {
+          "id": "dist-visits_chunk_0_7ad37fc86e13:p1",
+          "sourceId": "dist-visits_chunk_0_7ad37fc86e13",
+          "text": "زيارة المندوب مجانية للمتاجر التي تطلب 60 كرتونة شهرياً على الأقل.",
+          "sourceHeading": "# المندوب والمستودع",
+          "score": 0.5923349840000001
+        },
+        {
+          "id": "dist-visits_chunk_0_7ad37fc86e13:p2",
+          "sourceId": "dist-visits_chunk_0_7ad37fc86e13",
+          "text": "مستودع البيرة يستقبل الاستلام الذاتي من الثامنة صباحاً حتى الرابعة عصراً.",
+          "sourceHeading": "# المندوب والمستودع",
+          "score": 0.5923349840000001
+        },
+        {
+          "id": "dist-visits_chunk_0_7ad37fc86e13:p3",
+          "sourceId": "dist-visits_chunk_0_7ad37fc86e13",
+          "text": "توفر الصنف في المستودع لا يضمن حجزه قبل تأكيد الطلب.",
+          "sourceHeading": "# المندوب والمستودع",
+          "score": 0.5923349840000001
+        },
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p1",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "التوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.587096592
+        },
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p2",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "لا يغطي الأسطول أريحا.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.587096592
+        },
+        {
+          "id": "dist-zones_chunk_0_19392d72f595:p3",
+          "sourceId": "dist-zones_chunk_0_19392d72f595",
+          "text": "الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.",
+          "sourceHeading": "# التوزيع",
+          "score": 0.587096592
+        }
+      ],
+      "actualDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "إلى أي مدينة يتم التوصيل؟",
+      "correct": true,
+      "decisionCorrect": true,
+      "factCorrect": true,
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"إلى أي مدينة يتم التوصيل؟\"\n}",
+      "inputTokens": 1353,
+      "outputTokens": 50,
+      "cost": 0.0005309,
+      "latencyMs": 978.4,
+      "error": null
+    }
+  ]
+}

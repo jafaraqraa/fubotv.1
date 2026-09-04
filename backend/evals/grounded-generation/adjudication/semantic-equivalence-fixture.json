@@ -1,0 +1,11 @@
+[
+  {"caseId":"distribution-a-07","expectedFact":"لا يغطي","acceptedSemanticForms":["لا يتم التوزيع","لا يتم توزيع"],"reason":"نفي التوزيع في أريحا هو نفس نفي تغطيتها في هذا المصدر.","evidenceReference":"dist-zones","reviewStatus":"REVIEWED"},
+  {"caseId":"distribution-a-13","expectedFact":"تقبل","acceptedSemanticForms":["يمكن إرجاع","يمكن ارجاع"],"reason":"إمكان إرجاع العبوة المغلقة يثبت قبول إرجاعها.","evidenceReference":"dist-damage","reviewStatus":"REVIEWED"},
+  {"caseId":"clinic-a-06","expectedFact":"الثامنة والنصف","acceptedSemanticForms":["8:30","8 30"],"reason":"تمثيل رقمي مطابق للوقت المكتوب.","evidenceReference":"clinic-hours","reviewStatus":"REVIEWED"},
+  {"caseId":"clinic-a-06","expectedFact":"السادسة","acceptedSemanticForms":["6:00","6 00"],"reason":"تمثيل رقمي مطابق للوقت المكتوب.","evidenceReference":"clinic-hours","reviewStatus":"REVIEWED"},
+  {"caseId":"clinic-a-12","expectedFact":"الرعاية الاولية فقط","acceptedSemanticForms":["للرعاية الأولية فقط","للرعاية الاولية فقط"],"reason":"حرف الجر المتصل لا يغير الحقيقة.","evidenceReference":"clinic-insurance","reviewStatus":"REVIEWED"},
+  {"caseId":"clinic-a-13","expectedFact":"لا يشمل","acceptedSemanticForms":["لا يغطي"],"reason":"عدم تغطية جلسة التأمين يعادل عدم شمولها في هذه الحالة.","evidenceReference":"clinic-insurance","reviewStatus":"REVIEWED"},
+  {"caseId":"fashion-a-08","expectedFact":"لا تسترد نقدا","acceptedSemanticForms":["لا يمكن استرداد الأموال نقدا","لا يمكن استرداد النقود"],"reason":"الصيغ تنفي الاسترداد النقدي نفسه.","evidenceReference":"fashion-exchange","reviewStatus":"REVIEWED"},
+  {"caseId":"fashion-a-08","expectedFact":"المقاس فقط","acceptedSemanticForms":["استبدالها بالمقاس فقط","استبدال قطع التخفيض النهائي بالمقاس فقط"],"reason":"الصيغ تقيد الاستبدال بالمقاس وحده.","evidenceReference":"fashion-exchange","reviewStatus":"REVIEWED"},
+  {"caseId":"fashion-a-09","expectedFact":"لا تبدل","acceptedSemanticForms":["لا يمكن استبدال"],"reason":"نفي إمكان الاستبدال يعادل نفي التبديل.","evidenceReference":"fashion-exchange","reviewStatus":"REVIEWED"}
+]

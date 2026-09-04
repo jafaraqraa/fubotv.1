@@ -39,8 +39,19 @@ test('intent-aware AI conversation routing', async t => {
                 userQuestion: message,
                 responseMode: decision.mode
             });
-            assert.ok(prompt.at(-1).content.includes('UNTRUSTED_RETRIEVED_CONTEXT_START'));
+            assert.ok(prompt.at(-1).content.includes('VERIFIED_EVIDENCE_START'));
             assert.ok(prompt[0].content.includes('RAG SECURITY POLICY'));
+        }
+    });
+
+    await t.test('Palestinian product and installment questions never bypass grounding', () => {
+        for (const query of [
+            'شو بصير إذا المنتج مش متوفر؟',
+            'هل في تقسيط على ستة أشهر؟',
+            'قديش كفالة الأجهزة؟',
+            'مين الشخص الموجود في صورة جعفر؟'
+        ]) {
+            assert.equal(classifyConversationMode(query).mode, MODE.COMPANY_KNOWLEDGE, query);
         }
     });
 

@@ -1,0 +1,64 @@
+{
+  "suite": "numeric-empty-claim-holdout-v1",
+  "sector": "library-cooperative",
+  "tenantId": "unseen-library-owner",
+  "cases": [
+    {
+      "id": "unseen-percentage",
+      "mode": "VALIDATE",
+      "route": "COMPANY_KNOWLEDGE",
+      "question": "كم يصير بدل العضوية بعد التعديل؟",
+      "answer": "بدل العضوية بعد خفضه يصبح 700 شيقل.",
+      "evidence": [
+        { "id": "membership-base", "text": "بدل العضوية 800 شيقل." },
+        { "id": "membership-rate", "text": "جرى خفض بدل العضوية بنسبة 12.5%." }
+      ],
+      "expectedDecision": "ALLOW"
+    },
+    {
+      "id": "mixed-owner-unsafe",
+      "mode": "FOREIGN_CLAIM",
+      "route": "COMPANY_KNOWLEDGE",
+      "question": "كم قيمة الرسم؟",
+      "answer": "قيمة الرسم 90 شيقل.",
+      "evidence": [{ "id": "foreign-fee", "tenantId": "unseen-external-owner", "text": "قيمة الرسم 90 شيقل." }],
+      "expectedDecision": "BLOCK"
+    },
+    {
+      "id": "direct-supported-control",
+      "mode": "VALIDATE",
+      "route": "COMPANY_KNOWLEDGE",
+      "question": "كم مدة إصدار البطاقة؟",
+      "answer": "مدة إصدار البطاقة 25 دقيقة.",
+      "evidence": [{ "id": "duration-rule", "text": "مدة إصدار البطاقة 25 دقيقة." }],
+      "expectedDecision": "ALLOW"
+    },
+    {
+      "id": "threshold-control",
+      "mode": "VALIDATE",
+      "route": "COMPANY_KNOWLEDGE",
+      "question": "مساهمتي 1400 شيقل، هل تحقق الشرط؟",
+      "answer": "المساهمة 1400 شيقل تحقق شرط أكثر من 1250 شيقل.",
+      "evidence": [{ "id": "contribution-rule", "text": "العضوية الممتدة متاحة عند مساهمة أكثر من 1250 شيقل." }],
+      "expectedDecision": "ALLOW"
+    },
+    {
+      "id": "zero-business-claims",
+      "mode": "ZERO_CLAIMS",
+      "route": "COMPANY_KNOWLEDGE",
+      "question": "ما قيمة الخدمة؟",
+      "answer": "القيمة مؤكدة لكنها غير موثقة.",
+      "evidence": [],
+      "expectedDecision": "BLOCK"
+    },
+    {
+      "id": "social-zero-claims",
+      "mode": "ZERO_CLAIMS",
+      "route": "GENERAL_CONVERSATION",
+      "question": "أهلًا، كيفك؟",
+      "answer": "أهلًا وسهلًا!",
+      "evidence": [],
+      "expectedDecision": "ALLOW"
+    }
+  ]
+}

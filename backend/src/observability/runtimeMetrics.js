@@ -62,6 +62,13 @@ function prometheus() {
         lines.push(`${metric}_sum${labelText(labels)} ${value.sum}`);
         lines.push(`${metric}_max${labelText(labels)} ${value.max}`);
     }
+    const counter = name => counters.get(JSON.stringify([name, {}])) || 0;
+    const total = counter('grounding_safety_totalBusinessResponses');
+    const ratio = numerator => total > 0 ? numerator / total : 0;
+    lines.push(`futhing_grounding_safety_blockRate ${ratio(counter('grounding_safety_blockedResponses'))}`);
+    lines.push(`futhing_grounding_safety_clarifyRate ${ratio(counter('grounding_safety_clarifyFallbacks'))}`);
+    lines.push(`futhing_grounding_safety_fallbackRate ${ratio(counter('grounding_safety_clarifyFallbacks') + counter('grounding_safety_noAnswerFallbacks'))}`);
+    lines.push(`futhing_grounding_safety_boundaryErrorRate ${ratio(counter('grounding_safety_boundaryErrors'))}`);
     try {
         const rag = require('../rag/runtime/ragMetrics').snapshot().metrics;
         for (const [name, value] of Object.entries(rag)) {

@@ -1,0 +1,577 @@
+{
+  "model": "openai/gpt-5-mini",
+  "run": 1,
+  "prompt": "Decision Semantics v2",
+  "schema": "current native JSON schema",
+  "policy": "safe_partial",
+  "temperature": 0.2,
+  "maxTokens": 700,
+  "keySource": "DB_ACTIVE_PROVIDER:12",
+  "keyFingerprint": "f763187565de",
+  "metrics": {
+    "validResponses": 0,
+    "providerErrors": 38,
+    "answerAccuracy": null,
+    "noAnswerAccuracy": null,
+    "clarifyAccuracy": null,
+    "answerControlAccuracy": null,
+    "unsupportedRate": null,
+    "falseAnswer": 0,
+    "falseNoAnswer": 0,
+    "missedClarify": 0,
+    "falseClarify": {
+      "count": 0,
+      "total": 0,
+      "rate": null
+    },
+    "evidencePresentButIgnored": 0,
+    "generationOmissions": 0,
+    "malformed": 0,
+    "malformedRate": 0,
+    "hallucinatedEvidenceIds": 0,
+    "tenantLeakage": 0,
+    "latency": {
+      "meanMs": null,
+      "p95Ms": 0
+    },
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "cost": 0
+  },
+  "rows": [
+    {
+      "id": "electronics-c-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 448.3
+    },
+    {
+      "id": "electronics-c-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل هو متوفر الآن؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 424.3
+    },
+    {
+      "id": "electronics-c-03",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "بدي الضمان تبعه",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 420.8
+    },
+    {
+      "id": "distribution-c-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 426.4
+    },
+    {
+      "id": "distribution-c-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "متى بتوصل؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 30.1
+    },
+    {
+      "id": "distribution-c-03",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "بدي ارجعها",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 33.1
+    },
+    {
+      "id": "clinic-c-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 34.8
+    },
+    {
+      "id": "clinic-c-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 35.8
+    },
+    {
+      "id": "clinic-c-03",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 34.6
+    },
+    {
+      "id": "fashion-c-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 29.6
+    },
+    {
+      "id": "fashion-c-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "أي مقاس موجود؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 27.7
+    },
+    {
+      "id": "fashion-c-03",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "هل اللون متوفر؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 27.8
+    },
+    {
+      "id": "professional_services-c-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "قديش سعرها؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 22.9
+    },
+    {
+      "id": "professional_services-c-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 27.2
+    },
+    {
+      "id": "professional_services-c-03",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "بدي أعدلها",
+      "cohort": "ALL_CLARIFY",
+      "expectedDecision": "CLARIFY",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 27.9
+    },
+    {
+      "id": "clinic-a-11",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "cohort": "GENUINE_FALSE_NO_ANSWER",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 28.1
+    },
+    {
+      "id": "electronics-n-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "cohort": "GENUINE_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 19
+    },
+    {
+      "id": "professional_services-n-03",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "cohort": "GENUINE_FALSE_ANSWER",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 17.4
+    },
+    {
+      "id": "clinic-a-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "مين دكتور الجلدية؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 18.9
+    },
+    {
+      "id": "clinic-a-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "مين طبيب الأسرة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 22.1
+    },
+    {
+      "id": "distribution-a-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "اقل طلب جملة كم كرتونة؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 19
+    },
+    {
+      "id": "distribution-a-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "كرتونة عصير السهل بكم؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 24.7
+    },
+    {
+      "id": "electronics-a-01",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "قديش سعر لابتوب ندى 14؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 21.9
+    },
+    {
+      "id": "electronics-a-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "ما سعر ندى 14 برو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 25.9
+    },
+    {
+      "id": "fashion-a-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 23
+    },
+    {
+      "id": "fashion-a-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "مقاسات الفستان شو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 26.7
+    },
+    {
+      "id": "professional_services-a-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "باقة الانطلاق بكم وشو فيها؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 25.7
+    },
+    {
+      "id": "professional_services-a-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "سعر باقة النمو؟",
+      "cohort": "ANSWER_CONTROL",
+      "expectedDecision": "ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 34.1
+    },
+    {
+      "id": "clinic-n-01",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "شو تشخيص وجع الصدر؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 41.7
+    },
+    {
+      "id": "clinic-n-02",
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "أي دواء آخذ للحساسية؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 25.9
+    },
+    {
+      "id": "distribution-n-01",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "هل بتوصلوا الخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 30.7
+    },
+    {
+      "id": "distribution-n-02",
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "كم غرامة تأخير الدين؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 19
+    },
+    {
+      "id": "electronics-n-02",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 23
+    },
+    {
+      "id": "electronics-n-03",
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل بتصلحوا أجهزة أبل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 21.9
+    },
+    {
+      "id": "fashion-n-01",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "عندكم فرع بالخليل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 24.9
+    },
+    {
+      "id": "fashion-n-02",
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "في لون أزرق للفستان؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 19.4
+    },
+    {
+      "id": "professional_services-n-01",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 22.7
+    },
+    {
+      "id": "professional_services-n-02",
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم تكلفة إدارة الإعلانات؟",
+      "cohort": "NO_ANSWER_CONTROL",
+      "expectedDecision": "NO_ANSWER",
+      "error": {
+        "name": "OpenRouterEvaluationError",
+        "status": 404,
+        "message": "OPENROUTER_PROVIDER_ERROR:No endpoints found that can handle the requested parameters. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection"
+      },
+      "latencyMs": 26.2
+    }
+  ]
+}

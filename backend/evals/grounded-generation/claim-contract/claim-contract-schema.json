@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["referentStatus", "referent", "requestedPropositions", "clarificationQuestion"],
+  "properties": {
+    "referentStatus": {"enum": ["RESOLVED", "AMBIGUOUS"]},
+    "referent": {"type": ["string", "null"]},
+    "requestedPropositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "proposition", "requiredForAnswer"],
+        "properties": {
+          "id": {"type": "string"},
+          "proposition": {"type": "string"},
+          "requiredForAnswer": {"type": "boolean"}
+        }
+      }
+    },
+    "clarificationQuestion": {"type": ["string", "null"]}
+  }
+}

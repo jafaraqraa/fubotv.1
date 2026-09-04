@@ -8,6 +8,7 @@ const {
     docsDir,
     computeSHA256,
     validateFilenameSecurity,
+    assertProductionKnowledgeArtifact,
     validateMimeAndMagicBytes,
     extractTextFromBuffer,
     computeNormalizedTextHash
@@ -463,6 +464,7 @@ async function uploadAndRegisterDocument(originalName, mimeType, buffer, options
     const overwriteAction = options.overwriteAction;
     const { requireTenantId } = require('../security/tenantContext');
     const tenantId = requireTenantId(options.tenantId, 'document-upload');
+    assertProductionKnowledgeArtifact(originalName, options.metadata || options);
 
     // 1. Run strict security validations
     if (!Buffer.isBuffer(buffer) || buffer.length === 0) {

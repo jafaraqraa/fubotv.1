@@ -1,0 +1,22 @@
+{
+  "companies": [{
+    "tenantId": "clarify_holdout_parking",
+    "company": "مرفق مواقف تجريبي",
+    "documents": [
+      {"id":"parking-plans","content":"# التصاريح\nتصريح الزائر مدته يوم واحد ويكلف 8 شيقل. الاشتراك الشهري مدته 30 يوما ويكلف 120 شيقل."},
+      {"id":"parking-hours","content":"# الدوام\nالبوابة تعمل من السبت إلى الخميس من 06:00 إلى 23:00. لا تتوفر بيانات حية عن الأماكن الشاغرة."}
+    ]
+  }],
+  "cases": [
+    {"id":"park-c1","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"شو شروطها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["unresolved_referent"]},
+    {"id":"park-c2","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"قديش مدته؟","history":[{"role":"user","content":"احكيلي عن تصريح الزائر"},{"role":"user","content":"وعن الاشتراك الشهري"}],"expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["multiple_referents"]},
+    {"id":"park-c3","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"بدي أغيره","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["user_parameter"]},
+    {"id":"park-a1","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"قديش مدته؟","history":[{"role":"user","content":"احكيلي عن تصريح الزائر"}],"expectedDecision":"ANSWER","expectedFacts":["يوم واحد"],"expectedEvidenceIds":["parking-plans"],"tags":["history_resolved"]},
+    {"id":"park-a2","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"كم تكلف الاشتراك الشهري؟","expectedDecision":"ANSWER","expectedFacts":["120 شيقل"],"expectedEvidenceIds":["parking-plans"],"tags":["specified_parameter"]},
+    {"id":"park-a3","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"لأي ساعة البوابة شغالة يوم الخميس؟","expectedDecision":"ANSWER","expectedFacts":["23:00"],"expectedEvidenceIds":["parking-hours"],"tags":["specified_date"]},
+    {"id":"park-n1","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"في مكان فاضي الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state"]},
+    {"id":"park-n2","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"شو رقم التواصل؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"park-n3","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"بتقبلوا الدفع بالشيك؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["knowledge_missing"]},
+    {"id":"park-s1","tenantId":"clarify_holdout_parking","company":"مرفق مواقف تجريبي","domain":"parking","question":"أهلين، يعطيكم العافية","expectedDecision":"ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["social_control"]}
+  ]
+}

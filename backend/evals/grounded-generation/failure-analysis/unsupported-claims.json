@@ -1,0 +1,420 @@
+{
+  "summary": {
+    "responses": 9,
+    "rate": 0.03
+  },
+  "validatorSimulatedFinal": {
+    "responses": 3,
+    "rate": 0.01
+  },
+  "items": [
+    {
+      "caseId": "electronics-n-01",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط.",
+      "kind": "over-generalization",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "المعرض الوحيد للشركة يقع في البيرة قرب دوار المنارة، ولا يوجد فرع في نابلس.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد للشركة يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط.",
+      "kind": "over-generalization",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط.",
+      "kind": "over-generalization",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+      "claims": [
+        {
+          "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب.",
+      "kind": "related-but-nonresponsive",
+      "finalVisibleIfValidatorEnforced": true,
+      "whyUnsupported": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين التاسعة والخامسة.",
+      "claims": [
+        {
+          "text": "الدعم متاح من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب.",
+      "kind": "related-but-nonresponsive",
+      "finalVisibleIfValidatorEnforced": true,
+      "whyUnsupported": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+      "claims": [
+        {
+          "text": "الدعم متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب.",
+      "kind": "related-but-nonresponsive",
+      "finalVisibleIfValidatorEnforced": true,
+      "whyUnsupported": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف.",
+      "kind": "temporal/label-dispute",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف.",
+      "kind": "temporal/label-dispute",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف.",
+      "kind": "temporal/label-dispute",
+      "finalVisibleIfValidatorEnforced": false,
+      "whyUnsupported": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    }
+  ]
+}

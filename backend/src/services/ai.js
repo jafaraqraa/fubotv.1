@@ -5,7 +5,18 @@ const {
     getLastRetrievalMetadata
 } = require('./knowledge');
 const { getChatHistoryForAI } = require('../database/repositories/messageRepository');
-const { validateAnswer: runValidation } = require('../rag/intelligence/answerValidator');
+const {
+    validateAnswer: runValidation,
+    getLastValidationMetadata
+} = require('../rag/intelligence/answerValidator');
+const { enabled } = require('../rag/runtime/fallbackPolicy');
+const {
+    DECISION,
+    ARABIC_CLARIFY_MESSAGE,
+    clarificationForQuery,
+    needsClarification,
+    decideEvidence
+} = require('../rag/intelligence/evidenceDecisionGate');
 const {
     shouldBlockOpenDomain,
     blockOpenDomain,
@@ -15,6 +26,30 @@ const PromptBuilder = require('./PromptBuilder');
 const OpenRouterService = require('./OpenRouterService');
 const { MODE, classifyConversationMode } = require('./conversationModeRouter');
 const { performance } = require('perf_hooks');
+const {
+    applyGroundingSafetyBoundary,
+    enforcementAssignment
+} = require('../rag/security/groundingSafetyBoundary');
+const { getConfig } = require('../rag/config/ragConfig');
+const crypto = require('crypto');
+const ragTraceRepo = require('../database/repositories/ragRequestTraceRepository');
+
+function traceClaims(validation) {
+    return (validation?.claims || []).map(claim => ({
+        text: claim.propositionText || claim.text || null,
+        evidenceIds: claim.evidenceChunkIds || claim.evidenceIds || [],
+        verdict: claim.classification || claim.finalClassification || null,
+        reason: claim.reason || claim.classificationReason
+            || claim.numericResult?.reason
+            || (claim.missingEvidence ? 'missing_evidence' : null)
+            || (claim.classification ? `validator_${String(claim.classification).toLowerCase()}` : null),
+        matchedEvidenceId: claim.matchedEvidenceId
+            || claim.evidenceChunkIds?.[0] || claim.evidenceIds?.[0] || null,
+        numericVerdict: claim.numericResult?.relation || null,
+        temporalVerdict: claim.temporalResult?.relation || claim.temporalVerdict || null,
+        negationVerdict: claim.negationResult?.relation || claim.negationVerdict || null
+    }));
+}
 
 /**
  * High-resolution Timing Profiler for AI response generation pipeline.
@@ -86,8 +121,18 @@ function buildPrompt(conversationHistory, systemPrompt, context, userText, optio
         conversationHistory,
         knowledgeContext: context,
         userQuestion: userText,
-        responseMode: options.responseMode
+        responseMode: options.responseMode,
+        tenantId: options.tenantId,
+        evidenceDecision: options.evidenceDecision
     });
+}
+
+function inspectEvidenceTenantIntegrity(chunks, requestTenantId) {
+    const evidenceTenantIds = [...new Set((chunks || [])
+        .map(chunk => chunk?.tenantId || chunk?.payload?.tenantId)
+        .filter(Boolean).map(String))];
+    const mismatched = evidenceTenantIds.filter(id => id !== String(requestTenantId));
+    return { evidenceTenantIds, valid: mismatched.length === 0, mismatched };
 }
 
 /**
@@ -117,8 +162,8 @@ async function callOpenRouter(messagesPayload, taskName = 'text_generation', opt
  * 4. validateAnswer()
  * Validates raw LLM response against context if context exists.
  */
-function validateAnswer(rawResponse, context) {
-    return runValidation(rawResponse, context);
+function validateAnswer(rawResponse, context, options = {}) {
+    return runValidation(rawResponse, context, options);
 }
 
 /**
@@ -155,8 +200,23 @@ async function fetchOpenRouterGenerationDetails(generationId, apiKey) {
 async function getAIResponse(userId, userText, messageType = 'text', mediaObj = null, routing = {}) {
     const { requireTenantId } = require('../rag/security/tenantContext');
     const tenantId = requireTenantId(routing.tenantId, 'ai-rag-response');
+    const pipelineTelemetry = routing.pipelineTelemetry
+        && typeof routing.pipelineTelemetry === 'object' ? routing.pipelineTelemetry : {};
+    Object.assign(pipelineTelemetry, {
+        resolvedTenantId: tenantId, selectedRoute: null, ragInvoked: false,
+        retrievalTenantId: null, retrievedEvidenceCount: 0,
+        evidenceTenantIds: [], gateDecision: null, generationMode: null
+    });
     const startTime = Date.now();
     const profiler = new PipelineProfiler();
+    const requestId = routing.requestId || crypto.randomUUID();
+    ragTraceRepo.createTrace({
+        requestId,
+        messageId: routing.messageId || null,
+        tenantId,
+        conversationId: routing.conversationId || `${routing.channel || 'unknown'}:${userId}`,
+        retrievalQuery: userText
+    });
 
     const isImage = messageType === 'image' || (mediaObj && mediaObj.mimeType && mediaObj.mimeType.startsWith('image/'));
     const isAudio = ['audio', 'voice'].includes(messageType)
@@ -232,10 +292,35 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
 
     // 1. Fetch system prompt personality, rules, safety
     const systemPrompt = getSystemPrompt();
+    const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
     const routingDecision = isImage
         ? { mode: MODE.COMPANY_KNOWLEDGE, intent: 'Vision', reason: 'media_requires_grounding' }
-        : classifyConversationMode(userText);
+        : classifyConversationMode(userText, {
+            inputType: isAudio ? 'transcribed_audio' : 'text'
+        });
     const useCompanyKnowledge = routingDecision.mode === MODE.COMPANY_KNOWLEDGE;
+    ragTraceRepo.updateTrace(requestId, {
+        route: routingDecision.mode,
+        intent: routingDecision.intent,
+        retrieval_query: isImage ? (mediaObj?.caption || '') : userText
+    });
+    pipelineTelemetry.selectedRoute = routingDecision.mode;
+    pipelineTelemetry.generationMode = useCompanyKnowledge
+        ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
+    let upstreamClarificationNeeded = !isImage
+        && needsClarification(userText, conversationHistory);
+    if (!isImage && enabled('RAG_EVIDENCE_GATE_ENABLED', false)
+        && upstreamClarificationNeeded) {
+        pipelineTelemetry.gateDecision = DECISION.CLARIFY;
+        if (routing.decisionTelemetry && typeof routing.decisionTelemetry === 'object') {
+            Object.assign(routing.decisionTelemetry, {
+                decision: DECISION.CLARIFY,
+                reason: 'missing_conversation_reference',
+                consideredChunkIds: [], excludedTenantChunks: 0, durationMs: 0
+            });
+        }
+        return clarificationForQuery(userText);
+    }
     console.log(
         `[AI Routing] mode=${routingDecision.mode} intent=${routingDecision.intent} `
         + `reason=${routingDecision.reason} tenant=${tenantId}`
@@ -256,6 +341,21 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             telemetry: retrievalTelemetry
         })
         : '';
+    const retrievedChunks = retrievalTelemetry.profiling?.topChunks || [];
+    upstreamClarificationNeeded = upstreamClarificationNeeded || (!isImage
+        && needsClarification(userText, conversationHistory, retrievedChunks));
+    const tenantIntegrity = inspectEvidenceTenantIntegrity(retrievedChunks, tenantId);
+    Object.assign(pipelineTelemetry, {
+        ragInvoked: shouldRetrieveKnowledge,
+        retrievalTenantId: shouldRetrieveKnowledge ? tenantId : null,
+        retrievedEvidenceCount: retrievedChunks.length,
+        evidenceTenantIds: tenantIntegrity.evidenceTenantIds
+    });
+    if (shouldRetrieveKnowledge && !tenantIntegrity.valid) {
+        pipelineTelemetry.gateDecision = DECISION.NO_ANSWER;
+        pipelineTelemetry.generationMode = 'BLOCKED_TENANT_MISMATCH';
+        return blockOpenDomain(tenantId, 'tenant_evidence_mismatch');
+    }
     const retrievalMetadata = shouldRetrieveKnowledge
         ? (retrievalTelemetry.metadata || getLastRetrievalMetadata())
         : {
@@ -263,10 +363,38 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             degraded: false,
             cacheHit: false
         };
+    const decisionTelemetry = routing.decisionTelemetry
+        && typeof routing.decisionTelemetry === 'object' ? routing.decisionTelemetry : {};
+    if (!isImage && useCompanyKnowledge && enabled('RAG_EVIDENCE_GATE_ENABLED', false)) {
+        const gate = decideEvidence({
+            query: userText,
+            chunks: retrievalTelemetry.profiling?.topChunks || [],
+            history: conversationHistory,
+            tenantId
+        });
+        Object.assign(decisionTelemetry, gate);
+        ragTraceRepo.updateTrace(requestId, {
+            evidence_gate_decision: gate.decision,
+            evidence_gate_reason: gate.reason
+        });
+        pipelineTelemetry.gateDecision = gate.decision;
+        if (gate.decision === DECISION.CLARIFY) return clarificationForQuery(userText);
+        if (gate.decision === DECISION.NO_ANSWER
+            && shouldBlockOpenDomain({ knowledgeBaseOnly: routing.knowledgeBaseOnly })) {
+            return blockOpenDomain(tenantId, gate.reason);
+        }
+    }
     console.log(
         `[RAG Routing] mode=${routingDecision.mode} invoked=${shouldRetrieveKnowledge} `
         + `contextAvailable=${Boolean(String(context || '').trim())}`
     );
+    ragTraceRepo.updateTrace(requestId, {
+        retrieved_chunks_json: (retrievalTelemetry.profiling?.retrievedChunks || []).map(item => ({
+            id: item.chunkId, score: item.score, source: item.source
+        })),
+        selected_context_chunk_ids_json: retrievalTelemetry.profiling?.selectedContextChunkIds
+            || retrievedChunks.map(item => item.chunkId || item.id || item.payload?.chunkId).filter(Boolean)
+    });
     if (!isImage && useCompanyKnowledge
         && !String(context || '').trim()
         && shouldBlockOpenDomain({ knowledgeBaseOnly: routing.knowledgeBaseOnly })) {
@@ -280,8 +408,6 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     }
 
     // 3. Fetch clean conversation history (unmodified)
-    const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
-
     // 4. Construct messages payload using Prompt Builder
     profiler.startStage('Prompt Builder');
     // If it's an image, PromptBuilder builds the same array, and we then enrich the last user message inside Providers.
@@ -290,7 +416,11 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         systemPrompt,
         context,
         isImage ? (mediaObj.caption || 'صورة مرفقة') : userText,
-        { responseMode: routingDecision.mode }
+        {
+            responseMode: routingDecision.mode,
+            tenantId,
+            evidenceDecision: pipelineTelemetry.gateDecision
+        }
     );
     profiler.endStage('Prompt Builder');
 
@@ -322,6 +452,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     }
 
     const apiEnd = Date.now();
+    ragTraceRepo.updateTrace(requestId, { raw_model_output: rawResponse });
     console.log(`🤖 AI Provider API Request completed at: ${new Date(apiEnd).toISOString()}`);
 
     const apiLatency = apiEnd - apiStart;
@@ -352,9 +483,80 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             answer: rawResponse,
             context,
             validator: validateAnswer,
-            tenantId
+            tenantId,
+            validationOptions: { question: userText, tenantId }
         });
+        if (routing.validationTelemetry && typeof routing.validationTelemetry === 'object') {
+            Object.assign(routing.validationTelemetry, getLastValidationMetadata() || {});
+        }
+        const validationMetadata = getLastValidationMetadata() || {};
+        ragTraceRepo.updateTrace(requestId, { claims_json: traceClaims(validationMetadata) });
         profiler.endStage('Answer Validation');
+
+        if (enabled('RAG_GROUNDING_SAFETY_BOUNDARY_ENABLED', true)) {
+            profiler.startStage('Grounding Safety Boundary');
+            const shadowMode = enabled('RAG_GROUNDING_SAFETY_BOUNDARY_SHADOW', true);
+            const conversationId = routing.conversationId || `${routing.channel || 'unknown'}:${userId}`;
+            const rollout = enforcementAssignment({
+                tenantId,
+                conversationId,
+                percent: getConfig('RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT'),
+                shadowMode
+            });
+            const boundaryResult = applyGroundingSafetyBoundary({
+                answer: validatedResponse,
+                validatedAnswer: validatedResponse,
+                question: userText,
+                tenantId,
+                route: routingDecision.mode,
+                serverEvidence: retrievedChunks,
+                validation: getLastValidationMetadata() || {},
+                upstreamDecision: upstreamClarificationNeeded ? DECISION.CLARIFY : null,
+                shadowMode,
+                enforcementActive: rollout.enforced
+            });
+            validatedResponse = boundaryResult.outputAnswer;
+            pipelineTelemetry.groundingSafety = boundaryResult.telemetry;
+            if (routing.validationTelemetry && typeof routing.validationTelemetry === 'object') {
+                routing.validationTelemetry.groundingSafety = boundaryResult.telemetry;
+            }
+            console.log('[GroundingSafetyBoundary]', boundaryResult.telemetry);
+            const safetyMetrics = require('../observability/runtimeMetrics');
+            const metricNames = ['totalBusinessResponses'];
+            metricNames.push(rollout.enforced ? 'enforcedResponses' : 'shadowOnlyResponses');
+            metricNames.push(boundaryResult.decision === 'ALLOW' ? 'allowedResponses'
+                : boundaryResult.decision === 'PARTIAL' ? 'partialResponses' : 'blockedResponses');
+            if (boundaryResult.telemetry.fallbackType === 'CLARIFY') metricNames.push('clarifyFallbacks');
+            if (boundaryResult.telemetry.fallbackType === 'NO_ANSWER') metricNames.push('noAnswerFallbacks');
+            if (boundaryResult.telemetry.processingErrorCount) metricNames.push('boundaryErrors');
+            if (boundaryResult.telemetry.tenantMismatchCount
+                || boundaryResult.telemetry.missingTenantEvidenceCount) metricNames.push('tenantIntegrityBlocks');
+            if (boundaryResult.telemetry.numericBlockCount) metricNames.push('numericBlocks');
+            if (boundaryResult.telemetry.temporalBlockCount) metricNames.push('temporalBlocks');
+            if (boundaryResult.telemetry.negationBlockCount) metricNames.push('negationBlocks');
+            if (boundaryResult.telemetry.nonresponsiveBlockCount) metricNames.push('nonresponsiveBlocks');
+            if (boundaryResult.reasons.includes('UPSTREAM_CLARIFY')) metricNames.push('ambiguityClarifications');
+            metricNames.forEach(name => safetyMetrics.increment(`grounding_safety_${name}`));
+            Object.assign(boundaryResult.telemetry, { rolloutBucket: rollout.bucket, rolloutPercent: rollout.percent });
+            ragTraceRepo.updateTrace(requestId, {
+                boundary_decision: boundaryResult.telemetry.boundaryDecision,
+                boundary_reasons_json: boundaryResult.telemetry.boundaryReasons || [],
+                enforcement_active: boundaryResult.telemetry.enforcementActive,
+                fallback_source: boundaryResult.telemetry.fallbackType
+                    ? `grounding_boundary_${boundaryResult.telemetry.fallbackType}` : null,
+                final_response_type: boundaryResult.telemetry.fallbackType || 'ANSWER_CANDIDATE'
+            });
+            const boundaryClaims = boundaryResult.claimResults || [];
+            const claimTrace = traceClaims(getLastValidationMetadata() || {}).map((claim, index) => ({
+                ...claim,
+                numericVerdict: boundaryClaims[index]?.numericSafety || claim.numericVerdict,
+                temporalVerdict: boundaryClaims[index]?.temporalSafety || claim.temporalVerdict,
+                negationVerdict: boundaryClaims[index]?.negationSafety || claim.negationVerdict,
+                boundaryReasons: boundaryClaims[index]?.reasons || []
+            }));
+            ragTraceRepo.updateTrace(requestId, { claims_json: claimTrace });
+            profiler.endStage('Grounding Safety Boundary');
+        }
     } else if (rawResponse) {
         validatedResponse = String(rawResponse).trim();
     }
@@ -521,6 +723,7 @@ Provider Success: ${trackSuccess ? 'true' : 'false'}`);
         { key: 'Prompt Builder', label: 'Prompt Builder' },
         { key: providerApiStage, label: providerApiStage },
         { key: 'Answer Validation', label: 'Answer Validation' }
+        , { key: 'Grounding Safety Boundary', label: 'Grounding Safety Boundary' }
     ];
 
     console.log(`\n================ AI PIPELINE TIMINGS ================\n`);
@@ -599,5 +802,6 @@ module.exports = {
     retrieveContext,
     buildPrompt,
     callOpenRouter,
-    validateAnswer
+    validateAnswer,
+    inspectEvidenceTenantIntegrity
 };

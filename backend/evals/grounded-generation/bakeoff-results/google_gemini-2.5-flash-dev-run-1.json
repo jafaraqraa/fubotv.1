@@ -1,0 +1,4608 @@
+{
+  "suite": "dev",
+  "run": 1,
+  "model": "google/gemini-2.5-flash",
+  "provider": "openrouter",
+  "structuredMode": "native_json_schema",
+  "policy": "safe_partial",
+  "concurrency": 4,
+  "keySource": "DB_ACTIVE_PROVIDER:12",
+  "keyFingerprint": "f763187565de",
+  "metrics": {
+    "cases": 100,
+    "answerAccuracy": 0.8462,
+    "noAnswerAccuracy": 0.85,
+    "clarifyAccuracy": 0.6667,
+    "decisionAccuracy": 0.91,
+    "unsupportedRate": 0.03,
+    "claimEvidenceLinkValidity": 1,
+    "validatorAcceptedClaims": 71,
+    "validatorRejectedClaims": 24,
+    "validatorRejectionRate": 0.2526,
+    "malformedRate": 0,
+    "missingEvidenceIds": 0,
+    "hallucinatedEvidenceIds": 0,
+    "tenantLeaks": 0,
+    "meanLatencyMs": 1441.2,
+    "p50LatencyMs": 1303.5,
+    "p95LatencyMs": 2175.8,
+    "inputTokens": 89438,
+    "outputTokens": 11307,
+    "actualCost": 0.055098900000000006,
+    "estimatedCostPer1000": 0.550989,
+    "modelCalls": 100,
+    "providerErrors": 0
+  },
+  "rows": [
+    {
+      "id": "electronics-a-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "قديش سعر لابتوب ندى 14؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2890 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-products"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر لابتوب ندى 14 هو 2890 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر حاسوب ندى 14 هو 2890 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-products_chunk_0_a742c3d593ef\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378695-HidPj4mRLzgxmpKqIDU7",
+      "planDecision": "ANSWER",
+      "answer": "سعر لابتوب ندى 14 هو 2890 شيكل.",
+      "claims": [
+        {
+          "text": "سعر حاسوب ندى 14 هو 2890 شيكل.",
+          "evidenceIds": [
+            "elec-products_chunk_0_a742c3d593ef"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 956,
+      "outputTokens": 125,
+      "cost": 0.0005993,
+      "latencyMs": 4172.4,
+      "error": null
+    },
+    {
+      "id": "electronics-a-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "ما سعر ندى 14 برو؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "3490 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-products"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر حاسوب ندى 14 برو هو 3490 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"حاسوب ندى 14 برو بسعر 3490 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-products_chunk_0_a742c3d593ef\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378696-8vk9zsSLOBcC83wBMaFa",
+      "planDecision": "ANSWER",
+      "answer": "سعر حاسوب ندى 14 برو هو 3490 شيكل.",
+      "claims": [
+        {
+          "text": "حاسوب ندى 14 برو بسعر 3490 شيكل.",
+          "evidenceIds": [
+            "elec-products_chunk_0_a742c3d593ef"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 962,
+      "outputTokens": 126,
+      "cost": 0.0006036,
+      "latencyMs": 4064.8,
+      "error": null
+    },
+    {
+      "id": "electronics-a-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "سعر تلفون رمال X لو سمحت",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "1790 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-products"
+      ],
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر هاتف رمال X هو 1790 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"هاتف رمال X بسعر 1790 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-products_chunk_0_a742c3d593ef\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378695-PBUzExFoLwanlGzfXJwM",
+      "planDecision": "ANSWER",
+      "answer": "سعر هاتف رمال X هو 1790 شيكل.",
+      "claims": [
+        {
+          "text": "هاتف رمال X بسعر 1790 شيكل.",
+          "evidenceIds": [
+            "elec-products_chunk_0_a742c3d593ef"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 965,
+      "outputTokens": 118,
+      "cost": 0.0005845,
+      "latencyMs": 4171.7,
+      "error": null
+    },
+    {
+      "id": "electronics-a-04",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "نقل البيانات وإعداد الهاتف بكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "80 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-products"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة خدمة إعداد الهاتف ونقل البيانات هي 80 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-products_chunk_0_a742c3d593ef\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378695-88pZDRdxUPNKjDKDV16z",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة خدمة إعداد الهاتف ونقل البيانات هي 80 شيكل.",
+      "claims": [
+        {
+          "text": "خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل.",
+          "evidenceIds": [
+            "elec-products_chunk_0_a742c3d593ef"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 963,
+      "outputTokens": 119,
+      "cost": 0.0005864,
+      "latencyMs": 3968,
+      "error": null
+    },
+    {
+      "id": "electronics-a-05",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "كم ضمان اللابتوبات؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "24 شهرا"
+      ],
+      "expectedEvidenceIds": [
+        "elec-warranty"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"ضمان الحواسيب المحمولة هو 24 شهراً.\",\n  \"claims\": [\n    {\n      \"text\": \"ضمان الحواسيب المحمولة 24 شهراً.\",\n      \"evidenceIds\": [\n        \"elec-warranty_chunk_0_1ad9162a7c99\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378697-YuixXst9SmcBBdUvjzAX",
+      "planDecision": "ANSWER",
+      "answer": "ضمان الحواسيب المحمولة هو 24 شهراً.",
+      "claims": [
+        {
+          "text": "ضمان الحواسيب المحمولة 24 شهراً.",
+          "evidenceIds": [
+            "elec-warranty_chunk_0_1ad9162a7c99"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 959,
+      "outputTokens": 116,
+      "cost": 0.0005777,
+      "latencyMs": 1335.4,
+      "error": null
+    },
+    {
+      "id": "electronics-a-06",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "ضمان التلفونات قديش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "18 شهرا"
+      ],
+      "expectedEvidenceIds": [
+        "elec-warranty"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"ضمان الهواتف 18 شهرًا.\",\n  \"claims\": [\n    {\n      \"text\": \"ضمان الهواتف 18 شهرًا.\",\n      \"evidenceIds\": [\n        \"elec-warranty_chunk_0_1ad9162a7c99\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378697-A8dgRAsBdJSmmLUWVjOr",
+      "planDecision": "ANSWER",
+      "answer": "ضمان الهواتف 18 شهرًا.",
+      "claims": [
+        {
+          "text": "ضمان الهواتف 18 شهرًا.",
+          "evidenceIds": [
+            "elec-warranty_chunk_0_1ad9162a7c99"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 962,
+      "outputTokens": 109,
+      "cost": 0.0005611,
+      "latencyMs": 1623.1,
+      "error": null
+    },
+    {
+      "id": "electronics-a-07",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "والاكسسوارات شو كفالتها؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "6 اشهر"
+      ],
+      "expectedEvidenceIds": [
+        "elec-warranty"
+      ],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"ضمان الملحقات هو 6 أشهر.\",\n  \"claims\": [\n    {\n      \"text\": \"ضمان الملحقات هو 6 أشهر.\",\n      \"evidenceIds\": [\n        \"elec-warranty_chunk_0_1ad9162a7c99\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378697-PO0eYWFspIAMthzpe31l",
+      "planDecision": "ANSWER",
+      "answer": "ضمان الملحقات هو 6 أشهر.",
+      "claims": [
+        {
+          "text": "ضمان الملحقات هو 6 أشهر.",
+          "evidenceIds": [
+            "elec-warranty_chunk_0_1ad9162a7c99"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 965,
+      "outputTokens": 107,
+      "cost": 0.000557,
+      "latencyMs": 1314.6,
+      "error": null
+    },
+    {
+      "id": "electronics-a-08",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "البطارية داخلة بالضمان لأي مدة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "12 شهرا"
+      ],
+      "expectedEvidenceIds": [
+        "elec-warranty"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"بطارية الحاسوب مغطاة بضمان لمدة 12 شهراً.\",\n  \"claims\": [\n    {\n      \"text\": \"بطارية الحاسوب مغطاة بضمان لمدة 12 شهراً.\",\n      \"evidenceIds\": [\n        \"elec-warranty_chunk_0_1ad9162a7c99\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378697-VeVc5nQlHV5bZdISfrDQ",
+      "planDecision": "ANSWER",
+      "answer": "بطارية الحاسوب مغطاة بضمان لمدة 12 شهراً.",
+      "claims": [
+        {
+          "text": "بطارية الحاسوب مغطاة بضمان لمدة 12 شهراً.",
+          "evidenceIds": [
+            "elec-warranty_chunk_0_1ad9162a7c99"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 966,
+      "outputTokens": 121,
+      "cost": 0.0005923,
+      "latencyMs": 1534.1,
+      "error": null
+    },
+    {
+      "id": "electronics-a-09",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "انكسر الجهاز، الضمان بغطيه؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا يغطي",
+        "الكسر"
+      ],
+      "expectedEvidenceIds": [
+        "elec-warranty"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يغطي الضمان الكسر.\",\n  \"claims\": [\n    {\n      \"text\": \"الضمان لا يغطي الكسر.\",\n      \"evidenceIds\": [\n        \"elec-warranty_chunk_0_1ad9162a7c99\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378699-fvGfkrc9RscImpytpa6w",
+      "planDecision": "ANSWER",
+      "answer": "لا يغطي الضمان الكسر.",
+      "claims": [
+        {
+          "text": "الضمان لا يغطي الكسر.",
+          "evidenceIds": [
+            "elec-warranty_chunk_0_1ad9162a7c99"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 874,
+      "outputTokens": 106,
+      "cost": 0.0005272,
+      "latencyMs": 1875.8,
+      "error": null
+    },
+    {
+      "id": "electronics-a-10",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "امتى الشحن ببلاش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "تتجاوز",
+        "450 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-delivery"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378699-0ClYIxjMXbCXlKwrs0ky",
+      "planDecision": "ANSWER",
+      "answer": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.",
+      "claims": [
+        {
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 950,
+      "outputTokens": 121,
+      "cost": 0.0005875,
+      "latencyMs": 1348.8,
+      "error": null
+    },
+    {
+      "id": "electronics-a-11",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "قديش الشحن العادي وكم بوخذ؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "25 شيكل",
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-delivery"
+      ],
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل.\",\n  \"claims\": [\n    {\n      \"text\": \"رسوم الشحن العادي 25 شيكلاً.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    },\n    {\n      \"text\": \"مدة الشحن العادي المتوقعة من يومين إلى أربعة أيام عمل.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378699-nKD8hwF6nFbAcXJyD997",
+      "planDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل.",
+      "claims": [
+        {
+          "text": "رسوم الشحن العادي 25 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "text": "مدة الشحن العادي المتوقعة من يومين إلى أربعة أيام عمل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 965,
+      "outputTokens": 186,
+      "cost": 0.0007545,
+      "latencyMs": 2156.8,
+      "error": null
+    },
+    {
+      "id": "electronics-a-12",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "كم بوخذ التوصيل؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-delivery"
+      ],
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"رسوم الشحن العادي 25 شيكلاً.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    },\n    {\n      \"text\": \"الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكلاً.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378699-IB5QeoVotDQDY7kMawwu",
+      "planDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكلاً.",
+      "claims": [
+        {
+          "text": "رسوم الشحن العادي 25 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 960,
+      "outputTokens": 195,
+      "cost": 0.0007755,
+      "latencyMs": 1652.5,
+      "error": null
+    },
+    {
+      "id": "electronics-a-13",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "هل تركيب الشاشة هو نفسه التوصيل؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "منفصلة",
+        "120 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "elec-delivery"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا، تركيب الشاشة خدمة منفصلة عن التوصيل.\",\n  \"claims\": [\n    {\n      \"text\": \"تركيب الشاشة خدمة منفصلة عن التوصيل.\",\n      \"evidenceIds\": [\n        \"elec-delivery_chunk_0_3eb67cb4db8c\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378700-adHaFyb9APoIy6Kt1bDj",
+      "planDecision": "ANSWER",
+      "answer": "لا، تركيب الشاشة خدمة منفصلة عن التوصيل.",
+      "claims": [
+        {
+          "text": "تركيب الشاشة خدمة منفصلة عن التوصيل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 963,
+      "outputTokens": 112,
+      "cost": 0.0005689,
+      "latencyMs": 1515.2,
+      "error": null
+    },
+    {
+      "id": "electronics-n-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.\",\n  \"claims\": [\n    {\n      \"text\": \"المعرض الوحيد يقع في البيرة قرب دوار المنارة.\",\n      \"evidenceIds\": [\n        \"elec-contact_chunk_0_c37eea929623\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378700-lNg9NHCiVQkGztcYZp9f",
+      "planDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 964,
+      "outputTokens": 124,
+      "cost": 0.0005992,
+      "latencyMs": 1423,
+      "error": null
+    },
+    {
+      "id": "electronics-n-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378700-Gv0nchX7egP5iJWUVtPf",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 970,
+      "outputTokens": 40,
+      "cost": 0.000391,
+      "latencyMs": 1116.7,
+      "error": null
+    },
+    {
+      "id": "electronics-n-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "هل بتصلحوا أجهزة أبل؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378701-o9S3AghEfPpz4NntCA7r",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 963,
+      "outputTokens": 40,
+      "cost": 0.0003889,
+      "latencyMs": 909.6,
+      "error": null
+    },
+    {
+      "id": "electronics-n-04",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "شو سعر جهاز ندى 15؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378701-yRfD5uzh7WWzu6c5Ys8y",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 962,
+      "outputTokens": 40,
+      "cost": 0.0003886,
+      "latencyMs": 1043,
+      "error": null
+    },
+    {
+      "id": "electronics-c-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "قديش سعرها؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تستفسر عن سعره؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378702-GPneSO4lGLDyyGNvyaE8",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تستفسر عن سعره؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 737,
+      "outputTokens": 52,
+      "cost": 0.0003511,
+      "latencyMs": 1064.6,
+      "error": null
+    },
+    {
+      "id": "electronics-c-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "هل هو متوفر الآن؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن توفره؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378702-5VTA1AK1xlUmsTmctLTl",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن توفره؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 869,
+      "outputTokens": 52,
+      "cost": 0.0003907,
+      "latencyMs": 1730.8,
+      "error": null
+    },
+    {
+      "id": "electronics-c-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "domain": "electronics",
+      "question": "بدي الضمان تبعه",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن ضمانه؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378702-X7el8iQZN6LO4dXfmmq7",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن ضمانه؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 959,
+      "outputTokens": 51,
+      "cost": 0.0004152,
+      "latencyMs": 1067.4,
+      "error": null
+    },
+    {
+      "id": "distribution-a-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "اقل طلب جملة كم كرتونة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "24 كرتونة"
+      ],
+      "expectedEvidenceIds": [
+        "dist-orders"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الحد الأدنى لطلب الجملة هو 24 كرتونة.\",\n  \"claims\": [\n    {\n      \"text\": \"الحد الأدنى لطلب الجملة هو 24 كرتونة.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378702-E9XxOAX4N2xqe7iEFm2U",
+      "planDecision": "ANSWER",
+      "answer": "الحد الأدنى لطلب الجملة هو 24 كرتونة.",
+      "claims": [
+        {
+          "text": "الحد الأدنى لطلب الجملة هو 24 كرتونة.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 953,
+      "outputTokens": 119,
+      "cost": 0.0005834,
+      "latencyMs": 1332.2,
+      "error": null
+    },
+    {
+      "id": "distribution-a-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "كرتونة عصير السهل بكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "46 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "dist-orders"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر كرتونة عصير السهل هو 46 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر كرتونة عصير السهل هو 46 شيكلاً.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378703-j6lYA7IcU5VxGMcejxvQ",
+      "planDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل هو 46 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل هو 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 942,
+      "outputTokens": 119,
+      "cost": 0.0005801,
+      "latencyMs": 1242.9,
+      "error": null
+    },
+    {
+      "id": "distribution-a-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "سعر كرتونة المي؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "31 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "dist-orders"
+      ],
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر كرتونة مياه عين البلد هو 31 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر كرتونة مياه عين البلد 31 شيكلاً.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378703-nPsvd87RyPqOgxG1uwfj",
+      "planDecision": "ANSWER",
+      "answer": "سعر كرتونة مياه عين البلد هو 31 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 942,
+      "outputTokens": 118,
+      "cost": 0.0005776,
+      "latencyMs": 1256.7,
+      "error": null
+    },
+    {
+      "id": "distribution-a-04",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "متى باخذ خصم 4 بالمية؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "100 كرتونة",
+        "4%"
+      ],
+      "expectedEvidenceIds": [
+        "dist-orders"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تحصل على خصم 4% عند طلب 100 كرتونة أو أكثر.\",\n  \"claims\": [\n    {\n      \"text\": \"يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378703-IPVTvSbx9RKjA6XqYj3Q",
+      "planDecision": "ANSWER",
+      "answer": "تحصل على خصم 4% عند طلب 100 كرتونة أو أكثر.",
+      "claims": [
+        {
+          "text": "يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 932,
+      "outputTokens": 129,
+      "cost": 0.0006021,
+      "latencyMs": 1295.5,
+      "error": null
+    },
+    {
+      "id": "distribution-a-05",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "اي ايام توزيع رام الله؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاحد",
+        "الثلاثاء",
+        "الخميس"
+      ],
+      "expectedEvidenceIds": [
+        "dist-zones"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يتم التوصيل إلى رام الله أيام الأحد والثلاثاء والخميس.\",\n  \"claims\": [\n    {\n      \"text\": \"يتم التوصيل إلى رام الله أيام الأحد والثلاثاء والخميس.\",\n      \"evidenceIds\": [\n        \"dist-zones_chunk_0_19392d72f595\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378704-ub6wSFi7hKbTGUZtfzhb",
+      "planDecision": "ANSWER",
+      "answer": "يتم التوصيل إلى رام الله أيام الأحد والثلاثاء والخميس.",
+      "claims": [
+        {
+          "text": "يتم التوصيل إلى رام الله أيام الأحد والثلاثاء والخميس.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 931,
+      "outputTokens": 123,
+      "cost": 0.0005868,
+      "latencyMs": 1286.7,
+      "error": null
+    },
+    {
+      "id": "distribution-a-06",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "بيت لحم بأي أيام بتوصلوها؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاثنين",
+        "الاربعاء"
+      ],
+      "expectedEvidenceIds": [
+        "dist-zones"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يتم التوصيل إلى بيت لحم يومي الاثنين والأربعاء.\",\n  \"claims\": [\n    {\n      \"text\": \"يتم التوصيل إلى بيت لحم يومي الاثنين والأربعاء.\",\n      \"evidenceIds\": [\n        \"dist-zones_chunk_0_19392d72f595\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378704-zvIn8YqsBuQEeePmcZFP",
+      "planDecision": "ANSWER",
+      "answer": "يتم التوصيل إلى بيت لحم يومي الاثنين والأربعاء.",
+      "claims": [
+        {
+          "text": "يتم التوصيل إلى بيت لحم يومي الاثنين والأربعاء.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 931,
+      "outputTokens": 119,
+      "cost": 0.0005768,
+      "latencyMs": 1302.4,
+      "error": null
+    },
+    {
+      "id": "distribution-a-07",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "بتوزعوا بأريحا؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا يغطي",
+        "اريحا"
+      ],
+      "expectedEvidenceIds": [
+        "dist-zones"
+      ],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يتم التوزيع في أريحا.\",\n  \"claims\": [\n    {\n      \"text\": \"لا يغطي أسطول التوزيع أريحا.\",\n      \"evidenceIds\": [\n        \"dist-zones_chunk_0_19392d72f595\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378704-WEnA3huQdjcZWZH8fSIF",
+      "planDecision": "ANSWER",
+      "answer": "لا يتم التوزيع في أريحا.",
+      "claims": [
+        {
+          "text": "لا يغطي أسطول التوزيع أريحا.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 840,
+      "outputTokens": 109,
+      "cost": 0.0005245,
+      "latencyMs": 1262.8,
+      "error": null
+    },
+    {
+      "id": "distribution-a-08",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "أكدت قبل تنتين، متى بطلع؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "يوم التوزيع التالي"
+      ],
+      "expectedEvidenceIds": [
+        "dist-zones"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"إذا تم تأكيد الطلب قبل الساعة الثانية ظهرًا، فسيتم إدخاله في جدول يوم التوزيع التالي.\",\n  \"claims\": [\n    {\n      \"text\": \"الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.\",\n      \"evidenceIds\": [\n        \"dist-zones_chunk_0_19392d72f595\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378705-ajxl7O8EfmxDibXIrIip",
+      "planDecision": "ANSWER",
+      "answer": "إذا تم تأكيد الطلب قبل الساعة الثانية ظهرًا، فسيتم إدخاله في جدول يوم التوزيع التالي.",
+      "claims": [
+        {
+          "text": "الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 761,
+      "outputTokens": 129,
+      "cost": 0.0005508,
+      "latencyMs": 1426.5,
+      "error": null
+    },
+    {
+      "id": "distribution-a-09",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "العميل الجديد كيف بدفع؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "نقدا عند التسليم",
+        "ثلاث طلبيات"
+      ],
+      "expectedEvidenceIds": [
+        "dist-payment"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"العميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات.\",\n  \"claims\": [\n    {\n      \"text\": \"العميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات.\",\n      \"evidenceIds\": [\n        \"dist-payment_chunk_0_a6956514b390\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378705-amrCrBmsGQmj2U6mXfW8",
+      "planDecision": "ANSWER",
+      "answer": "العميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات.",
+      "claims": [
+        {
+          "text": "العميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات.",
+          "evidenceIds": [
+            "dist-payment_chunk_0_a6956514b390"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 951,
+      "outputTokens": 123,
+      "cost": 0.0005928,
+      "latencyMs": 1339.7,
+      "error": null
+    },
+    {
+      "id": "distribution-a-10",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "مدة الائتمان كم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "30 يوما"
+      ],
+      "expectedEvidenceIds": [
+        "dist-payment"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\"decision\":\"ANSWER\",\"answer\":\"مدة الائتمان 30 يومًا، وهي متاحة بعد موافقة الإدارة المالية ولا تُمنح للحسابات التي عليها رصيد متأخر.\",\"claims\":[{\"text\":\"مدة الائتمان 30 يومًا.\",\"evidenceIds\":[\"dist-payment_chunk_0_a6956514b390\"]},{\"text\":\"الائتمان متاح بعد موافقة الإدارة المالية.\",\"evidenceIds\":[\"dist-payment_chunk_0_a6956514b390\"]},{\"text\":\"لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.\",\"evidenceIds\":[\"dist-payment_chunk_0_a6956514b390\"]}],\"missingInformation\":[],\"clarificationQuestion\":null}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378705-tab52aTT1vL0fH9bR7o3",
+      "planDecision": "ANSWER",
+      "answer": "مدة الائتمان 30 يومًا، وهي متاحة بعد موافقة الإدارة المالية ولا تُمنح للحسابات التي عليها رصيد متأخر.",
+      "claims": [
+        {
+          "text": "مدة الائتمان 30 يومًا.",
+          "evidenceIds": [
+            "dist-payment_chunk_0_a6956514b390"
+          ]
+        },
+        {
+          "text": "الائتمان متاح بعد موافقة الإدارة المالية.",
+          "evidenceIds": [
+            "dist-payment_chunk_0_a6956514b390"
+          ]
+        },
+        {
+          "text": "لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.",
+          "evidenceIds": [
+            "dist-payment_chunk_0_a6956514b390"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 3,
+      "validLinkedClaims": 3,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 950,
+      "outputTokens": 184,
+      "cost": 0.000745,
+      "latencyMs": 1543.7,
+      "error": null
+    },
+    {
+      "id": "distribution-a-11",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "علي رصيد متأخر، بطلعلي ائتمان؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا يمنح",
+        "رصيد متاخر"
+      ],
+      "expectedEvidenceIds": [
+        "dist-payment"
+      ],
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.\",\n  \"claims\": [\n    {\n      \"text\": \"لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.\",\n      \"evidenceIds\": [\n        \"dist-payment_chunk_0_a6956514b390\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378705-d9Iye3kNGHpHAKb1twbr",
+      "planDecision": "ANSWER",
+      "answer": "لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.",
+      "claims": [
+        {
+          "text": "لا يمنح الائتمان للحسابات التي عليها رصيد متأخر.",
+          "evidenceIds": [
+            "dist-payment_chunk_0_a6956514b390"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 756,
+      "outputTokens": 127,
+      "cost": 0.0005443,
+      "latencyMs": 1311.6,
+      "error": null
+    },
+    {
+      "id": "distribution-a-12",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "وصلني كرتون مضروب شو المطلوب؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "تصوير",
+        "24 ساعة",
+        "رقم الفاتورة"
+      ],
+      "expectedEvidenceIds": [
+        "dist-damage"
+      ],
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع.\",\n  \"claims\": [\n    {\n      \"text\": \"يجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة.\",\n      \"evidenceIds\": [\n        \"dist-damage_chunk_0_e98fd5bb3951\"\n      ]\n    },\n    {\n      \"text\": \"تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام.\",\n      \"evidenceIds\": [\n        \"dist-damage_chunk_0_e98fd5bb3951\"\n      ]\n    },\n    {\n      \"text\": \"المياه المبردة لا ترجع.\",\n      \"evidenceIds\": [\n        \"dist-damage_chunk_0_e98fd5bb3951\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378706-o9Q1a2DmdvibnqkcTQp6",
+      "planDecision": "ANSWER",
+      "answer": "يجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع.",
+      "claims": [
+        {
+          "text": "يجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        },
+        {
+          "text": "تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        },
+        {
+          "text": "المياه المبردة لا ترجع.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 3,
+      "validLinkedClaims": 3,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 943,
+      "outputTokens": 275,
+      "cost": 0.0009704,
+      "latencyMs": 1707.8,
+      "error": null
+    },
+    {
+      "id": "distribution-a-13",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "برجع عصير مسكر بعد 5 ايام؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "تقبل",
+        "7 ايام"
+      ],
+      "expectedEvidenceIds": [
+        "dist-damage"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"نعم، يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.\",\n  \"claims\": [\n    {\n      \"text\": \"يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.\",\n      \"evidenceIds\": [\n        \"dist-damage_chunk_0_e98fd5bb3951\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378706-lFk6ezBlOfI6Ouz8ipk6",
+      "planDecision": "ANSWER",
+      "answer": "نعم، يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+      "claims": [
+        {
+          "text": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 933,
+      "outputTokens": 124,
+      "cost": 0.0005899,
+      "latencyMs": 1307.9,
+      "error": null
+    },
+    {
+      "id": "distribution-n-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "هل بتوصلوا الخليل؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378707-dOBn8QSY8kZyr6OptHpp",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 839,
+      "outputTokens": 40,
+      "cost": 0.0003517,
+      "latencyMs": 1045.5,
+      "error": null
+    },
+    {
+      "id": "distribution-n-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "كم غرامة تأخير الدين؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378707-wHPpvULULfsFRmct9KI8",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 951,
+      "outputTokens": 40,
+      "cost": 0.0003853,
+      "latencyMs": 944.8,
+      "error": null
+    },
+    {
+      "id": "distribution-n-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "هل تقبلون الشيكات؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378708-fGPKd7pJS5oZZqXtrTld",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 840,
+      "outputTokens": 40,
+      "cost": 0.000352,
+      "latencyMs": 1015.7,
+      "error": null
+    },
+    {
+      "id": "distribution-n-04",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "متى يتوفر صنف غير موجود؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378708-CzNoXg17RC6FBoM3M8Qp",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 952,
+      "outputTokens": 40,
+      "cost": 0.0003856,
+      "latencyMs": 1056.2,
+      "error": null
+    },
+    {
+      "id": "distribution-c-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر كرتونة عصير السهل 46 شيكلاً.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    },\n    {\n      \"text\": \"سعر كرتونة مياه عين البلد 31 شيكلاً.\",\n      \"evidenceIds\": [\n        \"dist-orders_chunk_0_113acd0282a6\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378708-dOO3ViWA1EFxNap6zgtx",
+      "planDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        },
+        {
+          "text": "سعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 743,
+      "outputTokens": 193,
+      "cost": 0.0007054,
+      "latencyMs": 1506.5,
+      "error": null
+    },
+    {
+      "id": "distribution-c-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "متى بتوصل؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هي المدينة التي تسأل عن موعد التوصيل إليها؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378708-D6PLTuz3EW7dWMrCkyK4",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هي المدينة التي تسأل عن موعد التوصيل إليها؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 735,
+      "outputTokens": 55,
+      "cost": 0.000358,
+      "latencyMs": 1120.1,
+      "error": null
+    },
+    {
+      "id": "distribution-c-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "domain": "distribution",
+      "question": "بدي ارجعها",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي ترغب في إرجاعه؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378709-y5dAxWfFrD9DramUYWje",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي ترغب في إرجاعه؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 948,
+      "outputTokens": 52,
+      "cost": 0.0004144,
+      "latencyMs": 1057.4,
+      "error": null
+    },
+    {
+      "id": "clinic-a-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "مين دكتور الجلدية؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "ليان منصور"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-doctors"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"دكتورة الجلدية هي الدكتورة ليان منصور.\",\n  \"claims\": [\n    {\n      \"text\": \"الدكتورة ليان منصور مختصة بالجلدية.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378709-XnWNYfNyaGW4o5ItD9hi",
+      "planDecision": "ANSWER",
+      "answer": "دكتورة الجلدية هي الدكتورة ليان منصور.",
+      "claims": [
+        {
+          "text": "الدكتورة ليان منصور مختصة بالجلدية.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 890,
+      "outputTokens": 111,
+      "cost": 0.0005445,
+      "latencyMs": 1243.9,
+      "error": null
+    },
+    {
+      "id": "clinic-a-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "مين طبيب الأسرة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "امين خليل"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-doctors"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"طبيب الأسرة هو الدكتور أمين خليل.\",\n  \"claims\": [\n    {\n      \"text\": \"الدكتور أمين خليل مختص بطب الأسرة.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378709-uEDMtRPBSNk3i2rjb64K",
+      "planDecision": "ANSWER",
+      "answer": "طبيب الأسرة هو الدكتور أمين خليل.",
+      "claims": [
+        {
+          "text": "الدكتور أمين خليل مختص بطب الأسرة.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 892,
+      "outputTokens": 110,
+      "cost": 0.0005426,
+      "latencyMs": 1152.4,
+      "error": null
+    },
+    {
+      "id": "clinic-a-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "كشف الجلدية بكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "170 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-doctors"
+      ],
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة الاستشارة الجلدية 170 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"تكلفة الاستشارة الجلدية 170 شيكلاً.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378709-XFwvikLCsu24n7vnwAhX",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة الاستشارة الجلدية 170 شيكلاً.",
+      "claims": [
+        {
+          "text": "تكلفة الاستشارة الجلدية 170 شيكلاً.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 914,
+      "outputTokens": 114,
+      "cost": 0.0005592,
+      "latencyMs": 1282.7,
+      "error": null
+    },
+    {
+      "id": "clinic-a-04",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "استشارة طب الأسرة قديش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "120 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-doctors"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة استشارة طب الأسرة هي 120 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"استشارة طب الأسرة تكلفتها 120 شيكلاً.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378710-mEtQ8n2ifYoKL9kGVojV",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة استشارة طب الأسرة هي 120 شيكلاً.",
+      "claims": [
+        {
+          "text": "استشارة طب الأسرة تكلفتها 120 شيكلاً.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 917,
+      "outputTokens": 119,
+      "cost": 0.0005726,
+      "latencyMs": 1228.4,
+      "error": null
+    },
+    {
+      "id": "clinic-a-05",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "تنظيف البشرة الطبي كم بكلف؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "140 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-doctors"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة جلسة تنظيف البشرة الطبية هي 140 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"تكلفة جلسة تنظيف البشرة الطبية هي 140 شيكلاً.\",\n      \"evidenceIds\": [\n        \"clinic-doctors_chunk_0_2dff9f9e9285\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378710-UbltTRqlY2B7dPhBnM9H",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة جلسة تنظيف البشرة الطبية هي 140 شيكلاً.",
+      "claims": [
+        {
+          "text": "تكلفة جلسة تنظيف البشرة الطبية هي 140 شيكلاً.",
+          "evidenceIds": [
+            "clinic-doctors_chunk_0_2dff9f9e9285"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 895,
+      "outputTokens": 124,
+      "cost": 0.0005785,
+      "latencyMs": 1304.6,
+      "error": null
+    },
+    {
+      "id": "clinic-a-06",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "شو دوام العيادة العادي؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "السبت",
+        "الاربعاء",
+        "الثامنة والنصف",
+        "السادسة"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-hours"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تعمل العيادة من السبت إلى الأربعاء من الساعة 8:30 صباحًا حتى 6:00 مساءً، ويوم الخميس حتى الساعة 2:00 ظهرًا.\",\n  \"claims\": [\n    {\n      \"text\": \"تعمل العيادة من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً.\",\n      \"evidenceIds\": [\n        \"clinic-hours_chunk_0_39da821f0e85\"\n      ]\n    },\n    {\n      \"text\": \"تعمل العيادة يوم الخميس حتى الثانية ظهراً.\",\n      \"evidenceIds\": [\n        \"clinic-hours_chunk_0_39da821f0e85\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378710-yyOXf70dv2HBGHNGAMsz",
+      "planDecision": "ANSWER",
+      "answer": "تعمل العيادة من السبت إلى الأربعاء من الساعة 8:30 صباحًا حتى 6:00 مساءً، ويوم الخميس حتى الساعة 2:00 ظهرًا.",
+      "claims": [
+        {
+          "text": "تعمل العيادة من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        },
+        {
+          "text": "تعمل العيادة يوم الخميس حتى الثانية ظهراً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 885,
+      "outputTokens": 213,
+      "cost": 0.000798,
+      "latencyMs": 2175.8,
+      "error": null
+    },
+    {
+      "id": "clinic-a-07",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "الخميس لأي ساعة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الثانية ظهرا"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-hours"
+      ],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"العيادة تعمل يوم الخميس حتى الساعة الثانية ظهراً.\",\n  \"claims\": [\n    {\n      \"text\": \"العيادة تعمل يوم الخميس حتى الساعة الثانية ظهراً.\",\n      \"evidenceIds\": [\n        \"clinic-hours_chunk_0_39da821f0e85\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378710-M0r6m5dXgLqX7Co0oL2y",
+      "planDecision": "ANSWER",
+      "answer": "العيادة تعمل يوم الخميس حتى الساعة الثانية ظهراً.",
+      "claims": [
+        {
+          "text": "العيادة تعمل يوم الخميس حتى الساعة الثانية ظهراً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 915,
+      "outputTokens": 112,
+      "cost": 0.0005545,
+      "latencyMs": 1231,
+      "error": null
+    },
+    {
+      "id": "clinic-a-08",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "بتستقبلوا طوارئ؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا تستقبل",
+        "الطوارئ في المستشفى"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-hours"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا تستقبل العيادة حالات الطوارئ، ويجب التوجه إلى قسم الطوارئ في المستشفى.\",\n  \"claims\": [\n    {\n      \"text\": \"لا تستقبل العيادة حالات الطوارئ.\",\n      \"evidenceIds\": [\n        \"clinic-hours_chunk_0_39da821f0e85\"\n      ]\n    },\n    {\n      \"text\": \"يجب التوجه إلى قسم الطوارئ في المستشفى.\",\n      \"evidenceIds\": [\n        \"clinic-hours_chunk_0_39da821f0e85\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378711-qtHGN9bzPGnrqlDVjesU",
+      "planDecision": "ANSWER",
+      "answer": "لا تستقبل العيادة حالات الطوارئ، ويجب التوجه إلى قسم الطوارئ في المستشفى.",
+      "claims": [
+        {
+          "text": "لا تستقبل العيادة حالات الطوارئ.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        },
+        {
+          "text": "يجب التوجه إلى قسم الطوارئ في المستشفى.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 804,
+      "outputTokens": 179,
+      "cost": 0.0006887,
+      "latencyMs": 1900.7,
+      "error": null
+    },
+    {
+      "id": "clinic-a-09",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "قبل كم ساعة بلغي بدون رسوم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "12 ساعة"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-changes"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يمكن إلغاء الموعد دون رسوم قبل 12 ساعة من الموعد.\",\n  \"claims\": [\n    {\n      \"text\": \"إلغاء الموعد دون رسوم متاح قبل 12 ساعة.\",\n      \"evidenceIds\": [\n        \"clinic-changes_chunk_0_68771da4f666\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378711-ToUzVpVhK5Y0KG3gvod8",
+      "planDecision": "ANSWER",
+      "answer": "يمكن إلغاء الموعد دون رسوم قبل 12 ساعة من الموعد.",
+      "claims": [
+        {
+          "text": "إلغاء الموعد دون رسوم متاح قبل 12 ساعة.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 885,
+      "outputTokens": 124,
+      "cost": 0.0005755,
+      "latencyMs": 1655.6,
+      "error": null
+    },
+    {
+      "id": "clinic-a-10",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "الغيت متأخر شو الرسوم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "40 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-changes"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"إذا ألغيت الموعد متأخرًا، فإن الرسوم هي 40 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"الإلغاء المتأخر للموعد عليه رسم 40 شيكلاً.\",\n      \"evidenceIds\": [\n        \"clinic-changes_chunk_0_68771da4f666\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378712-N2QNhj5RmARQ1320b4NA",
+      "planDecision": "ANSWER",
+      "answer": "إذا ألغيت الموعد متأخرًا، فإن الرسوم هي 40 شيكلاً.",
+      "claims": [
+        {
+          "text": "الإلغاء المتأخر للموعد عليه رسم 40 شيكلاً.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 917,
+      "outputTokens": 128,
+      "cost": 0.0005951,
+      "latencyMs": 1291.4,
+      "error": null
+    },
+    {
+      "id": "clinic-a-11",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-changes"
+      ],
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378712-OSQupnXgOepsjXjdOu7C",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 886,
+      "outputTokens": 40,
+      "cost": 0.0003658,
+      "latencyMs": 1109,
+      "error": null
+    },
+    {
+      "id": "clinic-a-12",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "تأمين أمان مقبول؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الرعاية الاولية فقط"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-insurance"
+      ],
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"نعم، العيادة تقبل تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة.\",\n  \"claims\": [\n    {\n      \"text\": \"العيادة تقبل تأمين أمان للرعاية الأولية فقط.\",\n      \"evidenceIds\": [\n        \"clinic-insurance_chunk_0_c53b53882dd4\"\n      ]\n    },\n    {\n      \"text\": \"تأمين أمان لا يشمل جلسات تنظيف البشرة.\",\n      \"evidenceIds\": [\n        \"clinic-insurance_chunk_0_c53b53882dd4\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378713-2JLKMFL5zXkC5io0PzLQ",
+      "planDecision": "ANSWER",
+      "answer": "نعم، العيادة تقبل تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "العيادة تقبل تأمين أمان للرعاية الأولية فقط.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        },
+        {
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 883,
+      "outputTokens": 191,
+      "cost": 0.0007424,
+      "latencyMs": 1497.1,
+      "error": null
+    },
+    {
+      "id": "clinic-a-13",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا يشمل",
+        "تنظيف البشرة"
+      ],
+      "expectedEvidenceIds": [
+        "clinic-insurance"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا، التأمين لا يغطي جلسات تنظيف البشرة.\",\n  \"claims\": [\n    {\n      \"text\": \"التأمين لا يشمل جلسات تنظيف البشرة.\",\n      \"evidenceIds\": [\n        \"clinic-insurance_chunk_0_c53b53882dd4\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378713-GwiggZYBYA2hoE1S15qI",
+      "planDecision": "ANSWER",
+      "answer": "لا، التأمين لا يغطي جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "التأمين لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 918,
+      "outputTokens": 114,
+      "cost": 0.0005604,
+      "latencyMs": 1363.9,
+      "error": null
+    },
+    {
+      "id": "clinic-n-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "شو تشخيص وجع الصدر؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378713-KZqDmxcikB0WJ08vQEx2",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 916,
+      "outputTokens": 40,
+      "cost": 0.0003748,
+      "latencyMs": 905.9,
+      "error": null
+    },
+    {
+      "id": "clinic-n-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "أي دواء آخذ للحساسية؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378713-196Lr6v4Gj39ZAeynOP8",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 917,
+      "outputTokens": 40,
+      "cost": 0.0003751,
+      "latencyMs": 1535.4,
+      "error": null
+    },
+    {
+      "id": "clinic-n-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "هل تقبلون تأمين الشفاء؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378714-sApW53h5zvymaifMKkj0",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 885,
+      "outputTokens": 40,
+      "cost": 0.0003655,
+      "latencyMs": 968.5,
+      "error": null
+    },
+    {
+      "id": "clinic-n-04",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "كم سعر فحص الدم الشامل؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "raw": "{\"decision\":\"NO_ANSWER\",\"answer\":\"\",\"claims\":[],\"missingInformation\":[],\"clarificationQuestion\":null}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378714-zXtZZi2jJWASnrgLvFFr",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 916,
+      "outputTokens": 22,
+      "cost": 0.0003298,
+      "latencyMs": 893.5,
+      "error": null
+    },
+    {
+      "id": "clinic-c-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378714-tsW7wT2lcwUvSoWqKDNA",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 717,
+      "outputTokens": 40,
+      "cost": 0.0003151,
+      "latencyMs": 918,
+      "error": null
+    },
+    {
+      "id": "clinic-c-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.\",\n  \"claims\": [\n    {\n      \"text\": \"يمكن إعادة جدولة الموعد مرة واحدة دون رسوم.\",\n      \"evidenceIds\": [\n        \"clinic-changes_chunk_0_68771da4f666\"\n      ]\n    },\n    {\n      \"text\": \"يجب أن يتم طلب إعادة الجدولة قبل 6 ساعات من الموعد الأصلي لتجنب الرسوم.\",\n      \"evidenceIds\": [\n        \"clinic-changes_chunk_0_68771da4f666\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378715-iZFsHZxYeHMCJLuIRAjH",
+      "planDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.",
+      "claims": [
+        {
+          "text": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        },
+        {
+          "text": "يجب أن يتم طلب إعادة الجدولة قبل 6 ساعات من الموعد الأصلي لتجنب الرسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 915,
+      "outputTokens": 196,
+      "cost": 0.0007645,
+      "latencyMs": 1571.6,
+      "error": null
+    },
+    {
+      "id": "clinic-c-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378715-dF9z0A3SpTgGRRvAaltN",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 694,
+      "outputTokens": 40,
+      "cost": 0.0003082,
+      "latencyMs": 992.8,
+      "error": null
+    },
+    {
+      "id": "fashion-a-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاسود",
+        "الزيتي"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-products"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"فستان سهل الزيتون متوفر باللونين الأسود والزيتي.\",\n  \"claims\": [\n    {\n      \"text\": \"فستان سهل الزيتون متوفر باللون الأسود.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    },\n    {\n      \"text\": \"فستان سهل الزيتون متوفر باللون الزيتي.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378715-b0YK7Hw3nJFeP2yxhgxp",
+      "planDecision": "ANSWER",
+      "answer": "فستان سهل الزيتون متوفر باللونين الأسود والزيتي.",
+      "claims": [
+        {
+          "text": "فستان سهل الزيتون متوفر باللون الأسود.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        },
+        {
+          "text": "فستان سهل الزيتون متوفر باللون الزيتي.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 922,
+      "outputTokens": 174,
+      "cost": 0.0007116,
+      "latencyMs": 1459.9,
+      "error": null
+    },
+    {
+      "id": "fashion-a-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "مقاسات الفستان شو؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "S",
+        "XL"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-products"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يتوفر فستان سهل الزيتون بمقاسات من S إلى XL.\",\n  \"claims\": [\n    {\n      \"text\": \"فستان سهل الزيتون متوفر بمقاسات من S إلى XL.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378715-f7IxoOa58B5yVCkytX4n",
+      "planDecision": "ANSWER",
+      "answer": "يتوفر فستان سهل الزيتون بمقاسات من S إلى XL.",
+      "claims": [
+        {
+          "text": "فستان سهل الزيتون متوفر بمقاسات من S إلى XL.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 908,
+      "outputTokens": 120,
+      "cost": 0.0005724,
+      "latencyMs": 1332.9,
+      "error": null
+    },
+    {
+      "id": "fashion-a-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "قديش سعر الفستان؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "260 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-products"
+      ],
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر فستان سهل الزيتون هو 260 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر فستان سهل الزيتون هو 260 شيكلاً.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378716-92j51McqlXuURANhHDhB",
+      "planDecision": "ANSWER",
+      "answer": "سعر فستان سهل الزيتون هو 260 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر فستان سهل الزيتون هو 260 شيكلاً.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 918,
+      "outputTokens": 120,
+      "cost": 0.0005754,
+      "latencyMs": 1160,
+      "error": null
+    },
+    {
+      "id": "fashion-a-04",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "قميص كرمل شو الوانه؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الابيض",
+        "الرملي"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-products"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يتوفر قميص كرمل الكتاني باللونين الأبيض والرملي.\",\n  \"claims\": [\n    {\n      \"text\": \"يتوفر قميص كرمل الكتاني باللونين الأبيض والرملي.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378717-SVafUK1xKk8dVmgUCSZO",
+      "planDecision": "ANSWER",
+      "answer": "يتوفر قميص كرمل الكتاني باللونين الأبيض والرملي.",
+      "claims": [
+        {
+          "text": "يتوفر قميص كرمل الكتاني باللونين الأبيض والرملي.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 910,
+      "outputTokens": 120,
+      "cost": 0.000573,
+      "latencyMs": 1404.8,
+      "error": null
+    },
+    {
+      "id": "fashion-a-05",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "سعر القميص الكتاني؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "145 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-products"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر قميص كرمل الكتاني هو 145 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"سعر قميص كرمل الكتاني هو 145 شيكلاً.\",\n      \"evidenceIds\": [\n        \"fashion-products_chunk_0_9511dd63804a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378717-gRIKu0MBm6vy3I15I9uE",
+      "planDecision": "ANSWER",
+      "answer": "سعر قميص كرمل الكتاني هو 145 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر قميص كرمل الكتاني هو 145 شيكلاً.",
+          "evidenceIds": [
+            "fashion-products_chunk_0_9511dd63804a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 886,
+      "outputTokens": 122,
+      "cost": 0.0005708,
+      "latencyMs": 1186.8,
+      "error": null
+    },
+    {
+      "id": "fashion-a-06",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "مدة تبديل القطعة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "14 يوما",
+        "الفاتورة"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-exchange"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"مدة تبديل القطعة هي 14 يومًا، مع ضرورة إحضار الفاتورة والبطاقة الأصلية.\",\n  \"claims\": [\n    {\n      \"text\": \"مدة تبديل القطعة هي 14 يومًا.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    },\n    {\n      \"text\": \"يشترط للتبديل إحضار الفاتورة والبطاقة الأصلية.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378717-Vpf0Cy5nmyFgabDiYDce",
+      "planDecision": "ANSWER",
+      "answer": "مدة تبديل القطعة هي 14 يومًا، مع ضرورة إحضار الفاتورة والبطاقة الأصلية.",
+      "claims": [
+        {
+          "text": "مدة تبديل القطعة هي 14 يومًا.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "يشترط للتبديل إحضار الفاتورة والبطاقة الأصلية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 885,
+      "outputTokens": 191,
+      "cost": 0.000743,
+      "latencyMs": 1669.8,
+      "error": null
+    },
+    {
+      "id": "fashion-a-07",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "الترجيع النقدي خلال قديش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "7 ايام",
+        "غير المستعملة"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-exchange"
+      ],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الترجيع النقدي يكون خلال 7 أيام للقطع غير المستعملة.\",\n  \"claims\": [\n    {\n      \"text\": \"الترجيع النقدي خلال 7 أيام للقطع غير المستعملة.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378717-yJbtbU6rVN87tYjpiaYI",
+      "planDecision": "ANSWER",
+      "answer": "الترجيع النقدي يكون خلال 7 أيام للقطع غير المستعملة.",
+      "claims": [
+        {
+          "text": "الترجيع النقدي خلال 7 أيام للقطع غير المستعملة.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 889,
+      "outputTokens": 121,
+      "cost": 0.0005692,
+      "latencyMs": 1237.4,
+      "error": null
+    },
+    {
+      "id": "fashion-a-08",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "قطعة final sale برجع مصاري؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا تسترد نقدا",
+        "المقاس فقط"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-exchange"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يمكن استرداد الأموال نقدًا لقطع التخفيض النهائي، ولكن يمكن استبدالها بالمقاس فقط.\",\n  \"claims\": [\n    {\n      \"text\": \"قطع التخفيض النهائي لا تسترد نقداً.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    },\n    {\n      \"text\": \"يمكن استبدال قطع التخفيض النهائي بالمقاس فقط.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378718-AVDjBprXUUOjSWxarUrT",
+      "planDecision": "ANSWER",
+      "answer": "لا يمكن استرداد الأموال نقدًا لقطع التخفيض النهائي، ولكن يمكن استبدالها بالمقاس فقط.",
+      "claims": [
+        {
+          "text": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "يمكن استبدال قطع التخفيض النهائي بالمقاس فقط.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 910,
+      "outputTokens": 187,
+      "cost": 0.0007405,
+      "latencyMs": 1479.7,
+      "error": null
+    },
+    {
+      "id": "fashion-a-09",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "الأقراط بتتبدل؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا تبدل",
+        "صحية"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-exchange"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يمكن استبدال الأقراط لأسباب صحية.\",\n  \"claims\": [\n    {\n      \"text\": \"الأقراط لا تبدل لأسباب صحية.\",\n      \"evidenceIds\": [\n        \"fashion-exchange_chunk_0_640eb3a28181\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378718-TKPqNw63PJAEJr21q4j5",
+      "planDecision": "ANSWER",
+      "answer": "لا يمكن استبدال الأقراط لأسباب صحية.",
+      "claims": [
+        {
+          "text": "الأقراط لا تبدل لأسباب صحية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 805,
+      "outputTokens": 110,
+      "cost": 0.0005165,
+      "latencyMs": 1186.9,
+      "error": null
+    },
+    {
+      "id": "fashion-a-10",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "الشحن داخل الضفة بكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "20 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-shipping"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة الشحن داخل الضفة الغربية هي 20 شيكلاً، وتصبح مجانية إذا كانت السلة تبلغ 350 شيكلاً أو أكثر.\",\n  \"claims\": [\n    {\n      \"text\": \"الشحن داخل الضفة الغربية يكلف 20 شيكلاً.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    },\n    {\n      \"text\": \"يصبح الشحن مجانياً للسلة التي تبلغ قيمتها 350 شيكلاً أو أكثر.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378718-0WUwBbWlUHOvGM8i9CgA",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة الشحن داخل الضفة الغربية هي 20 شيكلاً، وتصبح مجانية إذا كانت السلة تبلغ 350 شيكلاً أو أكثر.",
+      "claims": [
+        {
+          "text": "الشحن داخل الضفة الغربية يكلف 20 شيكلاً.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        },
+        {
+          "text": "يصبح الشحن مجانياً للسلة التي تبلغ قيمتها 350 شيكلاً أو أكثر.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 918,
+      "outputTokens": 210,
+      "cost": 0.0008004,
+      "latencyMs": 1755.8,
+      "error": null
+    },
+    {
+      "id": "fashion-a-11",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "متى الشحن مجاني؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "350 شيكل",
+        "او اكثر"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-shipping"
+      ],
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الشحن مجاني للسلة التي تبلغ 350 شيكلاً أو أكثر.\",\n  \"claims\": [\n    {\n      \"text\": \"الشحن يصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378718-hpjvP4JYsMpAFzHnnmbK",
+      "planDecision": "ANSWER",
+      "answer": "الشحن مجاني للسلة التي تبلغ 350 شيكلاً أو أكثر.",
+      "claims": [
+        {
+          "text": "الشحن يصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 908,
+      "outputTokens": 127,
+      "cost": 0.0005899,
+      "latencyMs": 1387.9,
+      "error": null
+    },
+    {
+      "id": "fashion-a-12",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "وين فروعكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "رام الله",
+        "جنين"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-shipping"
+      ],
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لدينا فرع في رام الله بشارع ركب، وفرع في جنين قرب دوار السينما. لا يوجد فرع في طولكرم.\",\n  \"claims\": [\n    {\n      \"text\": \"لدينا فرع في رام الله بشارع ركب.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    },\n    {\n      \"text\": \"لدينا فرع في جنين قرب دوار السينما.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    },\n    {\n      \"text\": \"لا يوجد فرع في طولكرم.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378719-4F6iG4O1HN33VfTzDPMq",
+      "planDecision": "ANSWER",
+      "answer": "لدينا فرع في رام الله بشارع ركب، وفرع في جنين قرب دوار السينما. لا يوجد فرع في طولكرم.",
+      "claims": [
+        {
+          "text": "لدينا فرع في رام الله بشارع ركب.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        },
+        {
+          "text": "لدينا فرع في جنين قرب دوار السينما.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        },
+        {
+          "text": "لا يوجد فرع في طولكرم.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 3,
+      "validLinkedClaims": 3,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 726,
+      "outputTokens": 248,
+      "cost": 0.0008378,
+      "latencyMs": 1846.2,
+      "error": null
+    },
+    {
+      "id": "fashion-a-13",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "في فرع بطولكرم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "لا يوجد",
+        "طولكرم"
+      ],
+      "expectedEvidenceIds": [
+        "fashion-shipping"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا يوجد فرع في طولكرم.\",\n  \"claims\": [\n    {\n      \"text\": \"لا يوجد فرع في طولكرم.\",\n      \"evidenceIds\": [\n        \"fashion-shipping_chunk_0_46e98e308875\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378719-YkKvMxdAgCpP7DoIiy7f",
+      "planDecision": "ANSWER",
+      "answer": "لا يوجد فرع في طولكرم.",
+      "claims": [
+        {
+          "text": "لا يوجد فرع في طولكرم.",
+          "evidenceIds": [
+            "fashion-shipping_chunk_0_46e98e308875"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 839,
+      "outputTokens": 105,
+      "cost": 0.0005142,
+      "latencyMs": 1180.6,
+      "error": null
+    },
+    {
+      "id": "fashion-n-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "عندكم فرع بالخليل؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378720-oC58afQYfbNUn7kW2CCn",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 897,
+      "outputTokens": 40,
+      "cost": 0.0003691,
+      "latencyMs": 990.8,
+      "error": null
+    },
+    {
+      "id": "fashion-n-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "في لون أزرق للفستان؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378720-qP0xvy2xIL4mXRf7WJPl",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 879,
+      "outputTokens": 40,
+      "cost": 0.0003637,
+      "latencyMs": 1227.2,
+      "error": null
+    },
+    {
+      "id": "fashion-n-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "كم طول الفستان بالسنتيمتر؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378720-snW0cDbVVyp7qjE84Kej",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 920,
+      "outputTokens": 40,
+      "cost": 0.000376,
+      "latencyMs": 984,
+      "error": null
+    },
+    {
+      "id": "fashion-n-04",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "هل عرض القميص القديم رجع اليوم؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378721-UWj20dXPjUY3jM1ZvEp9",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 912,
+      "outputTokens": 40,
+      "cost": 0.0003736,
+      "latencyMs": 990.3,
+      "error": null
+    },
+    {
+      "id": "fashion-c-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "قديش سعرها؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن سعره؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378721-ymX0TfZAfWHOw4kEnxin",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن سعره؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 734,
+      "outputTokens": 51,
+      "cost": 0.0003477,
+      "latencyMs": 989.5,
+      "error": null
+    },
+    {
+      "id": "fashion-c-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "أي مقاس موجود؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن مقاساته المتوفرة؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378721-1kvDa3Lvw0v37LAalPB6",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن مقاساته المتوفرة؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 906,
+      "outputTokens": 55,
+      "cost": 0.0004093,
+      "latencyMs": 1179.3,
+      "error": null
+    },
+    {
+      "id": "fashion-c-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "domain": "fashion",
+      "question": "هل اللون متوفر؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو المنتج الذي تسأل عن توفر لونه؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378721-vrJQHZm4a26S8m1ct8T9",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو المنتج الذي تسأل عن توفر لونه؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 806,
+      "outputTokens": 53,
+      "cost": 0.0003743,
+      "latencyMs": 1058.5,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "باقة الانطلاق بكم وشو فيها؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "2200 شيكل",
+        "شعار",
+        "دليل الوان"
+      ],
+      "expectedEvidenceIds": [
+        "svc-packages"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"باقة الانطلاق سعرها 2200 شيكل وتشمل شعارًا ودليل ألوان، وجولتي تعديل، ودعمًا تقنيًا لمدة 14 يومًا بعد التسليم. تستغرق 12 يوم عمل للتنفيذ بعد استلام المحتوى.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة الانطلاق لهوية العلامة بسعر 2200 شيكل.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc\"\n      ]\n    },\n    {\n      \"text\": \"تشمل باقة الانطلاق شعارًا ودليل ألوان.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc\"\n      ]\n    },\n    {\n      \"text\": \"باقة الانطلاق تشمل جولتي تعديل.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    },\n    {\n      \"text\": \"باقة الانطلاق تشمل دعمًا تقنيًا لمدة 14 يومًا بعد التسليم.\",\n      \"evidenceIds\": [\n        \"svc-support_chunk_0_19dc9459f9ae\"\n      ]\n    },\n    {\n      \"text\": \"تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378722-DBKPmK5LNzwQofvP1YMQ",
+      "planDecision": "ANSWER",
+      "answer": "باقة الانطلاق سعرها 2200 شيكل وتشمل شعارًا ودليل ألوان، وجولتي تعديل، ودعمًا تقنيًا لمدة 14 يومًا بعد التسليم. تستغرق 12 يوم عمل للتنفيذ بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "باقة الانطلاق لهوية العلامة بسعر 2200 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        },
+        {
+          "text": "تشمل باقة الانطلاق شعارًا ودليل ألوان.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        },
+        {
+          "text": "باقة الانطلاق تشمل جولتي تعديل.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        },
+        {
+          "text": "باقة الانطلاق تشمل دعمًا تقنيًا لمدة 14 يومًا بعد التسليم.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        },
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 5,
+      "validLinkedClaims": 5,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 902,
+      "outputTokens": 407,
+      "cost": 0.0012881,
+      "latencyMs": 2397.8,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "سعر باقة النمو؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "4800 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "svc-packages"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"سعر باقة النمو هو 4800 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة النمو سعرها 4800 شيكل.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378722-9F2cH3HRkjsVdHTnA7Hm",
+      "planDecision": "ANSWER",
+      "answer": "سعر باقة النمو هو 4800 شيكل.",
+      "claims": [
+        {
+          "text": "باقة النمو سعرها 4800 شيكل.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 899,
+      "outputTokens": 112,
+      "cost": 0.0005497,
+      "latencyMs": 1214.3,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كم صفحة بالموقع التعريفي؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "خمس صفحات"
+      ],
+      "expectedEvidenceIds": [
+        "svc-packages"
+      ],
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الموقع التعريفي ضمن باقة النمو يتكون من خمس صفحات.\",\n  \"claims\": [\n    {\n      \"text\": \"الموقع التعريفي ضمن باقة النمو يتكون من خمس صفحات.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378722-KphY9mQQ9GJhImoTvpu7",
+      "planDecision": "ANSWER",
+      "answer": "الموقع التعريفي ضمن باقة النمو يتكون من خمس صفحات.",
+      "claims": [
+        {
+          "text": "الموقع التعريفي ضمن باقة النمو يتكون من خمس صفحات.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 902,
+      "outputTokens": 115,
+      "cost": 0.0005581,
+      "latencyMs": 1303.5,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-04",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "إدارة الإعلانات داخلة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "ليست ضمن"
+      ],
+      "expectedEvidenceIds": [
+        "svc-packages"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"إدارة الإعلانات ليست ضمن أي من باقات الانطلاق أو النمو.\",\n  \"claims\": [\n    {\n      \"text\": \"إدارة الإعلانات ليست ضمن أي من باقات الانطلاق أو النمو.\",\n      \"evidenceIds\": [\n        \"svc-packages_chunk_0_d8ee877512fc\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378723-BULv3Vvy2eLDjpu6GlMd",
+      "planDecision": "ANSWER",
+      "answer": "إدارة الإعلانات ليست ضمن أي من باقات الانطلاق أو النمو.",
+      "claims": [
+        {
+          "text": "إدارة الإعلانات ليست ضمن أي من باقات الانطلاق أو النمو.",
+          "evidenceIds": [
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 901,
+      "outputTokens": 117,
+      "cost": 0.0005628,
+      "latencyMs": 1599.1,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-05",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "مدة باقة الانطلاق؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "12 يوم عمل"
+      ],
+      "expectedEvidenceIds": [
+        "svc-timeline"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تستغرق باقة الانطلاق 12 يوم عمل.\",\n  \"claims\": [\n    {\n      \"text\": \"تستغرق باقة الانطلاق 12 يوم عمل.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378723-qNx3FeLTXOmXCO8H9Jtr",
+      "planDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل.",
+      "claims": [
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 923,
+      "outputTokens": 113,
+      "cost": 0.0005594,
+      "latencyMs": 1418.6,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-06",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "النمو بتخلص بقديش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "25 يوم عمل",
+        "استلام المحتوى"
+      ],
+      "expectedEvidenceIds": [
+        "svc-timeline"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.\",\n  \"claims\": [\n    {\n      \"text\": \"تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378724-JytgedvFOo9RPDjJYjvr",
+      "planDecision": "ANSWER",
+      "answer": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 902,
+      "outputTokens": 121,
+      "cost": 0.0005731,
+      "latencyMs": 1245.5,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-07",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كيف دفعات المشروع؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "40%",
+        "30%",
+        "30%"
+      ],
+      "expectedEvidenceIds": [
+        "svc-timeline"
+      ],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم.\",\n  \"claims\": [\n    {\n      \"text\": \"يبدأ المشروع بدفعة 40%.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    },\n    {\n      \"text\": \"تُدفع 30% عند اعتماد الاتجاه.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    },\n    {\n      \"text\": \"تُدفع 30% عند التسليم.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378724-eCi6gAzZWKKsUxxUCE0S",
+      "planDecision": "ANSWER",
+      "answer": "يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم.",
+      "claims": [
+        {
+          "text": "يبدأ المشروع بدفعة 40%.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تُدفع 30% عند اعتماد الاتجاه.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تُدفع 30% عند التسليم.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 3,
+      "validLinkedClaims": 3,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 890,
+      "outputTokens": 238,
+      "cost": 0.000862,
+      "latencyMs": 1730.7,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-08",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كم تعديل بباقه الانطلاق؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "جولتي تعديل"
+      ],
+      "expectedEvidenceIds": [
+        "svc-revisions"
+      ],
+      "tags": [
+        "msa"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"باقة الانطلاق تشمل جولتي تعديل.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة الانطلاق تشمل جولتي تعديل.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378724-D2zQVdNhRvi3sZzJYuAc",
+      "planDecision": "ANSWER",
+      "answer": "باقة الانطلاق تشمل جولتي تعديل.",
+      "claims": [
+        {
+          "text": "باقة الانطلاق تشمل جولتي تعديل.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 925,
+      "outputTokens": 108,
+      "cost": 0.0005475,
+      "latencyMs": 1277.8,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-09",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "وباقة النمو كم جولة؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "اربع جولات"
+      ],
+      "expectedEvidenceIds": [
+        "svc-revisions"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"باقة النمو تشمل أربع جولات تعديل.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة النمو تشمل أربع جولات تعديل.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378725-8QiTpKOz83JA4BJnyeXU",
+      "planDecision": "ANSWER",
+      "answer": "باقة النمو تشمل أربع جولات تعديل.",
+      "claims": [
+        {
+          "text": "باقة النمو تشمل أربع جولات تعديل.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 900,
+      "outputTokens": 110,
+      "cost": 0.000545,
+      "latencyMs": 1303.1,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-10",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "التعديل الزيادة بكم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "180 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "svc-revisions"
+      ],
+      "tags": [
+        "palestinian"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة جولة التعديل الإضافية هي 180 شيكلاً.\",\n  \"claims\": [\n    {\n      \"text\": \"تكلفة جولة التعديل الإضافية هي 180 شيكلاً.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378725-mGFT385s7ZE6mk3w68YD",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة جولة التعديل الإضافية هي 180 شيكلاً.",
+      "claims": [
+        {
+          "text": "تكلفة جولة التعديل الإضافية هي 180 شيكلاً.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 925,
+      "outputTokens": 124,
+      "cost": 0.0005875,
+      "latencyMs": 1316.4,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-11",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كتابة عشر صفحات عربي قديش؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "600 شيكل"
+      ],
+      "expectedEvidenceIds": [
+        "svc-revisions"
+      ],
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تكلفة كتابة المحتوى العربي حتى عشر صفحات هي 600 شيكل.\",\n  \"claims\": [\n    {\n      \"text\": \"كتابة المحتوى العربي هي إضافة اختيارية.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    },\n    {\n      \"text\": \"سعر كتابة المحتوى العربي حتى عشر صفحات هو 600 شيكل.\",\n      \"evidenceIds\": [\n        \"svc-revisions_chunk_0_8b7e5fd6d9fa\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378725-1fO5xVzmhOGOWx8OGb8f",
+      "planDecision": "ANSWER",
+      "answer": "تكلفة كتابة المحتوى العربي حتى عشر صفحات هي 600 شيكل.",
+      "claims": [
+        {
+          "text": "كتابة المحتوى العربي هي إضافة اختيارية.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        },
+        {
+          "text": "سعر كتابة المحتوى العربي حتى عشر صفحات هو 600 شيكل.",
+          "evidenceIds": [
+            "svc-revisions_chunk_0_8b7e5fd6d9fa"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 903,
+      "outputTokens": 178,
+      "cost": 0.0007159,
+      "latencyMs": 1610.4,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-12",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "متى ساعات الدعم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "الاحد",
+        "الخميس",
+        "التاسعة",
+        "الخامسة"
+      ],
+      "expectedEvidenceIds": [
+        "svc-support"
+      ],
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الدعم عبر البريد متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.\",\n  \"claims\": [\n    {\n      \"text\": \"الدعم عبر البريد متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.\",\n      \"evidenceIds\": [\n        \"svc-support_chunk_0_19dc9459f9ae\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378726-KNAPhMJ1TIMx0NuXqyIK",
+      "planDecision": "ANSWER",
+      "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+      "claims": [
+        {
+          "text": "الدعم عبر البريد متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 899,
+      "outputTokens": 125,
+      "cost": 0.0005822,
+      "latencyMs": 1304.3,
+      "error": null
+    },
+    {
+      "id": "professional_services-a-13",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "دعم باقة النمو كم يوم؟",
+      "expectedDecision": "ANSWER",
+      "expectedFacts": [
+        "60 يوما"
+      ],
+      "expectedEvidenceIds": [
+        "svc-support"
+      ],
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"دعم باقة النمو يستمر لمدة 60 يومًا بعد التسليم.\",\n  \"claims\": [\n    {\n      \"text\": \"باقة النمو تشمل دعمًا تقنيًا لمدة 60 يومًا بعد التسليم.\",\n      \"evidenceIds\": [\n        \"svc-support_chunk_0_19dc9459f9ae\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378726-edEYHowy4I05rNQIENqj",
+      "planDecision": "ANSWER",
+      "answer": "دعم باقة النمو يستمر لمدة 60 يومًا بعد التسليم.",
+      "claims": [
+        {
+          "text": "باقة النمو تشمل دعمًا تقنيًا لمدة 60 يومًا بعد التسليم.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 901,
+      "outputTokens": 122,
+      "cost": 0.0005753,
+      "latencyMs": 1524.5,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\"decision\":\"NO_ANSWER\",\"answer\":\"\",\"claims\":[],\"missingInformation\":[],\"clarificationQuestion\":null}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378726-2dGOw1lJH11cGs9qSfWu",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 926,
+      "outputTokens": 22,
+      "cost": 0.0003328,
+      "latencyMs": 943.9,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كم تكلفة إدارة الإعلانات؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"NO_ANSWER\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378727-YhddAjhBIHfC0OE2RLj7",
+      "planDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 925,
+      "outputTokens": 40,
+      "cost": 0.0003775,
+      "latencyMs": 1031.4,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"الدعم عبر البريد متاح من الأحد إلى الخميس.\",\n  \"claims\": [\n    {\n      \"text\": \"الدعم عبر البريد متاح من الأحد إلى الخميس.\",\n      \"evidenceIds\": [\n        \"svc-support_chunk_0_19dc9459f9ae\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378727-wVnYzzcDnqVYa8BaqQFL",
+      "planDecision": "ANSWER",
+      "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+      "claims": [
+        {
+          "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 926,
+      "outputTokens": 111,
+      "cost": 0.0005553,
+      "latencyMs": 1321.1,
+      "error": null
+    },
+    {
+      "id": "professional_services-n-04",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedDecision": "NO_ANSWER",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.\",\n  \"claims\": [\n    {\n      \"text\": \"العرض متاح من 1 إلى 5 سبتمبر 2026.\",\n      \"evidenceIds\": [\n        \"svc-promo_chunk_0_53ae533e4c8a\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378727-COgbey44PBjvU1wNf9Hq",
+      "planDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 1,
+      "validLinkedClaims": 1,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 895,
+      "outputTokens": 138,
+      "cost": 0.0006135,
+      "latencyMs": 1465.9,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "قديش سعرها؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ما هو الشيء الذي تسأل عن سعره؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378727-0MNF5vqm3lWC42LnYcwf",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ما هو الشيء الذي تسأل عن سعره؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 732,
+      "outputTokens": 51,
+      "cost": 0.0003471,
+      "latencyMs": 1058.6,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"ANSWER\",\n  \"answer\": \"تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.\",\n  \"claims\": [\n    {\n      \"text\": \"تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    },\n    {\n      \"text\": \"تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.\",\n      \"evidenceIds\": [\n        \"svc-timeline_chunk_0_436f7e90adf9\"\n      ]\n    }\n  ],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": null\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378728-ISJgsUkxHvvdzMAOI4l7",
+      "planDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "malformed": false,
+      "claimCount": 2,
+      "validLinkedClaims": 2,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "tenantLeaks": 0,
+      "inputTokens": 890,
+      "outputTokens": 198,
+      "cost": 0.000762,
+      "latencyMs": 1463,
+      "error": null
+    },
+    {
+      "id": "professional_services-c-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "domain": "professional_services",
+      "question": "بدي أعدلها",
+      "expectedDecision": "CLARIFY",
+      "expectedFacts": [],
+      "expectedEvidenceIds": [],
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "raw": "{\n  \"decision\": \"CLARIFY\",\n  \"answer\": \"\",\n  \"claims\": [],\n  \"missingInformation\": [],\n  \"clarificationQuestion\": \"ماذا تقصد بـ \\\"أعدلها\\\"؟ هل تقصد تعديل باقة معينة أو تعديل شيء آخر؟\"\n}",
+      "routedModel": "google/gemini-2.5-flash",
+      "routedProvider": "Google",
+      "generationId": "gen-1788378728-ORUpNwMIfz5Eab6mdErQ",
+      "planDecision": "CLARIFY",
+      "answer": "",
+      "claims": [],
+      "missingInformation": [],
+      "clarificationQuestion": "ماذا تقصد بـ \"أعدلها\"؟ هل تقصد تعديل باقة معينة أو تعديل شيء آخر؟",
+      "malformed": false,
+      "claimCount": 0,
+      "validLinkedClaims": 0,
+      "missingEvidenceIds": 0,
+      "hallucinatedEvidenceIds": 0,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "tenantLeaks": 0,
+      "inputTokens": 726,
+      "outputTokens": 68,
+      "cost": 0.0003878,
+      "latencyMs": 1210.2,
+      "error": null
+    }
+  ]
+}

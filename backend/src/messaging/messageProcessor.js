@@ -3,6 +3,7 @@ const { registerCustomerUser, findCustomerUser, incrementUnreadCount } = require
 const { saveMessage, existsByExternalId, markMessageForManagement } = require('../database/repositories/messageRepository');
 const { addLog, reportError } = require('../services/logger');
 const { getAIResponse } = require('../services/ai');
+const { collectTextMessage } = require('./inboundMessageBatcher');
 const { materializeProfileImage } = require('../services/profileImageService');
 const fs = require('fs');
 const path = require('path');
@@ -10,6 +11,8 @@ const knowledgeDocumentRepo = require('../database/repositories/knowledgeDocumen
 const mediaAttachmentRepo = require('../database/repositories/mediaAttachmentRepository');
 const { persistMediaBuffer, removeStoredMedia } = require('../services/outgoingMediaStorage');
 const { requestedKnowledgeMediaType } = require('../rag/intelligence/mediaRequestDetector');
+const crypto = require('crypto');
+const ragTraceRepo = require('../database/repositories/ragRequestTraceRepository');
 
 function requestsManagement(text) {
     const value = String(text || '').normalize('NFKC').toLowerCase();
@@ -202,14 +205,22 @@ async function processIncomingMessage(normalizedMsg) {
             };
         };
 
-        if (messageType === 'text' && requestsManagement(content)) {
+        let batchedText = content;
+        if (messageType === 'text') {
+            const batch = await collectTextMessage({ tenantId, channel, externalUserId }, content, persistedMessageId);
+            if (!batch.leader) return { status: 'batched', duplicate: false, channel, externalUserId, aiEnabled: true, responseSent: false, batchedMessageCount: batch.count, messageId: persistedMessageId };
+            batchedText = batch.combinedText;
+        }
+        if (messageType === 'text' && requestsManagement(batchedText)) {
             return await escalateToManagement('customer_requested_management');
         }
 
         // 7. AI automation mode is active
         let replyText = '';
         let replyMedia = null;
-        const textToProcess = (messageType !== 'text') ? content : content; // handles attachments captions or paths
+        let safeNoAnswer = false;
+        const textToProcess = messageType === 'text' ? batchedText : content;
+        const ragRequestId = crypto.randomUUID();
 
         if (textToProcess || messageType === 'image' || messageType === 'audio' || messageType === 'voice') {
             const retrievalTelemetry = {};
@@ -220,18 +231,31 @@ async function processIncomingMessage(normalizedMsg) {
                     textToProcess || '',
                     messageType,
                     normalizedMsg.media,
-                    { tenantId, channel, retrievalTelemetry }
+                    {
+                        tenantId, channel, retrievalTelemetry,
+                        conversationId: user?.conversationId || `${channel}:${externalUserId}`,
+                        requestId: ragRequestId,
+                        messageId: persistedMessageId
+                    }
                 );
             } catch (aiError) {
                 addLog(`⚠️ تعذر على الذكاء الاصطناعي معالجة رسالة ${customer.displayName}: ${aiError.message}`);
                 return await escalateToManagement('ai_provider_failure');
             }
             if (!aiResponse || !String(aiResponse).trim()) {
+                ragTraceRepo.updateTrace(ragRequestId, {
+                    fallback_source: 'message_processor_ai_empty_response',
+                    final_response_type: 'ESCALATION'
+                });
                 return await escalateToManagement('ai_empty_response');
             }
             replyText = String(aiResponse).trim();
             if (aiSignalsUnknown(replyText)) {
-                return await escalateToManagement('ai_unknown_answer');
+                safeNoAnswer = true;
+                ragTraceRepo.updateTrace(ragRequestId, {
+                    fallback_source: 'message_processor_ai_unknown_answer',
+                    final_response_type: 'NO_ANSWER'
+                });
             }
             const requestedMediaType = messageType === 'text'
                 ? requestedKnowledgeMediaType(textToProcess)
@@ -269,6 +293,13 @@ async function processIncomingMessage(normalizedMsg) {
             media: replyMedia,
             tenantId
         });
+        if (typeof ragRequestId !== 'undefined') {
+            ragTraceRepo.updateTrace(ragRequestId, {
+                fallback_source: safeNoAnswer ? 'message_processor_ai_unknown_answer' : null,
+                final_response_type: safeNoAnswer ? 'NO_ANSWER'
+                    : replyMedia ? 'ANSWER_WITH_MEDIA' : 'ANSWER'
+            });
+        }
 
         return {
             status: 'processed',

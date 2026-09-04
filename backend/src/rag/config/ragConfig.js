@@ -21,6 +21,12 @@ const DEFAULTS = {
     RAG_FAIL_OPEN_ON_PROMPT_GUARD: 'false',
     RAG_ALLOW_OPEN_DOMAIN: 'false',
     RAG_KNOWLEDGE_BASE_ONLY: 'true',
+    RAG_EVIDENCE_GATE_ENABLED: 'true',
+    // Grounded business responses fail closed by default. Installations can still
+    // opt into shadow mode explicitly for diagnostics.
+    RAG_GROUNDING_SAFETY_BOUNDARY_ENABLED: 'true',
+    RAG_GROUNDING_SAFETY_BOUNDARY_SHADOW: 'false',
+    RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT: 100,
     QDRANT_URL: 'http://127.0.0.1:6333',
     QDRANT_API_KEY: '',
     OLLAMA_BASE_URL: 'http://127.0.0.1:11434',
@@ -61,6 +67,7 @@ const DEFAULTS = {
     RAG_RECONCILIATION_LOCK_TTL_MS: 600000,
     RAG_ORPHAN_GRACE_PERIOD_HOURS: 24,
     RAG_NEIGHBOR_EXPANSION: 'false',
+    RAG_MULTI_QUERY_ENABLED: 'false',
     RAG_CONTEXT_BUDGET: 3000,
     RAG_INJECTION_GUARD_ENABLED: 'true',
     RAG_INJECTION_BLOCK_HIGH_RISK: 'true',
@@ -70,6 +77,7 @@ const DEFAULTS = {
 };
 
 const RUNTIME_LIMITS = {
+    RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT: [0, 100],
     RAG_OLLAMA_EMBED_TIMEOUT_MS: [100, 300000],
     RAG_OLLAMA_HEALTH_TIMEOUT_MS: [100, 60000],
     RAG_EMBEDDING_DIMENSION: [1, 65536],
@@ -199,6 +207,9 @@ function validateSetting(key, value) {
         case 'RAG_FAIL_OPEN_ON_PROMPT_GUARD':
         case 'RAG_ALLOW_OPEN_DOMAIN':
         case 'RAG_KNOWLEDGE_BASE_ONLY':
+        case 'RAG_EVIDENCE_GATE_ENABLED':
+        case 'RAG_GROUNDING_SAFETY_BOUNDARY_ENABLED':
+        case 'RAG_GROUNDING_SAFETY_BOUNDARY_SHADOW':
         case 'RAG_NEIGHBOR_EXPANSION':
         case 'RAG_INJECTION_GUARD_ENABLED':
         case 'RAG_INJECTION_BLOCK_HIGH_RISK':

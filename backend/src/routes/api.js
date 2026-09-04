@@ -16,6 +16,7 @@ const { getManualKnowledgePath } = require('../rag/storage/tenantKnowledgeStorag
 const { requirePermission } = require('../security/accessControl');
 const { audit } = require('../security/accessControl');
 const bcrypt = require('bcryptjs');
+const { isKnowledgeOperation } = require('../rag/security/ragAccessPolicy');
 
 const RAG_ACCESS_TTL_MS = 30 * 60 * 1000;
 const RAG_ACCESS_PASSWORD_HASH = process.env.RAG_ACCESS_PASSWORD_HASH
@@ -1308,11 +1309,7 @@ router.use('/rag', (req, res, next) => {
 
     // Knowledge files and every reindex flow stay available to authorized
     // administrators without the secondary settings password.
-    const relativePath = String(req.path || '');
-    const isDocumentOperation = relativePath.startsWith('/rag/documents');
-    const isReindexOperation = relativePath === '/rag/reindex'
-        || relativePath === '/rag/reconciliation/reindex';
-    if (isDocumentOperation || isReindexOperation) return next();
+    if (isKnowledgeOperation(req.path)) return next();
 
     return requireRagAccess(req, res, next);
 });
@@ -1668,7 +1665,10 @@ router.post('/rag/playground', async (req, res) => {
                 question,
                 'text',
                 null,
-                { tenantId: req.ragTenantId, channel: 'playground', retrievalTelemetry }
+                {
+                    tenantId: req.ragTenantId, channel: 'playground', retrievalTelemetry,
+                    conversationId: `playground:${req.ragTenantId}`
+                }
             );
             if (aiResp) {
                 finalAnswer = aiResp;

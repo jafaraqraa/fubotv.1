@@ -1,0 +1,2444 @@
+{
+  "model": "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
+  "runtime": "quantized ONNX CPU",
+  "modelFileBytes": 338679133,
+  "coldStartMs": 1459.0453499986324,
+  "datasetSize": 55,
+  "formulations": {
+    "raw": {
+      "calibrated": {
+        "threshold": 0.11,
+        "tp": 15,
+        "tn": 22,
+        "fp": 3,
+        "fn": 15,
+        "accuracy": 0.6727272727272727,
+        "supportedPrecision": 0.8333333333333334,
+        "supportedRecall": 0.5,
+        "falseAnswerRate": 0.12,
+        "falseNoAnswerRate": 0.5,
+        "hardNegativeAccuracy": 0.8
+      },
+      "arabicParaphrase": {
+        "threshold": 0.11,
+        "tp": 6,
+        "tn": 0,
+        "fp": 0,
+        "fn": 4,
+        "accuracy": 0.6,
+        "supportedPrecision": 1.0,
+        "supportedRecall": 0.6,
+        "falseAnswerRate": null,
+        "falseNoAnswerRate": 0.4,
+        "hardNegativeAccuracy": null
+      },
+      "languageStyles": {
+        "palestinian": {
+          "threshold": 0.11,
+          "tp": 8,
+          "tn": 0,
+          "fp": 0,
+          "fn": 6,
+          "accuracy": 0.5714285714285714,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.5714285714285714,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.42857142857142855,
+          "hardNegativeAccuracy": null
+        },
+        "msa": {
+          "threshold": 0.11,
+          "tp": 2,
+          "tn": 0,
+          "fp": 0,
+          "fn": 4,
+          "accuracy": 0.3333333333333333,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.3333333333333333,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.6666666666666666,
+          "hardNegativeAccuracy": null
+        },
+        "morphology_paraphrase": {
+          "threshold": 0.11,
+          "tp": 6,
+          "tn": 0,
+          "fp": 0,
+          "fn": 4,
+          "accuracy": 0.6,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.6,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.4,
+          "hardNegativeAccuracy": null
+        }
+      },
+      "unknownConcepts": {
+        "threshold": 0.11,
+        "tp": 5,
+        "tn": 0,
+        "fp": 0,
+        "fn": 5,
+        "accuracy": 0.5,
+        "supportedPrecision": 1.0,
+        "supportedRecall": 0.5,
+        "falseAnswerRate": null,
+        "falseNoAnswerRate": 0.5,
+        "hardNegativeAccuracy": null
+      },
+      "scoreDistributions": {
+        "SUPPORTED": {
+          "count": 30,
+          "mean": 0.16902101067826153,
+          "median": 0.11004815623164177,
+          "p10": 0.027062240801751618,
+          "p90": 0.41225478649139413,
+          "min": 0.012845099903643131,
+          "max": 0.7068650126457214
+        },
+        "INSUFFICIENT": {
+          "count": 23,
+          "mean": 0.07277988170719017,
+          "median": 0.02764282189309597,
+          "p10": 0.00433744378387928,
+          "p90": 0.2341696470975877,
+          "min": 0.0022102058865129948,
+          "max": 0.34073761105537415
+        },
+        "CONTRADICTED": {
+          "count": 2,
+          "mean": 0.053327737376093864,
+          "median": 0.053327737376093864,
+          "p10": 0.038515349850058556,
+          "p90": 0.06814012490212917,
+          "min": 0.03481225296854973,
+          "max": 0.071843221783638
+        }
+      },
+      "latency": {
+        "warmupMs": 30.19063900137553,
+        "meanMs": 27.532778199714482,
+        "p50Ms": 27.14698600175325,
+        "p95Ms": 33.5247008020815
+      },
+      "rows": [
+        {
+          "id": "p01",
+          "label": "POSITIVE",
+          "question": "قديش سعر رمال X؟",
+          "evidence": "سعر هاتف رمال X هو 1890 شيكل.",
+          "hypothesis": "قديش سعر رمال X؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.06456468999385834,
+            "neutral": 0.9166831970214844,
+            "contradiction": 0.018752142786979675,
+            "logits": [
+              -0.5008822679519653,
+              2.152211904525757,
+              -1.7372419834136963
+            ]
+          },
+          "latencyMs": 27.468464002595283
+        },
+        {
+          "id": "p02",
+          "label": "POSITIVE",
+          "question": "والاكسسوارات شو كفالتها؟",
+          "evidence": "ضمان الملحقات 6 أشهر.",
+          "hypothesis": "والاكسسوارات شو كفالتها؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.03214653953909874,
+            "neutral": 0.9427394866943359,
+            "contradiction": 0.02511400543153286,
+            "logits": [
+              -1.0373278856277466,
+              2.3411574363708496,
+              -1.2842069864273071
+            ]
+          },
+          "latencyMs": 23.211845000332687
+        },
+        {
+          "id": "p03",
+          "label": "POSITIVE",
+          "question": "بيت لحم بأي أيام بتوصلوها؟",
+          "evidence": "التوصيل إلى بيت لحم يومي الاثنين والأربعاء.",
+          "hypothesis": "بيت لحم بأي أيام بتوصلوها؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.1334351748228073,
+            "neutral": 0.795221745967865,
+            "contradiction": 0.07134309411048889,
+            "logits": [
+              -0.3919854462146759,
+              1.393019676208496,
+              -1.0181007385253906
+            ]
+          },
+          "latencyMs": 28.509340998425614
+        },
+        {
+          "id": "p04",
+          "label": "POSITIVE",
+          "question": "بتوزعوا بأريحا؟",
+          "evidence": "لا يغطي الأسطول أريحا.",
+          "hypothesis": "بتوزعوا بأريحا؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.3689202666282654,
+            "neutral": 0.5817025899887085,
+            "contradiction": 0.04937712475657463,
+            "logits": [
+              0.5278177261352539,
+              0.983196496963501,
+              -1.4832755327224731
+            ]
+          },
+          "latencyMs": 22.6827910009888
+        },
+        {
+          "id": "p05",
+          "label": "POSITIVE",
+          "question": "كيف بقدر ادفع؟",
+          "evidence": "الدفع متاح نقداً أو بالبطاقة.",
+          "hypothesis": "كيف بقدر ادفع؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0420362688601017,
+            "neutral": 0.9389686584472656,
+            "contradiction": 0.018995029851794243,
+            "logits": [
+              -0.7845536470413208,
+              2.321695566177368,
+              -1.5789092779159546
+            ]
+          },
+          "latencyMs": 24.44038300018292
+        },
+        {
+          "id": "p06",
+          "label": "POSITIVE",
+          "question": "التأمين بغطي تنظيف البشرة؟",
+          "evidence": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "hypothesis": "التأمين بغطي تنظيف البشرة؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.1326674073934555,
+            "neutral": 0.6687573194503784,
+            "contradiction": 0.19857527315616608,
+            "logits": [
+              -0.6600298881530762,
+              0.9575459957122803,
+              -0.2567068934440613
+            ]
+          },
+          "latencyMs": 28.706876997603104
+        },
+        {
+          "id": "p07",
+          "label": "POSITIVE",
+          "question": "فستان سهل الزيتون بأي ألوان؟",
+          "evidence": "فستان سهل الزيتون متوفر بالأسود والزيتي.",
+          "hypothesis": "فستان سهل الزيتون بأي ألوان؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.08215328305959702,
+            "neutral": 0.8352786898612976,
+            "contradiction": 0.08256801217794418,
+            "logits": [
+              -0.7628527283668518,
+              1.556325912475586,
+              -0.7578173279762268
+            ]
+          },
+          "latencyMs": 27.162004997080658
+        },
+        {
+          "id": "p08",
+          "label": "POSITIVE",
+          "question": "الترجيع النقدي خلال قديش؟",
+          "evidence": "الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة.",
+          "hypothesis": "الترجيع النقدي خلال قديش؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.29538393020629883,
+            "neutral": 0.6597079634666443,
+            "contradiction": 0.04490816220641136,
+            "logits": [
+              0.36054232716560364,
+              1.164063572883606,
+              -1.5231139659881592
+            ]
+          },
+          "latencyMs": 32.17959299945505
+        },
+        {
+          "id": "p09",
+          "label": "POSITIVE",
+          "question": "الشحن داخل الضفة بكم؟",
+          "evidence": "الشحن داخل الضفة 20 شيكلاً.",
+          "hypothesis": "الشحن داخل الضفة بكم؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.47680649161338806,
+            "neutral": 0.44658297300338745,
+            "contradiction": 0.07661057263612747,
+            "logits": [
+              0.651090145111084,
+              0.585604727268219,
+              -1.1772855520248413
+            ]
+          },
+          "latencyMs": 24.391104001551867
+        },
+        {
+          "id": "p10",
+          "label": "POSITIVE",
+          "question": "متى الشحن مجاني؟",
+          "evidence": "يصبح الشحن مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر.",
+          "hypothesis": "متى الشحن مجاني؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.016151733696460724,
+            "neutral": 0.9705528616905212,
+            "contradiction": 0.01329541951417923,
+            "logits": [
+              -1.3417894840240479,
+              2.754049062728882,
+              -1.5363973379135132
+            ]
+          },
+          "latencyMs": 31.45131000201218
+        },
+        {
+          "id": "p11",
+          "label": "POSITIVE",
+          "question": "المخزون بالموقع يعني محجوز؟",
+          "evidence": "تحديث المخزون في الموقع لا يمثل حجزاً.",
+          "hypothesis": "المخزون بالموقع يعني محجوز؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.4050823748111725,
+            "neutral": 0.39220157265663147,
+            "contradiction": 0.20271605253219604,
+            "logits": [
+              0.2532075345516205,
+              0.220892995595932,
+              -0.4390767812728882
+            ]
+          },
+          "latencyMs": 27.243495002039708
+        },
+        {
+          "id": "p12",
+          "label": "POSITIVE",
+          "question": "متى ساعات الدعم؟",
+          "evidence": "الدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "hypothesis": "متى ساعات الدعم؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.02955474704504013,
+            "neutral": 0.955045759677887,
+            "contradiction": 0.015399507246911526,
+            "logits": [
+              -0.9524917006492615,
+              2.5230231285095215,
+              -1.6044007539749146
+            ]
+          },
+          "latencyMs": 32.2107629981474
+        },
+        {
+          "id": "p13",
+          "label": "POSITIVE",
+          "question": "دعم باقة النمو كم يوم؟",
+          "evidence": "باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم.",
+          "hypothesis": "دعم باقة النمو كم يوم؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.2219478338956833,
+            "neutral": 0.7485124468803406,
+            "contradiction": 0.02953970991075039,
+            "logits": [
+              0.22937849164009094,
+              1.4450238943099976,
+              -1.7873283624649048
+            ]
+          },
+          "latencyMs": 34.37564599880716
+        },
+        {
+          "id": "p14",
+          "label": "POSITIVE",
+          "question": "كم ثمن باقة الانطلاق؟",
+          "evidence": "سعر باقة الانطلاق 2200 شيكل.",
+          "hypothesis": "كم ثمن باقة الانطلاق؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.7068650126457214,
+            "neutral": 0.27969712018966675,
+            "contradiction": 0.01343784760683775,
+            "logits": [
+              1.6122593879699707,
+              0.6851269602775574,
+              -2.3505051136016846
+            ]
+          },
+          "latencyMs": 28.848761998233385
+        },
+        {
+          "id": "p15",
+          "label": "POSITIVE",
+          "question": "في ضمان على التلفونات؟",
+          "evidence": "ضمان الهواتف 18 شهراً.",
+          "hypothesis": "في ضمان على التلفونات؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.2184295803308487,
+            "neutral": 0.7385609745979309,
+            "contradiction": 0.04300939291715622,
+            "logits": [
+              0.14682964980602264,
+              1.3650696277618408,
+              -1.4782154560089111
+            ]
+          },
+          "latencyMs": 26.299857003323268
+        },
+        {
+          "id": "p16",
+          "label": "POSITIVE",
+          "question": "بكم القميص الكتاني؟",
+          "evidence": "سعر قميص كرمل الكتاني 145 شيكلاً.",
+          "hypothesis": "بكم القميص الكتاني؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.57221519947052,
+            "neutral": 0.39802682399749756,
+            "contradiction": 0.029758023098111153,
+            "logits": [
+              1.0934332609176636,
+              0.7304375171661377,
+              -1.8629831075668335
+            ]
+          },
+          "latencyMs": 26.062246004585177
+        },
+        {
+          "id": "p17",
+          "label": "POSITIVE",
+          "question": "قديش بده وقت تنفيذ باقة النمو؟",
+          "evidence": "تنفيذ باقة النمو يستغرق 25 يوم عمل.",
+          "hypothesis": "قديش بده وقت تنفيذ باقة النمو؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.015179181471467018,
+            "neutral": 0.9709942936897278,
+            "contradiction": 0.013826522044837475,
+            "logits": [
+              -1.4107781648635864,
+              2.747617483139038,
+              -1.5041143894195557
+            ]
+          },
+          "latencyMs": 30.298360994493123
+        },
+        {
+          "id": "p18",
+          "label": "POSITIVE",
+          "question": "الأقراط بتتبدل؟",
+          "evidence": "الأقراط لا تبدل لأسباب صحية.",
+          "hypothesis": "الأقراط بتتبدل؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.06872133165597916,
+            "neutral": 0.8535773158073425,
+            "contradiction": 0.07770130783319473,
+            "logits": [
+              -0.8881468176841736,
+              1.6312297582626343,
+              -0.7653343677520752
+            ]
+          },
+          "latencyMs": 23.998440003197175
+        },
+        {
+          "id": "p19",
+          "label": "POSITIVE",
+          "question": "وين فرع جنين؟",
+          "evidence": "فرع جنين قرب دوار السينما.",
+          "hypothesis": "وين فرع جنين؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.045405592769384384,
+            "neutral": 0.9159204959869385,
+            "contradiction": 0.03867383301258087,
+            "logits": [
+              -0.9478431344032288,
+              2.0564510822296143,
+              -1.108315348625183
+            ]
+          },
+          "latencyMs": 24.155164006515406
+        },
+        {
+          "id": "p20",
+          "label": "POSITIVE",
+          "question": "عرض الخريف شغال هسا؟",
+          "evidence": "خصم الخريف فعال حالياً حتى 7 سبتمبر 2026.",
+          "hypothesis": "عرض الخريف شغال هسا؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.10701942443847656,
+            "neutral": 0.8485137224197388,
+            "contradiction": 0.04446686431765556,
+            "logits": [
+              -0.391951322555542,
+              1.6785248517990112,
+              -1.270216941833496
+            ]
+          },
+          "latencyMs": 29.425593005726114
+        },
+        {
+          "id": "u01",
+          "label": "POSITIVE",
+          "question": "بعد شو بصير تلميع السيارة؟",
+          "evidence": "يتم تلميع السيارة بعد مرحلة التجفيف.",
+          "unseen": true,
+          "hypothesis": "بعد شو بصير تلميع السيارة؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.13347168266773224,
+            "neutral": 0.8131722807884216,
+            "contradiction": 0.053356096148490906,
+            "logits": [
+              -0.2919360101222992,
+              1.5151176452636719,
+              -1.2088369131088257
+            ]
+          },
+          "latencyMs": 27.14698600175325
+        },
+        {
+          "id": "u02",
+          "label": "POSITIVE",
+          "question": "إيمتى بتعقموا الغرفة؟",
+          "evidence": "يتم تعقيم الغرفة بعد التنظيف.",
+          "unseen": true,
+          "hypothesis": "إيمتى بتعقموا الغرفة؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.30623698234558105,
+            "neutral": 0.6749282479286194,
+            "contradiction": 0.018834728747606277,
+            "logits": [
+              0.6410499811172485,
+              1.4312970638275146,
+              -2.14760684967041
+            ]
+          },
+          "latencyMs": 26.69808399514295
+        },
+        {
+          "id": "u03",
+          "label": "POSITIVE",
+          "question": "بشو بتغلفوا الطلب؟",
+          "evidence": "يتم تغليف الطلب بورق مقاوم للماء.",
+          "unseen": true,
+          "hypothesis": "بشو بتغلفوا الطلب؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.12020186334848404,
+            "neutral": 0.8476896286010742,
+            "contradiction": 0.032108552753925323,
+            "logits": [
+              -0.23078344762325287,
+              1.722558617591858,
+              -1.5508335828781128
+            ]
+          },
+          "latencyMs": 24.948086000222247
+        },
+        {
+          "id": "u04",
+          "label": "POSITIVE",
+          "question": "المعايرة قبل ولا بعد التشغيل؟",
+          "evidence": "تتم معايرة الجهاز قبل التشغيل.",
+          "unseen": true,
+          "hypothesis": "المعايرة قبل ولا بعد التشغيل؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.05836953595280647,
+            "neutral": 0.8962876796722412,
+            "contradiction": 0.045342788100242615,
+            "logits": [
+              -0.8219298720359802,
+              1.9095373153686523,
+              -1.0744729042053223
+            ]
+          },
+          "latencyMs": 27.010496996808797
+        },
+        {
+          "id": "u05",
+          "label": "POSITIVE",
+          "question": "كل قديش الفحص الدوري؟",
+          "evidence": "يجرى الفحص الدوري كل ستة أشهر.",
+          "unseen": true,
+          "hypothesis": "كل قديش الفحص الدوري؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.08793677389621735,
+            "neutral": 0.8882347345352173,
+            "contradiction": 0.02382846176624298,
+            "logits": [
+              -0.3634544014930725,
+              1.949163556098938,
+              -1.669191837310791
+            ]
+          },
+          "latencyMs": 24.89876999607077
+        },
+        {
+          "id": "u06",
+          "label": "POSITIVE",
+          "question": "متى بقدر أجدد الرخصة؟",
+          "evidence": "يتم تجديد الرخصة بعد انتهائها.",
+          "unseen": true,
+          "hypothesis": "متى بقدر أجدد الرخصة؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.012845099903643131,
+            "neutral": 0.9797704219818115,
+            "contradiction": 0.00738455168902874,
+            "logits": [
+              -1.2736107110977173,
+              3.0607452392578125,
+              -1.8271827697753906
+            ]
+          },
+          "latencyMs": 26.232124997477513
+        },
+        {
+          "id": "u07",
+          "label": "POSITIVE",
+          "question": "مين بعمل التركيب؟",
+          "evidence": "يتم تركيب القطعة بواسطة فني معتمد.",
+          "unseen": true,
+          "hypothesis": "مين بعمل التركيب؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.04233492910861969,
+            "neutral": 0.9324743151664734,
+            "contradiction": 0.025190820917487144,
+            "logits": [
+              -0.8651084899902344,
+              2.2271206378936768,
+              -1.3842412233352661
+            ]
+          },
+          "latencyMs": 27.068236006016377
+        },
+        {
+          "id": "u08",
+          "label": "POSITIVE",
+          "question": "المعالجة متى بتبدأ؟",
+          "evidence": "تبدأ المعالجة بعد ظهور نتيجة الفحص.",
+          "unseen": true,
+          "hypothesis": "المعالجة متى بتبدأ؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.028274519369006157,
+            "neutral": 0.965260922908783,
+            "contradiction": 0.006464467383921146,
+            "logits": [
+              -0.7293418049812317,
+              2.801095724105835,
+              -2.204982042312622
+            ]
+          },
+          "latencyMs": 27.7515769994352
+        },
+        {
+          "id": "u09",
+          "label": "POSITIVE",
+          "question": "شو نوع الطباعة؟",
+          "evidence": "تتم الطباعة بالحبر الحراري.",
+          "unseen": true,
+          "hypothesis": "شو نوع الطباعة؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.13319598138332367,
+            "neutral": 0.7570788860321045,
+            "contradiction": 0.10972512513399124,
+            "logits": [
+              -0.4891832172870636,
+              1.2484626770019531,
+              -0.6830264329910278
+            ]
+          },
+          "latencyMs": 25.986636996094603
+        },
+        {
+          "id": "u10",
+          "label": "POSITIVE",
+          "question": "إيمتى الاستلام؟",
+          "evidence": "الاستلام بعد إتمام المعاملة.",
+          "unseen": true,
+          "hypothesis": "إيمتى الاستلام؟",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.11307688802480698,
+            "neutral": 0.860821545124054,
+            "contradiction": 0.02610161155462265,
+            "logits": [
+              -0.2189476639032364,
+              1.8108714818954468,
+              -1.68501877784729
+            ]
+          },
+          "latencyMs": 26.074569999764208
+        },
+        {
+          "id": "n01",
+          "label": "NEGATIVE",
+          "question": "هل عندكم فرع بالخليل؟",
+          "evidence": "فرع رام الله في شارع ركب وفرع جنين قرب دوار السينما.",
+          "hypothesis": "هل عندكم فرع بالخليل؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.07014800608158112,
+            "neutral": 0.8824460506439209,
+            "contradiction": 0.04740593582391739,
+            "logits": [
+              -0.7059628963470459,
+              1.8261271715164185,
+              -1.097822904586792
+            ]
+          },
+          "latencyMs": 36.5670639948803
+        },
+        {
+          "id": "n02",
+          "label": "NEGATIVE",
+          "question": "هل تقبلون تأمين الشفاء؟",
+          "evidence": "تقبل العيادة تأمين أمان للرعاية الأولية فقط.",
+          "hypothesis": "هل تقبلون تأمين الشفاء؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.04174470901489258,
+            "neutral": 0.920244574546814,
+            "contradiction": 0.03801080211997032,
+            "logits": [
+              -0.981363832950592,
+              2.1117029190063477,
+              -1.0750662088394165
+            ]
+          },
+          "latencyMs": 29.403630003798753
+        },
+        {
+          "id": "n03",
+          "label": "NEGATIVE",
+          "question": "كم سعر فحص الدم الشامل؟",
+          "evidence": "الفحوصات المخبرية متاحة أيام الأحد والثلاثاء.",
+          "hypothesis": "كم سعر فحص الدم الشامل؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.004324155393987894,
+            "neutral": 0.9889411330223083,
+            "contradiction": 0.006734807509928942,
+            "logits": [
+              -1.9902544021606445,
+              3.4421634674072266,
+              -1.5471822023391724
+            ]
+          },
+          "latencyMs": 28.85304799565347
+        },
+        {
+          "id": "n04",
+          "label": "NEGATIVE",
+          "question": "هل بتعملوا تطبيق موبايل؟",
+          "evidence": "تقدم الشركة تصميم مواقع وباقات محتوى.",
+          "hypothesis": "هل بتعملوا تطبيق موبايل؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.005626549478620291,
+            "neutral": 0.9872854351997375,
+            "contradiction": 0.007088027894496918,
+            "logits": [
+              -1.7754377126693726,
+              3.3920249938964844,
+              -1.5445270538330078
+            ]
+          },
+          "latencyMs": 29.074012003547978
+        },
+        {
+          "id": "n05",
+          "label": "NEGATIVE",
+          "question": "هل الدعم متاح يوم الجمعة؟",
+          "evidence": "الدعم من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "hypothesis": "هل الدعم متاح يوم الجمعة؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.026245178654789925,
+            "neutral": 0.9368716478347778,
+            "contradiction": 0.036883290857076645,
+            "logits": [
+              -1.305074691772461,
+              2.269989252090454,
+              -0.9647984504699707
+            ]
+          },
+          "latencyMs": 29.610703997605015
+        },
+        {
+          "id": "n06",
+          "label": "NEGATIVE",
+          "question": "متى يرجع رمال X للمخزون؟",
+          "evidence": "هاتف رمال X متوفر حالياً باللون الأسود.",
+          "hypothesis": "متى يرجع رمال X للمخزون؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.00330588361248374,
+            "neutral": 0.9921231865882874,
+            "contradiction": 0.004570866469293833,
+            "logits": [
+              -2.037956714630127,
+              3.666186571121216,
+              -1.7139581441879272
+            ]
+          },
+          "latencyMs": 33.160010003484786
+        },
+        {
+          "id": "n07",
+          "label": "NEGATIVE",
+          "question": "شو سعر جهاز ندى 15؟",
+          "evidence": "سعر جهاز ندى 14 هو 2890 شيكل.",
+          "hypothesis": "شو سعر جهاز ندى 15؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.022175099700689316,
+            "neutral": 0.9613315463066101,
+            "contradiction": 0.016493335366249084,
+            "logits": [
+              -1.1677093505859375,
+              2.601639986038208,
+              -1.4637227058410645
+            ]
+          },
+          "latencyMs": 27.935515994613525
+        },
+        {
+          "id": "n08",
+          "label": "NEGATIVE",
+          "question": "هل تقبلون الشيكات؟",
+          "evidence": "الدفع نقداً أو بتحويل بنكي قبل التوزيع.",
+          "hypothesis": "هل تقبلون الشيكات؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.10280272364616394,
+            "neutral": 0.8658251166343689,
+            "contradiction": 0.03137208893895149,
+            "logits": [
+              -0.32306358218193054,
+              1.807807445526123,
+              -1.5099568367004395
+            ]
+          },
+          "latencyMs": 27.00906799873337
+        },
+        {
+          "id": "n09",
+          "label": "NEGATIVE",
+          "question": "أي دواء آخذ للحساسية؟",
+          "evidence": "العيادة تقدم فحوصات وتحاليل مخبرية.",
+          "hypothesis": "أي دواء آخذ للحساسية؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.004390597343444824,
+            "neutral": 0.9894987344741821,
+            "contradiction": 0.006110711023211479,
+            "logits": [
+              -1.9282004833221436,
+              3.489532947540283,
+              -1.5976226329803467
+            ]
+          },
+          "latencyMs": 27.417981000326108
+        },
+        {
+          "id": "n10",
+          "label": "NEGATIVE",
+          "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+          "evidence": "خصم الشركات الجديدة فعال حتى 5 سبتمبر.",
+          "hypothesis": "هل العرض مستمر بعد 5 سبتمبر؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.02764282189309597,
+            "neutral": 0.9653249382972717,
+            "contradiction": 0.007032223977148533,
+            "logits": [
+              -0.7426526546478271,
+              2.81044602394104,
+              -2.111515760421753
+            ]
+          },
+          "latencyMs": 28.97959300025832
+        },
+        {
+          "id": "h01",
+          "label": "HARD_NEGATIVE",
+          "question": "كم سعر الفستان؟",
+          "evidence": "الفستان الزيتي مقاس M متوفر.",
+          "hypothesis": "كم سعر الفستان؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.34073761105537415,
+            "neutral": 0.5950596928596497,
+            "contradiction": 0.06420264393091202,
+            "logits": [
+              0.3786376118659973,
+              0.936186671257019,
+              -1.2904306650161743
+            ]
+          },
+          "latencyMs": 22.701492998749018
+        },
+        {
+          "id": "h02",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الفستان متوفر؟",
+          "evidence": "سعر الفستان 260 شيكلاً.",
+          "hypothesis": "هل الفستان متوفر؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.006881396751850843,
+            "neutral": 0.9851475358009338,
+            "contradiction": 0.007971035316586494,
+            "logits": [
+              -1.7419840097427368,
+              3.2219858169555664,
+              -1.5949910879135132
+            ]
+          },
+          "latencyMs": 23.004545000731014
+        },
+        {
+          "id": "h03",
+          "label": "HARD_NEGATIVE",
+          "question": "قديش ضمان المنتج؟",
+          "evidence": "المنتج يشمل ضماناً.",
+          "hypothesis": "قديش ضمان المنتج؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.10614894330501556,
+            "neutral": 0.863862156867981,
+            "contradiction": 0.029988933354616165,
+            "logits": [
+              -0.27893292903900146,
+              1.8176372051239014,
+              -1.5429474115371704
+            ]
+          },
+          "latencyMs": 24.068070997600444
+        },
+        {
+          "id": "h04",
+          "label": "HARD_NEGATIVE",
+          "question": "كم رسوم التوصيل؟",
+          "evidence": "التوصيل مجاني للطلبات فوق 350 شيكلاً.",
+          "hypothesis": "كم رسوم التوصيل؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.019492192193865776,
+            "neutral": 0.9718136787414551,
+            "contradiction": 0.008694141171872616,
+            "logits": [
+              -1.0384641885757446,
+              2.8706858158111572,
+              -1.8458287715911865
+            ]
+          },
+          "latencyMs": 25.650111005234066
+        },
+        {
+          "id": "h05",
+          "label": "HARD_NEGATIVE",
+          "question": "متى الموعد؟",
+          "evidence": "يمكن إلغاء الموعد قبل 24 ساعة.",
+          "hypothesis": "متى الموعد؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0662318617105484,
+            "neutral": 0.8900206089019775,
+            "contradiction": 0.043747495859861374,
+            "logits": [
+              -0.718756914138794,
+              1.8793259859085083,
+              -1.133484125137329
+            ]
+          },
+          "latencyMs": 24.02595400053542
+        },
+        {
+          "id": "h06",
+          "label": "HARD_NEGATIVE",
+          "question": "بقدر ألغي الموعد؟",
+          "evidence": "يمكن إعادة جدولة الموعد مرة واحدة.",
+          "hypothesis": "بقدر ألغي الموعد؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0555339939892292,
+            "neutral": 0.9359295964241028,
+            "contradiction": 0.008536343462765217,
+            "logits": [
+              -0.31747013330459595,
+              2.5070748329162598,
+              -2.1901328563690186
+            ]
+          },
+          "latencyMs": 34.54862600483466
+        },
+        {
+          "id": "h07",
+          "label": "HARD_NEGATIVE",
+          "question": "بقدر أرجع القطعة؟",
+          "evidence": "يمكن استبدال القطعة خلال 14 يوماً.",
+          "hypothesis": "بقدر أرجع القطعة؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.01325474213808775,
+            "neutral": 0.9809633493423462,
+            "contradiction": 0.0057818349450826645,
+            "logits": [
+              -1.2084954977035522,
+              3.095684289932251,
+              -2.0381293296813965
+            ]
+          },
+          "latencyMs": 28.360127995256335
+        },
+        {
+          "id": "h08",
+          "label": "HARD_NEGATIVE",
+          "question": "شو الخصم الحالي؟",
+          "evidence": "يحصل العميل عادة على كوبون عند التأخير.",
+          "hypothesis": "شو الخصم الحالي؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.07950007915496826,
+            "neutral": 0.889924943447113,
+            "contradiction": 0.030575038865208626,
+            "logits": [
+              -0.4976691007614136,
+              1.9177098274230957,
+              -1.4532431364059448
+            ]
+          },
+          "latencyMs": 26.577819997328334
+        },
+        {
+          "id": "h09",
+          "label": "HARD_NEGATIVE",
+          "question": "سعر ندى 14 قديش؟",
+          "evidence": "سعر رمال X هو 1890 شيكل.",
+          "hypothesis": "سعر ندى 14 قديش؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.2661748230457306,
+            "neutral": 0.6344435811042786,
+            "contradiction": 0.09938151389360428,
+            "logits": [
+              0.08208803087472916,
+              0.950683057308197,
+              -0.9030992388725281
+            ]
+          },
+          "latencyMs": 25.749925000127405
+        },
+        {
+          "id": "h10",
+          "label": "HARD_NEGATIVE",
+          "question": "هل وزن العبوة 5 كيلو؟",
+          "evidence": "وزن العبوة 3 كيلو.",
+          "hypothesis": "هل وزن العبوة 5 كيلو؟",
+          "expectedNli": "CONTRADICTED",
+          "scores": {
+            "entailment": 0.071843221783638,
+            "neutral": 0.8153836727142334,
+            "contradiction": 0.11277303844690323,
+            "logits": [
+              -0.9511884450912476,
+              1.477984070777893,
+              -0.5002974271774292
+            ]
+          },
+          "latencyMs": 27.682109001034405
+        },
+        {
+          "id": "h11",
+          "label": "HARD_NEGATIVE",
+          "question": "كم أجرة الشحن العادية؟",
+          "evidence": "الشحن مجاني إذا تجاوز الطلب 300 شيكل.",
+          "hypothesis": "كم أجرة الشحن العادية؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0022102058865129948,
+            "neutral": 0.9950684309005737,
+            "contradiction": 0.002721356926485896,
+            "logits": [
+              -2.122065782546997,
+              3.9876599311828613,
+              -1.9140208959579468
+            ]
+          },
+          "latencyMs": 27.31168599711964
+        },
+        {
+          "id": "h12",
+          "label": "HARD_NEGATIVE",
+          "question": "مدة الإرجاع العامة؟",
+          "evidence": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "hypothesis": "مدة الإرجاع العامة؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.2972756624221802,
+            "neutral": 0.6678712368011475,
+            "contradiction": 0.034853145480155945,
+            "logits": [
+              0.47269144654273987,
+              1.2821269035339355,
+              -1.6708250045776367
+            ]
+          },
+          "latencyMs": 26.876893993176054
+        },
+        {
+          "id": "h13",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الأسود داخل الخصم؟",
+          "evidence": "خصم 18% على الفستان باستثناء اللون الأسود.",
+          "hypothesis": "هل الأسود داخل الخصم؟",
+          "expectedNli": "CONTRADICTED",
+          "scores": {
+            "entailment": 0.03481225296854973,
+            "neutral": 0.945294201374054,
+            "contradiction": 0.019893616437911987,
+            "logits": [
+              -0.9266703128814697,
+              2.374856472015381,
+              -1.4862407445907593
+            ]
+          },
+          "latencyMs": 29.18780299660284
+        },
+        {
+          "id": "h14",
+          "label": "HARD_NEGATIVE",
+          "question": "متى يبدأ الدعم؟",
+          "evidence": "يمكن إلغاء الدعم قبل بدء المشروع.",
+          "hypothesis": "متى يبدأ الدعم؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.012795104645192623,
+            "neutral": 0.9821563363075256,
+            "contradiction": 0.005048579070717096,
+            "logits": [
+              -1.1664316654205322,
+              3.1742563247680664,
+              -2.0963873863220215
+            ]
+          },
+          "latencyMs": 26.542011997662485
+        },
+        {
+          "id": "h15",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الباقة تشمل الطباعة؟",
+          "evidence": "الباقة تشمل كتابة المحتوى.",
+          "hypothesis": "هل الباقة تشمل الطباعة؟",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.09929493814706802,
+            "neutral": 0.8736361265182495,
+            "contradiction": 0.02706885151565075,
+            "logits": [
+              -0.29325786232948303,
+              1.8813115358352661,
+              -1.5929688215255737
+            ]
+          },
+          "latencyMs": 27.067390001320746
+        }
+      ]
+    },
+    "proposition": {
+      "calibrated": {
+        "threshold": 0.03,
+        "tp": 7,
+        "tn": 22,
+        "fp": 3,
+        "fn": 23,
+        "accuracy": 0.5272727272727272,
+        "supportedPrecision": 0.7,
+        "supportedRecall": 0.23333333333333334,
+        "falseAnswerRate": 0.12,
+        "falseNoAnswerRate": 0.7666666666666667,
+        "hardNegativeAccuracy": 0.8666666666666667
+      },
+      "arabicParaphrase": {
+        "threshold": 0.03,
+        "tp": 2,
+        "tn": 0,
+        "fp": 0,
+        "fn": 8,
+        "accuracy": 0.2,
+        "supportedPrecision": 1.0,
+        "supportedRecall": 0.2,
+        "falseAnswerRate": null,
+        "falseNoAnswerRate": 0.8,
+        "hardNegativeAccuracy": null
+      },
+      "languageStyles": {
+        "palestinian": {
+          "threshold": 0.03,
+          "tp": 3,
+          "tn": 0,
+          "fp": 0,
+          "fn": 11,
+          "accuracy": 0.21428571428571427,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.21428571428571427,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.7857142857142857,
+          "hardNegativeAccuracy": null
+        },
+        "msa": {
+          "threshold": 0.03,
+          "tp": 1,
+          "tn": 0,
+          "fp": 0,
+          "fn": 5,
+          "accuracy": 0.16666666666666666,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.16666666666666666,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.8333333333333334,
+          "hardNegativeAccuracy": null
+        },
+        "morphology_paraphrase": {
+          "threshold": 0.03,
+          "tp": 2,
+          "tn": 0,
+          "fp": 0,
+          "fn": 8,
+          "accuracy": 0.2,
+          "supportedPrecision": 1.0,
+          "supportedRecall": 0.2,
+          "falseAnswerRate": null,
+          "falseNoAnswerRate": 0.8,
+          "hardNegativeAccuracy": null
+        }
+      },
+      "unknownConcepts": {
+        "threshold": 0.03,
+        "tp": 3,
+        "tn": 0,
+        "fp": 0,
+        "fn": 7,
+        "accuracy": 0.3,
+        "supportedPrecision": 1.0,
+        "supportedRecall": 0.3,
+        "falseAnswerRate": null,
+        "falseNoAnswerRate": 0.7,
+        "hardNegativeAccuracy": null
+      },
+      "scoreDistributions": {
+        "SUPPORTED": {
+          "count": 30,
+          "mean": 0.020123103742177288,
+          "median": 0.006629419978708029,
+          "p10": 0.002045607729814947,
+          "p90": 0.05200418010354045,
+          "min": 0.0014866518322378397,
+          "max": 0.08829071372747421
+        },
+        "INSUFFICIENT": {
+          "count": 23,
+          "mean": 0.008589334251946244,
+          "median": 0.005338457878679037,
+          "p10": 0.0012469800654798745,
+          "p90": 0.019022286683321003,
+          "min": 0.0008393793250434101,
+          "max": 0.043078262358903885
+        },
+        "CONTRADICTED": {
+          "count": 2,
+          "mean": 0.021928587462753057,
+          "median": 0.021928587462753057,
+          "p10": 0.011905927490442992,
+          "p90": 0.031951247435063126,
+          "min": 0.009400262497365475,
+          "max": 0.03445691242814064
+        }
+      },
+      "latency": {
+        "warmupMs": 27.764104001107626,
+        "meanMs": 32.409321854488965,
+        "p50Ms": 31.890283004031517,
+        "p95Ms": 39.61211109708529
+      },
+      "rows": [
+        {
+          "id": "p01",
+          "label": "POSITIVE",
+          "question": "قديش سعر رمال X؟",
+          "evidence": "سعر هاتف رمال X هو 1890 شيكل.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ سعر رمال X.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0063348072580993176,
+            "neutral": 0.9898647665977478,
+            "contradiction": 0.0038004841189831495,
+            "logits": [
+              -1.5717874765396118,
+              3.4797213077545166,
+              -2.08271861076355
+            ]
+          },
+          "latencyMs": 35.901675997592974
+        },
+        {
+          "id": "p02",
+          "label": "POSITIVE",
+          "question": "والاكسسوارات شو كفالتها؟",
+          "evidence": "ضمان الملحقات 6 أشهر.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: والاكسسوارات شو كفالتها.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.004578076768666506,
+            "neutral": 0.9918558597564697,
+            "contradiction": 0.0035660797730088234,
+            "logits": [
+              -1.7478008270263672,
+              3.630497932434082,
+              -1.997612714767456
+            ]
+          },
+          "latencyMs": 28.858772995590698
+        },
+        {
+          "id": "p03",
+          "label": "POSITIVE",
+          "question": "بيت لحم بأي أيام بتوصلوها؟",
+          "evidence": "التوصيل إلى بيت لحم يومي الاثنين والأربعاء.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: بيت لحم بأي أيام بتوصلوها.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0699063092470169,
+            "neutral": 0.899076521396637,
+            "contradiction": 0.03101716935634613,
+            "logits": [
+              -0.5888177156448364,
+              1.9653946161270142,
+              -1.4014326333999634
+            ]
+          },
+          "latencyMs": 43.727413001761306
+        },
+        {
+          "id": "p04",
+          "label": "POSITIVE",
+          "question": "بتوزعوا بأريحا؟",
+          "evidence": "لا يغطي الأسطول أريحا.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: بتوزعوا بأريحا.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.024005277082324028,
+            "neutral": 0.965388834476471,
+            "contradiction": 0.010605952702462673,
+            "logits": [
+              -0.9785175919532776,
+              2.7157397270202637,
+              -1.795375943183899
+            ]
+          },
+          "latencyMs": 31.223206002323423
+        },
+        {
+          "id": "p05",
+          "label": "POSITIVE",
+          "question": "كيف بقدر ادفع؟",
+          "evidence": "الدفع متاح نقداً أو بالبطاقة.",
+          "hypothesis": "المطلوب معرفة تفاصيل بقدر ادفع.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.002057936741039157,
+            "neutral": 0.9936724901199341,
+            "contradiction": 0.004269588738679886,
+            "logits": [
+              -2.3430428504943848,
+              3.8366611003875732,
+              -1.6132287979125977
+            ]
+          },
+          "latencyMs": 31.334296996647026
+        },
+        {
+          "id": "p06",
+          "label": "POSITIVE",
+          "question": "التأمين بغطي تنظيف البشرة؟",
+          "evidence": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: التأمين بغطي تنظيف البشرة.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.028260886669158936,
+            "neutral": 0.9430356621742249,
+            "contradiction": 0.028703365474939346,
+            "logits": [
+              -1.1800322532653809,
+              2.3275930881500244,
+              -1.1644967794418335
+            ]
+          },
+          "latencyMs": 45.163683003920596
+        },
+        {
+          "id": "p07",
+          "label": "POSITIVE",
+          "question": "فستان سهل الزيتون بأي ألوان؟",
+          "evidence": "فستان سهل الزيتون متوفر بالأسود والزيتي.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: فستان سهل الزيتون بأي ألوان.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.08829071372747421,
+            "neutral": 0.7998406291007996,
+            "contradiction": 0.11186860501766205,
+            "logits": [
+              -0.7966667413711548,
+              1.4071108102798462,
+              -0.5599766373634338
+            ]
+          },
+          "latencyMs": 39.41358999873046
+        },
+        {
+          "id": "p08",
+          "label": "POSITIVE",
+          "question": "الترجيع النقدي خلال قديش؟",
+          "evidence": "الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ الترجيع النقدي خلال .",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.012201895006000996,
+            "neutral": 0.9832852482795715,
+            "contradiction": 0.004512850660830736,
+            "logits": [
+              -1.139693260192871,
+              3.249614953994751,
+              -2.1343555450439453
+            ]
+          },
+          "latencyMs": 35.96843800187344
+        },
+        {
+          "id": "p09",
+          "label": "POSITIVE",
+          "question": "الشحن داخل الضفة بكم؟",
+          "evidence": "الشحن داخل الضفة 20 شيكلاً.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ الشحن داخل الضفة .",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.029774565249681473,
+            "neutral": 0.9619096517562866,
+            "contradiction": 0.00831572338938713,
+            "logits": [
+              -0.7657873630523682,
+              2.7094786167144775,
+              -2.0412940979003906
+            ]
+          },
+          "latencyMs": 30.293879004602786
+        },
+        {
+          "id": "p10",
+          "label": "POSITIVE",
+          "question": "متى الشحن مجاني؟",
+          "evidence": "يصبح الشحن مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر.",
+          "hypothesis": "المطلوب معرفة توقيت الشحن مجاني.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0016375919803977013,
+            "neutral": 0.994621992111206,
+            "contradiction": 0.0037404398899525404,
+            "logits": [
+              -2.460587739944458,
+              3.948547840118408,
+              -1.6346113681793213
+            ]
+          },
+          "latencyMs": 35.408090996497776
+        },
+        {
+          "id": "p11",
+          "label": "POSITIVE",
+          "question": "المخزون بالموقع يعني محجوز؟",
+          "evidence": "تحديث المخزون في الموقع لا يمثل حجزاً.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: المخزون بالموقع يعني محجوز.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.006984465755522251,
+            "neutral": 0.10524310916662216,
+            "contradiction": 0.8877724409103394,
+            "logits": [
+              -2.562612771987915,
+              0.14997190237045288,
+              2.282414436340332
+            ]
+          },
+          "latencyMs": 32.72731600009138
+        },
+        {
+          "id": "p12",
+          "label": "POSITIVE",
+          "question": "متى ساعات الدعم؟",
+          "evidence": "الدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "hypothesis": "المطلوب معرفة توقيت ساعات الدعم.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0019346466287970543,
+            "neutral": 0.9954763054847717,
+            "contradiction": 0.0025890013203024864,
+            "logits": [
+              -2.2004787921905518,
+              4.042818069458008,
+              -1.9091308116912842
+            ]
+          },
+          "latencyMs": 34.76922600384569
+        },
+        {
+          "id": "p13",
+          "label": "POSITIVE",
+          "question": "دعم باقة النمو كم يوم؟",
+          "evidence": "باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ دعم باقة النمو يوم.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0034921702463179827,
+            "neutral": 0.9948614239692688,
+            "contradiction": 0.0016463695792481303,
+            "logits": [
+              -1.6933749914169312,
+              3.958705186843872,
+              -2.4453256130218506
+            ]
+          },
+          "latencyMs": 38.37368200038327
+        },
+        {
+          "id": "p14",
+          "label": "POSITIVE",
+          "question": "كم ثمن باقة الانطلاق؟",
+          "evidence": "سعر باقة الانطلاق 2200 شيكل.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ ثمن باقة الانطلاق.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.00692403269931674,
+            "neutral": 0.9898205995559692,
+            "contradiction": 0.003255414543673396,
+            "logits": [
+              -1.4536309242248535,
+              3.508894681930542,
+              -2.2083096504211426
+            ]
+          },
+          "latencyMs": 30.294583993963897
+        },
+        {
+          "id": "p15",
+          "label": "POSITIVE",
+          "question": "في ضمان على التلفونات؟",
+          "evidence": "ضمان الهواتف 18 شهراً.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: في ضمان على التلفونات.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.08183146268129349,
+            "neutral": 0.8940180540084839,
+            "contradiction": 0.024150436744093895,
+            "logits": [
+              -0.37988096475601196,
+              2.011183261871338,
+              -1.6002403497695923
+            ]
+          },
+          "latencyMs": 31.631074998585973
+        },
+        {
+          "id": "p16",
+          "label": "POSITIVE",
+          "question": "بكم القميص الكتاني؟",
+          "evidence": "سعر قميص كرمل الكتاني 145 شيكلاً.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ القميص الكتاني.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.01186503004282713,
+            "neutral": 0.9828434586524963,
+            "contradiction": 0.005291530396789312,
+            "logits": [
+              -1.2493005990982056,
+              3.1675539016723633,
+              -2.056788682937622
+            ]
+          },
+          "latencyMs": 32.17173599841772
+        },
+        {
+          "id": "p17",
+          "label": "POSITIVE",
+          "question": "قديش بده وقت تنفيذ باقة النمو؟",
+          "evidence": "تنفيذ باقة النمو يستغرق 25 يوم عمل.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ بده وقت تنفيذ باقة النمو.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.00538808386772871,
+            "neutral": 0.9917284846305847,
+            "contradiction": 0.0028833814430981874,
+            "logits": [
+              -1.5733628273010254,
+              3.6418967247009277,
+              -2.1985888481140137
+            ]
+          },
+          "latencyMs": 36.24889100319706
+        },
+        {
+          "id": "p18",
+          "label": "POSITIVE",
+          "question": "الأقراط بتتبدل؟",
+          "evidence": "الأقراط لا تبدل لأسباب صحية.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: الأقراط بتتبدل.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.04884624853730202,
+            "neutral": 0.49497857689857483,
+            "contradiction": 0.45617520809173584,
+            "logits": [
+              -1.5200785398483276,
+              0.7957584857940674,
+              0.7141209244728088
+            ]
+          },
+          "latencyMs": 31.43128200463252
+        },
+        {
+          "id": "p19",
+          "label": "POSITIVE",
+          "question": "وين فرع جنين؟",
+          "evidence": "فرع جنين قرب دوار السينما.",
+          "hypothesis": "المطلوب معرفة مكان فرع جنين.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.00346804759465158,
+            "neutral": 0.993626594543457,
+            "contradiction": 0.002905297791585326,
+            "logits": [
+              -1.8594199419021606,
+              3.798349618911743,
+              -2.036475896835327
+            ]
+          },
+          "latencyMs": 26.998850000381935
+        },
+        {
+          "id": "p20",
+          "label": "POSITIVE",
+          "question": "عرض الخريف شغال هسا؟",
+          "evidence": "خصم الخريف فعال حالياً حتى 7 سبتمبر 2026.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: عرض الخريف شغال هسا.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.017174506559967995,
+            "neutral": 0.975326657295227,
+            "contradiction": 0.007498838007450104,
+            "logits": [
+              -1.1064399480819702,
+              2.93290638923645,
+              -1.9351180791854858
+            ]
+          },
+          "latencyMs": 37.0184400017024
+        },
+        {
+          "id": "u01",
+          "label": "POSITIVE",
+          "question": "بعد شو بصير تلميع السيارة؟",
+          "evidence": "يتم تلميع السيارة بعد مرحلة التجفيف.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة المعلومة التالية: بعد شو بصير تلميع السيارة.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.046467699110507965,
+            "neutral": 0.9362313747406006,
+            "contradiction": 0.01730095036327839,
+            "logits": [
+              -0.6928051710128784,
+              2.310299873352051,
+              -1.6808013916015625
+            ]
+          },
+          "latencyMs": 40.07532699324656
+        },
+        {
+          "id": "u02",
+          "label": "POSITIVE",
+          "question": "إيمتى بتعقموا الغرفة؟",
+          "evidence": "يتم تعقيم الغرفة بعد التنظيف.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة توقيت بتعقموا الغرفة.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0035771362017840147,
+            "neutral": 0.9940826296806335,
+            "contradiction": 0.002340270671993494,
+            "logits": [
+              -1.7665804624557495,
+              3.8606772422790527,
+              -2.1908764839172363
+            ]
+          },
+          "latencyMs": 27.966033994744066
+        },
+        {
+          "id": "u03",
+          "label": "POSITIVE",
+          "question": "بشو بتغلفوا الطلب؟",
+          "evidence": "يتم تغليف الطلب بورق مقاوم للماء.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة تفاصيل بتغلفوا الطلب.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0030588898807764053,
+            "neutral": 0.9941124320030212,
+            "contradiction": 0.0028287083841860294,
+            "logits": [
+              -1.9770793914794922,
+              3.8067190647125244,
+              -2.0553107261657715
+            ]
+          },
+          "latencyMs": 28.562977000547107
+        },
+        {
+          "id": "u04",
+          "label": "POSITIVE",
+          "question": "المعايرة قبل ولا بعد التشغيل؟",
+          "evidence": "تتم معايرة الجهاز قبل التشغيل.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة المعلومة التالية: المعايرة قبل ولا بعد التشغيل.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.050015054643154144,
+            "neutral": 0.931281566619873,
+            "contradiction": 0.018703483045101166,
+            "logits": [
+              -0.6431266665458679,
+              2.2811107635498047,
+              -1.6267411708831787
+            ]
+          },
+          "latencyMs": 34.78335600084392
+        },
+        {
+          "id": "u05",
+          "label": "POSITIVE",
+          "question": "كل قديش الفحص الدوري؟",
+          "evidence": "يجرى الفحص الدوري كل ستة أشهر.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ كل الفحص الدوري.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0024391578044742346,
+            "neutral": 0.9955679774284363,
+            "contradiction": 0.001992865465581417,
+            "logits": [
+              -1.9715107679367065,
+              4.040149688720703,
+              -2.1735901832580566
+            ]
+          },
+          "latencyMs": 29.775092996715102
+        },
+        {
+          "id": "u06",
+          "label": "POSITIVE",
+          "question": "متى بقدر أجدد الرخصة؟",
+          "evidence": "يتم تجديد الرخصة بعد انتهائها.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة توقيت بقدر أجدد الرخصة.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.002441451884806156,
+            "neutral": 0.9956369996070862,
+            "contradiction": 0.0019215889042243361,
+            "logits": [
+              -1.9643946886062622,
+              4.046395301818848,
+              -2.2038350105285645
+            ]
+          },
+          "latencyMs": 30.958880997786764
+        },
+        {
+          "id": "u07",
+          "label": "POSITIVE",
+          "question": "مين بعمل التركيب؟",
+          "evidence": "يتم تركيب القطعة بواسطة فني معتمد.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة تفاصيل بعمل التركيب.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0025514978915452957,
+            "neutral": 0.9940766096115112,
+            "contradiction": 0.0033718503545969725,
+            "logits": [
+              -2.1189680099487305,
+              3.846165895462036,
+              -1.8401867151260376
+            ]
+          },
+          "latencyMs": 30.92502199433511
+        },
+        {
+          "id": "u08",
+          "label": "POSITIVE",
+          "question": "المعالجة متى بتبدأ؟",
+          "evidence": "تبدأ المعالجة بعد ظهور نتيجة الفحص.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة توقيت المعالجة بتبدأ.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.005956816021353006,
+            "neutral": 0.9917376637458801,
+            "contradiction": 0.0023055411875247955,
+            "logits": [
+              -1.4394981861114502,
+              3.675424098968506,
+              -2.388719320297241
+            ]
+          },
+          "latencyMs": 30.969419996836223
+        },
+        {
+          "id": "u09",
+          "label": "POSITIVE",
+          "question": "شو نوع الطباعة؟",
+          "evidence": "تتم الطباعة بالحبر الحراري.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة المعلومة التالية: شو نوع الطباعة.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.03074200265109539,
+            "neutral": 0.9504724144935608,
+            "contradiction": 0.018785618245601654,
+            "logits": [
+              -0.9960103631019592,
+              2.435318946838379,
+              -1.4885485172271729
+            ]
+          },
+          "latencyMs": 27.347231000021566
+        },
+        {
+          "id": "u10",
+          "label": "POSITIVE",
+          "question": "إيمتى الاستلام؟",
+          "evidence": "الاستلام بعد إتمام المعاملة.",
+          "unseen": true,
+          "hypothesis": "المطلوب معرفة توقيت الاستلام.",
+          "expectedNli": "SUPPORTED",
+          "scores": {
+            "entailment": 0.0014866518322378397,
+            "neutral": 0.9968376159667969,
+            "contradiction": 0.0016756660770624876,
+            "logits": [
+              -2.2458951473236084,
+              4.262166500091553,
+              -2.126210927963257
+            ]
+          },
+          "latencyMs": 23.33271800307557
+        },
+        {
+          "id": "n01",
+          "label": "NEGATIVE",
+          "question": "هل عندكم فرع بالخليل؟",
+          "evidence": "فرع رام الله في شارع ركب وفرع جنين قرب دوار السينما.",
+          "hypothesis": "المطلوب معرفة ما إذا كان عندكم فرع بالخليل.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.043078262358903885,
+            "neutral": 0.9166303873062134,
+            "contradiction": 0.04029131308197975,
+            "logits": [
+              -0.9819454550743103,
+              2.075740337371826,
+              -1.0488282442092896
+            ]
+          },
+          "latencyMs": 37.393960999906994
+        },
+        {
+          "id": "n02",
+          "label": "NEGATIVE",
+          "question": "هل تقبلون تأمين الشفاء؟",
+          "evidence": "تقبل العيادة تأمين أمان للرعاية الأولية فقط.",
+          "hypothesis": "المطلوب معرفة ما إذا كان تقبلون تأمين الشفاء.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.005453174468129873,
+            "neutral": 0.9899415373802185,
+            "contradiction": 0.0046052951365709305,
+            "logits": [
+              -1.7296079397201538,
+              3.4718401432037354,
+              -1.8985987901687622
+            ]
+          },
+          "latencyMs": 34.07929300010437
+        },
+        {
+          "id": "n03",
+          "label": "NEGATIVE",
+          "question": "كم سعر فحص الدم الشامل؟",
+          "evidence": "الفحوصات المخبرية متاحة أيام الأحد والثلاثاء.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ سعر فحص الدم الشامل.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0019436974544078112,
+            "neutral": 0.9947475790977478,
+            "contradiction": 0.003308760467916727,
+            "logits": [
+              -2.327242851257324,
+              3.910654306411743,
+              -1.7952613830566406
+            ]
+          },
+          "latencyMs": 33.65471900178818
+        },
+        {
+          "id": "n04",
+          "label": "NEGATIVE",
+          "question": "هل بتعملوا تطبيق موبايل؟",
+          "evidence": "تقدم الشركة تصميم مواقع وباقات محتوى.",
+          "hypothesis": "المطلوب معرفة ما إذا كان بتعملوا تطبيق موبايل.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0010391619289293885,
+            "neutral": 0.9968198537826538,
+            "contradiction": 0.0021409455221146345,
+            "logits": [
+              -2.6296465396881104,
+              4.236509323120117,
+              -1.906813144683838
+            ]
+          },
+          "latencyMs": 30.585347005398944
+        },
+        {
+          "id": "n05",
+          "label": "NEGATIVE",
+          "question": "هل الدعم متاح يوم الجمعة؟",
+          "evidence": "الدعم من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "hypothesis": "المطلوب معرفة ما إذا كان الدعم متاح يوم الجمعة.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0040850332006812096,
+            "neutral": 0.9900004863739014,
+            "contradiction": 0.005914452485740185,
+            "logits": [
+              -1.987208604812622,
+              3.503166913986206,
+              -1.6171395778656006
+            ]
+          },
+          "latencyMs": 35.18284200254129
+        },
+        {
+          "id": "n06",
+          "label": "NEGATIVE",
+          "question": "متى يرجع رمال X للمخزون؟",
+          "evidence": "هاتف رمال X متوفر حالياً باللون الأسود.",
+          "hypothesis": "المطلوب معرفة توقيت يرجع رمال X للمخزون.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.006136735435575247,
+            "neutral": 0.9860751032829285,
+            "contradiction": 0.007788059767335653,
+            "logits": [
+              -1.7731598615646362,
+              3.3062796592712402,
+              -1.5348610877990723
+            ]
+          },
+          "latencyMs": 36.33046000322793
+        },
+        {
+          "id": "n07",
+          "label": "NEGATIVE",
+          "question": "شو سعر جهاز ندى 15؟",
+          "evidence": "سعر جهاز ندى 14 هو 2890 شيكل.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: شو سعر جهاز ندى 15.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.013512436300516129,
+            "neutral": 0.9736668467521667,
+            "contradiction": 0.012820780277252197,
+            "logits": [
+              -1.4067054986953735,
+              2.870753288269043,
+              -1.459248423576355
+            ]
+          },
+          "latencyMs": 33.197858996572904
+        },
+        {
+          "id": "n08",
+          "label": "NEGATIVE",
+          "question": "هل تقبلون الشيكات؟",
+          "evidence": "الدفع نقداً أو بتحويل بنكي قبل التوزيع.",
+          "hypothesis": "المطلوب معرفة ما إذا كان تقبلون الشيكات.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.002222564071416855,
+            "neutral": 0.9960327744483948,
+            "contradiction": 0.0017447074642404914,
+            "logits": [
+              -2.031116247177124,
+              4.074002742767334,
+              -2.273190498352051
+            ]
+          },
+          "latencyMs": 32.61269599897787
+        },
+        {
+          "id": "n09",
+          "label": "NEGATIVE",
+          "question": "أي دواء آخذ للحساسية؟",
+          "evidence": "العيادة تقدم فحوصات وتحاليل مخبرية.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: أي دواء آخذ للحساسية.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0008393793250434101,
+            "neutral": 0.998201847076416,
+            "contradiction": 0.0009587028180249035,
+            "logits": [
+              -2.477722406387329,
+              4.603325366973877,
+              -2.344804048538208
+            ]
+          },
+          "latencyMs": 32.1408000017982
+        },
+        {
+          "id": "n10",
+          "label": "NEGATIVE",
+          "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+          "evidence": "خصم الشركات الجديدة فعال حتى 5 سبتمبر.",
+          "hypothesis": "المطلوب معرفة ما إذا كان العرض مستمر بعد 5 سبتمبر.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.002324105007573962,
+            "neutral": 0.9920187592506409,
+            "contradiction": 0.00565712433308363,
+            "logits": [
+              -2.3259522914886475,
+              3.730454444885254,
+              -1.436371922492981
+            ]
+          },
+          "latencyMs": 32.76958800415741
+        },
+        {
+          "id": "h01",
+          "label": "HARD_NEGATIVE",
+          "question": "كم سعر الفستان؟",
+          "evidence": "الفستان الزيتي مقاس M متوفر.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ سعر الفستان.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.020399749279022217,
+            "neutral": 0.9754144549369812,
+            "contradiction": 0.004185765516012907,
+            "logits": [
+              -0.8091740608215332,
+              3.0581657886505127,
+              -2.393007278442383
+            ]
+          },
+          "latencyMs": 27.2011740016751
+        },
+        {
+          "id": "h02",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الفستان متوفر؟",
+          "evidence": "سعر الفستان 260 شيكلاً.",
+          "hypothesis": "المطلوب معرفة ما إذا كان الفستان متوفر.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.002765701152384281,
+            "neutral": 0.9951010346412659,
+            "contradiction": 0.002133210888132453,
+            "logits": [
+              -1.927254557609558,
+              3.9582955837249756,
+              -2.186920642852783
+            ]
+          },
+          "latencyMs": 27.019488996302243
+        },
+        {
+          "id": "h03",
+          "label": "HARD_NEGATIVE",
+          "question": "قديش ضمان المنتج؟",
+          "evidence": "المنتج يشمل ضماناً.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ ضمان المنتج.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.010134553536772728,
+            "neutral": 0.9853045344352722,
+            "contradiction": 0.004560868721455336,
+            "logits": [
+              -1.2861939668655396,
+              3.290806293487549,
+              -2.0846312046051025
+            ]
+          },
+          "latencyMs": 29.101565000019036
+        },
+        {
+          "id": "h04",
+          "label": "HARD_NEGATIVE",
+          "question": "كم رسوم التوصيل؟",
+          "evidence": "التوصيل مجاني للطلبات فوق 350 شيكلاً.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ رسوم التوصيل.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.003485726658254862,
+            "neutral": 0.9861453771591187,
+            "contradiction": 0.010368931107223034,
+            "logits": [
+              -2.2859294414520264,
+              3.3591976165771484,
+              -1.1957919597625732
+            ]
+          },
+          "latencyMs": 30.94777599471854
+        },
+        {
+          "id": "h05",
+          "label": "HARD_NEGATIVE",
+          "question": "متى الموعد؟",
+          "evidence": "يمكن إلغاء الموعد قبل 24 ساعة.",
+          "hypothesis": "المطلوب معرفة توقيت الموعد.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.007845313288271427,
+            "neutral": 0.9828218817710876,
+            "contradiction": 0.00933267641812563,
+            "logits": [
+              -1.6637874841690063,
+              3.1667239665985107,
+              -1.4901823997497559
+            ]
+          },
+          "latencyMs": 26.32480199827114
+        },
+        {
+          "id": "h06",
+          "label": "HARD_NEGATIVE",
+          "question": "بقدر ألغي الموعد؟",
+          "evidence": "يمكن إعادة جدولة الموعد مرة واحدة.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: بقدر ألغي الموعد.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0056344373151659966,
+            "neutral": 0.9835811853408813,
+            "contradiction": 0.010784322395920753,
+            "logits": [
+              -1.9827525615692139,
+              3.1795501708984375,
+              -1.3335567712783813
+            ]
+          },
+          "latencyMs": 31.479721001232974
+        },
+        {
+          "id": "h07",
+          "label": "HARD_NEGATIVE",
+          "question": "بقدر أرجع القطعة؟",
+          "evidence": "يمكن استبدال القطعة خلال 14 يوماً.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: بقدر أرجع القطعة.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.00815904513001442,
+            "neutral": 0.9804430603981018,
+            "contradiction": 0.0113978935405612,
+            "logits": [
+              -1.7416715621948242,
+              3.047205686569214,
+              -1.4073704481124878
+            ]
+          },
+          "latencyMs": 32.04748399730306
+        },
+        {
+          "id": "h08",
+          "label": "HARD_NEGATIVE",
+          "question": "شو الخصم الحالي؟",
+          "evidence": "يحصل العميل عادة على كوبون عند التأخير.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: شو الخصم الحالي.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.005338457878679037,
+            "neutral": 0.990159809589386,
+            "contradiction": 0.00450173020362854,
+            "logits": [
+              -1.7032263278961182,
+              3.5197031497955322,
+              -1.8737014532089233
+            ]
+          },
+          "latencyMs": 31.29412600537762
+        },
+        {
+          "id": "h09",
+          "label": "HARD_NEGATIVE",
+          "question": "سعر ندى 14 قديش؟",
+          "evidence": "سعر رمال X هو 1890 شيكل.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ سعر ندى 14 .",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.040936972945928574,
+            "neutral": 0.9217303395271301,
+            "contradiction": 0.037332694977521896,
+            "logits": [
+              -1.0172007083892822,
+              2.097018241882324,
+              -1.1093648672103882
+            ]
+          },
+          "latencyMs": 32.40686900244327
+        },
+        {
+          "id": "h10",
+          "label": "HARD_NEGATIVE",
+          "question": "هل وزن العبوة 5 كيلو؟",
+          "evidence": "وزن العبوة 3 كيلو.",
+          "hypothesis": "المطلوب معرفة ما إذا كان وزن العبوة 5 كيلو.",
+          "expectedNli": "CONTRADICTED",
+          "scores": {
+            "entailment": 0.03445691242814064,
+            "neutral": 0.8418020009994507,
+            "contradiction": 0.12374117970466614,
+            "logits": [
+              -1.4873037338256836,
+              1.7085314989089966,
+              -0.2088211178779602
+            ]
+          },
+          "latencyMs": 28.77936600270914
+        },
+        {
+          "id": "h11",
+          "label": "HARD_NEGATIVE",
+          "question": "كم أجرة الشحن العادية؟",
+          "evidence": "الشحن مجاني إذا تجاوز الطلب 300 شيكل.",
+          "hypothesis": "المطلوب معرفة المقدار المتعلق بـ أجرة الشحن العادية.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0012463086750358343,
+            "neutral": 0.9945066571235657,
+            "contradiction": 0.004247000906616449,
+            "logits": [
+              -2.7204551696777344,
+              3.9616055488586426,
+              -1.4944279193878174
+            ]
+          },
+          "latencyMs": 31.890283004031517
+        },
+        {
+          "id": "h12",
+          "label": "HARD_NEGATIVE",
+          "question": "مدة الإرجاع العامة؟",
+          "evidence": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "hypothesis": "المطلوب معرفة المعلومة التالية: مدة الإرجاع العامة.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.005797079764306545,
+            "neutral": 0.9902890920639038,
+            "contradiction": 0.003913900349289179,
+            "logits": [
+              -1.6171669960021973,
+              3.5234756469726562,
+              -2.0099871158599854
+            ]
+          },
+          "latencyMs": 32.01368900045054
+        },
+        {
+          "id": "h13",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الأسود داخل الخصم؟",
+          "evidence": "خصم 18% على الفستان باستثناء اللون الأسود.",
+          "hypothesis": "المطلوب معرفة ما إذا كان الأسود داخل الخصم.",
+          "expectedNli": "CONTRADICTED",
+          "scores": {
+            "entailment": 0.009400262497365475,
+            "neutral": 0.9810813069343567,
+            "contradiction": 0.00951843336224556,
+            "logits": [
+              -1.5574276447296143,
+              3.0904901027679443,
+              -1.5449351072311401
+            ]
+          },
+          "latencyMs": 32.56302299996605
+        },
+        {
+          "id": "h14",
+          "label": "HARD_NEGATIVE",
+          "question": "متى يبدأ الدعم؟",
+          "evidence": "يمكن إلغاء الدعم قبل بدء المشروع.",
+          "hypothesis": "المطلوب معرفة توقيت يبدأ الدعم.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.0012496656272560358,
+            "neutral": 0.9967356324195862,
+            "contradiction": 0.002014689613133669,
+            "logits": [
+              -2.4396376609802246,
+              4.241971969604492,
+              -1.9620486497879028
+            ]
+          },
+          "latencyMs": 29.727203997026663
+        },
+        {
+          "id": "h15",
+          "label": "HARD_NEGATIVE",
+          "question": "هل الباقة تشمل الطباعة؟",
+          "evidence": "الباقة تشمل كتابة المحتوى.",
+          "hypothesis": "المطلوب معرفة ما إذا كان الباقة تشمل الطباعة.",
+          "expectedNli": "INSUFFICIENT",
+          "scores": {
+            "entailment": 0.003927126992493868,
+            "neutral": 0.9890131950378418,
+            "contradiction": 0.007059736642986536,
+            "logits": [
+              -2.0592453479766846,
+              3.4695541858673096,
+              -1.472745418548584
+            ]
+          },
+          "latencyMs": 28.114378997997846
+        }
+      ]
+    }
+  },
+  "chosenFormulation": "raw",
+  "pairCountLatencySimulation": {
+    "1": {
+      "serialMeanMs": 27.532778199714482,
+      "serialP50Ms": 27.14698600175325,
+      "serialP95Ms": 33.5247008020815
+    },
+    "3": {
+      "serialMeanMs": 82.59833459914344,
+      "serialP50Ms": 81.44095800525974,
+      "serialP95Ms": 100.57410240624449
+    },
+    "5": {
+      "serialMeanMs": 137.6638909985724,
+      "serialP50Ms": 135.73493000876624,
+      "serialP95Ms": 167.6235040104075
+    },
+    "10": {
+      "serialMeanMs": 275.3277819971448,
+      "serialP50Ms": 271.4698600175325,
+      "serialP95Ms": 335.247008020815
+    }
+  },
+  "candidateReduction": {
+    "top3": {
+      "serialMeanMs": 82.59833459914344,
+      "serialP50Ms": 81.44095800525974,
+      "serialP95Ms": 100.57410240624449,
+      "goldPreserved": 0.9,
+      "goldTop1AndAccepted": 0.4666666666666667,
+      "distractorAuthorized": 0.3
+    },
+    "top5": {
+      "serialMeanMs": 137.6638909985724,
+      "serialP50Ms": 135.73493000876624,
+      "serialP95Ms": 167.6235040104075,
+      "goldPreserved": 0.9666666666666667,
+      "goldTop1AndAccepted": 0.4666666666666667,
+      "distractorAuthorized": 0.3
+    },
+    "qualityNote": "Synthetic grouped simulation using one gold and nine rotating unsupported DEV-pair sentences; not retrieval recall."
+  },
+  "priorBaselines": {
+    "currentGate": {
+      "threshold": 0.5,
+      "tp": 29,
+      "tn": 3,
+      "fp": 22,
+      "fn": 1,
+      "accuracy": 0.5818181818181818,
+      "falseAnswerRate": 0.88,
+      "falseNoAnswerRate": 0.03333333333333333
+    },
+    "lexical": {
+      "threshold": 0.34,
+      "tp": 21,
+      "tn": 13,
+      "fp": 12,
+      "fn": 9,
+      "accuracy": 0.6181818181818182,
+      "falseAnswerRate": 0.48,
+      "falseNoAnswerRate": 0.3,
+      "balancedAccuracy": 0.61
+    },
+    "nomicCosine": {
+      "threshold": 0.75,
+      "tp": 24,
+      "tn": 12,
+      "fp": 13,
+      "fn": 6,
+      "accuracy": 0.6545454545454545,
+      "falseAnswerRate": 0.52,
+      "falseNoAnswerRate": 0.2,
+      "balancedAccuracy": 0.64
+    },
+    "nomicHybrid": {
+      "threshold": 0.75,
+      "tp": 24,
+      "tn": 14,
+      "fp": 11,
+      "fn": 6,
+      "accuracy": 0.6909090909090909,
+      "falseAnswerRate": 0.44,
+      "falseNoAnswerRate": 0.2,
+      "balancedAccuracy": 0.68
+    }
+  }
+}

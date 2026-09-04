@@ -1,0 +1,15 @@
+'use strict';
+const test=require('node:test');const assert=require('node:assert/strict');
+const {normalizeBenchmarkCase,normalizeBenchmarkDataset}=require('./benchmark-case-normalizer');
+const config={configuredRegressionTenant:'regression-tenant'};
+test('DEV question and expectedFacts normalize unchanged',()=>{const x=normalizeBenchmarkCase({id:'d',question:'سؤال',expectedFacts:['حقيقة'],tenantId:'dev',expectedDecision:'ANSWER'},config);assert.equal(x.question,'سؤال');assert.deepEqual(x.expectedFacts,['حقيقة']);assert.equal(x.tenantId,'dev')});
+test('Regression query and expectedTerms populate canonical fields',()=>{const x=normalizeBenchmarkCase({id:'r',query:'استفسار',expectedTerms:['300'],expectedDecision:'ANSWER'},config);assert.equal(x.question,'استفسار');assert.deepEqual(x.expectedFacts,['300']);assert.equal(x.tenantId,'regression-tenant')});
+test('question takes precedence over query',()=>assert.equal(normalizeBenchmarkCase({question:'الأول',query:'الثاني'},config).question,'الأول'));
+test('expectedFacts takes precedence over expectedTerms',()=>assert.deepEqual(normalizeBenchmarkCase({question:'س',expectedFacts:['أ'],expectedTerms:['ب']},config).expectedFacts,['أ']));
+test('item tenantId takes precedence over configured regression tenant',()=>assert.equal(normalizeBenchmarkCase({question:'س',tenantId:'item-tenant'},config).tenantId,'item-tenant'));
+test('configured tenant is used only when item tenant is absent',()=>assert.equal(normalizeBenchmarkCase({question:'س'},config).tenantId,'regression-tenant'));
+test('missing question fails',()=>assert.throws(()=>normalizeBenchmarkCase({query:null},config),/INVALID_BENCHMARK_QUESTION/));
+test('empty question fails',()=>assert.throws(()=>normalizeBenchmarkCase({question:'  '},config),/INVALID_BENCHMARK_QUESTION/));
+test('missing expected facts safely defaults to an empty array',()=>assert.deepEqual(normalizeBenchmarkCase({question:'س'},config).expectedFacts,[]));
+test('invalid case prevents downstream provider callback',()=>{let calls=0;assert.throws(()=>{const data=normalizeBenchmarkDataset([{id:'bad'}],config);data.forEach(()=>calls++)},/INVALID_BENCHMARK_QUESTION/);assert.equal(calls,0)});
+test('non-array expectedTerms fails',()=>assert.throws(()=>normalizeBenchmarkCase({question:'س',expectedTerms:'خطأ'},config),/INVALID_BENCHMARK_EXPECTED_FACTS/));

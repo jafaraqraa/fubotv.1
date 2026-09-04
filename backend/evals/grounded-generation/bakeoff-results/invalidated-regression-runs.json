@@ -1,0 +1,10 @@
+{
+  "status": "INVALID_DATASET_MAPPING",
+  "reason": "Regression fields query/expectedTerms were not normalized to question/expectedFacts.",
+  "excludedFromAggregates": true,
+  "files": [
+    "google_gemini-2.5-flash-regression-run-1.json",
+    "google_gemini-2.5-flash-regression-run-2.json",
+    "google_gemini-2.5-flash-regression-run-3.json"
+  ]
+}

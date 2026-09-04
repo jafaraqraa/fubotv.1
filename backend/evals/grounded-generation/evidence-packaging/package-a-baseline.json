@@ -1,0 +1,183 @@
+{
+  "variant": "A",
+  "source": "existing Decision Semantics v2 saved runs",
+  "runs": [
+    {
+      "run": 1,
+      "metrics": {
+        "answerAccuracy": 1,
+        "noAnswerAccuracy": 0.8333333333333334,
+        "clarifyAccuracy": 1,
+        "unsupportedRate": 0.07407407407407407,
+        "falseAnswer": 2,
+        "falseNoAnswer": 0,
+        "falseClarify": 0,
+        "generationOmission": 0,
+        "evidencePresentButIgnored": 0,
+        "evidenceUnits": 127,
+        "evidenceCharacters": 20675,
+        "inputTokens": 35520
+      },
+      "forensic": [
+        {
+          "id": "electronics-n-01",
+          "decision": "ANSWER",
+          "answer": "المعرض الوحيد لدينا يقع في البيرة قرب دوار المنارة.",
+          "claims": [
+            {
+              "text": "المعرض الوحيد في البيرة قرب دوار المنارة.",
+              "evidenceIds": [
+                "elec-contact_chunk_0_c37eea929623"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623",
+            "elec-products_chunk_0_a742c3d593ef",
+            "elec-returns_chunk_0_72a86ecb5c5a",
+            "elec-offers_chunk_0_9b609c61d4a8",
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "id": "professional_services-n-03",
+          "decision": "ANSWER",
+          "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "claims": [
+            {
+              "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+              "evidenceIds": [
+                "svc-support_chunk_0_19dc9459f9ae"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae",
+            "svc-cancel_chunk_0_c587235e4c1e",
+            "svc-timeline_chunk_0_436f7e90adf9",
+            "svc-revisions_chunk_0_8b7e5fd6d9fa",
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "metrics": {
+        "answerAccuracy": 1,
+        "noAnswerAccuracy": 0.8333333333333334,
+        "clarifyAccuracy": 1,
+        "unsupportedRate": 0.07407407407407407,
+        "falseAnswer": 2,
+        "falseNoAnswer": 0,
+        "falseClarify": 0,
+        "generationOmission": 0,
+        "evidencePresentButIgnored": 0,
+        "evidenceUnits": 127,
+        "evidenceCharacters": 20675,
+        "inputTokens": 35520
+      },
+      "forensic": [
+        {
+          "id": "electronics-n-01",
+          "decision": "ANSWER",
+          "answer": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "claims": [
+            {
+              "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+              "evidenceIds": [
+                "elec-contact_chunk_0_c37eea929623"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623",
+            "elec-products_chunk_0_a742c3d593ef",
+            "elec-returns_chunk_0_72a86ecb5c5a",
+            "elec-offers_chunk_0_9b609c61d4a8",
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "id": "professional_services-n-03",
+          "decision": "ANSWER",
+          "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "claims": [
+            {
+              "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+              "evidenceIds": [
+                "svc-support_chunk_0_19dc9459f9ae"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae",
+            "svc-cancel_chunk_0_c587235e4c1e",
+            "svc-timeline_chunk_0_436f7e90adf9",
+            "svc-revisions_chunk_0_8b7e5fd6d9fa",
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "metrics": {
+        "answerAccuracy": 1,
+        "noAnswerAccuracy": 0.8333333333333334,
+        "clarifyAccuracy": 1,
+        "unsupportedRate": 0.07407407407407407,
+        "falseAnswer": 2,
+        "falseNoAnswer": 0,
+        "falseClarify": 0,
+        "generationOmission": 0,
+        "evidencePresentButIgnored": 0,
+        "evidenceUnits": 127,
+        "evidenceCharacters": 20675,
+        "inputTokens": 35520
+      },
+      "forensic": [
+        {
+          "id": "electronics-n-01",
+          "decision": "ANSWER",
+          "answer": "المعرض الوحيد لنا يقع في البيرة قرب دوار المنارة.",
+          "claims": [
+            {
+              "text": "المعرض الوحيد في البيرة قرب دوار المنارة.",
+              "evidenceIds": [
+                "elec-contact_chunk_0_c37eea929623"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623",
+            "elec-products_chunk_0_a742c3d593ef",
+            "elec-returns_chunk_0_72a86ecb5c5a",
+            "elec-offers_chunk_0_9b609c61d4a8",
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "id": "professional_services-n-03",
+          "decision": "ANSWER",
+          "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "claims": [
+            {
+              "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+              "evidenceIds": [
+                "svc-support_chunk_0_19dc9459f9ae"
+              ]
+            }
+          ],
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae",
+            "svc-cancel_chunk_0_c587235e4c1e",
+            "svc-timeline_chunk_0_436f7e90adf9",
+            "svc-revisions_chunk_0_8b7e5fd6d9fa",
+            "svc-packages_chunk_0_d8ee877512fc"
+          ]
+        }
+      ]
+    }
+  ]
+}

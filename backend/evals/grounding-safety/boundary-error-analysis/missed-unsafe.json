@@ -1,0 +1,31 @@
+{
+  "count": 2,
+  "cases": [
+    {
+      "caseId": "clinic-c-02",
+      "question": "بدي أغير الموعد",
+      "expectedDecision": "CLARIFY",
+      "generatedAnswer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.",
+      "claims": [{"text":"يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.","evidenceIds":["clinic-changes_chunk_0_68771da4f666"]}],
+      "validatorResult": {"status":"SUPPORTED","confidence":0.8696,"numeric":"ENTAILED"},
+      "boundaryDecision": "ALLOW",
+      "availableSignals": {"needsClarification":false,"route":"COMPANY_KNOWLEDGE","routingIntent":"Order Modification","routingReason":"business_intent","benchmarkAmbiguousTag":true,"referentResolutionTelemetry":"ABSENT","evidenceGateDecisionTelemetry":"ABSENT_IN_SAVED_PRODUCTION_PATH","followUpDetection":"ABSENT"},
+      "whyMissed": "The business policy and numbers are supported. The only ambiguity label is benchmark metadata, which is not a trusted production signal. Current needsClarification does not recognize this form and the boundary receives neither history resolution nor an ambiguity verdict.",
+      "catchableWithExistingDeterministicSignal": false,
+      "falseBlockRiskIfUsingRouteIntentAlone": "HIGH: Order Modification is not equivalent to unresolved reference."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedDecision": "NO_ANSWER",
+      "generatedAnswer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+      "claims": [{"text":"الدعم عبر البريد متاح من الأحد إلى الخميس.","evidenceIds":["svc-support_chunk_0_19dc9459f9ae"]}],
+      "validatorResult": {"status":"SUPPORTED","confidence":0.8371,"matchedEvidence":"الدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة.","semanticScore":0.5804,"keywordOverlap":0.8571},
+      "boundaryDecision": "ALLOW",
+      "availableSignals": {"requestedScopeToken":"الجمعة","requestedScopePresentInClaim":false,"requestedScopePresentInMatchedEvidence":false,"validatorMatchedEvidenceAvailable":true,"answerRelevanceScore":"CURRENT_BOOLEAN_ONLY","routingIntent":"Customer Support"},
+      "whyMissed": "The current relevance guard retained the definite article in الدعم, treated that shared generic topic as an anchor, and passed at its 25% any-anchor threshold even though الجمعة was absent.",
+      "catchableWithExistingDeterministicSignal": true,
+      "safeCondition": "For explicit day/location scope, require that scope token in the claim or matched evidence; do not let a generic topic token satisfy scope relevance."
+    }
+  ]
+}

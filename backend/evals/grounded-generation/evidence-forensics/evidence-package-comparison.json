@@ -1,0 +1,60 @@
+{
+  "apiCalls": 0,
+  "sourceRuns": [
+    "../evidence-sufficiency/results/gemini-2.5-flash-sufficiency-run-1.json",
+    "../evidence-sufficiency/results/gemini-2.5-flash-sufficiency-run-2.json",
+    "../evidence-sufficiency/results/gemini-2.5-flash-sufficiency-run-3.json"
+  ],
+  "payloadSerialization": "USER_QUESTION followed by VERIFIED_EVIDENCE; each ordered item serialized as <VERIFIED_EVIDENCE id=\"ID\">TEXT</VERIFIED_EVIDENCE>",
+  "sentFields": ["question", "ordered evidence ID", "evidence text"],
+  "savedButNotSentFields": ["retrieval score"],
+  "crossReferencedButNotSentFields": ["tenant ID", "document ID", "document filename", "validity metadata"],
+  "notAvailable": ["explicit neighbor-expansion provenance"],
+  "cases": {
+    "electronics-n-01": {
+      "exactPayloadReconstructable": true,
+      "payloadIdenticalAcrossRuns": true,
+      "rawOutputIdenticalAcrossRuns": true,
+      "requestedProposition": "The business currently has a branch in Nablus, or explicitly does not have one.",
+      "orderedEvidenceIds": [
+        "elec-contact_chunk_0_c37eea929623",
+        "elec-products_chunk_0_a742c3d593ef",
+        "elec-returns_chunk_0_72a86ecb5c5a",
+        "elec-offers_chunk_0_9b609c61d4a8",
+        "elec-delivery_chunk_0_3eb67cb4db8c"
+      ],
+      "counts": {"DIRECT_SUPPORT": 0, "PARTIAL_SUPPORT": 0, "RELATED_ONLY": 1, "CONTRADICTS": 0, "IRRELEVANT": 4},
+      "modelDecision": ["ANSWER", "ANSWER", "ANSWER"],
+      "modelAnswer": ["المعرض الوحيد يقع في البيرة قرب دوار المنارة.", "المعرض الوحيد يقع في البيرة قرب دوار المنارة.", "المعرض الوحيد يقع في البيرة قرب دوار المنارة."],
+      "citedEvidenceIds": [["elec-contact_chunk_0_c37eea929623"], ["elec-contact_chunk_0_c37eea929623"], ["elec-contact_chunk_0_c37eea929623"]],
+      "validator": [{"status":"SUPPORTED","accepted":true},{"status":"SUPPORTED","accepted":true},{"status":"SUPPORTED","accepted":true}],
+      "systematic": true,
+      "expectedLabelCorrect": true,
+      "packagingContributed": true,
+      "rootCause": "MIXED"
+    },
+    "professional_services-n-03": {
+      "exactPayloadReconstructable": true,
+      "payloadIdenticalAcrossRuns": true,
+      "rawOutputIdenticalAcrossRuns": true,
+      "requestedProposition": "Support is available or unavailable on Friday for the scope/channel intended by the question.",
+      "orderedEvidenceIds": [
+        "svc-support_chunk_0_19dc9459f9ae",
+        "svc-cancel_chunk_0_c587235e4c1e",
+        "svc-timeline_chunk_0_436f7e90adf9",
+        "svc-revisions_chunk_0_8b7e5fd6d9fa",
+        "svc-packages_chunk_0_d8ee877512fc"
+      ],
+      "counts": {"DIRECT_SUPPORT": 0, "PARTIAL_SUPPORT": 0, "RELATED_ONLY": 1, "CONTRADICTS": 0, "IRRELEVANT": 4},
+      "modelDecision": ["ANSWER", "ANSWER", "ANSWER"],
+      "modelAnswer": ["الدعم عبر البريد متاح من الأحد إلى الخميس.", "الدعم عبر البريد متاح من الأحد إلى الخميس.", "الدعم عبر البريد متاح من الأحد إلى الخميس."],
+      "citedEvidenceIds": [["svc-support_chunk_0_19dc9459f9ae"], ["svc-support_chunk_0_19dc9459f9ae"], ["svc-support_chunk_0_19dc9459f9ae"]],
+      "validator": [{"status":"SUPPORTED","accepted":true},{"status":"SUPPORTED","accepted":true},{"status":"SUPPORTED","accepted":true}],
+      "systematic": true,
+      "expectedLabelCorrect": true,
+      "packagingContributed": true,
+      "rootCause": "MIXED"
+    }
+  },
+  "nextExperiment": "EVIDENCE_PACKAGING"
+}

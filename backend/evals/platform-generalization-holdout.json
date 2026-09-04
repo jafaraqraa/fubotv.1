@@ -1,0 +1,16 @@
+{
+  "companies": [{"tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","documents":[
+    {"id":"ngo-services","content":"# الخدمات\nجلسة الاستشارة القانونية مجانية. دورة المهارات الرقمية مدتها 6 أسابيع. التسجيل للدورة يتطلب هوية سارية."},
+    {"id":"ngo-scope","content":"# النطاق\nهذه هي القائمة الكاملة الحالية للمراكز: الخليل، دورا. المساعدة النقدية متاحة للأسر التي يقل دخلها الشهري عن 1800 شيقل."},
+    {"id":"ngo-hours","content":"# الساعات\nالمركز يعمل من الاثنين إلى الخميس 10:00–16:00. لا توجد بيانات حية عن حالة طلب مستفيد معين."}
+  ]}],
+  "cases": [
+    {"id":"hold-a1","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"الاستشارة القانونية بكم؟","expectedDecision":"ANSWER","expectedFacts":["مجانية"],"expectedEvidenceIds":["ngo-services"],"tags":["price"]},
+    {"id":"hold-a2","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"قديش مدة دورة المهارات الرقمية؟","expectedDecision":"ANSWER","expectedFacts":["6 أسابيع"],"expectedEvidenceIds":["ngo-services"],"tags":["duration"]},
+    {"id":"hold-a3","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"في مركز بدورا؟","expectedDecision":"ANSWER","expectedFacts":["دورا"],"expectedEvidenceIds":["ngo-scope"],"tags":["complete_list"]},
+    {"id":"hold-a4","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"دخل الأسرة 1700 شيقل، بتقدر تقدم للمساعدة؟","expectedDecision":"ANSWER","expectedFacts":["أقل من 1800 شيقل"],"expectedEvidenceIds":["ngo-scope"],"tags":["threshold"]},
+    {"id":"hold-a5","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"شو دوام المركز؟","expectedDecision":"ANSWER","expectedFacts":["10:00","16:00"],"expectedEvidenceIds":["ngo-hours"],"tags":["hours"]},
+    {"id":"hold-c1","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"شو شروطها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"hold-n1","tenantId":"x_ngo_holdout","company":"مؤسسة مجتمعية تجريبية","domain":"ngo","question":"طلبي اتوافق عليه هسا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live"]}
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "companies": [
+    {"tenantId":"x_restaurant","company":"مطعم تجريبي","documents":[
+      {"id":"rest-menu","content":"# القائمة\nسعر وجبة العدس 24 شيقل. سعر طبق الأرز بالخضار 31 شيقل. مدة تجهيز الطلب المعتادة 20 دقيقة."},
+      {"id":"rest-policy","content":"# السياسات\nالحد الأدنى للتوصيل المجاني 100 شيقل أو أكثر. هذه هي القائمة الكاملة الحالية لمناطق التوصيل: رام الله، البيرة، بيتونيا."},
+      {"id":"rest-hours","content":"# الدوام\nالدوام من السبت إلى الخميس 11:00–22:00. الجمعة 13:00–23:00. لا توجد بيانات حية عن ازدحام الطاولات."}
+    ]},
+    {"tenantId":"x_logistics","company":"شركة نقل تجريبية","documents":[
+      {"id":"log-routes","content":"# المسارات\nمدة الشحن إلى طولكرم يومان عمل. مدة الشحن إلى قلقيلية ثلاثة أيام عمل. سعر الطرد حتى 5 كغم هو 35 شيقل."},
+      {"id":"log-policy","content":"# السياسة\nالتأمين الاختياري يساوي 2% من قيمة الشحنة. هذه هي القائمة الكاملة الحالية للدول المدعومة: الأردن، مصر، تركيا."},
+      {"id":"log-hours","content":"# الاستلام\nمركز الاستلام يعمل من الأحد إلى الخميس 08:00–17:00. لا تتوفر في قاعدة المعرفة حالة أي شحنة حية."}
+    ]},
+    {"tenantId":"x_university","company":"جامعة تجريبية","documents":[
+      {"id":"uni-fees","content":"# الرسوم\nرسوم طلب الالتحاق 50 شيقل. رسوم إصدار كشف العلامات 20 شيقل. معالجة كشف العلامات تستغرق يوم عمل واحد."},
+      {"id":"uni-programs","content":"# البرامج\nهذه هي القائمة الكاملة الحالية لبرامج الدبلوم: المحاسبة، التصميم، إدارة المكاتب."},
+      {"id":"uni-hours","content":"# الدوام\nدائرة القبول تعمل من الأحد إلى الخميس 09:00–15:00. لا توجد بيانات حية عن حالة طلب طالب بعينه."}
+    ]}
+  ],
+  "cases": [
+    {"id":"rest-a1","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"كم سعر وجبة العدس؟","expectedDecision":"ANSWER","expectedFacts":["24 شيقل"],"expectedEvidenceIds":["rest-menu"],"tags":["direct_fact"]},
+    {"id":"rest-a2","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"قديش تجهيز الطلب؟","expectedDecision":"ANSWER","expectedFacts":["20 دقيقة"],"expectedEvidenceIds":["rest-menu"],"tags":["duration"]},
+    {"id":"rest-a3","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"طلب 110 شيقل توصيله مجاني؟","expectedDecision":"ANSWER","expectedFacts":["100 شيقل أو أكثر"],"expectedEvidenceIds":["rest-policy"],"tags":["threshold"]},
+    {"id":"rest-a4","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"بتوصلوا لبيتونيا؟","expectedDecision":"ANSWER","expectedFacts":["بيتونيا"],"expectedEvidenceIds":["rest-policy"],"tags":["complete_list"]},
+    {"id":"rest-a5","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"شو دوام الجمعة؟","expectedDecision":"ANSWER","expectedFacts":["13:00","23:00"],"expectedEvidenceIds":["rest-hours"],"tags":["hours"]},
+    {"id":"rest-c1","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"قديش سعرها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"rest-n1","tenantId":"x_restaurant","company":"مطعم تجريبي","domain":"restaurant","question":"في طاولة فاضية الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live"]},
+
+    {"id":"log-a1","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"الشحن لطولكرم قديش؟","expectedDecision":"ANSWER","expectedFacts":["يومان عمل"],"expectedEvidenceIds":["log-routes"],"tags":["duration"]},
+    {"id":"log-a2","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"كم سعر طرد وزنه 5 كغم؟","expectedDecision":"ANSWER","expectedFacts":["35 شيقل"],"expectedEvidenceIds":["log-routes"],"tags":["quantity"]},
+    {"id":"log-a3","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"شو نسبة التأمين الاختياري؟","expectedDecision":"ANSWER","expectedFacts":["2%"],"expectedEvidenceIds":["log-policy"],"tags":["percentage"]},
+    {"id":"log-a4","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"تركيا من الدول المدعومة؟","expectedDecision":"ANSWER","expectedFacts":["تركيا"],"expectedEvidenceIds":["log-policy"],"tags":["complete_list"]},
+    {"id":"log-a5","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"لأي ساعة مركز الاستلام؟","expectedDecision":"ANSWER","expectedFacts":["17:00"],"expectedEvidenceIds":["log-hours"],"tags":["hours"]},
+    {"id":"log-c1","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"وين وصلت؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"log-n1","tenantId":"x_logistics","company":"شركة نقل تجريبية","domain":"logistics","question":"شحنتي وصلت الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live"]},
+
+    {"id":"uni-a1","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"كم رسوم طلب الالتحاق؟","expectedDecision":"ANSWER","expectedFacts":["50 شيقل"],"expectedEvidenceIds":["uni-fees"],"tags":["price"]},
+    {"id":"uni-a2","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"كشف العلامات كم بده وقت؟","expectedDecision":"ANSWER","expectedFacts":["يوم عمل واحد"],"expectedEvidenceIds":["uni-fees"],"tags":["duration"]},
+    {"id":"uni-a3","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"عندكم دبلوم تصميم؟","expectedDecision":"ANSWER","expectedFacts":["التصميم"],"expectedEvidenceIds":["uni-programs"],"tags":["complete_list"]},
+    {"id":"uni-a4","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"في دبلوم برمجة؟","expectedDecision":"ANSWER","expectedFacts":["القائمة الكاملة","المحاسبة","التصميم","إدارة المكاتب"],"expectedEvidenceIds":["uni-programs"],"tags":["complete_list_negative"]},
+    {"id":"uni-a5","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"شو ساعات القبول؟","expectedDecision":"ANSWER","expectedFacts":["09:00","15:00"],"expectedEvidenceIds":["uni-hours"],"tags":["hours"]},
+    {"id":"uni-c1","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"قديش بتاخد؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"uni-n1","tenantId":"x_university","company":"جامعة تجريبية","domain":"university","question":"طلبي انقبل الآن؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live"]}
+  ]
+}

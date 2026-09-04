@@ -1,0 +1,5030 @@
+{
+  "summary": {
+    "validRuns": 3,
+    "totalResponses": 300,
+    "stability": {
+      "STABLE_PASS": 80,
+      "STABLE_FAIL": 18,
+      "MOSTLY_PASS": 2
+    },
+    "failedCaseRuns": 56,
+    "uniqueFailedCases": 20,
+    "failuresByExpectedDecision": {
+      "ANSWER": 31,
+      "CLARIFY": 16,
+      "NO_ANSWER": 9
+    },
+    "primaryTaxonomy": {
+      "D1 EVALUATOR_FALSE_REJECTION": 24,
+      "A4 MISSED_CLARIFY": 16,
+      "D4 EXPECTED_LABEL_PROBLEM": 6,
+      "B1 EVIDENCE_PRESENT_BUT_IGNORED": 4,
+      "C2 OVER_GENERALIZATION": 3,
+      "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT": 3
+    },
+    "failuresByDomain": {
+      "clinic": 21,
+      "distribution": 10,
+      "electronics": 9,
+      "professional_services": 9,
+      "fashion": 7
+    },
+    "failuresByTag": {
+      "palestinian": 38,
+      "hard_paraphrase": 22,
+      "msa": 18,
+      "ambiguous": 16,
+      "clarify": 16,
+      "typo": 13,
+      "no_answer": 9,
+      "cross_tenant_trap": 3,
+      "multi_intent": 3,
+      "temporal": 3
+    },
+    "decisionVariabilityCases": [
+      "distribution-c-03"
+    ],
+    "contentVariabilityCases": [
+      "distribution-c-03",
+      "fashion-a-06"
+    ],
+    "rawUnsupportedProxy": {
+      "responses": 9,
+      "rate": 0.03
+    },
+    "validatorSimulatedFinalUnsupported": {
+      "responses": 3,
+      "rate": 0.01
+    },
+    "telemetryLimitation": "Saved rows omit the complete VERIFIED_EVIDENCE block; cited/expected source text is reconstructed from local DEV sources, but uncited retrieved chunks cannot be proven from saved output alone."
+  },
+  "cases": [
+    {
+      "caseId": "electronics-a-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قديش سعر لابتوب ندى 14؟",
+      "expectedFacts": [
+        "2890 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-products_chunk_0_a742c3d593ef"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-products",
+          "tenantId": "gen_electronics",
+          "name": "دليل المنتجات والأسعار.md",
+          "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "ما سعر ندى 14 برو؟",
+      "expectedFacts": [
+        "3490 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-products_chunk_0_a742c3d593ef"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-products",
+          "tenantId": "gen_electronics",
+          "name": "دليل المنتجات والأسعار.md",
+          "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "سعر تلفون رمال X لو سمحت",
+      "expectedFacts": [
+        "1790 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-products_chunk_0_a742c3d593ef"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-products",
+          "tenantId": "gen_electronics",
+          "name": "دليل المنتجات والأسعار.md",
+          "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-04",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "نقل البيانات وإعداد الهاتف بكم؟",
+      "expectedFacts": [
+        "80 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-products_chunk_0_a742c3d593ef"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-products",
+          "tenantId": "gen_electronics",
+          "name": "دليل المنتجات والأسعار.md",
+          "text": "# المنتجات\nحاسوب ندى 14 بسعر 2890 شيكل. حاسوب ندى 14 برو بسعر 3490 شيكل. هاتف رمال X بسعر 1790 شيكل. خدمة إعداد الهاتف ونقل البيانات تكلف 80 شيكل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-05",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم ضمان اللابتوبات؟",
+      "expectedFacts": [
+        "24 شهرا"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-warranty_chunk_0_1ad9162a7c99"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-warranty",
+          "tenantId": "gen_electronics",
+          "name": "الضمان والصيانة.md",
+          "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-06",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "ضمان التلفونات قديش؟",
+      "expectedFacts": [
+        "18 شهرا"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-warranty_chunk_0_1ad9162a7c99"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-warranty",
+          "tenantId": "gen_electronics",
+          "name": "الضمان والصيانة.md",
+          "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-07",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "والاكسسوارات شو كفالتها؟",
+      "expectedFacts": [
+        "6 اشهر"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-warranty_chunk_0_1ad9162a7c99"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-warranty",
+          "tenantId": "gen_electronics",
+          "name": "الضمان والصيانة.md",
+          "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-08",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "البطارية داخلة بالضمان لأي مدة؟",
+      "expectedFacts": [
+        "12 شهرا"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-warranty_chunk_0_1ad9162a7c99"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-warranty",
+          "tenantId": "gen_electronics",
+          "name": "الضمان والصيانة.md",
+          "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-09",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "انكسر الجهاز، الضمان بغطيه؟",
+      "expectedFacts": [
+        "لا يغطي",
+        "الكسر"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-warranty_chunk_0_1ad9162a7c99"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-warranty",
+          "tenantId": "gen_electronics",
+          "name": "الضمان والصيانة.md",
+          "text": "# الضمان\nضمان الحواسيب المحمولة 24 شهراً، وضمان الهواتف 18 شهراً، وضمان الملحقات 6 أشهر. بطارية الحاسوب مغطاة 12 شهراً. لا يغطي الضمان الكسر أو ضرر السوائل."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-10",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "امتى الشحن ببلاش؟",
+      "expectedFacts": [
+        "تتجاوز",
+        "450 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-delivery_chunk_0_3eb67cb4db8c"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-11",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قديش الشحن العادي وكم بوخذ؟",
+      "expectedFacts": [
+        "25 شيكل",
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-delivery_chunk_0_3eb67cb4db8c"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-a-12",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم بوخذ التوصيل؟",
+      "expectedFacts": [
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-delivery_chunk_0_3eb67cb4db8c"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "سؤال \"كم بوخذ\" يحتمل الرسوم أو المدة، بينما expectedFacts تفرض المدة فقط."
+    },
+    {
+      "caseId": "electronics-a-13",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "هل تركيب الشاشة هو نفسه التوصيل؟",
+      "expectedFacts": [
+        "منفصلة",
+        "120 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "elec-delivery_chunk_0_3eb67cb4db8c"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "السؤال يطلب هل الخدمتان منفصلتان؛ الجواب أثبت ذلك، لكن expectedFacts يفرض أيضاً سعر 120 غير مطلوب صراحة."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": true,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "elec-contact_chunk_0_c37eea929623"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "electronics-n-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-n-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل بتصلحوا أجهزة أبل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-n-04",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "شو سعر جهاز ندى 15؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-c-01",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تستفسر عن سعره؟",
+        "ما هو المنتج الذي تستفسر عن سعره؟",
+        "ما هو المنتج الذي تستفسر عن سعره؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-c-02",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "هل هو متوفر الآن؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تسأل عن توفره؟",
+        "ما هو المنتج الذي تسأل عن توفره؟",
+        "ما هو المنتج الذي تسأل عن توفره؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "electronics-c-03",
+      "tenantId": "gen_electronics",
+      "company": "برق تك",
+      "category": "electronics",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي الضمان تبعه",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تسأل عن ضمانه؟",
+        "ما هو المنتج الذي تسأل عن ضمانه؟",
+        "ما هو المنتج الذي تسأل عن ضمانه؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "اقل طلب جملة كم كرتونة؟",
+      "expectedFacts": [
+        "24 كرتونة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-orders_chunk_0_113acd0282a6"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كرتونة عصير السهل بكم؟",
+      "expectedFacts": [
+        "46 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-orders_chunk_0_113acd0282a6"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "سعر كرتونة المي؟",
+      "expectedFacts": [
+        "31 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-orders_chunk_0_113acd0282a6"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-04",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "متى باخذ خصم 4 بالمية؟",
+      "expectedFacts": [
+        "100 كرتونة",
+        "4%"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-orders_chunk_0_113acd0282a6"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-05",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "اي ايام توزيع رام الله؟",
+      "expectedFacts": [
+        "الاحد",
+        "الثلاثاء",
+        "الخميس"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-zones_chunk_0_19392d72f595"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-06",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بيت لحم بأي أيام بتوصلوها؟",
+      "expectedFacts": [
+        "الاثنين",
+        "الاربعاء"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-zones_chunk_0_19392d72f595"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-07",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بتوزعوا بأريحا؟",
+      "expectedFacts": [
+        "لا يغطي",
+        "اريحا"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-zones_chunk_0_19392d72f595"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "\"لا يتم التوزيع في أريحا\" مكافئة دلالياً لـ\"لا يغطي أريحا\"."
+    },
+    {
+      "caseId": "distribution-a-08",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "أكدت قبل تنتين، متى بطلع؟",
+      "expectedFacts": [
+        "يوم التوزيع التالي"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "dist-zones_chunk_0_19392d72f595"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-09",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "العميل الجديد كيف بدفع؟",
+      "expectedFacts": [
+        "نقدا عند التسليم",
+        "ثلاث طلبيات"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-payment_chunk_0_a6956514b390"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-payment",
+          "tenantId": "gen_distribution",
+          "name": "الدفع والائتمان.md",
+          "text": "# الدفع\nالعميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات. الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية. لا يمنح الائتمان للحسابات التي عليها رصيد متأخر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-10",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مدة الائتمان كم؟",
+      "expectedFacts": [
+        "30 يوما"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "dist-payment_chunk_0_a6956514b390"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-payment",
+          "tenantId": "gen_distribution",
+          "name": "الدفع والائتمان.md",
+          "text": "# الدفع\nالعميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات. الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية. لا يمنح الائتمان للحسابات التي عليها رصيد متأخر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-11",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "علي رصيد متأخر، بطلعلي ائتمان؟",
+      "expectedFacts": [
+        "لا يمنح",
+        "رصيد متاخر"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-payment_chunk_0_a6956514b390"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-payment",
+          "tenantId": "gen_distribution",
+          "name": "الدفع والائتمان.md",
+          "text": "# الدفع\nالعميل الجديد يدفع نقداً عند التسليم لأول ثلاث طلبيات. الائتمان لمدة 30 يوماً متاح بعد موافقة الإدارة المالية. لا يمنح الائتمان للحسابات التي عليها رصيد متأخر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-12",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "وصلني كرتون مضروب شو المطلوب؟",
+      "expectedFacts": [
+        "تصوير",
+        "24 ساعة",
+        "رقم الفاتورة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-damage_chunk_0_e98fd5bb3951"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-a-13",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "برجع عصير مسكر بعد 5 ايام؟",
+      "expectedFacts": [
+        "تقبل",
+        "7 ايام"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-damage_chunk_0_e98fd5bb3951"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "\"يمكن إرجاع\" مكافئة لـ\"تقبل\" لكن المطابقة اللفظية لا تراها."
+    },
+    {
+      "caseId": "distribution-n-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل بتوصلوا الخليل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-n-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم غرامة تأخير الدين؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-n-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل تقبلون الشيكات؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-n-04",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "متى يتوفر صنف غير موجود؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-c-01",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-orders_chunk_0_113acd0282a6"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "الضمير بلا مرجع ومع الدليل منتجان؛ عرض السعرين لا يحل المقصود."
+    },
+    {
+      "caseId": "distribution-c-02",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "متى بتوصل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هي المدينة التي تسأل عن موعد التوصيل إليها؟",
+        "ما هي المدينة التي تسأل عن موعد التوصيل إليها؟",
+        "ما هي المدينة التي تسأل عن موعد التوصيل إليها؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "distribution-c-03",
+      "tenantId": "gen_distribution",
+      "company": "سند للتوزيع",
+      "category": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي ارجعها",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "ANSWER",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        false,
+        true
+      ],
+      "passCount": 2,
+      "stabilityClass": "MOSTLY_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "dist-damage_chunk_0_e98fd5bb3951"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي ترغب في إرجاعه؟",
+        null,
+        "ما هو المنتج الذي ترغب في إرجاعه؟"
+      ],
+      "notes": "الضمير بلا مرجع؛ أخفق تشغيل واحد فقط وأجاب بسياسات كيانين."
+    },
+    {
+      "caseId": "clinic-a-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مين دكتور الجلدية؟",
+      "expectedFacts": [
+        "ليان منصور"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-doctors_chunk_0_2dff9f9e9285"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-doctors",
+          "tenantId": "gen_clinic",
+          "name": "الأطباء والخدمات.md",
+          "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مين طبيب الأسرة؟",
+      "expectedFacts": [
+        "امين خليل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "clinic-doctors_chunk_0_2dff9f9e9285"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-doctors",
+          "tenantId": "gen_clinic",
+          "name": "الأطباء والخدمات.md",
+          "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كشف الجلدية بكم؟",
+      "expectedFacts": [
+        "170 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-doctors_chunk_0_2dff9f9e9285"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-doctors",
+          "tenantId": "gen_clinic",
+          "name": "الأطباء والخدمات.md",
+          "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-04",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "استشارة طب الأسرة قديش؟",
+      "expectedFacts": [
+        "120 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-doctors_chunk_0_2dff9f9e9285"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-doctors",
+          "tenantId": "gen_clinic",
+          "name": "الأطباء والخدمات.md",
+          "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-05",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "تنظيف البشرة الطبي كم بكلف؟",
+      "expectedFacts": [
+        "140 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-doctors_chunk_0_2dff9f9e9285"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-doctors",
+          "tenantId": "gen_clinic",
+          "name": "الأطباء والخدمات.md",
+          "text": "# الأطباء\nالدكتورة ليان منصور مختصة بالجلدية، والدكتور أمين خليل مختص بطب الأسرة. الاستشارة الجلدية 170 شيكلاً واستشارة طب الأسرة 120 شيكلاً. جلسة تنظيف البشرة الطبية 140 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-06",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "شو دوام العيادة العادي؟",
+      "expectedFacts": [
+        "السبت",
+        "الاربعاء",
+        "الثامنة والنصف",
+        "السادسة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "clinic-hours_chunk_0_39da821f0e85"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "8:30 و6:00 مكافئتان للثامنة والنصف والسادسة، والإجابة صحيحة."
+    },
+    {
+      "caseId": "clinic-a-07",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الخميس لأي ساعة؟",
+      "expectedFacts": [
+        "الثانية ظهرا"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-hours_chunk_0_39da821f0e85"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-08",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بتستقبلوا طوارئ؟",
+      "expectedFacts": [
+        "لا تستقبل",
+        "الطوارئ في المستشفى"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-hours_chunk_0_39da821f0e85"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-09",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قبل كم ساعة بلغي بدون رسوم؟",
+      "expectedFacts": [
+        "12 ساعة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-changes_chunk_0_68771da4f666"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-10",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الغيت متأخر شو الرسوم؟",
+      "expectedFacts": [
+        "40 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "clinic-changes_chunk_0_68771da4f666"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-a-11",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "المصدر المتوقع clinic-changes يثبت مرة واحدة وشرط 6 ساعات، لكن النموذج رجع NO_ANSWER."
+    },
+    {
+      "caseId": "clinic-a-12",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "تأمين أمان مقبول؟",
+      "expectedFacts": [
+        "الرعاية الاولية فقط"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "clinic-insurance_chunk_0_c53b53882dd4"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "الإجابة تحتوي الرعاية الأولية فقط؛ اختلاف اللصق في \"للرعاية\" أفشل matcher."
+    },
+    {
+      "caseId": "clinic-a-13",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "expectedFacts": [
+        "لا يشمل",
+        "تنظيف البشرة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "clinic-insurance_chunk_0_c53b53882dd4"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "\"لا يغطي\" مكافئة لـ\"لا يشمل\"، والادعاء مرتبط بمصدر التأمين."
+    },
+    {
+      "caseId": "clinic-n-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "شو تشخيص وجع الصدر؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-n-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "أي دواء آخذ للحساسية؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-n-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل تقبلون تأمين الشفاء؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-n-04",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم سعر فحص الدم الشامل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "clinic-c-01",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "الضمير بلا مرجع؛ اختار NO_ANSWER بدل طلب تحديد الخدمة."
+    },
+    {
+      "caseId": "clinic-c-02",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي أغير الموعد",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "clinic-changes_chunk_0_68771da4f666"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "طلب تغيير موعد شخصي يحتاج تحديد الموعد؛ النموذج أجاب بالسياسة العامة."
+    },
+    {
+      "caseId": "clinic-c-03",
+      "tenantId": "gen_clinic",
+      "company": "عيادة نبع الطبية",
+      "category": "clinic",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "متى موعدي؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "موعد شخصي غير محدد؛ اختار NO_ANSWER بدل سؤال توضيحي."
+    },
+    {
+      "caseId": "fashion-a-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "expectedFacts": [
+        "الاسود",
+        "الزيتي"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-products_chunk_0_9511dd63804a"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-products",
+          "tenantId": "gen_fashion",
+          "name": "المنتجات والمقاسات.md",
+          "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مقاسات الفستان شو؟",
+      "expectedFacts": [
+        "S",
+        "XL"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-products_chunk_0_9511dd63804a"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-products",
+          "tenantId": "gen_fashion",
+          "name": "المنتجات والمقاسات.md",
+          "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قديش سعر الفستان؟",
+      "expectedFacts": [
+        "260 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-products_chunk_0_9511dd63804a",
+        "fashion-current-sale_chunk_0_fd8d907fd431"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-products",
+          "tenantId": "gen_fashion",
+          "name": "المنتجات والمقاسات.md",
+          "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً."
+        },
+        {
+          "id": "fashion-current-sale",
+          "tenantId": "gen_fashion",
+          "name": "تنزيلات الخريف.md",
+          "text": "# تنزيلات حالية\nخصم 18% على فستان سهل الزيتون فعال من 1 سبتمبر حتى 7 سبتمبر 2026، باستثناء اللون الأسود."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-04",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قميص كرمل شو الوانه؟",
+      "expectedFacts": [
+        "الابيض",
+        "الرملي"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "fashion-products_chunk_0_9511dd63804a"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-products",
+          "tenantId": "gen_fashion",
+          "name": "المنتجات والمقاسات.md",
+          "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-05",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "سعر القميص الكتاني؟",
+      "expectedFacts": [
+        "145 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-products_chunk_0_9511dd63804a"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-products",
+          "tenantId": "gen_fashion",
+          "name": "المنتجات والمقاسات.md",
+          "text": "# المجموعة\nفستان سهل الزيتون متوفر بالأسود والزيتي ومقاساته من S إلى XL وسعره 260 شيكلاً. قميص كرمل الكتاني متوفر بالأبيض والرملي من M إلى XXL وسعره 145 شيكلاً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-06",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مدة تبديل القطعة؟",
+      "expectedFacts": [
+        "14 يوما",
+        "الفاتورة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        false
+      ],
+      "passCount": 2,
+      "stabilityClass": "MOSTLY_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "fashion-exchange_chunk_0_640eb3a28181"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "تشغيل واحد حذف شرط الفاتورة رغم وجوده في المصدر والـexpectedFacts."
+    },
+    {
+      "caseId": "fashion-a-07",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الترجيع النقدي خلال قديش؟",
+      "expectedFacts": [
+        "7 ايام",
+        "غير المستعملة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-exchange_chunk_0_640eb3a28181"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-08",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قطعة final sale برجع مصاري؟",
+      "expectedFacts": [
+        "لا تسترد نقدا",
+        "المقاس فقط"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "fashion-exchange_chunk_0_640eb3a28181"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "الإجابة تطابق عدم الرد النقدي والاستبدال بالمقاس دلالياً."
+    },
+    {
+      "caseId": "fashion-a-09",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الأقراط بتتبدل؟",
+      "expectedFacts": [
+        "لا تبدل",
+        "صحية"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-exchange_chunk_0_640eb3a28181"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "\"لا يمكن استبدال\" مكافئة لـ\"لا تبدل\"."
+    },
+    {
+      "caseId": "fashion-a-10",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الشحن داخل الضفة بكم؟",
+      "expectedFacts": [
+        "20 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-shipping_chunk_0_46e98e308875"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-shipping",
+          "tenantId": "gen_fashion",
+          "name": "الشحن والفروع.md",
+          "text": "# الشحن\nالشحن داخل الضفة 20 شيكلاً ويصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر. فرع رام الله في شارع ركب، وفرع جنين قرب دوار السينما. لا يوجد فرع في طولكرم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-11",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "متى الشحن مجاني؟",
+      "expectedFacts": [
+        "350 شيكل",
+        "او اكثر"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-shipping_chunk_0_46e98e308875"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-shipping",
+          "tenantId": "gen_fashion",
+          "name": "الشحن والفروع.md",
+          "text": "# الشحن\nالشحن داخل الضفة 20 شيكلاً ويصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر. فرع رام الله في شارع ركب، وفرع جنين قرب دوار السينما. لا يوجد فرع في طولكرم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-12",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "وين فروعكم؟",
+      "expectedFacts": [
+        "رام الله",
+        "جنين"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-shipping_chunk_0_46e98e308875"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-shipping",
+          "tenantId": "gen_fashion",
+          "name": "الشحن والفروع.md",
+          "text": "# الشحن\nالشحن داخل الضفة 20 شيكلاً ويصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر. فرع رام الله في شارع ركب، وفرع جنين قرب دوار السينما. لا يوجد فرع في طولكرم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-a-13",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "في فرع بطولكرم؟",
+      "expectedFacts": [
+        "لا يوجد",
+        "طولكرم"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "fashion-shipping_chunk_0_46e98e308875"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "fashion-shipping",
+          "tenantId": "gen_fashion",
+          "name": "الشحن والفروع.md",
+          "text": "# الشحن\nالشحن داخل الضفة 20 شيكلاً ويصبح مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر. فرع رام الله في شارع ركب، وفرع جنين قرب دوار السينما. لا يوجد فرع في طولكرم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-n-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "عندكم فرع بالخليل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-n-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "في لون أزرق للفستان؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-n-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم طول الفستان بالسنتيمتر؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-n-04",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عرض القميص القديم رجع اليوم؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-c-01",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تسأل عن سعره؟",
+        "ما هو المنتج الذي تسأل عن سعره؟",
+        "ما هو المنتج الذي تسأل عن سعره؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-c-02",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "أي مقاس موجود؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تسأل عن مقاساته المتوفرة؟",
+        "أي منتج تقصد؟",
+        "ما هو المنتج الذي تسأل عن مقاساته المتوفرة؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "fashion-c-03",
+      "tenantId": "gen_fashion",
+      "company": "خيط وزيتونة",
+      "category": "fashion",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "هل اللون متوفر؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو المنتج الذي تسأل عن توفر لونه؟",
+        "ما هو المنتج الذي تسأل عن توفر لونه؟",
+        "ما هو المنتج الذي تسأل عن توفر لونه؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "باقة الانطلاق بكم وشو فيها؟",
+      "expectedFacts": [
+        "2200 شيكل",
+        "شعار",
+        "دليل الوان"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "svc-packages_chunk_0_d8ee877512fc",
+        "svc-revisions_chunk_0_8b7e5fd6d9fa",
+        "svc-support_chunk_0_19dc9459f9ae",
+        "svc-timeline_chunk_0_436f7e90adf9"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-packages",
+          "tenantId": "gen_services",
+          "name": "الباقات.md",
+          "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين."
+        },
+        {
+          "id": "svc-revisions",
+          "tenantId": "gen_services",
+          "name": "التعديلات والنطاق.md",
+          "text": "# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات."
+        },
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        },
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "سعر باقة النمو؟",
+      "expectedFacts": [
+        "4800 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-packages_chunk_0_d8ee877512fc"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-packages",
+          "tenantId": "gen_services",
+          "name": "الباقات.md",
+          "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم صفحة بالموقع التعريفي؟",
+      "expectedFacts": [
+        "خمس صفحات"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "svc-packages_chunk_0_d8ee877512fc"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-packages",
+          "tenantId": "gen_services",
+          "name": "الباقات.md",
+          "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-04",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "إدارة الإعلانات داخلة؟",
+      "expectedFacts": [
+        "ليست ضمن"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-packages_chunk_0_d8ee877512fc"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-packages",
+          "tenantId": "gen_services",
+          "name": "الباقات.md",
+          "text": "# الباقات\nباقة الانطلاق لهوية العلامة بسعر 2200 شيكل وتشمل شعاراً ودليل ألوان. باقة النمو بسعر 4800 شيكل وتشمل الهوية وموقعاً تعريفياً من خمس صفحات. إدارة الإعلانات ليست ضمن أي من الباقتين."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-05",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مدة باقة الانطلاق؟",
+      "expectedFacts": [
+        "12 يوم عمل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-timeline_chunk_0_436f7e90adf9"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-06",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "النمو بتخلص بقديش؟",
+      "expectedFacts": [
+        "25 يوم عمل",
+        "استلام المحتوى"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-timeline_chunk_0_436f7e90adf9"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-07",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كيف دفعات المشروع؟",
+      "expectedFacts": [
+        "40%",
+        "30%",
+        "30%"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-timeline_chunk_0_436f7e90adf9"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-08",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم تعديل بباقه الانطلاق؟",
+      "expectedFacts": [
+        "جولتي تعديل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-revisions_chunk_0_8b7e5fd6d9fa"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-revisions",
+          "tenantId": "gen_services",
+          "name": "التعديلات والنطاق.md",
+          "text": "# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-09",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "وباقة النمو كم جولة؟",
+      "expectedFacts": [
+        "اربع جولات"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-revisions_chunk_0_8b7e5fd6d9fa"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-revisions",
+          "tenantId": "gen_services",
+          "name": "التعديلات والنطاق.md",
+          "text": "# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-10",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "التعديل الزيادة بكم؟",
+      "expectedFacts": [
+        "180 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-revisions_chunk_0_8b7e5fd6d9fa"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-revisions",
+          "tenantId": "gen_services",
+          "name": "التعديلات والنطاق.md",
+          "text": "# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-11",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كتابة عشر صفحات عربي قديش؟",
+      "expectedFacts": [
+        "600 شيكل"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-revisions_chunk_0_8b7e5fd6d9fa"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-revisions",
+          "tenantId": "gen_services",
+          "name": "التعديلات والنطاق.md",
+          "text": "# التعديلات\nباقة الانطلاق تشمل جولتي تعديل، وباقة النمو تشمل أربع جولات. الجولة الإضافية تكلف 180 شيكلاً. كتابة المحتوى العربي إضافة اختيارية بسعر 600 شيكل حتى عشر صفحات."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-12",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "متى ساعات الدعم؟",
+      "expectedFacts": [
+        "الاحد",
+        "الخميس",
+        "التاسعة",
+        "الخامسة"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-support_chunk_0_19dc9459f9ae"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-a-13",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "دعم باقة النمو كم يوم؟",
+      "expectedFacts": [
+        "60 يوما"
+      ],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "svc-support_chunk_0_19dc9459f9ae"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-n-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-n-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa",
+        "typo",
+        "hard_paraphrase",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم تكلفة إدارة الإعلانات؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "NO_ANSWER",
+        "NO_ANSWER",
+        "NO_ANSWER"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": true,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [
+        "svc-support_chunk_0_19dc9459f9ae"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": true,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "svc-promo_chunk_0_53ae533e4c8a"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-c-01",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ما هو الشيء الذي تسأل عن سعره؟",
+        "ما هو الشيء الذي تسأل عن سعره؟",
+        "ما هو الشيء الذي تسأل عن سعره؟"
+      ],
+      "notes": ""
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "كم بتاخد وقت؟",
+      "expectedFacts": [],
+      "runDecisions": [
+        "ANSWER",
+        "ANSWER",
+        "ANSWER"
+      ],
+      "runCorrect": [
+        false,
+        false,
+        false
+      ],
+      "passCount": 0,
+      "stabilityClass": "STABLE_FAIL",
+      "unsupportedAny": false,
+      "validatorRejectedAny": true,
+      "evidenceIdsUsed": [
+        "svc-timeline_chunk_0_436f7e90adf9"
+      ],
+      "reconstructedUsedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        null,
+        null,
+        null
+      ],
+      "notes": "يوجد زمنان لباقتين؛ عرضهما لا يحدد أيهما يقصد المستخدم."
+    },
+    {
+      "caseId": "professional_services-c-03",
+      "tenantId": "gen_services",
+      "company": "مرتكز للاستشارات",
+      "category": "professional_services",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي أعدلها",
+      "expectedFacts": [],
+      "runDecisions": [
+        "CLARIFY",
+        "CLARIFY",
+        "CLARIFY"
+      ],
+      "runCorrect": [
+        true,
+        true,
+        true
+      ],
+      "passCount": 3,
+      "stabilityClass": "STABLE_PASS",
+      "unsupportedAny": false,
+      "validatorRejectedAny": false,
+      "evidenceIdsUsed": [],
+      "reconstructedUsedEvidence": [],
+      "evidenceActuallySentAvailable": false,
+      "missingInformation": [
+        [],
+        [],
+        []
+      ],
+      "clarificationQuestions": [
+        "ماذا تقصد بـ \"أعدلها\"؟ هل تقصد تعديل باقة معينة أو تعديل شيء آخر؟",
+        "ماذا تقصد بـ \"أعدلها\"؟ هل تقصد تعديل باقة، أو تعديل شيء آخر؟",
+        "ماذا تقصد بـ \"أعدلها\"؟ هل تقصد تعديل باقة، أو تعديل شيء آخر؟"
+      ],
+      "notes": ""
+    }
+  ]
+}

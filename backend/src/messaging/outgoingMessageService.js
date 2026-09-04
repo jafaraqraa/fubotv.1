@@ -4,9 +4,11 @@ const { sendMetaMessage } = require('../channels/meta');
 const { saveMessage, updateMessageDelivery } = require('../database/repositories/messageRepository');
 const { reportError } = require('../services/logger');
 const mediaRepo = require('../database/repositories/mediaAttachmentRepository');
+const { renderCustomerResponse } = require('./customerResponseRenderer');
 
 async function sendOutgoingMessage(outgoingMsg) {
-    const { channel, externalUserId, senderType, messageType, content, media } = outgoingMsg;
+    const { channel, externalUserId, senderType, messageType, media } = outgoingMsg;
+    let content = outgoingMsg.content;
     const tenantId = outgoingMsg.tenantId;
     const supportedChannels = new Set(['telegram', 'whatsapp', 'messenger', 'instagram']);
 
@@ -28,6 +30,17 @@ async function sendOutgoingMessage(outgoingMsg) {
         if (messageType === 'note' || outgoingMsg.isNote) {
             saveMessage(externalUserId, senderType, content, 'note', true, null, { channel, tenantId });
             return { success: true, status: 'note_saved' };
+        }
+
+        // This is the final shared customer-facing boundary for every supported
+        // channel. Apply it only to AI output, after grounding/safety decisions;
+        // human-authored replies and internal notes remain untouched.
+        if (senderType === 'ai') {
+            content = renderCustomerResponse({
+                decision: outgoingMsg.decision,
+                answer: content,
+                clarificationQuestion: outgoingMsg.clarificationQuestion
+            });
         }
 
         // Persist an authoritative "sending" state before any provider side effect.

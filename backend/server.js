@@ -23,7 +23,16 @@ initializeDatabase();
 // Load persistent SQLite settings into process.env before starting other services
 loadSettingsOnStartup();
 validateProductionSecurityConfig();
-require('./src/rag/config/ragConfig').validateRuntimeConfig();
+const ragConfig = require('./src/rag/config/ragConfig');
+ragConfig.validateRuntimeConfig();
+console.log(JSON.stringify({
+    level: 'info',
+    event: 'rag_safety_runtime_configuration',
+    evidenceGateEnabled: String(ragConfig.getConfig('RAG_EVIDENCE_GATE_ENABLED')).toLowerCase() === 'true',
+    groundingSafetyBoundaryEnabled: String(ragConfig.getConfig('RAG_GROUNDING_SAFETY_BOUNDARY_ENABLED')).toLowerCase() === 'true',
+    groundingSafetyBoundaryShadow: String(ragConfig.getConfig('RAG_GROUNDING_SAFETY_BOUNDARY_SHADOW')).toLowerCase() === 'true',
+    groundingSafetyEnforcementPercent: Number(ragConfig.getConfig('RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT'))
+}));
 require('./src/rag/runtime/distributedLockService').startStaleLeaseRecovery();
 
 // 2. Idempotently bootstrap initial administrator account (Task 6)

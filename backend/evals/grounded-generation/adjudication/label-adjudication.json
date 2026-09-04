@@ -1,0 +1,5 @@
+[
+  {"caseId":"electronics-a-12","action":"KEEP_ORIGINAL_LABEL","originalDecision":"ANSWER","adjudicatedDecision":"ANSWER","originalExpectedFacts":["يومين","اربعة ايام عمل"],"adjudicatedExpectedFacts":["يومين","اربعة ايام عمل"],"reason":"في الاستعمال الفلسطيني، كم بوخذ التوصيل يسأل عن الزمن. إجابات الرسوم لا تجيب عن المطلوب.","evidenceReference":"elec-delivery","reviewStatus":"REVIEWED"},
+  {"caseId":"professional_services-n-04","action":"CHANGE_EXPECTED_DECISION","originalDecision":"NO_ANSWER","adjudicatedDecision":"ANSWER","originalExpectedFacts":[],"adjudicatedExpectedFacts":["لا يستمر بعد 5 سبتمبر","1 إلى 5 سبتمبر 2026"],"reason":"حصر العرض صراحة بين 1 و5 سبتمبر يثبت أنه لا يستمر بعد نهاية 5 سبتمبر.","evidenceReference":"svc-promo","reviewStatus":"REVIEWED"},
+  {"caseId":"electronics-a-13","action":"CHANGE_EXPECTED_FACTS","originalDecision":"ANSWER","adjudicatedDecision":"ANSWER","originalExpectedFacts":["منفصلة","120 شيكل"],"adjudicatedExpectedFacts":["منفصلة"],"reason":"السؤال يسأل هل التركيب هو التوصيل، ولا يطلب سعر التركيب؛ اشتراط 120 شيكل يرفض جواباً كاملاً للسؤال.","evidenceReference":"elec-delivery","reviewStatus":"REVIEWED"}
+]

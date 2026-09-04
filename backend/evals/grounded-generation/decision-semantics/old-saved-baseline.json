@@ -1,0 +1,38 @@
+{
+  "source": "Three saved google/gemini-2.5-flash DEV runs scored on the targeted subset with adjudicated decisions",
+  "subsetCases": 38,
+  "responses": 114,
+  "runs": [
+    {
+      "run": 1,
+      "clarify": { "correct": 10, "total": 15, "accuracy": 0.6667 },
+      "noAnswer": { "correct": 10, "total": 12, "accuracy": 0.8333 },
+      "answerControl": { "correct": 10, "total": 10, "accuracy": 1.0 }
+    },
+    {
+      "run": 2,
+      "clarify": { "correct": 9, "total": 15, "accuracy": 0.6 },
+      "noAnswer": { "correct": 10, "total": 12, "accuracy": 0.8333 },
+      "answerControl": { "correct": 10, "total": 10, "accuracy": 1.0 }
+    },
+    {
+      "run": 3,
+      "clarify": { "correct": 10, "total": 15, "accuracy": 0.6667 },
+      "noAnswer": { "correct": 10, "total": 12, "accuracy": 0.8333 },
+      "answerControl": { "correct": 10, "total": 10, "accuracy": 1.0 }
+    }
+  ],
+  "aggregate": {
+    "clarify": { "correct": 29, "total": 45, "accuracy": 0.6444 },
+    "noAnswer": { "correct": 30, "total": 36, "accuracy": 0.8333 },
+    "answerControl": { "correct": 30, "total": 30, "accuracy": 1.0 },
+    "unsupported": { "count": 6, "totalResponses": 114, "rate": 0.0526 },
+    "missedClarify": 16,
+    "falseClarify": 0,
+    "transitionMatrix": {
+      "ANSWER": { "ANSWER": 30, "NO_ANSWER": 3, "CLARIFY": 0 },
+      "NO_ANSWER": { "ANSWER": 6, "NO_ANSWER": 30, "CLARIFY": 0 },
+      "CLARIFY": { "ANSWER": 10, "NO_ANSWER": 6, "CLARIFY": 29 }
+    }
+  }
+}

@@ -71,6 +71,19 @@ function validateFilenameSecurity(filename) {
     return ext;
 }
 
+function assertProductionKnowledgeArtifact(filename, metadata = {}) {
+    const normalized = String(filename || '').normalize('NFKC').toLowerCase();
+    const artifactType = String(metadata.artifactType || metadata.sourcePurpose || '')
+        .normalize('NFKC').toLowerCase();
+    const evaluationName = /(?:^|[._-])(?:eval|evaluation|benchmark|test|tests|fixture|fixtures|holdout|regression)(?:[._-]|$)/u;
+    const evaluationMetadata = /^(?:eval|evaluation|benchmark|test|fixture|holdout|regression)$/u;
+    if (evaluationName.test(normalized) || evaluationMetadata.test(artifactType)) {
+        const error = new Error('ملفات الاختبار والتقييم ليست مصادر معرفة إنتاجية.');
+        error.code = 'RAG_EVALUATION_ARTIFACT_REJECTED';
+        throw error;
+    }
+}
+
 /**
  * Validates declared MIME type and checks PDF magic bytes if appropriate.
  */
@@ -202,6 +215,7 @@ module.exports = {
     docsDir,
     computeSHA256,
     validateFilenameSecurity,
+    assertProductionKnowledgeArtifact,
     validateMimeAndMagicBytes,
     extractTextFromBuffer,
     computeNormalizedTextHash

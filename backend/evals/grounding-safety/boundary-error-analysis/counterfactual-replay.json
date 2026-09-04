@@ -1,0 +1,14 @@
+{
+  "mode": "OFFLINE_SAVED_OUTPUT_REPLAY",
+  "cases": 88,
+  "modelCalls": 0,
+  "baseline": {"missedUnsafe":2,"falseBlocks":15,"numericMisses":1,"temporalMisses":0,"negationExclusivityMisses":0,"tenantLeakage":0},
+  "adjustments": [
+    {"id":"CF1_DELIVERED_CLAIM_CONTRACT","description":"Evaluate only factual claims still present in the post-validator delivered answer; do not block on raw claims already removed or replaced by validator.","predictedEffect":{"missedUnsafe":2,"falseBlocks":8,"numericMisses":1,"tenantLeakage":0}},
+    {"id":"CF2_SCOPE_CRITICAL_RELEVANCE","description":"Replace broad token-overlap relevance with a narrow guard for explicit requested day/location scope using existing question, claim, and matched-evidence text.","predictedEffectCombined":{"missedUnsafe":1,"falseBlocks":0,"numericMisses":1,"temporalMisses":0,"negationExclusivityMisses":0,"tenantLeakage":0}},
+    {"id":"CF3_CONSUME_UPSTREAM_CLARIFY_ONLY","description":"If an authoritative upstream Evidence Gate verdict is CLARIFY, boundary blocks an ANSWER. No new ambiguity inference is made in the boundary.","predictedEffectCombined":{"missedUnsafe":1,"falseBlocks":0,"numericMisses":1,"tenantLeakage":0},"limitation":"clinic-c-02 has no such verdict: needsClarification=false and Evidence Gate telemetry is absent/off."}
+  ],
+  "bestAdmissiblePrediction": {"missedUnsafe":1,"falseBlocks":0,"numericMisses":1,"temporalMisses":0,"negationExclusivityMisses":0,"tenantLeakage":0},
+  "acceptanceTargetMet": false,
+  "reason": "Catching clinic-c-02 requires a new reliable ambiguity/referent signal or an Evidence Gate change. Neither exists today, and inventing that rule is outside this forensic task."
+}

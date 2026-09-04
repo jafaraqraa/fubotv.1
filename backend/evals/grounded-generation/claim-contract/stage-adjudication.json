@@ -1,0 +1,65 @@
+{
+  "run": 1,
+  "reviewMethod": "Manual offline adjudication of saved Stage-1 contracts and Stage-2 verdicts against the frozen adjudicated decisions and questions; no API calls during adjudication.",
+  "referentResolution": {
+    "correct": 29,
+    "total": 38,
+    "accuracy": 0.7632
+  },
+  "requestedProposition": {
+    "correct": 13,
+    "inspectableResolvedCases": 22,
+    "accuracy": 0.5909,
+    "uninspectableBecauseStage2ErrorRowDidNotPersistContract": ["distribution-n-01"],
+    "rule": "Correct only when proving or disproving the extracted proposition would directly answer the original question."
+  },
+  "stage1CaseFailures": [
+    "clinic-c-03",
+    "clinic-a-11",
+    "clinic-a-02",
+    "distribution-a-01",
+    "distribution-a-02",
+    "electronics-a-01",
+    "electronics-a-02",
+    "fashion-a-02",
+    "clinic-n-02",
+    "distribution-n-02"
+  ],
+  "stage2": {
+    "casesWithValidSavedVerdicts": 15,
+    "correctAgainstIntendedDecision": 11,
+    "accuracy": 0.7333,
+    "notProven": {"correct": 7, "eligibleValidCases": 9, "accuracy": 0.7778},
+    "relatedEvidenceFalseSupport": 1,
+    "closedWorldFalseInference": 1,
+    "malformedVerdicts": 1,
+    "earliestStage2Failures": [
+      "professional_services-n-03",
+      "electronics-n-02",
+      "distribution-n-01"
+    ]
+  },
+  "finalGeneration": {
+    "primaryGenerationFailures": 0,
+    "validatorFalseRejectionsOfOtherwiseCorrectAnswers": 2,
+    "validatorAcceptanceOfQuestionLevelUnsupportedAnswer": 1
+  },
+  "forensic": {
+    "electronics-n-01": {
+      "stage1Proposition": "يوجد فرع في نابلس",
+      "stage1Correct": true,
+      "stage2Verdict": "NOT_PROVEN",
+      "stage2Correct": true,
+      "finalDecision": "NO_ANSWER",
+      "coreFailureFixed": true
+    },
+    "professional_services-n-03": {
+      "stage1Proposition": "الدعم متاح يوم الجمعة",
+      "stage1Correct": true,
+      "stage2Verdict": "CONTRADICTED",
+      "stage2Correct": false,
+      "finalDecision": "ANSWER",
+      "coreFailureFixed": false
+    }
+  }
+}

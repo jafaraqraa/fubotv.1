@@ -1,0 +1,677 @@
+{
+  "model": "nomic-embed-text",
+  "infrastructure": "existing Ollama embedding provider",
+  "dataset": {
+    "total": 55,
+    "positive": 30,
+    "negative": 10,
+    "hardNegative": 15,
+    "unseen": 10
+  },
+  "distributions": {
+    "positive": {
+      "count": 30,
+      "mean": 0.7973251560835186,
+      "median": 0.794784886867411,
+      "p10": 0.7186411178428636,
+      "p90": 0.8677725257056923,
+      "min": 0.6191305043738174,
+      "max": 0.9098582341643843
+    },
+    "negative": {
+      "count": 10,
+      "mean": 0.8045712588287387,
+      "median": 0.8012299525462878,
+      "p10": 0.7443931377192528,
+      "p90": 0.875199549280854,
+      "min": 0.7414021241053348,
+      "max": 0.8952691224412064
+    },
+    "hardNegative": {
+      "count": 15,
+      "mean": 0.7427145737780856,
+      "median": 0.7323231016611204,
+      "p10": 0.6670299454906896,
+      "p90": 0.8501091978348114,
+      "min": 0.6060102867672076,
+      "max": 0.9052256461346283
+    }
+  },
+  "overlap": {
+    "positiveP10": 0.7186411178428636,
+    "unsupportedP90": 0.8850174319077698,
+    "margin": -0.16637631406490627
+  },
+  "methods": {
+    "baseline": {
+      "threshold": 0.5,
+      "tp": 29,
+      "tn": 3,
+      "fp": 22,
+      "fn": 1,
+      "accuracy": 0.5818181818181818,
+      "falseAnswerRate": 0.88,
+      "falseNoAnswerRate": 0.03333333333333333
+    },
+    "lexical": {
+      "threshold": 0.34,
+      "tp": 21,
+      "tn": 13,
+      "fp": 12,
+      "fn": 9,
+      "accuracy": 0.6181818181818182,
+      "falseAnswerRate": 0.48,
+      "falseNoAnswerRate": 0.3,
+      "balancedAccuracy": 0.61
+    },
+    "semantic": {
+      "threshold": 0.75,
+      "tp": 24,
+      "tn": 12,
+      "fp": 13,
+      "fn": 6,
+      "accuracy": 0.6545454545454545,
+      "falseAnswerRate": 0.52,
+      "falseNoAnswerRate": 0.2,
+      "balancedAccuracy": 0.64
+    },
+    "hybrid": {
+      "threshold": 0.75,
+      "tp": 24,
+      "tn": 14,
+      "fp": 11,
+      "fn": 6,
+      "accuracy": 0.6909090909090909,
+      "falseAnswerRate": 0.44,
+      "falseNoAnswerRate": 0.2,
+      "balancedAccuracy": 0.68
+    }
+  },
+  "arabicRobustness": {
+    "threshold": 0.5,
+    "tp": 6,
+    "tn": 0,
+    "fp": 0,
+    "fn": 4,
+    "accuracy": 0.6,
+    "falseAnswerRate": null,
+    "falseNoAnswerRate": 0.4
+  },
+  "unseen": {
+    "threshold": 0.5,
+    "tp": 10,
+    "tn": 0,
+    "fp": 0,
+    "fn": 0,
+    "accuracy": 1,
+    "falseAnswerRate": null,
+    "falseNoAnswerRate": 0
+  },
+  "latency": {
+    "totalMs": 5445.8,
+    "uniqueTexts": 110,
+    "meanPerTextMs": 49.51
+  },
+  "rows": [
+    {
+      "id": "p01",
+      "label": "POSITIVE",
+      "question": "قديش سعر رمال X؟",
+      "evidence": "سعر هاتف رمال X هو 1890 شيكل.",
+      "semanticScore": 0.7625310931130617,
+      "lexicalScore": 1,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p02",
+      "label": "POSITIVE",
+      "question": "والاكسسوارات شو كفالتها؟",
+      "evidence": "ضمان الملحقات 6 أشهر.",
+      "semanticScore": 0.6191305043738174,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p03",
+      "label": "POSITIVE",
+      "question": "بيت لحم بأي أيام بتوصلوها؟",
+      "evidence": "التوصيل إلى بيت لحم يومي الاثنين والأربعاء.",
+      "semanticScore": 0.8622535939017735,
+      "lexicalScore": 0.4,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p04",
+      "label": "POSITIVE",
+      "question": "بتوزعوا بأريحا؟",
+      "evidence": "لا يغطي الأسطول أريحا.",
+      "semanticScore": 0.7568156354952966,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p05",
+      "label": "POSITIVE",
+      "question": "كيف بقدر ادفع؟",
+      "evidence": "الدفع متاح نقداً أو بالبطاقة.",
+      "semanticScore": 0.7762100301700865,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p06",
+      "label": "POSITIVE",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "evidence": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+      "semanticScore": 0.8646870883213246,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p07",
+      "label": "POSITIVE",
+      "question": "فستان سهل الزيتون بأي ألوان؟",
+      "evidence": "فستان سهل الزيتون متوفر بالأسود والزيتي.",
+      "semanticScore": 0.9098582341643843,
+      "lexicalScore": 0.6,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p08",
+      "label": "POSITIVE",
+      "question": "الترجيع النقدي خلال قديش؟",
+      "evidence": "الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة.",
+      "semanticScore": 0.7936104100531218,
+      "lexicalScore": 0.6666666666666666,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p09",
+      "label": "POSITIVE",
+      "question": "الشحن داخل الضفة بكم؟",
+      "evidence": "الشحن داخل الضفة 20 شيكلاً.",
+      "semanticScore": 0.8246666978945505,
+      "lexicalScore": 0.75,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p10",
+      "label": "POSITIVE",
+      "question": "متى الشحن مجاني؟",
+      "evidence": "يصبح الشحن مجانياً للسلة التي تبلغ 350 شيكلاً أو أكثر.",
+      "semanticScore": 0.748716785758151,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p11",
+      "label": "POSITIVE",
+      "question": "المخزون بالموقع يعني محجوز؟",
+      "evidence": "تحديث المخزون في الموقع لا يمثل حجزاً.",
+      "semanticScore": 0.8620825932837922,
+      "lexicalScore": 0.25,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p12",
+      "label": "POSITIVE",
+      "question": "متى ساعات الدعم؟",
+      "evidence": "الدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة.",
+      "semanticScore": 0.7191773890805174,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p13",
+      "label": "POSITIVE",
+      "question": "دعم باقة النمو كم يوم؟",
+      "evidence": "باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم.",
+      "semanticScore": 0.7930873217419483,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p14",
+      "label": "POSITIVE",
+      "question": "كم ثمن باقة الانطلاق؟",
+      "evidence": "سعر باقة الانطلاق 2200 شيكل.",
+      "semanticScore": 0.7006694037865554,
+      "lexicalScore": 0.6666666666666666,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p15",
+      "label": "POSITIVE",
+      "question": "في ضمان على التلفونات؟",
+      "evidence": "ضمان الهواتف 18 شهراً.",
+      "semanticScore": 0.7571884001235251,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": false
+    },
+    {
+      "id": "p16",
+      "label": "POSITIVE",
+      "question": "بكم القميص الكتاني؟",
+      "evidence": "سعر قميص كرمل الكتاني 145 شيكلاً.",
+      "semanticScore": 0.7356637265964929,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p17",
+      "label": "POSITIVE",
+      "question": "قديش بده وقت تنفيذ باقة النمو؟",
+      "evidence": "تنفيذ باقة النمو يستغرق 25 يوم عمل.",
+      "semanticScore": 0.7687931510325775,
+      "lexicalScore": 0.6,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p18",
+      "label": "POSITIVE",
+      "question": "الأقراط بتتبدل؟",
+      "evidence": "الأقراط لا تبدل لأسباب صحية.",
+      "semanticScore": 0.8766919433567849,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p19",
+      "label": "POSITIVE",
+      "question": "وين فرع جنين؟",
+      "evidence": "فرع جنين قرب دوار السينما.",
+      "semanticScore": 0.8514046941352114,
+      "lexicalScore": 1,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "p20",
+      "label": "POSITIVE",
+      "question": "عرض الخريف شغال هسا؟",
+      "evidence": "خصم الخريف فعال حالياً حتى 7 سبتمبر 2026.",
+      "semanticScore": 0.7138146767039788,
+      "lexicalScore": 0.25,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u01",
+      "label": "POSITIVE",
+      "question": "بعد شو بصير تلميع السيارة؟",
+      "evidence": "يتم تلميع السيارة بعد مرحلة التجفيف.",
+      "unseen": true,
+      "semanticScore": 0.7959593636817002,
+      "lexicalScore": 0.75,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u02",
+      "label": "POSITIVE",
+      "question": "إيمتى بتعقموا الغرفة؟",
+      "evidence": "يتم تعقيم الغرفة بعد التنظيف.",
+      "unseen": true,
+      "semanticScore": 0.8667814793000154,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u03",
+      "label": "POSITIVE",
+      "question": "بشو بتغلفوا الطلب؟",
+      "evidence": "يتم تغليف الطلب بورق مقاوم للماء.",
+      "unseen": true,
+      "semanticScore": 0.8063965475863442,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u04",
+      "label": "POSITIVE",
+      "question": "المعايرة قبل ولا بعد التشغيل؟",
+      "evidence": "تتم معايرة الجهاز قبل التشغيل.",
+      "unseen": true,
+      "semanticScore": 0.8791552749129828,
+      "lexicalScore": 0.4,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u05",
+      "label": "POSITIVE",
+      "question": "كل قديش الفحص الدوري؟",
+      "evidence": "يجرى الفحص الدوري كل ستة أشهر.",
+      "unseen": true,
+      "semanticScore": 0.8167144854151265,
+      "lexicalScore": 1,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u06",
+      "label": "POSITIVE",
+      "question": "متى بقدر أجدد الرخصة؟",
+      "evidence": "يتم تجديد الرخصة بعد انتهائها.",
+      "unseen": true,
+      "semanticScore": 0.8654958179532314,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u07",
+      "label": "POSITIVE",
+      "question": "مين بعمل التركيب؟",
+      "evidence": "يتم تركيب القطعة بواسطة فني معتمد.",
+      "unseen": true,
+      "semanticScore": 0.7712517910721131,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u08",
+      "label": "POSITIVE",
+      "question": "المعالجة متى بتبدأ؟",
+      "evidence": "تبدأ المعالجة بعد ظهور نتيجة الفحص.",
+      "unseen": true,
+      "semanticScore": 0.8454641446576829,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u09",
+      "label": "POSITIVE",
+      "question": "شو نوع الطباعة؟",
+      "evidence": "تتم الطباعة بالحبر الحراري.",
+      "unseen": true,
+      "semanticScore": 0.7536951359878431,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "u10",
+      "label": "POSITIVE",
+      "question": "إيمتى الاستلام؟",
+      "evidence": "الاستلام بعد إتمام المعاملة.",
+      "unseen": true,
+      "semanticScore": 0.8217872688515604,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n01",
+      "label": "NEGATIVE",
+      "question": "هل عندكم فرع بالخليل؟",
+      "evidence": "فرع رام الله في شارع ركب وفرع جنين قرب دوار السينما.",
+      "semanticScore": 0.7827672114582059,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n02",
+      "label": "NEGATIVE",
+      "question": "هل تقبلون تأمين الشفاء؟",
+      "evidence": "تقبل العيادة تأمين أمان للرعاية الأولية فقط.",
+      "semanticScore": 0.8526669845906177,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n03",
+      "label": "NEGATIVE",
+      "question": "كم سعر فحص الدم الشامل؟",
+      "evidence": "الفحوصات المخبرية متاحة أيام الأحد والثلاثاء.",
+      "semanticScore": 0.7447254725652437,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n04",
+      "label": "NEGATIVE",
+      "question": "هل بتعملوا تطبيق موبايل؟",
+      "evidence": "تقدم الشركة تصميم مواقع وباقات محتوى.",
+      "semanticScore": 0.8004324695509316,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n05",
+      "label": "NEGATIVE",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "evidence": "الدعم من الأحد إلى الخميس بين التاسعة والخامسة.",
+      "semanticScore": 0.8069084034757308,
+      "lexicalScore": 0.25,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n06",
+      "label": "NEGATIVE",
+      "question": "متى يرجع رمال X للمخزون؟",
+      "evidence": "هاتف رمال X متوفر حالياً باللون الأسود.",
+      "semanticScore": 0.8729695967074815,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n07",
+      "label": "NEGATIVE",
+      "question": "شو سعر جهاز ندى 15؟",
+      "evidence": "سعر جهاز ندى 14 هو 2890 شيكل.",
+      "semanticScore": 0.8020274355416439,
+      "lexicalScore": 1,
+      "hybridCompatible": false,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n08",
+      "label": "NEGATIVE",
+      "question": "هل تقبلون الشيكات؟",
+      "evidence": "الدفع نقداً أو بتحويل بنكي قبل التوزيع.",
+      "semanticScore": 0.7465437678509915,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n09",
+      "label": "NEGATIVE",
+      "question": "أي دواء آخذ للحساسية؟",
+      "evidence": "العيادة تقدم فحوصات وتحاليل مخبرية.",
+      "semanticScore": 0.7414021241053348,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "n10",
+      "label": "NEGATIVE",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "evidence": "خصم الشركات الجديدة فعال حتى 5 سبتمبر.",
+      "semanticScore": 0.8952691224412064,
+      "lexicalScore": 0.25,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h01",
+      "label": "HARD_NEGATIVE",
+      "question": "كم سعر الفستان؟",
+      "evidence": "الفستان الزيتي مقاس M متوفر.",
+      "semanticScore": 0.7788632063642045,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h02",
+      "label": "HARD_NEGATIVE",
+      "question": "هل الفستان متوفر؟",
+      "evidence": "سعر الفستان 260 شيكلاً.",
+      "semanticScore": 0.7323231016611204,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h03",
+      "label": "HARD_NEGATIVE",
+      "question": "قديش ضمان المنتج؟",
+      "evidence": "المنتج يشمل ضماناً.",
+      "semanticScore": 0.8930493220412953,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h04",
+      "label": "HARD_NEGATIVE",
+      "question": "كم رسوم التوصيل؟",
+      "evidence": "التوصيل مجاني للطلبات فوق 350 شيكلاً.",
+      "semanticScore": 0.6060102867672076,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": false
+    },
+    {
+      "id": "h05",
+      "label": "HARD_NEGATIVE",
+      "question": "متى الموعد؟",
+      "evidence": "يمكن إلغاء الموعد قبل 24 ساعة.",
+      "semanticScore": 0.711452471457654,
+      "lexicalScore": 1,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h06",
+      "label": "HARD_NEGATIVE",
+      "question": "بقدر ألغي الموعد؟",
+      "evidence": "يمكن إعادة جدولة الموعد مرة واحدة.",
+      "semanticScore": 0.7783879953458404,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h07",
+      "label": "HARD_NEGATIVE",
+      "question": "بقدر أرجع القطعة؟",
+      "evidence": "يمكن استبدال القطعة خلال 14 يوماً.",
+      "semanticScore": 0.6818648106481913,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h08",
+      "label": "HARD_NEGATIVE",
+      "question": "شو الخصم الحالي؟",
+      "evidence": "يحصل العميل عادة على كوبون عند التأخير.",
+      "semanticScore": 0.7419313942847411,
+      "lexicalScore": 0,
+      "hybridCompatible": false,
+      "baselineAuthorized": false
+    },
+    {
+      "id": "h09",
+      "label": "HARD_NEGATIVE",
+      "question": "سعر ندى 14 قديش؟",
+      "evidence": "سعر رمال X هو 1890 شيكل.",
+      "semanticScore": 0.6571400353856884,
+      "lexicalScore": 0.5,
+      "hybridCompatible": false,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h10",
+      "label": "HARD_NEGATIVE",
+      "question": "هل وزن العبوة 5 كيلو؟",
+      "evidence": "وزن العبوة 3 كيلو.",
+      "semanticScore": 0.7503453696444112,
+      "lexicalScore": 1,
+      "hybridCompatible": false,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h11",
+      "label": "HARD_NEGATIVE",
+      "question": "كم أجرة الشحن العادية؟",
+      "evidence": "الشحن مجاني إذا تجاوز الطلب 300 شيكل.",
+      "semanticScore": 0.7199951672954212,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h12",
+      "label": "HARD_NEGATIVE",
+      "question": "مدة الإرجاع العامة؟",
+      "evidence": "قطع التخفيض النهائي لا تسترد نقداً.",
+      "semanticScore": 0.6886087449440351,
+      "lexicalScore": 0,
+      "hybridCompatible": true,
+      "baselineAuthorized": false
+    },
+    {
+      "id": "h13",
+      "label": "HARD_NEGATIVE",
+      "question": "هل الأسود داخل الخصم؟",
+      "evidence": "خصم 18% على الفستان باستثناء اللون الأسود.",
+      "semanticScore": 0.7098220431717582,
+      "lexicalScore": 0.3333333333333333,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h14",
+      "label": "HARD_NEGATIVE",
+      "question": "متى يبدأ الدعم؟",
+      "evidence": "يمكن إلغاء الدعم قبل بدء المشروع.",
+      "semanticScore": 0.7856990115250857,
+      "lexicalScore": 0.5,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    },
+    {
+      "id": "h15",
+      "label": "HARD_NEGATIVE",
+      "question": "هل الباقة تشمل الطباعة؟",
+      "evidence": "الباقة تشمل كتابة المحتوى.",
+      "semanticScore": 0.9052256461346283,
+      "lexicalScore": 0.6666666666666666,
+      "hybridCompatible": true,
+      "baselineAuthorized": true
+    }
+  ]
+}

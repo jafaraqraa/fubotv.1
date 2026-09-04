@@ -1,0 +1,2488 @@
+{
+  "summary": {
+    "validRuns": 3,
+    "totalResponses": 300,
+    "stability": {
+      "STABLE_PASS": 80,
+      "STABLE_FAIL": 18,
+      "MOSTLY_PASS": 2
+    },
+    "failedCaseRuns": 56,
+    "uniqueFailedCases": 20,
+    "failuresByExpectedDecision": {
+      "ANSWER": 31,
+      "CLARIFY": 16,
+      "NO_ANSWER": 9
+    },
+    "primaryTaxonomy": {
+      "D1 EVALUATOR_FALSE_REJECTION": 24,
+      "A4 MISSED_CLARIFY": 16,
+      "D4 EXPECTED_LABEL_PROBLEM": 6,
+      "B1 EVIDENCE_PRESENT_BUT_IGNORED": 4,
+      "C2 OVER_GENERALIZATION": 3,
+      "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT": 3
+    },
+    "failuresByDomain": {
+      "clinic": 21,
+      "distribution": 10,
+      "electronics": 9,
+      "professional_services": 9,
+      "fashion": 7
+    },
+    "failuresByTag": {
+      "palestinian": 38,
+      "hard_paraphrase": 22,
+      "msa": 18,
+      "ambiguous": 16,
+      "clarify": 16,
+      "typo": 13,
+      "no_answer": 9,
+      "cross_tenant_trap": 3,
+      "multi_intent": 3,
+      "temporal": 3
+    },
+    "decisionVariabilityCases": [
+      "distribution-c-03"
+    ],
+    "contentVariabilityCases": [
+      "distribution-c-03",
+      "fashion-a-06"
+    ],
+    "rawUnsupportedProxy": {
+      "responses": 9,
+      "rate": 0.03
+    },
+    "validatorSimulatedFinalUnsupported": {
+      "responses": 3,
+      "rate": 0.01
+    },
+    "telemetryLimitation": "Saved rows omit the complete VERIFIED_EVIDENCE block; cited/expected source text is reconstructed from local DEV sources, but uncited retrieved chunks cannot be proven from saved output alone."
+  },
+  "failures": [
+    {
+      "caseId": "electronics-a-12",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم بوخذ التوصيل؟",
+      "expectedFacts": [
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكلاً.",
+      "claims": [
+        {
+          "text": "رسوم الشحن العادي 25 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "سؤال \"كم بوخذ\" يحتمل الرسوم أو المدة، بينما expectedFacts تفرض المدة فقط."
+    },
+    {
+      "caseId": "electronics-a-12",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم بوخذ التوصيل؟",
+      "expectedFacts": [
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكل.",
+      "claims": [
+        {
+          "text": "رسوم الشحن العادي 25 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "سؤال \"كم بوخذ\" يحتمل الرسوم أو المدة، بينما expectedFacts تفرض المدة فقط."
+    },
+    {
+      "caseId": "electronics-a-12",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "كم بوخذ التوصيل؟",
+      "expectedFacts": [
+        "يومين",
+        "اربعة ايام عمل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانياً إذا تجاوزت قيمة السلة 450 شيكلاً.",
+      "claims": [
+        {
+          "text": "رسوم الشحن العادي 25 شيكلاً.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        },
+        {
+          "text": "الشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "سؤال \"كم بوخذ\" يحتمل الرسوم أو المدة، بينما expectedFacts تفرض المدة فقط."
+    },
+    {
+      "caseId": "electronics-a-13",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "هل تركيب الشاشة هو نفسه التوصيل؟",
+      "expectedFacts": [
+        "منفصلة",
+        "120 شيكل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، تركيب الشاشة خدمة منفصلة عن التوصيل.",
+      "claims": [
+        {
+          "text": "تركيب الشاشة خدمة منفصلة عن التوصيل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "السؤال يطلب هل الخدمتان منفصلتان؛ الجواب أثبت ذلك، لكن expectedFacts يفرض أيضاً سعر 120 غير مطلوب صراحة."
+    },
+    {
+      "caseId": "electronics-a-13",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "هل تركيب الشاشة هو نفسه التوصيل؟",
+      "expectedFacts": [
+        "منفصلة",
+        "120 شيكل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، تركيب الشاشة خدمة منفصلة عن التوصيل.",
+      "claims": [
+        {
+          "text": "تركيب الشاشة خدمة منفصلة عن التوصيل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "السؤال يطلب هل الخدمتان منفصلتان؛ الجواب أثبت ذلك، لكن expectedFacts يفرض أيضاً سعر 120 غير مطلوب صراحة."
+    },
+    {
+      "caseId": "electronics-a-13",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "هل تركيب الشاشة هو نفسه التوصيل؟",
+      "expectedFacts": [
+        "منفصلة",
+        "120 شيكل"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، تركيب الشاشة خدمة منفصلة عن التوصيل.",
+      "claims": [
+        {
+          "text": "تركيب الشاشة خدمة منفصلة عن التوصيل.",
+          "evidenceIds": [
+            "elec-delivery_chunk_0_3eb67cb4db8c"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-delivery",
+          "tenantId": "gen_electronics",
+          "name": "الشحن والتركيب.md",
+          "text": "# الشحن\nالشحن مجاني عندما تتجاوز قيمة السلة 450 شيكل. رسوم الشحن العادي 25 شيكلاً، والمدة المتوقعة من يومين إلى أربعة أيام عمل. تركيب الشاشة خدمة منفصلة عن التوصيل وسعرها 120 شيكلاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "السؤال يطلب هل الخدمتان منفصلتان؛ الجواب أثبت ذلك، لكن expectedFacts يفرض أيضاً سعر 120 غير مطلوب صراحة."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "المعرض الوحيد للشركة يقع في البيرة قرب دوار المنارة، ولا يوجد فرع في نابلس.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد للشركة يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "tags": [
+        "palestinian",
+        "cross_tenant_trap",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع في نابلس؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "claims": [
+        {
+          "text": "المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+          "evidenceIds": [
+            "elec-contact_chunk_0_c37eea929623"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "elec-contact",
+          "tenantId": "gen_electronics",
+          "name": "الفروع والتواصل.md",
+          "text": "# التواصل\nالمعرض الوحيد في البيرة قرب دوار المنارة، ويفتح من السبت إلى الخميس من التاسعة صباحاً حتى السابعة مساءً. صورة معتمدة: واجهة معرض برق تك ذات اللافتة الزرقاء."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "C2 OVER_GENERALIZATION",
+      "secondary": [
+        "A1 FALSE_ANSWER"
+      ],
+      "notes": "وجود \"المعرض الوحيد في البيرة\" استُخدم لاستنتاج نفي فرع نابلس؛ النفي غير ممثل كـclaim مرتبط."
+    },
+    {
+      "caseId": "distribution-a-07",
+      "run": 1,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بتوزعوا بأريحا؟",
+      "expectedFacts": [
+        "لا يغطي",
+        "اريحا"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يتم التوزيع في أريحا.",
+      "claims": [
+        {
+          "text": "لا يغطي أسطول التوزيع أريحا.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يتم التوزيع في أريحا\" مكافئة دلالياً لـ\"لا يغطي أريحا\"."
+    },
+    {
+      "caseId": "distribution-a-07",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بتوزعوا بأريحا؟",
+      "expectedFacts": [
+        "لا يغطي",
+        "اريحا"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يتم التوزيع في أريحا.",
+      "claims": [
+        {
+          "text": "لا يغطي أسطول التوزيع أريحا.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يتم التوزيع في أريحا\" مكافئة دلالياً لـ\"لا يغطي أريحا\"."
+    },
+    {
+      "caseId": "distribution-a-07",
+      "run": 3,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بتوزعوا بأريحا؟",
+      "expectedFacts": [
+        "لا يغطي",
+        "اريحا"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يتم التوزيع في أريحا.",
+      "claims": [
+        {
+          "text": "لا يغطي أسطول التوزيع أريحا.",
+          "evidenceIds": [
+            "dist-zones_chunk_0_19392d72f595"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-zones",
+          "tenantId": "gen_distribution",
+          "name": "مناطق وجدول التوزيع.md",
+          "text": "# التوزيع\nالتوصيل إلى رام الله والبيرة أيام الأحد والثلاثاء والخميس، وإلى بيت لحم يومي الاثنين والأربعاء. لا يغطي الأسطول أريحا. الطلب المؤكد قبل الثانية ظهراً يدخل جدول يوم التوزيع التالي."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يتم التوزيع في أريحا\" مكافئة دلالياً لـ\"لا يغطي أريحا\"."
+    },
+    {
+      "caseId": "distribution-a-13",
+      "run": 1,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "برجع عصير مسكر بعد 5 ايام؟",
+      "expectedFacts": [
+        "تقبل",
+        "7 ايام"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+      "claims": [
+        {
+          "text": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"يمكن إرجاع\" مكافئة لـ\"تقبل\" لكن المطابقة اللفظية لا تراها."
+    },
+    {
+      "caseId": "distribution-a-13",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "برجع عصير مسكر بعد 5 ايام؟",
+      "expectedFacts": [
+        "تقبل",
+        "7 ايام"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+      "claims": [
+        {
+          "text": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"يمكن إرجاع\" مكافئة لـ\"تقبل\" لكن المطابقة اللفظية لا تراها."
+    },
+    {
+      "caseId": "distribution-a-13",
+      "run": 3,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "برجع عصير مسكر بعد 5 ايام؟",
+      "expectedFacts": [
+        "تقبل",
+        "7 ايام"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+      "claims": [
+        {
+          "text": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"يمكن إرجاع\" مكافئة لـ\"تقبل\" لكن المطابقة اللفظية لا تراها."
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 1,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        },
+        {
+          "text": "سعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "الضمير بلا مرجع ومع الدليل منتجان؛ عرض السعرين لا يحل المقصود."
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        },
+        {
+          "text": "سعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "الضمير بلا مرجع ومع الدليل منتجان؛ عرض السعرين لا يحل المقصود."
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 3,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "claims": [
+        {
+          "text": "سعر كرتونة عصير السهل 46 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        },
+        {
+          "text": "سعر كرتونة مياه عين البلد 31 شيكلاً.",
+          "evidenceIds": [
+            "dist-orders_chunk_0_113acd0282a6"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-orders",
+          "tenantId": "gen_distribution",
+          "name": "شروط طلبات الجملة.md",
+          "text": "# طلبات الجملة\nالحد الأدنى للطلب 24 كرتونة. سعر كرتونة عصير السهل 46 شيكلاً وسعر كرتونة مياه عين البلد 31 شيكلاً. يمنح خصم 4% للطلبات التي تبلغ 100 كرتونة أو أكثر."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "الضمير بلا مرجع ومع الدليل منتجان؛ عرض السعرين لا يحل المقصود."
+    },
+    {
+      "caseId": "distribution-c-03",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي ارجعها",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم، أما المياه المبردة فلا يمكن إرجاعها.",
+      "claims": [
+        {
+          "text": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        },
+        {
+          "text": "لا يمكن إرجاع المياه المبردة.",
+          "evidenceIds": [
+            "dist-damage_chunk_0_e98fd5bb3951"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "dist-damage",
+          "tenantId": "gen_distribution",
+          "name": "التالف والمرتجعات.md",
+          "text": "# التالف\nيجب تصوير البضاعة المتضررة خلال 24 ساعة من التسليم وإرسال رقم الفاتورة. تقبل عبوات العصير المغلقة للإرجاع خلال 7 أيام، أما المياه المبردة فلا ترجع."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "F1 MODEL_INCONSISTENCY"
+      ],
+      "notes": "الضمير بلا مرجع؛ أخفق تشغيل واحد فقط وأجاب بسياسات كيانين."
+    },
+    {
+      "caseId": "clinic-a-06",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "شو دوام العيادة العادي؟",
+      "expectedFacts": [
+        "السبت",
+        "الاربعاء",
+        "الثامنة والنصف",
+        "السادسة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "تعمل العيادة من السبت إلى الأربعاء من الساعة 8:30 صباحًا حتى 6:00 مساءً، ويوم الخميس حتى الساعة 2:00 ظهرًا.",
+      "claims": [
+        {
+          "text": "تعمل العيادة من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        },
+        {
+          "text": "تعمل العيادة يوم الخميس حتى الثانية ظهراً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "8:30 و6:00 مكافئتان للثامنة والنصف والسادسة، والإجابة صحيحة."
+    },
+    {
+      "caseId": "clinic-a-06",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "شو دوام العيادة العادي؟",
+      "expectedFacts": [
+        "السبت",
+        "الاربعاء",
+        "الثامنة والنصف",
+        "السادسة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "تعمل العيادة من السبت إلى الأربعاء من الساعة 8:30 صباحًا حتى 6:00 مساءً، ويوم الخميس حتى الساعة 2:00 ظهرًا.",
+      "claims": [
+        {
+          "text": "تعمل العيادة من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        },
+        {
+          "text": "تعمل العيادة يوم الخميس حتى الثانية ظهراً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "8:30 و6:00 مكافئتان للثامنة والنصف والسادسة، والإجابة صحيحة."
+    },
+    {
+      "caseId": "clinic-a-06",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "شو دوام العيادة العادي؟",
+      "expectedFacts": [
+        "السبت",
+        "الاربعاء",
+        "الثامنة والنصف",
+        "السادسة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "تعمل العيادة من السبت إلى الأربعاء من الساعة 8:30 صباحًا حتى 6:00 مساءً، ويوم الخميس حتى الساعة 2:00 ظهرًا.",
+      "claims": [
+        {
+          "text": "تعمل العيادة من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        },
+        {
+          "text": "تعمل العيادة يوم الخميس حتى الثانية ظهراً.",
+          "evidenceIds": [
+            "clinic-hours_chunk_0_39da821f0e85"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-hours",
+          "tenantId": "gen_clinic",
+          "name": "المواعيد والدوام.md",
+          "text": "# المواعيد\nالعيادة تعمل من السبت إلى الأربعاء من الثامنة والنصف صباحاً حتى السادسة مساءً، والخميس حتى الثانية ظهراً. لا تستقبل العيادة حالات الطوارئ؛ يجب التوجه إلى قسم الطوارئ في المستشفى."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "8:30 و6:00 مكافئتان للثامنة والنصف والسادسة، والإجابة صحيحة."
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "B1 EVIDENCE_PRESENT_BUT_IGNORED",
+      "secondary": [
+        "B4 MULTI_EVIDENCE_COMPOSITION_FAILURE"
+      ],
+      "notes": "المصدر المتوقع clinic-changes يثبت مرة واحدة وشرط 6 ساعات، لكن النموذج رجع NO_ANSWER."
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "B1 EVIDENCE_PRESENT_BUT_IGNORED",
+      "secondary": [
+        "B4 MULTI_EVIDENCE_COMPOSITION_FAILURE"
+      ],
+      "notes": "المصدر المتوقع clinic-changes يثبت مرة واحدة وشرط 6 ساعات، لكن النموذج رجع NO_ANSWER."
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "multi_intent"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "expectedFacts": [
+        "مرة واحدة",
+        "6 ساعات"
+      ],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "B1 EVIDENCE_PRESENT_BUT_IGNORED",
+      "secondary": [
+        "B4 MULTI_EVIDENCE_COMPOSITION_FAILURE"
+      ],
+      "notes": "المصدر المتوقع clinic-changes يثبت مرة واحدة وشرط 6 ساعات، لكن النموذج رجع NO_ANSWER."
+    },
+    {
+      "caseId": "clinic-a-12",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "تأمين أمان مقبول؟",
+      "expectedFacts": [
+        "الرعاية الاولية فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، العيادة تقبل تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "العيادة تقبل تأمين أمان للرعاية الأولية فقط.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        },
+        {
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تحتوي الرعاية الأولية فقط؛ اختلاف اللصق في \"للرعاية\" أفشل matcher."
+    },
+    {
+      "caseId": "clinic-a-12",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "تأمين أمان مقبول؟",
+      "expectedFacts": [
+        "الرعاية الاولية فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، العيادة تقبل تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "العيادة تقبل تأمين أمان للرعاية الأولية فقط.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        },
+        {
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تحتوي الرعاية الأولية فقط؛ اختلاف اللصق في \"للرعاية\" أفشل matcher."
+    },
+    {
+      "caseId": "clinic-a-12",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "typo"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "تأمين أمان مقبول؟",
+      "expectedFacts": [
+        "الرعاية الاولية فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "نعم، العيادة تقبل تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "العيادة تقبل تأمين أمان للرعاية الأولية فقط.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        },
+        {
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تحتوي الرعاية الأولية فقط؛ اختلاف اللصق في \"للرعاية\" أفشل matcher."
+    },
+    {
+      "caseId": "clinic-a-13",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "expectedFacts": [
+        "لا يشمل",
+        "تنظيف البشرة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، التأمين لا يغطي جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "التأمين لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "\"لا يغطي\" مكافئة لـ\"لا يشمل\"، والادعاء مرتبط بمصدر التأمين."
+    },
+    {
+      "caseId": "clinic-a-13",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "expectedFacts": [
+        "لا يشمل",
+        "تنظيف البشرة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، التأمين لا يغطي جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "التأمين لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "\"لا يغطي\" مكافئة لـ\"لا يشمل\"، والادعاء مرتبط بمصدر التأمين."
+    },
+    {
+      "caseId": "clinic-a-13",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "التأمين بغطي تنظيف البشرة؟",
+      "expectedFacts": [
+        "لا يشمل",
+        "تنظيف البشرة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا، التأمين لا يغطي جلسات تنظيف البشرة.",
+      "claims": [
+        {
+          "text": "التأمين لا يشمل جلسات تنظيف البشرة.",
+          "evidenceIds": [
+            "clinic-insurance_chunk_0_c53b53882dd4"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-insurance",
+          "tenantId": "gen_clinic",
+          "name": "التأمين والدفع.md",
+          "text": "# التأمين\nتقبل العيادة تأمين أمان للرعاية الأولية فقط، ولا يشمل جلسات تنظيف البشرة. الدفع متاح نقداً أو بالبطاقة. لا توفر العيادة تقسيطاً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "\"لا يغطي\" مكافئة لـ\"لا يشمل\"، والادعاء مرتبط بمصدر التأمين."
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "الضمير بلا مرجع؛ اختار NO_ANSWER بدل طلب تحديد الخدمة."
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "الضمير بلا مرجع؛ اختار NO_ANSWER بدل طلب تحديد الخدمة."
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "قديش سعرها؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "الضمير بلا مرجع؛ اختار NO_ANSWER بدل طلب تحديد الخدمة."
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي أغير الموعد",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.",
+      "claims": [
+        {
+          "text": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        },
+        {
+          "text": "يجب أن يتم طلب إعادة الجدولة قبل 6 ساعات من الموعد الأصلي لتجنب الرسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "طلب تغيير موعد شخصي يحتاج تحديد الموعد؛ النموذج أجاب بالسياسة العامة."
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي أغير الموعد",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد.",
+      "claims": [
+        {
+          "text": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        },
+        {
+          "text": "يجب أن يتم طلب إعادة الجدولة قبل 6 ساعات من الموعد.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "طلب تغيير موعد شخصي يحتاج تحديد الموعد؛ النموذج أجاب بالسياسة العامة."
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "بدي أغير الموعد",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم طلب ذلك قبل 6 ساعات من الموعد الأصلي.",
+      "claims": [
+        {
+          "text": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        },
+        {
+          "text": "يجب أن يتم طلب إعادة الجدولة قبل 6 ساعات من الموعد.",
+          "evidenceIds": [
+            "clinic-changes_chunk_0_68771da4f666"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "clinic-changes",
+          "tenantId": "gen_clinic",
+          "name": "الإلغاء وإعادة الجدولة.md",
+          "text": "# تعديل الموعد\nإلغاء الموعد دون رسوم متاح قبل 12 ساعة. الإلغاء المتأخر عليه رسم 40 شيكلاً. يمكن إعادة الجدولة مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "طلب تغيير موعد شخصي يحتاج تحديد الموعد؛ النموذج أجاب بالسياسة العامة."
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "متى موعدي؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "موعد شخصي غير محدد؛ اختار NO_ANSWER بدل سؤال توضيحي."
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "متى موعدي؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "موعد شخصي غير محدد؛ اختار NO_ANSWER بدل سؤال توضيحي."
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "tags": [
+        "palestinian",
+        "typo",
+        "hard_paraphrase",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "متى موعدي؟",
+      "expectedFacts": [],
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "claims": [],
+      "usedEvidence": [],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION",
+        "E1 DECISION_SEMANTICS_AMBIGUOUS"
+      ],
+      "notes": "موعد شخصي غير محدد؛ اختار NO_ANSWER بدل سؤال توضيحي."
+    },
+    {
+      "caseId": "fashion-a-06",
+      "run": 3,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "palestinian"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "مدة تبديل القطعة؟",
+      "expectedFacts": [
+        "14 يوما",
+        "الفاتورة"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "مدة تبديل القطعة هي 14 يومًا، باستثناء الأقراط وقطع التخفيض النهائي.",
+      "claims": [
+        {
+          "text": "الاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "الأقراط لا تبدل لأسباب صحية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "B1 EVIDENCE_PRESENT_BUT_IGNORED",
+      "secondary": [
+        "F1 MODEL_INCONSISTENCY"
+      ],
+      "notes": "تشغيل واحد حذف شرط الفاتورة رغم وجوده في المصدر والـexpectedFacts."
+    },
+    {
+      "caseId": "fashion-a-08",
+      "run": 1,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قطعة final sale برجع مصاري؟",
+      "expectedFacts": [
+        "لا تسترد نقدا",
+        "المقاس فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استرداد الأموال نقدًا لقطع التخفيض النهائي، ولكن يمكن استبدالها بالمقاس فقط.",
+      "claims": [
+        {
+          "text": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "يمكن استبدال قطع التخفيض النهائي بالمقاس فقط.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تطابق عدم الرد النقدي والاستبدال بالمقاس دلالياً."
+    },
+    {
+      "caseId": "fashion-a-08",
+      "run": 2,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قطعة final sale برجع مصاري؟",
+      "expectedFacts": [
+        "لا تسترد نقدا",
+        "المقاس فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استرداد النقود لقطع التخفيض النهائي، بل يمكن استبدالها بالمقاس فقط.",
+      "claims": [
+        {
+          "text": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "يمكن استبدال قطع التخفيض النهائي بالمقاس فقط.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تطابق عدم الرد النقدي والاستبدال بالمقاس دلالياً."
+    },
+    {
+      "caseId": "fashion-a-08",
+      "run": 3,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "msa"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "قطعة final sale برجع مصاري؟",
+      "expectedFacts": [
+        "لا تسترد نقدا",
+        "المقاس فقط"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استرداد النقود لقطع التخفيض النهائي، بل يمكن استبدالها بالمقاس فقط.",
+      "claims": [
+        {
+          "text": "قطع التخفيض النهائي لا تسترد نقداً.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        },
+        {
+          "text": "يمكن استبدال قطع التخفيض النهائي بالمقاس فقط.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [
+        "D2 VALIDATOR_FALSE_REJECTION"
+      ],
+      "notes": "الإجابة تطابق عدم الرد النقدي والاستبدال بالمقاس دلالياً."
+    },
+    {
+      "caseId": "fashion-a-09",
+      "run": 1,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الأقراط بتتبدل؟",
+      "expectedFacts": [
+        "لا تبدل",
+        "صحية"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استبدال الأقراط لأسباب صحية.",
+      "claims": [
+        {
+          "text": "الأقراط لا تبدل لأسباب صحية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يمكن استبدال\" مكافئة لـ\"لا تبدل\"."
+    },
+    {
+      "caseId": "fashion-a-09",
+      "run": 2,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الأقراط بتتبدل؟",
+      "expectedFacts": [
+        "لا تبدل",
+        "صحية"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استبدال الأقراط لأسباب صحية.",
+      "claims": [
+        {
+          "text": "الأقراط لا تبدل لأسباب صحية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يمكن استبدال\" مكافئة لـ\"لا تبدل\"."
+    },
+    {
+      "caseId": "fashion-a-09",
+      "run": 3,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "tags": [
+        "palestinian",
+        "hard_paraphrase"
+      ],
+      "expectedDecision": "ANSWER",
+      "question": "الأقراط بتتبدل؟",
+      "expectedFacts": [
+        "لا تبدل",
+        "صحية"
+      ],
+      "actualDecision": "ANSWER",
+      "answer": "لا يمكن استبدال الأقراط لأسباب صحية.",
+      "claims": [
+        {
+          "text": "الأقراط لا تبدل لأسباب صحية.",
+          "evidenceIds": [
+            "fashion-exchange_chunk_0_640eb3a28181"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "fashion-exchange",
+          "tenantId": "gen_fashion",
+          "name": "الاستبدال والإرجاع.md",
+          "text": "# الاستبدال\nالاستبدال خلال 14 يوماً مع الفاتورة والبطاقة الأصلية. الإرجاع النقدي خلال 7 أيام للقطع غير المستعملة. قطع التخفيض النهائي تستبدل بالمقاس فقط ولا تسترد نقداً. الأقراط لا تبدل لأسباب صحية."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "D1 EVALUATOR_FALSE_REJECTION",
+      "secondary": [],
+      "notes": "\"لا يمكن استبدال\" مكافئة لـ\"لا تبدل\"."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+      "claims": [
+        {
+          "text": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين التاسعة والخامسة.",
+      "claims": [
+        {
+          "text": "الدعم متاح من الأحد إلى الخميس بين التاسعة والخامسة.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "palestinian",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+      "claims": [
+        {
+          "text": "الدعم متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+          "evidenceIds": [
+            "svc-support_chunk_0_19dc9459f9ae"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-support",
+          "tenantId": "gen_services",
+          "name": "الدعم والتواصل.md",
+          "text": "# الدعم\nالدعم عبر البريد من الأحد إلى الخميس بين التاسعة والخامسة. باقة النمو تشمل دعماً تقنياً لمدة 60 يوماً بعد التسليم، بينما باقة الانطلاق تشمل 14 يوماً."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true,
+      "primary": "B2 RELATED_EVIDENCE_MISTAKEN_FOR_SUPPORT",
+      "secondary": [
+        "A1 FALSE_ANSWER",
+        "D3 VALIDATOR_FALSE_ACCEPT"
+      ],
+      "notes": "جدول الأحد-الخميس مرتبط بالسؤال لكنه لا يصرح بحالة الجمعة؛ validator قبل الادعاء المرتبط غير المجيب."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-n-04",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "hard_paraphrase",
+        "temporal",
+        "no_answer"
+      ],
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل العرض مستمر بعد 5 سبتمبر؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "لا، العرض لا يستمر بعد 5 سبتمبر 2026، حيث أنه متاح فقط من 1 إلى 5 سبتمبر 2026.",
+      "claims": [
+        {
+          "text": "العرض متاح من 1 إلى 5 سبتمبر 2026.",
+          "evidenceIds": [
+            "svc-promo_chunk_0_53ae533e4c8a"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-promo",
+          "tenantId": "gen_services",
+          "name": "عرض تأسيس الشركات.md",
+          "text": "# عرض مؤقت\nمن 1 إلى 5 سبتمبر 2026 تحصل الشركات الجديدة عند شراء باقة النمو على كتابة خمس صفحات عربية دون رسوم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "D4 EXPECTED_LABEL_PROBLEM",
+      "secondary": [
+        "B3 SCOPE_CONDITION_EXCEPTION_ERROR"
+      ],
+      "notes": "الفترة 1-5 سبتمبر تدعم منطقياً أن العرض لا يستمر بعدها؛ expected NO_ANSWER محل خلاف."
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "كم بتاخد وقت؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "يوجد زمنان لباقتين؛ عرضهما لا يحدد أيهما يقصد المستخدم."
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "كم بتاخد وقت؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "يوجد زمنان لباقتين؛ عرضهما لا يحدد أيهما يقصد المستخدم."
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "tags": [
+        "msa",
+        "ambiguous",
+        "clarify"
+      ],
+      "expectedDecision": "CLARIFY",
+      "question": "كم بتاخد وقت؟",
+      "expectedFacts": [],
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "claims": [
+        {
+          "text": "تستغرق باقة الانطلاق 12 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        },
+        {
+          "text": "تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+          "evidenceIds": [
+            "svc-timeline_chunk_0_436f7e90adf9"
+          ]
+        }
+      ],
+      "usedEvidence": [
+        {
+          "id": "svc-timeline",
+          "tenantId": "gen_services",
+          "name": "المدة والمراحل.md",
+          "text": "# التنفيذ\nتستغرق باقة الانطلاق 12 يوم عمل، وباقة النمو 25 يوم عمل بعد استلام المحتوى. يبدأ المشروع بدفعة 40%، ثم 30% عند اعتماد الاتجاه، و30% عند التسليم."
+        }
+      ],
+      "actualSentEvidenceUnavailable": true,
+      "missingInformation": [],
+      "clarificationQuestion": null,
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false,
+      "primary": "A4 MISSED_CLARIFY",
+      "secondary": [
+        "B5 ENTITY_REFERENCE_RESOLUTION"
+      ],
+      "notes": "يوجد زمنان لباقتين؛ عرضهما لا يحدد أيهما يقصد المستخدم."
+    }
+  ]
+}

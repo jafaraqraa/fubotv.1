@@ -1,0 +1,757 @@
+{
+  "responses": 300,
+  "semanticEquivalenceEntries": 9,
+  "labelAdjudications": 3,
+  "evaluatorErrorsRemoved": 27,
+  "original": {
+    "answer": {
+      "correct": 164,
+      "total": 195,
+      "rate": 0.841025641025641
+    },
+    "noAnswer": {
+      "correct": 51,
+      "total": 60,
+      "rate": 0.85
+    },
+    "clarify": {
+      "correct": 29,
+      "total": 45,
+      "rate": 0.6444444444444445
+    },
+    "overallScore": {
+      "correct": 244,
+      "total": 300,
+      "rate": 0.8133333333333334
+    },
+    "decisionAccuracy": {
+      "correct": 272,
+      "total": 300,
+      "rate": 0.9066666666666666
+    }
+  },
+  "adjudicated": {
+    "answer": {
+      "correct": 191,
+      "total": 198,
+      "rate": 0.9646464646464646
+    },
+    "noAnswer": {
+      "correct": 51,
+      "total": 57,
+      "rate": 0.8947368421052632
+    },
+    "clarify": {
+      "correct": 29,
+      "total": 45,
+      "rate": 0.6444444444444445
+    },
+    "overallScore": {
+      "correct": 271,
+      "total": 300,
+      "rate": 0.9033333333333333
+    },
+    "decisionAccuracy": {
+      "correct": 275,
+      "total": 300,
+      "rate": 0.9166666666666666
+    }
+  },
+  "differencePercentagePoints": {
+    "answer": 12.362082362082361,
+    "noAnswer": 4.473684210526319,
+    "clarify": 0,
+    "overallScore": 8.999999999999996,
+    "decisionAccuracy": 1.0000000000000009
+  },
+  "unsupported": {
+    "rawModel": {
+      "numerator": 6,
+      "denominator": 300,
+      "rate": 0.02
+    },
+    "validatorAccepted": {
+      "numerator": 3,
+      "denominator": 300,
+      "rate": 0.01
+    },
+    "finalPotentiallyVisible": {
+      "numerator": 3,
+      "denominator": 300,
+      "rate": 0.01,
+      "note": "Simulated from saved validatorAccepted; no post-validator delivered response was stored."
+    }
+  },
+  "validator": {
+    "previouslyIdentifiedFalseRejectionsRemaining": 12,
+    "totalFalseRejectionsAfterAdjudication": 15,
+    "falseAcceptsRemaining": 3
+  },
+  "genuineFailuresRemaining": 29,
+  "stability": {
+    "STABLE_PASS": 89,
+    "MOSTLY_PASS": 2,
+    "MOSTLY_FAIL": 0,
+    "STABLE_FAIL": 9
+  },
+  "acceptance": {
+    "answer": true,
+    "noAnswer": false,
+    "clarify": false,
+    "unsupported": false,
+    "pass": false
+  },
+  "remainingRows": [
+    {
+      "caseId": "electronics-a-12",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "كم بوخذ التوصيل؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكلاً.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "electronics-a-12",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "كم بوخذ التوصيل؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانيًا إذا تجاوزت قيمة السلة 450 شيكل.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "electronics-a-12",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "كم بوخذ التوصيل؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "يومين",
+          "اربعة ايام عمل"
+        ],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "رسوم الشحن العادي 25 شيكلاً، ويكون الشحن مجانياً إذا تجاوزت قيمة السلة 450 شيكلاً.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 1,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 2,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "المعرض الوحيد للشركة يقع في البيرة قرب دوار المنارة، ولا يوجد فرع في نابلس.",
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "electronics-n-01",
+      "run": 3,
+      "tenantId": "gen_electronics",
+      "domain": "electronics",
+      "question": "هل عندكم فرع في نابلس؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "لا يوجد فرع في نابلس، المعرض الوحيد يقع في البيرة قرب دوار المنارة.",
+      "validatorStatus": "PARTIALLY_SUPPORTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 1,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "distribution-c-01",
+      "run": 3,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "سعر كرتونة عصير السهل 46 شيكلاً، وسعر كرتونة مياه عين البلد 31 شيكلاً.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "distribution-c-03",
+      "run": 2,
+      "tenantId": "gen_distribution",
+      "domain": "distribution",
+      "question": "بدي ارجعها",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إرجاع عبوات العصير المغلقة خلال 7 أيام من التسليم، أما المياه المبردة فلا يمكن إرجاعها.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-a-11",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بقدر اغير الموعد مرتين؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "مرة واحدة",
+          "6 ساعات"
+        ],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-01",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "قديش سعرها؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد الأصلي.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم الطلب قبل 6 ساعات من الموعد.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-02",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "بدي أغير الموعد",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "يمكن إعادة جدولة الموعد مرة واحدة دون رسوم إذا تم طلب ذلك قبل 6 ساعات من الموعد الأصلي.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 1,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 2,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "clinic-c-03",
+      "run": 3,
+      "tenantId": "gen_clinic",
+      "domain": "clinic",
+      "question": "متى موعدي؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "NO_ANSWER",
+      "answer": "",
+      "validatorStatus": "UNKNOWN",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "fashion-a-06",
+      "run": 3,
+      "tenantId": "gen_fashion",
+      "domain": "fashion",
+      "question": "مدة تبديل القطعة؟",
+      "original": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "14 يوما",
+          "الفاتورة"
+        ],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "ANSWER",
+        "expectedFacts": [
+          "14 يوما",
+          "الفاتورة"
+        ],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "مدة تبديل القطعة هي 14 يومًا، باستثناء الأقراط وقطع التخفيض النهائي.",
+      "validatorStatus": "UNSUPPORTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "الدعم عبر البريد متاح من الأحد إلى الخميس.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين التاسعة والخامسة.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "professional_services-n-03",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "هل الدعم متاح يوم الجمعة؟",
+      "original": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "NO_ANSWER",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "الدعم متاح من الأحد إلى الخميس بين الساعة التاسعة والخامسة.",
+      "validatorStatus": "SUPPORTED",
+      "validatorAccepted": true
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 1,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 2,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false
+    },
+    {
+      "caseId": "professional_services-c-02",
+      "run": 3,
+      "tenantId": "gen_services",
+      "domain": "professional_services",
+      "question": "كم بتاخد وقت؟",
+      "original": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "adjudicated": {
+        "expectedDecision": "CLARIFY",
+        "expectedFacts": [],
+        "correct": false
+      },
+      "actualDecision": "ANSWER",
+      "answer": "تستغرق باقة الانطلاق 12 يوم عمل، بينما تستغرق باقة النمو 25 يوم عمل بعد استلام المحتوى.",
+      "validatorStatus": "CONTRADICTED",
+      "validatorAccepted": false
+    }
+  ]
+}

@@ -225,13 +225,13 @@ window.Dashboard.rag = {
 
         const dom = window.Dashboard.utils;
         const options = [
-            dom.createElement('option', { text: 'كل المستندات', attributes: { value: '' } }),
-            dom.createElement('option', { text: 'النص المعرفي اليدوي (knowledge.txt)', attributes: { value: 'manual_text' } })
+            dom.createElement('option', { text: 'كل المستندات', attributes: { value: '' } })
         ];
         window.Dashboard.state.ragDocuments.forEach(d => {
-            if (d.documentId !== 'manual_text') {
-                options.push(dom.createElement('option', { text: d.originalFilename, attributes: { value: d.documentId } }));
-            }
+            options.push(dom.createElement('option', {
+                text: d.originalFilename,
+                attributes: { value: d.documentId }
+            }));
         });
         select.replaceChildren(...options);
         select.value = window.Dashboard.state.inspectorDocFilter;

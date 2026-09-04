@@ -1,0 +1,38 @@
+{
+  "companies": [
+    {
+      "tenantId": "reliability_unseen_observatory_20260904",
+      "company": "مرصد سهيل المجتمعي",
+      "domain": "astronomy_observatory",
+      "documents": [
+        {"id":"obs-visits","name":"الزيارات والبرامج.md","content":"# البرامج\nجولة القبة تستغرق 50 دقيقة وسعرها 35 شيكلاً للشخص. ليلة الرصد العائلي تستغرق ساعتين وسعرها 120 شيكلاً للعائلة حتى خمسة أشخاص. ورشة خريطة السماء تستغرق 75 دقيقة وسعرها 55 شيكلاً."},
+        {"id":"obs-hours","name":"الموقع والدوام.md","content":"# الموقع والدوام\nيقع المرصد في تل الريح، مبنى 7، الطابق الثاني، بيرزيت. الدوام الكامل هو: الأحد والثلاثاء والخميس من 16:00 إلى 22:00، والسبت من 10:00 إلى 18:00. المرصد مغلق الاثنين والأربعاء والجمعة."},
+        {"id":"obs-weather","name":"سياسة الطقس.md","content":"# سياسة الطقس\nإذا ألغى المرصد ليلة الرصد بسبب الغيوم، ينقل الحجز إلى موعد آخر دون رسوم. إذا طلب الزائر الإلغاء قبل 24 ساعة أو أكثر، يسترد المبلغ كاملاً. إذا كان المتبقي أقل من 24 ساعة فلا يوجد استرداد."},
+        {"id":"obs-access","name":"الوصول والمعدات.md","content":"# الوصول والمعدات\nالمعدات المتاحة للزوار هي القائمة الكاملة التالية:\n1. منظار شمسي\n2. تلسكوب دوبسوني\n3. خرائط نجوم ورقية\nلا يسمح بإحضار مؤشرات ليزر. المصعد متاح حتى الطابق الثاني."},
+        {"id":"obs-groups","name":"المجموعات.md","content":"# حجوزات المجموعات\nالحجز المدرسي متاح من 8 إلى 24 طالباً. للمجموعات التي تضم 16 طالباً أو أكثر خصم 10%. يجب تثبيت الحجز قبل 7 أيام على الأقل."}
+      ]
+    }
+  ],
+  "cases": [
+    {"id":"obs-a-01","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"وين المرصد؟","expectedDecision":"ANSWER","expectedFacts":["تل الريح","مبنى 7","بيرزيت"],"expectedEvidenceIds":["obs-hours"],"tags":["location"]},
+    {"id":"obs-a-02","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"جولة القبة قديش وكم مدتها؟","expectedDecision":"ANSWER","expectedFacts":["35 شيكل","50 دقيقة"],"expectedEvidenceIds":["obs-visits"],"tags":["multi_value"]},
+    {"id":"obs-a-03","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"ليلة الرصد لعيلة من خمسة كم؟","expectedDecision":"ANSWER","expectedFacts":["120 شيكل","خمسة"],"expectedEvidenceIds":["obs-visits"],"tags":["price"]},
+    {"id":"obs-a-04","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"شو دوام السبت؟","expectedDecision":"ANSWER","expectedFacts":["10:00","18:00"],"expectedEvidenceIds":["obs-hours"],"tags":["hours"]},
+    {"id":"obs-a-05","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"الأربعاء فاتحين؟","expectedDecision":"ANSWER","expectedFacts":["مغلق","الأربعاء"],"expectedEvidenceIds":["obs-hours"],"tags":["complete_schedule"]},
+    {"id":"obs-a-06","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"إذا المرصد لغى بسبب الغيم شو بصير؟","expectedDecision":"ANSWER","expectedFacts":["ينقل الحجز","دون رسوم"],"expectedEvidenceIds":["obs-weather"],"tags":["policy"]},
+    {"id":"obs-a-07","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"لغيت قبل 24 ساعة بالزبط، برجع المبلغ؟","expectedDecision":"ANSWER","expectedFacts":["المبلغ كاملا"],"expectedEvidenceIds":["obs-weather"],"tags":["numeric_boundary"]},
+    {"id":"obs-a-08","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"باقي 20 ساعة وبدي ألغي، في استرداد؟","expectedDecision":"ANSWER","expectedFacts":["لا يوجد استرداد"],"expectedEvidenceIds":["obs-weather"],"tags":["numeric_policy"]},
+    {"id":"obs-a-09","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"اعطيني كل المعدات المتاحة للزوار","expectedDecision":"ANSWER","expectedFacts":["منظار شمسي","تلسكوب دوبسوني","خرائط نجوم ورقية","القائمة الكاملة"],"expectedEvidenceIds":["obs-access"],"tags":["complete_list"]},
+    {"id":"obs-a-10","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"في كاميرا فلكية ضمن معدات الزوار؟","expectedDecision":"ANSWER","expectedFacts":["لا"],"expectedEvidenceIds":["obs-access"],"tags":["complete_list_negative"]},
+    {"id":"obs-a-11","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"مجموعة مدرسة فيها 16 طالب إلها خصم كم؟","expectedDecision":"ANSWER","expectedFacts":["10%"],"expectedEvidenceIds":["obs-groups"],"tags":["threshold"]},
+    {"id":"obs-a-12","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"25 طالب ممكن يحجزوا كمدرسة؟","expectedDecision":"ANSWER","expectedFacts":["24","لا"],"expectedEvidenceIds":["obs-groups"],"tags":["range"]},
+    {"id":"obs-n-01","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"في موقف سيارات؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["missing"]},
+    {"id":"obs-n-02","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"شو رقم الهاتف؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["missing"]},
+    {"id":"obs-n-03","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"في تذاكر متاحة هسا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["live_state"]},
+    {"id":"obs-n-04","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"هل ببيعوا تلسكوبات؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"expectedEvidenceIds":[],"tags":["related_fact"]},
+    {"id":"obs-c-01","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"قديش سعرها؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"obs-c-02","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"بدي ألغيه","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"obs-c-03","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"متى؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]},
+    {"id":"obs-c-04","tenantId":"reliability_unseen_observatory_20260904","company":"مرصد سهيل المجتمعي","domain":"astronomy_observatory","question":"وين وصلت؟","expectedDecision":"CLARIFY","expectedFacts":[],"expectedEvidenceIds":[],"tags":["ambiguous"]}
+  ]
+}

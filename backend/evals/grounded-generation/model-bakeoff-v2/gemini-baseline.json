@@ -1,0 +1,184 @@
+{
+  "model": "google/gemini-2.5-flash",
+  "source": "compatible saved Decision Semantics v2 runs",
+  "cases": 38,
+  "runs": [
+    {
+      "run": 1,
+      "metrics": {
+        "validResponses": 38,
+        "providerDependencyFailures": 0,
+        "clarify": {
+          "correct": 13,
+          "total": 15,
+          "accuracy": 0.8666666666666667
+        },
+        "noAnswer": {
+          "correct": 10,
+          "total": 12,
+          "accuracy": 0.8333333333333334
+        },
+        "answerControl": {
+          "correct": 10,
+          "total": 10,
+          "accuracy": 1
+        },
+        "unsupported": {
+          "count": 2,
+          "total": 38,
+          "rate": 0.05263157894736842
+        },
+        "missedClarify": 2,
+        "falseClarify": {
+          "count": 0,
+          "total": 20,
+          "rate": 0
+        },
+        "transitionMatrix": {
+          "ANSWER": {
+            "ANSWER": 10,
+            "NO_ANSWER": 1,
+            "CLARIFY": 0
+          },
+          "NO_ANSWER": {
+            "ANSWER": 2,
+            "NO_ANSWER": 10,
+            "CLARIFY": 0
+          },
+          "CLARIFY": {
+            "ANSWER": 1,
+            "NO_ANSWER": 1,
+            "CLARIFY": 13
+          }
+        }
+      },
+      "latency": {
+        "meanMs": 1556.9105263157894,
+        "p95Ms": 4665.3
+      },
+      "tokens": {
+        "input": 49028,
+        "output": 2972
+      },
+      "cost": 0.022138399999999996
+    },
+    {
+      "run": 2,
+      "metrics": {
+        "validResponses": 38,
+        "providerDependencyFailures": 0,
+        "clarify": {
+          "correct": 13,
+          "total": 15,
+          "accuracy": 0.8666666666666667
+        },
+        "noAnswer": {
+          "correct": 10,
+          "total": 12,
+          "accuracy": 0.8333333333333334
+        },
+        "answerControl": {
+          "correct": 10,
+          "total": 10,
+          "accuracy": 1
+        },
+        "unsupported": {
+          "count": 2,
+          "total": 38,
+          "rate": 0.05263157894736842
+        },
+        "missedClarify": 2,
+        "falseClarify": {
+          "count": 0,
+          "total": 20,
+          "rate": 0
+        },
+        "transitionMatrix": {
+          "ANSWER": {
+            "ANSWER": 10,
+            "NO_ANSWER": 1,
+            "CLARIFY": 0
+          },
+          "NO_ANSWER": {
+            "ANSWER": 2,
+            "NO_ANSWER": 10,
+            "CLARIFY": 0
+          },
+          "CLARIFY": {
+            "ANSWER": 1,
+            "NO_ANSWER": 1,
+            "CLARIFY": 13
+          }
+        }
+      },
+      "latency": {
+        "meanMs": 1006.5131578947369,
+        "p95Ms": 1842.5
+      },
+      "tokens": {
+        "input": 49028,
+        "output": 2985
+      },
+      "cost": 0.022170899999999997
+    },
+    {
+      "run": 3,
+      "metrics": {
+        "validResponses": 38,
+        "providerDependencyFailures": 0,
+        "clarify": {
+          "correct": 13,
+          "total": 15,
+          "accuracy": 0.8666666666666667
+        },
+        "noAnswer": {
+          "correct": 10,
+          "total": 12,
+          "accuracy": 0.8333333333333334
+        },
+        "answerControl": {
+          "correct": 10,
+          "total": 10,
+          "accuracy": 1
+        },
+        "unsupported": {
+          "count": 2,
+          "total": 38,
+          "rate": 0.05263157894736842
+        },
+        "missedClarify": 2,
+        "falseClarify": {
+          "count": 0,
+          "total": 20,
+          "rate": 0
+        },
+        "transitionMatrix": {
+          "ANSWER": {
+            "ANSWER": 10,
+            "NO_ANSWER": 1,
+            "CLARIFY": 0
+          },
+          "NO_ANSWER": {
+            "ANSWER": 2,
+            "NO_ANSWER": 10,
+            "CLARIFY": 0
+          },
+          "CLARIFY": {
+            "ANSWER": 1,
+            "NO_ANSWER": 1,
+            "CLARIFY": 13
+          }
+        }
+      },
+      "latency": {
+        "meanMs": 1149.9947368421053,
+        "p95Ms": 3058.9
+      },
+      "tokens": {
+        "input": 49028,
+        "output": 2977
+      },
+      "cost": 0.022150899999999994
+    }
+  ]
+}

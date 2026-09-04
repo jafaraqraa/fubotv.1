@@ -1,0 +1,656 @@
+[
+  {
+    "id": "electronics-c-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "electronics-c-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل هو متوفر الآن؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "electronics-c-03",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "بدي الضمان تبعه",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "distribution-c-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "distribution-c-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "متى بتوصل؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "distribution-c-03",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "بدي ارجعها",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "clinic-c-01",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "clinic-c-02",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "بدي أغير الموعد",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "clinic-c-03",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "متى موعدي؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "fashion-c-01",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "fashion-c-02",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "أي مقاس موجود؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "fashion-c-03",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "هل اللون متوفر؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "professional_services-c-01",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "قديش سعرها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "professional_services-c-02",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "كم بتاخد وقت؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "professional_services-c-03",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "بدي أعدلها",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "ambiguous",
+      "clarify"
+    ],
+    "experimentCohort": "ALL_CLARIFY"
+  },
+  {
+    "id": "clinic-a-11",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "بقدر اغير الموعد مرتين؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "مرة واحدة",
+      "6 ساعات"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-changes"
+    ],
+    "tags": [
+      "palestinian",
+      "multi_intent"
+    ],
+    "experimentCohort": "GENUINE_FALSE_NO_ANSWER"
+  },
+  {
+    "id": "electronics-n-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل عندكم فرع في نابلس؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "GENUINE_FALSE_ANSWER"
+  },
+  {
+    "id": "professional_services-n-03",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "هل الدعم متاح يوم الجمعة؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "no_answer"
+    ],
+    "experimentCohort": "GENUINE_FALSE_ANSWER"
+  },
+  {
+    "id": "clinic-a-01",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "مين دكتور الجلدية؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "ليان منصور"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-doctors"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "clinic-a-02",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "مين طبيب الأسرة؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "امين خليل"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-doctors"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "distribution-a-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "اقل طلب جملة كم كرتونة؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "24 كرتونة"
+    ],
+    "expectedEvidenceIds": [
+      "dist-orders"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "distribution-a-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "كرتونة عصير السهل بكم؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "46 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "dist-orders"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "electronics-a-01",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "قديش سعر لابتوب ندى 14؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2890 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "elec-products"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "electronics-a-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "ما سعر ندى 14 برو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "3490 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "elec-products"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "fashion-a-01",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "فستان سهل الزيتون بأي ألوان؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "الاسود",
+      "الزيتي"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-products"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "fashion-a-02",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "مقاسات الفستان شو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "S",
+      "XL"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-products"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "professional_services-a-01",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "باقة الانطلاق بكم وشو فيها؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2200 شيكل",
+      "شعار",
+      "دليل الوان"
+    ],
+    "expectedEvidenceIds": [
+      "svc-packages"
+    ],
+    "tags": [
+      "palestinian"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "professional_services-a-02",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "سعر باقة النمو؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "4800 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "svc-packages"
+    ],
+    "tags": [
+      "msa"
+    ],
+    "experimentCohort": "ANSWER_CONTROL"
+  },
+  {
+    "id": "clinic-n-01",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "شو تشخيص وجع الصدر؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "clinic-n-02",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "أي دواء آخذ للحساسية؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "distribution-n-01",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "هل بتوصلوا الخليل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "distribution-n-02",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "كم غرامة تأخير الدين؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "electronics-n-02",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "متى يرجع هاتف رمال X للمخزون بالضبط؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "electronics-n-03",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل بتصلحوا أجهزة أبل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "fashion-n-01",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "عندكم فرع بالخليل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "fashion-n-02",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "في لون أزرق للفستان؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "professional_services-n-01",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "هل بتعملوا تطبيق موبايل؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  },
+  {
+    "id": "professional_services-n-02",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "كم تكلفة إدارة الإعلانات؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "typo",
+      "hard_paraphrase",
+      "cross_tenant_trap",
+      "no_answer"
+    ],
+    "experimentCohort": "NO_ANSWER_CONTROL"
+  }
+]

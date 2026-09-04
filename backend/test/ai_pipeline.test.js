@@ -38,7 +38,7 @@ test('Modern Production-Grade RAG Response Generation Pipeline Suite', async (t)
         assert.strictEqual(lastMsg.role, "user");
 
         // Verify structure of the user prompt content
-        assert.ok(lastMsg.content.includes("UNTRUSTED_RETRIEVED_CONTEXT_START"));
+        assert.ok(lastMsg.content.includes("VERIFIED_EVIDENCE_START"));
         assert.ok(lastMsg.content.includes(knowledgeContext));
         assert.ok(lastMsg.content.includes("<untrusted_document"));
         assert.ok(lastMsg.content.includes("DOCUMENT_TEXT_START"));
@@ -62,6 +62,16 @@ test('Modern Production-Grade RAG Response Generation Pipeline Suite', async (t)
         const lastMsg = messages[messages.length - 1];
         assert.ok(lastMsg.content.includes("[No verified knowledge context available]"));
         assert.ok(lastMsg.content.includes(userQuestion));
+    });
+
+    await t.test('general conversation prompt requires one cohesive Palestinian reply for consecutive messages', () => {
+        const messages = PromptBuilder.buildMessages({
+            systemPrompt: 'base', conversationHistory: [], knowledgeContext: '',
+            userQuestion: 'مرحبا\nكيفك', responseMode: 'GENERAL_CONVERSATION', tenantId: 'default'
+        });
+        assert.match(messages[0].content, /south of Nablus/);
+        assert.match(messages[0].content, /ONE cohesive response/);
+        assert.match(messages.at(-1).content, /مرحبا\nكيفك/);
     });
 
     await t.test('ai.js exports retrieveContext, buildPrompt, callOpenRouter, and validateAnswer helper functions', () => {

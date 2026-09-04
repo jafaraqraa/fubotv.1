@@ -99,9 +99,9 @@ function blockOpenDomain(tenantId, reason = 'insufficient_context') {
     return 'لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.';
 }
 
-function validateWithPolicy({ answer, context, validator, tenantId }) {
+function validateWithPolicy({ answer, context, validator, tenantId, validationOptions }) {
     try {
-        return validator(answer, context);
+        return validator(answer, context, validationOptions);
     } catch (error) {
         const failOpen = enabled('RAG_FAIL_OPEN_ON_VALIDATOR', false);
         recordFallback({

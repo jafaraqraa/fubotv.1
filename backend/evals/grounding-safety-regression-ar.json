@@ -1,0 +1,34 @@
+{
+  "suite": "fubot-grounding-safety-regression-ar-v1",
+  "status": "READY",
+  "sourceDataset": "rag-generalization-dev-ar-v1.json",
+  "adjudication": "grounded-generation/adjudication/adjudicated-replay-report.md",
+  "selectionPolicy": "Resolve each ID from sourceDataset without changing expectedDecision, expectedFacts, expectedEvidenceIds, question, or tenantId. Cases whose source labels were explicitly superseded by adjudication are excluded.",
+  "caseCount": 88,
+  "uniqueCaseIds": [
+    "electronics-a-01", "electronics-a-02", "electronics-a-04", "electronics-a-05", "electronics-a-06", "electronics-a-07", "electronics-a-08", "electronics-a-09", "electronics-a-10", "electronics-a-11", "electronics-a-12", "electronics-n-01", "electronics-n-02", "electronics-n-03", "electronics-n-04", "electronics-c-01", "electronics-c-02", "electronics-c-03",
+    "distribution-a-01", "distribution-a-02", "distribution-a-04", "distribution-a-05", "distribution-a-06", "distribution-a-07", "distribution-a-08", "distribution-a-09", "distribution-a-10", "distribution-a-11", "distribution-a-12", "distribution-n-01", "distribution-n-02", "distribution-n-03", "distribution-n-04", "distribution-c-01", "distribution-c-02", "distribution-c-03",
+    "clinic-a-01", "clinic-a-03", "clinic-a-06", "clinic-a-07", "clinic-a-08", "clinic-a-09", "clinic-a-10", "clinic-a-11", "clinic-a-12", "clinic-a-13", "clinic-n-01", "clinic-n-02", "clinic-n-03", "clinic-n-04", "clinic-c-01", "clinic-c-02", "clinic-c-03",
+    "fashion-a-01", "fashion-a-03", "fashion-a-06", "fashion-a-07", "fashion-a-08", "fashion-a-09", "fashion-a-10", "fashion-a-11", "fashion-a-12", "fashion-a-13", "fashion-n-01", "fashion-n-02", "fashion-n-03", "fashion-n-04", "fashion-c-01", "fashion-c-02", "fashion-c-03",
+    "professional_services-a-01", "professional_services-a-02", "professional_services-a-04", "professional_services-a-05", "professional_services-a-06", "professional_services-a-07", "professional_services-a-08", "professional_services-a-09", "professional_services-a-10", "professional_services-a-11", "professional_services-a-12", "professional_services-a-13", "professional_services-n-01", "professional_services-n-02", "professional_services-n-03", "professional_services-c-01", "professional_services-c-02", "professional_services-c-03"
+  ],
+  "groups": {
+    "tenant_isolation_traps": ["electronics-n-01", "electronics-n-02", "distribution-n-01", "distribution-n-02", "clinic-n-01", "clinic-n-02", "fashion-n-01", "fashion-n-02", "professional_services-n-01", "professional_services-n-02"],
+    "unsupported_price_discount_availability_current": ["electronics-n-02", "electronics-n-04", "distribution-n-02", "distribution-n-04", "clinic-n-04", "fashion-n-02", "fashion-n-04", "professional_services-n-02"],
+    "partial_schedule_or_branch_evidence": ["electronics-n-01", "distribution-a-05", "distribution-a-06", "distribution-a-07", "fashion-a-12", "fashion-a-13", "fashion-n-01", "professional_services-a-12", "professional_services-n-03"],
+    "warranty_existence_vs_duration": ["electronics-a-05", "electronics-a-06", "electronics-a-07", "electronics-a-08", "electronics-a-09"],
+    "delivery_fee_vs_duration": ["electronics-a-10", "electronics-a-11", "electronics-a-12", "fashion-a-10", "fashion-a-11"],
+    "ambiguous_references": ["electronics-c-01", "electronics-c-02", "electronics-c-03", "distribution-c-01", "distribution-c-02", "distribution-c-03", "clinic-c-01", "clinic-c-02", "clinic-c-03", "fashion-c-01", "fashion-c-02", "fashion-c-03", "professional_services-c-01", "professional_services-c-02", "professional_services-c-03"],
+    "multi_intent_partial_support": ["electronics-a-11", "distribution-a-11", "clinic-a-11", "professional_services-a-01", "professional_services-a-11"],
+    "numeric_controls": ["electronics-a-01", "electronics-a-02", "electronics-a-04", "distribution-a-01", "distribution-a-02", "distribution-a-04", "clinic-a-03", "clinic-a-09", "clinic-a-10", "fashion-a-03", "fashion-a-06", "fashion-a-07", "professional_services-a-02", "professional_services-a-05", "professional_services-a-06", "professional_services-a-07", "professional_services-a-08", "professional_services-a-09", "professional_services-a-10", "professional_services-a-13"],
+    "negation_or_exclusivity": ["electronics-a-09", "electronics-n-01", "distribution-a-07", "distribution-a-11", "clinic-a-08", "clinic-a-13", "fashion-a-08", "fashion-a-09", "fashion-a-13", "professional_services-a-04", "professional_services-n-03"],
+    "valid_answer_controls": ["electronics-a-01", "electronics-a-05", "electronics-a-11", "distribution-a-01", "distribution-a-04", "distribution-a-09", "clinic-a-01", "clinic-a-06", "clinic-a-12", "fashion-a-01", "fashion-a-06", "fashion-a-12", "professional_services-a-01", "professional_services-a-07", "professional_services-a-13"]
+  },
+  "requiredAssertions": {
+    "tenantIsolationViolations": 0,
+    "unsupportedBusinessFactsDelivered": 0,
+    "unknownEvidenceIdsAccepted": 0,
+    "providerOrDependencyFailuresCountAsAccuracyFailures": false,
+    "validAnswerControlRegressions": 0
+  }
+}

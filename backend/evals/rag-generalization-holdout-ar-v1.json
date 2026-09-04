@@ -1,0 +1,919 @@
+[
+  {
+    "id": "electronics-a-14",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "بقدر ارجع جهاز ما فتحته بعد 8 ايام؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "يمكن",
+      "10 ايام"
+    ],
+    "expectedEvidenceIds": [
+      "elec-returns"
+    ],
+    "tags": [
+      "palestinian"
+    ]
+  },
+  {
+    "id": "electronics-a-15",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "القطعة مخفضة، بقدر ارجعها؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "الملحقات المخفضة",
+      "لا ترد"
+    ],
+    "expectedEvidenceIds": [
+      "elec-returns"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "electronics-a-16",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "رمال X خلص، شو بقدر اعمل؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "طلب تنبيه",
+      "عودته"
+    ],
+    "expectedEvidenceIds": [
+      "elec-returns"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "electronics-a-17",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "شو خصم رمال X الحالي؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "12%",
+      "رمال X"
+    ],
+    "expectedEvidenceIds": [
+      "elec-offers"
+    ],
+    "tags": [
+      "palestinian",
+      "temporal"
+    ]
+  },
+  {
+    "id": "electronics-a-18",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "عرض السماعات لسا شغال؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "انتهى",
+      "31 اغسطس 2026"
+    ],
+    "expectedEvidenceIds": [
+      "elec-offers"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "electronics-a-19",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "بالصورة شو لون لافتة المعرض ووين مكانه؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "اللافتة الزرقاء",
+      "البيرة"
+    ],
+    "expectedEvidenceIds": [
+      "elec-contact"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "multi_intent",
+      "image"
+    ]
+  },
+  {
+    "id": "electronics-a-20",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "سعر ندى 14 وضمانه؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2890 شيكل",
+      "24 شهرا"
+    ],
+    "expectedEvidenceIds": [
+      "elec-products",
+      "elec-warranty"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "electronics-n-05",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل خصم السماعات فعال اليوم؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "no_answer"
+    ]
+  },
+  {
+    "id": "electronics-c-04",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "متى بوصل؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "electronics-c-05",
+    "tenantId": "gen_electronics",
+    "company": "برق تك",
+    "domain": "electronics",
+    "question": "هل العرض بشمله؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "distribution-a-14",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "المي المبردة بترجع؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "لا ترجع"
+    ],
+    "expectedEvidenceIds": [
+      "dist-damage"
+    ],
+    "tags": [
+      "palestinian"
+    ]
+  },
+  {
+    "id": "distribution-a-15",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "متى زيارة المندوب بتكون مجانية؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "60 كرتونة شهريا"
+    ],
+    "expectedEvidenceIds": [
+      "dist-visits"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "distribution-a-16",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "ساعات الاستلام من المستودع؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "الثامنة صباحا",
+      "الرابعة عصرا"
+    ],
+    "expectedEvidenceIds": [
+      "dist-visits"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "distribution-a-17",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "وجود الصنف بالمستودع يعني محجوز؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "لا يضمن حجزه",
+      "تاكيد الطلب"
+    ],
+    "expectedEvidenceIds": [
+      "dist-visits"
+    ],
+    "tags": [
+      "palestinian",
+      "temporal"
+    ]
+  },
+  {
+    "id": "distribution-a-18",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "في حافز فعال هسا لعصير السهل؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "120 كرتونة",
+      "6 كرتونات اضافية"
+    ],
+    "expectedEvidenceIds": [
+      "dist-offer"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "distribution-a-19",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "طلبت 120 كرتونة، شو الهدية الحالية؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "6 كرتونات",
+      "مجانا"
+    ],
+    "expectedEvidenceIds": [
+      "dist-offer"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "distribution-a-20",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "اقل طلب وسعر كرتونة العصير؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "24 كرتونة",
+      "46 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "dist-orders"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "distribution-n-05",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "هل حافز 6 كراتين مستمر الشهر القادم؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "no_answer"
+    ]
+  },
+  {
+    "id": "distribution-c-04",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "هل عليه خصم؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "distribution-c-05",
+    "tenantId": "gen_distribution",
+    "company": "سند للتوزيع",
+    "domain": "distribution",
+    "question": "بدي زيارة للمحل",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "clinic-a-14",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "كيف بقدر ادفع؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "نقدا",
+      "البطاقة"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-insurance"
+    ],
+    "tags": [
+      "palestinian"
+    ]
+  },
+  {
+    "id": "clinic-a-15",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "فحص السكر بده صيام؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "8 ساعات",
+      "الماء"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-tests"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "clinic-a-16",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "فيتامين د لازم صيام؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "لا يحتاج صياما"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-tests"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "clinic-a-17",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "متى بتطلع نتائج المختبر؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "يومي عمل",
+      "بوابة المريض"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-tests"
+    ],
+    "tags": [
+      "palestinian",
+      "temporal"
+    ]
+  },
+  {
+    "id": "clinic-a-18",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "الدكتورة ليان موجودة هالأسبوع؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "الثلاثاء",
+      "الاربعاء"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-availability"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "clinic-a-19",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "موعد جلدية وسعره ومين الدكتورة؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "ليان منصور",
+      "170 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-doctors"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "clinic-a-20",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "إلغاء قبل 13 ساعة وإعادة الجدولة شو وضعهم؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "دون رسوم",
+      "مرة واحدة"
+    ],
+    "expectedEvidenceIds": [
+      "clinic-changes"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "clinic-n-05",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "هل الدكتورة ليان متاحة الأسبوع القادم؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "no_answer"
+    ]
+  },
+  {
+    "id": "clinic-c-04",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "هل التأمين بشملها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "clinic-c-05",
+    "tenantId": "gen_clinic",
+    "company": "عيادة نبع الطبية",
+    "domain": "clinic",
+    "question": "مين الدكتور المناسب؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "fashion-a-14",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "الفستان الزيتي M موجود؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "متوفر"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-stock"
+    ],
+    "tags": [
+      "palestinian"
+    ]
+  },
+  {
+    "id": "fashion-a-15",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "الأسود XL متوفر؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "نافد"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-stock"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "fashion-a-16",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "الأبيض L من كرمل موجود؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "متوفر"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-stock"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "fashion-a-17",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "المخزون بالموقع يعني محجوز؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "لا يمثل حجزا",
+      "كل ساعتين"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-stock"
+    ],
+    "tags": [
+      "palestinian",
+      "temporal"
+    ]
+  },
+  {
+    "id": "fashion-a-18",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "شو تنزيل الفستان الحالي؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "18%",
+      "باستثناء اللون الاسود"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-current-sale"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "fashion-a-19",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "عرض الثلاث قطع شغال هسا؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "انتهى",
+      "20 اغسطس 2026"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-expired"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "fashion-a-20",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "سعر الفستان وشحن سلة 400؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "260 شيكل",
+      "مجاني"
+    ],
+    "expectedEvidenceIds": [
+      "fashion-products",
+      "fashion-shipping"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "fashion-n-05",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "بتفصلوا فساتين حسب الطلب؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "no_answer"
+    ]
+  },
+  {
+    "id": "fashion-c-04",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "بدي أبدلها",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "fashion-c-05",
+    "tenantId": "gen_fashion",
+    "company": "خيط وزيتونة",
+    "domain": "fashion",
+    "question": "هل العرض شاملها؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "professional_services-a-14",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "الانطلاق فيها دعم بعد التسليم؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "14 يوما"
+    ],
+    "expectedEvidenceIds": [
+      "svc-support"
+    ],
+    "tags": [
+      "palestinian"
+    ]
+  },
+  {
+    "id": "professional_services-a-15",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "لغيت قبل جلسة الاكتشاف شو برجعلي؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "استرداد كامل"
+    ],
+    "expectedEvidenceIds": [
+      "svc-cancel"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "professional_services-a-16",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "بعد جلسة الاكتشاف كم بخصموا؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "25%"
+    ],
+    "expectedEvidenceIds": [
+      "svc-cancel"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase"
+    ]
+  },
+  {
+    "id": "professional_services-a-17",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "بقدر أأجل البداية؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "مرة واحدة",
+      "30 يوما"
+    ],
+    "expectedEvidenceIds": [
+      "svc-cancel"
+    ],
+    "tags": [
+      "palestinian",
+      "temporal"
+    ]
+  },
+  {
+    "id": "professional_services-a-18",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "شو عرض الشركات الجديدة الحالي؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "باقة النمو",
+      "خمس صفحات",
+      "دون رسوم"
+    ],
+    "expectedEvidenceIds": [
+      "svc-promo"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "professional_services-a-19",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "باقة النمو مدتها ودعمها؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "25 يوم عمل",
+      "60 يوما"
+    ],
+    "expectedEvidenceIds": [
+      "svc-timeline",
+      "svc-support"
+    ],
+    "tags": [
+      "palestinian",
+      "typo",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "professional_services-a-20",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "سعر الانطلاق وكتابة المحتوى؟",
+    "expectedDecision": "ANSWER",
+    "expectedFacts": [
+      "2200 شيكل",
+      "600 شيكل"
+    ],
+    "expectedEvidenceIds": [
+      "svc-packages",
+      "svc-revisions"
+    ],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "multi_intent"
+    ]
+  },
+  {
+    "id": "professional_services-n-05",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "بتضمنوا زيادة المبيعات؟",
+    "expectedDecision": "NO_ANSWER",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "hard_paraphrase",
+      "temporal",
+      "no_answer"
+    ]
+  },
+  {
+    "id": "professional_services-c-04",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "هل الدعم شامل؟",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "palestinian",
+      "ambiguous",
+      "clarify"
+    ]
+  },
+  {
+    "id": "professional_services-c-05",
+    "tenantId": "gen_services",
+    "company": "مرتكز للاستشارات",
+    "domain": "professional_services",
+    "question": "بدي ألغي المشروع",
+    "expectedDecision": "CLARIFY",
+    "expectedFacts": [],
+    "expectedEvidenceIds": [],
+    "tags": [
+      "msa",
+      "ambiguous",
+      "clarify"
+    ]
+  }
+]
