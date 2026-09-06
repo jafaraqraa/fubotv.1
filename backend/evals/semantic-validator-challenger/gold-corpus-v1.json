@@ -1,0 +1,4606 @@
+{
+  "version": 1,
+  "frozenAt": "2026-09-04",
+  "labelPolicy": "Labels are independently adjudicated from tenant evidence; production decisions are not ground truth.",
+  "unseenTenant": {
+    "tenant": "unseen-sourdough",
+    "sector": "artisan sourdough bakery",
+    "documents": [
+      {
+        "id": "u-food-1",
+        "title": "التخمير",
+        "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+      },
+      {
+        "id": "u-food-2",
+        "title": "حرارة الخَبز",
+        "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+      },
+      {
+        "id": "u-food-3",
+        "title": "المكونات",
+        "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+      },
+      {
+        "id": "u-food-4",
+        "title": "التوصيل",
+        "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+      },
+      {
+        "id": "u-food-5",
+        "title": "الحساسية",
+        "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+      },
+      {
+        "id": "u-food-6",
+        "title": "الطلب",
+        "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+      }
+    ]
+  },
+  "rows": [
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-1",
+      "tenant": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "سعر الفحص الشامل مئة وعشرون شيكلاً.",
+      "evidence": [
+        {
+          "id": "clinic-e-1",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-2",
+      "tenant": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "سعر الفحص الشامل مئة وعشرون شيكل.",
+      "evidence": [
+        {
+          "id": "clinic-e-2",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-3",
+      "tenant": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "حسب المعلومات المتاحة، سعر الفحص الشامل مئة وعشرون شيكلاً.",
+      "evidence": [
+        {
+          "id": "clinic-e-3",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-4",
+      "tenant": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "سعر الفحص الشامل مئة وعشرون شيكلاً.",
+      "evidence": [
+        {
+          "id": "clinic-e-4",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-5",
+      "tenant": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-5",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-6",
+      "tenant": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-6",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-7",
+      "tenant": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "حسب المعلومات المتاحة، تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-7",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-7"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-8",
+      "tenant": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-8",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-8"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-9",
+      "tenant": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-9",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-9"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-10",
+      "tenant": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-10",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-10"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-11",
+      "tenant": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "حسب المعلومات المتاحة، تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-11",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-11"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-12",
+      "tenant": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-12",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-12"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-13",
+      "tenant": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "إنجاز باقة النمو يحتاج خمسة وعشرين يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-13",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-13"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-14",
+      "tenant": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "إنجاز باقة النمو يحتاج 25 يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-14",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-14"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-15",
+      "tenant": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "حسب المعلومات المتاحة، إنجاز باقة النمو يحتاج خمسة وعشرين يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-15",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-15"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-16",
+      "tenant": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "إنجاز باقة النمو يحتاج خمسة وعشرين يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-16",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-16"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-17",
+      "tenant": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "الدفع المتاح نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-17",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-17"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-18",
+      "tenant": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "الدفع المتاح نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-18",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-18"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-19",
+      "tenant": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "حسب المعلومات المتاحة، الدفع المتاح نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-19",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-19"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-20",
+      "tenant": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "الدفع المتوفر نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-20",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-20"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-21",
+      "tenant": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-21",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-21"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative-membership",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-22",
+      "tenant": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-22",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-22"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative-membership",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-23",
+      "tenant": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "حسب المعلومات المتاحة، الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-23",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-23"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative-membership",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-24",
+      "tenant": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-24",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-24"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative-membership",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-25",
+      "tenant": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-25",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-25"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-26",
+      "tenant": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-26",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-26"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-27",
+      "tenant": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "حسب المعلومات المتاحة، تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-27",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-27"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-28",
+      "tenant": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-28",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-28"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-29",
+      "tenant": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "مدة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-29",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-29"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-30",
+      "tenant": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "مدة الحصة 120 دقيقة.",
+      "evidence": [
+        {
+          "id": "ceramics-e-30",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-30"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-31",
+      "tenant": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "حسب المعلومات المتاحة، مدة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-31",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-31"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-32",
+      "tenant": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "فترة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-32",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-32"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-33",
+      "tenant": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-33",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-33"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-34",
+      "tenant": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-34",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-34"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-35",
+      "tenant": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "حسب المعلومات المتاحة، يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-35",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-35"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-36",
+      "tenant": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-36",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-36"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "temporal",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-37",
+      "tenant": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "العدسات المتاحة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-37",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-37"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-38",
+      "tenant": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "العدسات المتاحة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-38",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-38"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-39",
+      "tenant": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "حسب المعلومات المتاحة، العدسات المتاحة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-39",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-39"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-40",
+      "tenant": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "العدسات المتوفرة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-40",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-40"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-41",
+      "tenant": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "الشحن مجاني للطلبات التي قيمتها 350 شيكلاً أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-41",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-41"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-42",
+      "tenant": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "الشحن مجاني للطلبات التي قيمتها 350 شيكل أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-42",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-42"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-43",
+      "tenant": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "حسب المعلومات المتاحة، الشحن مجاني للطلبات التي قيمتها 350 شيكلاً أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-43",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-43"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-44",
+      "tenant": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "الشحن مجاني للطلبات التي قيمتها 350 شيكلاً أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-44",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-44"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-45",
+      "tenant": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-45",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-45"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-46",
+      "tenant": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-46",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-46"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-47",
+      "tenant": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "حسب المعلومات المتاحة، كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-47",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-47"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-48",
+      "tenant": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-48",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-48"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-49",
+      "tenant": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-49",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-49"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "conditional-policy",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-50",
+      "tenant": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-50",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-50"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "conditional-policy",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-51",
+      "tenant": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "حسب المعلومات المتاحة، الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-51",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-51"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "conditional-policy",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-52",
+      "tenant": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-52",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-52"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "conditional-policy",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-53",
+      "tenant": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-53",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-53"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-54",
+      "tenant": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-54",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-54"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-55",
+      "tenant": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "حسب المعلومات المتاحة، يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-55",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-55"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-56",
+      "tenant": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-56",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-56"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-57",
+      "tenant": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-57",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-57"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "history-resolved-referent",
+      "sourceDataset": "frozen-artifact-derived"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-58",
+      "tenant": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-58",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-58"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "history-resolved-referent",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-59",
+      "tenant": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "حسب المعلومات المتاحة، ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-59",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-59"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "history-resolved-referent",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "id": "sp-60",
+      "tenant": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-60",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-60"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "history-resolved-referent",
+      "sourceDataset": "supported-paraphrase-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-numeric",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-1-numeric",
+          "tenantId": "control-1",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-numeric",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-numeric",
+          "tenantId": "control-1",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-threshold",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-threshold",
+          "tenantId": "control-1",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-threshold",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-1-threshold",
+          "tenantId": "control-1",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-temporal",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-1-temporal",
+          "tenantId": "control-1",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-temporal",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-1-temporal",
+          "tenantId": "control-1",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-negative",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-negative",
+          "tenantId": "control-1",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-complete-list",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-complete-list",
+          "tenantId": "control-1",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "complete-list",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-not-proven",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-1-not-proven",
+          "tenantId": "control-1",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-not-proven",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-not-proven",
+          "tenantId": "control-1",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-1-conditional-policy",
+      "tenant": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-1-conditional-policy",
+          "tenantId": "control-1",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "conditional-policy",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-numeric",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-2-numeric",
+          "tenantId": "control-2",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-numeric",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-numeric",
+          "tenantId": "control-2",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-threshold",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-threshold",
+          "tenantId": "control-2",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-threshold",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-2-threshold",
+          "tenantId": "control-2",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-temporal",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-2-temporal",
+          "tenantId": "control-2",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-temporal",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-2-temporal",
+          "tenantId": "control-2",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-negative",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-negative",
+          "tenantId": "control-2",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-complete-list",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-complete-list",
+          "tenantId": "control-2",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "complete-list",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-not-proven",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-2-not-proven",
+          "tenantId": "control-2",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-not-proven",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-not-proven",
+          "tenantId": "control-2",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-2-conditional-policy",
+      "tenant": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-2-conditional-policy",
+          "tenantId": "control-2",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "conditional-policy",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-numeric",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-3-numeric",
+          "tenantId": "control-3",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-numeric",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-numeric",
+          "tenantId": "control-3",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-threshold",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-threshold",
+          "tenantId": "control-3",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-threshold",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-3-threshold",
+          "tenantId": "control-3",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-temporal",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-3-temporal",
+          "tenantId": "control-3",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-temporal",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-3-temporal",
+          "tenantId": "control-3",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-negative",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-negative",
+          "tenantId": "control-3",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-complete-list",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-complete-list",
+          "tenantId": "control-3",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "complete-list",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-not-proven",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-3-not-proven",
+          "tenantId": "control-3",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-not-proven",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-not-proven",
+          "tenantId": "control-3",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-3-conditional-policy",
+      "tenant": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-3-conditional-policy",
+          "tenantId": "control-3",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "conditional-policy",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-numeric",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-4-numeric",
+          "tenantId": "control-4",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-numeric",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-numeric",
+          "tenantId": "control-4",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-threshold",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-threshold",
+          "tenantId": "control-4",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-threshold",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-4-threshold",
+          "tenantId": "control-4",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-temporal",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-4-temporal",
+          "tenantId": "control-4",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-temporal",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-4-temporal",
+          "tenantId": "control-4",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-negative",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-negative",
+          "tenantId": "control-4",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-complete-list",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-complete-list",
+          "tenantId": "control-4",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "complete-list",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-not-proven",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-4-not-proven",
+          "tenantId": "control-4",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-not-proven",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-not-proven",
+          "tenantId": "control-4",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "id": "hn-4-conditional-policy",
+      "tenant": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-4-conditional-policy",
+          "tenantId": "control-4",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "conditional-policy",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-numeric",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-5-numeric",
+          "tenantId": "other-tenant",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-numeric",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-numeric",
+          "tenantId": "other-tenant",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-threshold",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-threshold",
+          "tenantId": "other-tenant",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-threshold"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-threshold",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-5-threshold",
+          "tenantId": "other-tenant",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-threshold"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-temporal",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-5-temporal",
+          "tenantId": "other-tenant",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-temporal",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-5-temporal",
+          "tenantId": "other-tenant",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-negative",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-negative",
+          "tenantId": "other-tenant",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-negative"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-complete-list",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-complete-list",
+          "tenantId": "other-tenant",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-complete-list"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-not-proven",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-5-not-proven",
+          "tenantId": "other-tenant",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-not-proven",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-not-proven",
+          "tenantId": "other-tenant",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "id": "hn-5-conditional-policy",
+      "tenant": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-5-conditional-policy",
+          "tenantId": "other-tenant",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-conditional-policy"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "cross-tenant-controls",
+      "sourceDataset": "hard-negative-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-1",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مدة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-2",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مدة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-3",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "سعر الرغيف 12 شيكل.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-4",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 درجة مئوية.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-5",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 فهرنهايت.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-6",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "تستغرق عملية الخبز 230 دقيقة.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-7",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المكونات هي الدقيق والماء والملح.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-8",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "السكر من مكونات الوصفة.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative-membership",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-9",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مصدر الدقيق محلي.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-10",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متاح الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-11",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متاح يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-12",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل مجاني يوم الثلاثاء.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-13",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "قد تحتوي المنتجات على آثار مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-14",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المنتجات مضمونة الخلو من المكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-15",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "كل المنتجات تحتوي مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-16",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-17",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 19 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": false,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-18",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً يحصل على خصم.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-19",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مدة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-20",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مدة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-21",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، سعر الرغيف 12 شيكل.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-22",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، حرارة الخبز 230 درجة مئوية.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-23",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، حرارة الخبز 230 فهرنهايت.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-24",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، تستغرق عملية الخبز 230 دقيقة.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-25",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، المكونات هي الدقيق والماء والملح.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-26",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، السكر من مكونات الوصفة.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative-membership",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-27",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مصدر الدقيق محلي.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-28",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل متاح الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-29",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل متاح يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-30",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل مجاني يوم الثلاثاء.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-31",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، قد تحتوي المنتجات على آثار مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-32",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، المنتجات مضمونة الخلو من المكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-33",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، كل المنتجات تحتوي مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-34",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 20 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-35",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 19 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-36",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 20 رغيفاً يحصل على خصم.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-37",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "فترة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "duration",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-38",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "فترة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-39",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "سعر الرغيف 12 شيكل.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-40",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 درجة مئوية.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-41",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 فهرنهايت.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-42",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "تستغرق عملية الخبز 230 دقيقة.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "numeric",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-43",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المكونات هي الدقيق والماء والملح.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "complete-list",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-44",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "السكر من مكونات الوصفة.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative-membership",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-45",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مصدر الدقيق محلي.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": true,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-46",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متوفر الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "multi-value",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": true,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-47",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متوفر يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "temporal",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-48",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل مجاني يوم الثلاثاء.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-49",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "قد تحتوي المنتجات على آثار مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": true,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-50",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المنتجات مضمونة الخلو من المكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "negative",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": false,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-51",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "كل المنتجات تحتوي مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": false,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-52",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-53",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 19 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "category": "threshold",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    },
+    {
+      "directOrDerived": "direct",
+      "numeric": true,
+      "temporal": false,
+      "negative": false,
+      "completeList": false,
+      "hardNegative": true,
+      "disagreementProne": true,
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted.",
+      "id": "unseen-54",
+      "tenant": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً يحصل على خصم.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "category": "not-proven",
+      "sourceDataset": "unseen-sourdough-frozen-v1"
+    }
+  ]
+}

@@ -126,8 +126,8 @@ function claimSurvivesDelivery(claim, deliveredAnswer) {
 }
 
 function explicitNegationPass(claimText, evidence, numericSafety = 'NOT_APPLICABLE') {
-    const claim = normalize(claimText);
-    const source = normalize(evidence);
+    const claim = normalize(String(claimText || '').replace(/^\s*لا\s*[,،]\s*/, '')).replace(/(?:^|\s)فلا\s/gu,' لا ');
+    const source = normalize(evidence).replace(/(?:^|\s)فلا\s/gu,' لا ');
     const claimNegative = NEGATION_MARKER.test(claim);
     const claimExclusive = EXCLUSIVE_MARKER.test(claim);
     if (!claimNegative && !claimExclusive) return true;

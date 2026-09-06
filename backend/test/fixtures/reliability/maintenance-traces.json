@@ -1,0 +1,922 @@
+[
+  {
+    "i": 10,
+    "raw": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+    "requestId": "dbfb7526-d10f-42c1-a406-b9b44d3320e9",
+    "gate": {
+      "query": "الـHome 5K عليه خصم؟",
+      "chunks": [
+        {
+          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.77428932,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.65027712,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "طيب لو كانوا 15 لوح؟"
+        },
+        {
+          "role": "assistant",
+          "content": "300 شيكل."
+        },
+        {
+          "role": "user",
+          "content": "طيب لو كانوا 15 لوح؟"
+        },
+        {
+          "role": "assistant",
+          "content": "300 شيكل"
+        },
+        {
+          "role": "user",
+          "content": "فحص الإنفرتر بدون قطع قديش؟"
+        },
+        {
+          "role": "assistant",
+          "content": "120 شيكل."
+        }
+      ],
+      "tenantId": "default"
+    },
+    "boundary": {
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "question": "الـHome 5K عليه خصم؟",
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "serverEvidence": [
+        {
+          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.77428932,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.65027712,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "validation": {
+        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "overallStatus": "CONTRADICTED",
+        "validationState": "CONTRADICTED",
+        "confidenceScore": 0,
+        "confidenceLabel": "Reject",
+        "evidenceCoverage": 0,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+            "sourceText": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+            "originalCompoundClaim": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+            "propositionText": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "CONTRADICTED",
+            "confidence": 0,
+            "evidenceChunkIds": [],
+            "similarity": 0.3648,
+            "keywordOverlap": 0.6154,
+            "citationCoverage": 0,
+            "missingEvidence": true,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+            "matchedSentence": "للباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.",
+            "semanticScore": 0.3648,
+            "numericResult": {
+              "relation": "UNKNOWN",
+              "reason": "unit_missing",
+              "claimQuantities": [
+                {
+                  "value": 5,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 18700,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 18000,
+                  "unit": "UNSPECIFIED",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 18000,
+                  "unit": "ILS",
+                  "operator": ">="
+                },
+                {
+                  "value": 5,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "CONTRADICTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [
+          "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000)."
+        ],
+        "ignoredPromptInjectionChunks": [
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a"
+        ],
+        "uniqueEvidenceChunks": 2,
+        "durationMs": 78.285
+      },
+      "upstreamDecision": null,
+      "shadowMode": false,
+      "enforcementActive": true
+    }
+  },
+  {
+    "i": 11,
+    "raw": "لا. Home 3K غير مؤهلة لخصم 5%.",
+    "requestId": "47683c35-93b5-40b9-86bb-519fb21bdf46",
+    "gate": {
+      "query": "طيب Home 3K عليه نفس الخصم؟",
+      "chunks": [
+        {
+          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.8186370133333333,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.72025496,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "طيب لو كانوا 15 لوح؟"
+        },
+        {
+          "role": "assistant",
+          "content": "300 شيكل"
+        },
+        {
+          "role": "user",
+          "content": "فحص الإنفرتر بدون قطع قديش؟"
+        },
+        {
+          "role": "assistant",
+          "content": "120 شيكل."
+        },
+        {
+          "role": "user",
+          "content": "الـHome 5K عليه خصم؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        }
+      ],
+      "tenantId": "default"
+    },
+    "boundary": {
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "question": "طيب Home 3K عليه نفس الخصم؟",
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "serverEvidence": [
+        {
+          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.8186370133333333,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.72025496,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "validation": {
+        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "overallStatus": "UNSUPPORTED",
+        "validationState": "UNSUPPORTED",
+        "confidenceScore": 0.2734,
+        "confidenceLabel": "Reject",
+        "evidenceCoverage": 0,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "لا.",
+            "sourceText": "لا.",
+            "originalCompoundClaim": "لا.",
+            "propositionText": "لا.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": false,
+            "classification": "UNKNOWN",
+            "confidence": 0.5,
+            "evidenceChunkIds": [],
+            "similarity": 0,
+            "keywordOverlap": 0,
+            "citationCoverage": 0,
+            "missingEvidence": false,
+            "contradictionScore": 0
+          },
+          {
+            "id": "claim-2",
+            "text": "Home 3K غير مؤهلة لخصم 5%.",
+            "sourceText": "Home 3K غير مؤهلة لخصم 5%.",
+            "originalCompoundClaim": "Home 3K غير مؤهلة لخصم 5%.",
+            "propositionText": "Home 3K غير مؤهلة لخصم 5%.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-2",
+            "factual": true,
+            "classification": "UNSUPPORTED",
+            "confidence": 0.3453,
+            "evidenceChunkIds": [],
+            "similarity": 0.6433,
+            "keywordOverlap": 0.6667,
+            "citationCoverage": 0,
+            "missingEvidence": true,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+            "matchedSentence": "Home 3K غير مؤهلة.",
+            "semanticScore": 0.6433,
+            "numericResult": {
+              "relation": "UNKNOWN",
+              "claimQuantities": [
+                {
+                  "value": 5,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": true,
+              "evidenceNegated": true,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "UNSUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [
+          "Home 3K غير مؤهلة لخصم 5%."
+        ],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a"
+        ],
+        "uniqueEvidenceChunks": 2,
+        "durationMs": 40.45
+      },
+      "upstreamDecision": null,
+      "shadowMode": false,
+      "enforcementActive": true
+    }
+  },
+  {
+    "i": 22,
+    "raw": null,
+    "requestId": "7cc39521-b6df-48d9-93e5-ee4ed0e3e48b",
+    "gate": {
+      "query": "مش كان مكتب رام الله يسكر السبت عالواحدة؟",
+      "chunks": [
+        {
+          "text": "لا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل\n\nبعض الشركات المعتمدة قد تحصل على حساب آجل بموافقة مالية مسبقة.\n\nتنفيذ مشروع سابق أو دفع فاتورة سابقة لا يمنح حسابًا آجلًا تلقائيًا.\n\nلا توجد مدة ائتمان عامة موحدة لجميع الشركات.\n\n14. معلومات تاريخية\n\nحتى 2026-04-30 كان مكتب رام الله يغلق السبت الساعة 13:00.\n\nمن 2026-05-01 أصبحت ساعات السبت الحالية لمكتب رام الله 09:00–15:00.\n\nعند السؤال عن الوضع الحالي استخدم السياسة الحالية، لا التاريخية.\n\n15. معلومات غير متوفرة عمدًا\n\nلا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_7_75bac687de92",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.7373950628571428,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6944016022857143,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "شو كل مكاتبكم الحالية؟"
+        },
+        {
+          "role": "assistant",
+          "content": "مكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\nهذه قائمة المكاتب الحالية الكاملة.\nلا يوجد مكتب حالي في جنين أو طولكرم أو الخليل."
+        },
+        {
+          "role": "user",
+          "content": "مكتب نابلس بفتح الجمعة؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا، الجمعة مغلق."
+        },
+        {
+          "role": "user",
+          "content": "رام الله السبت لأي ساعة؟"
+        },
+        {
+          "role": "assistant",
+          "content": "السبت 09:00–15:00."
+        }
+      ],
+      "tenantId": "default"
+    }
+  },
+  {
+    "i": 25,
+    "raw": "لا. الكتالوج مش مخزون حي.",
+    "requestId": "e6b99d70-8d67-4346-80d5-6b0ae96d7f71",
+    "gate": {
+      "query": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟",
+      "chunks": [
+        {
+          "text": "إذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.\n\nالكتالوج لا يساوي مخزونًا حيًا، ونطاق الخدمة لا يساوي موعدًا متاحًا.\n\nفي الحسابات استخدم فقط القيم والقواعد المثبتة هنا.\n\nإذا كانت المعلومة غير موجودة أو تحتاج بيانات حية، لا تفترضها.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.66596328,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.659616376,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "مش كان مكتب رام الله يسكر السبت عالواحدة؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        },
+        {
+          "role": "user",
+          "content": "طيب هسّا عالواحدة ولا عالثلاثة؟"
+        },
+        {
+          "role": "assistant",
+          "content": "عالثلاثة. السبت 09:00–15:00."
+        },
+        {
+          "role": "user",
+          "content": "عندكم بطارية 10kWh متوفرة هسّا؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        }
+      ],
+      "tenantId": "default"
+    },
+    "boundary": {
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "question": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟",
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "serverEvidence": [
+        {
+          "text": "إذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.\n\nالكتالوج لا يساوي مخزونًا حيًا، ونطاق الخدمة لا يساوي موعدًا متاحًا.\n\nفي الحسابات استخدم فقط القيم والقواعد المثبتة هنا.\n\nإذا كانت المعلومة غير موجودة أو تحتاج بيانات حية، لا تفترضها.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.66596328,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.659616376,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "validation": {
+        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "overallStatus": "UNSUPPORTED",
+        "validationState": "UNSUPPORTED",
+        "confidenceScore": 0.426,
+        "confidenceLabel": "Low",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "لا.",
+            "sourceText": "لا.",
+            "originalCompoundClaim": "لا.",
+            "propositionText": "لا.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": false,
+            "classification": "UNKNOWN",
+            "confidence": 0.5,
+            "evidenceChunkIds": [],
+            "similarity": 0,
+            "keywordOverlap": 0,
+            "citationCoverage": 0,
+            "missingEvidence": false,
+            "contradictionScore": 0
+          },
+          {
+            "id": "claim-2",
+            "text": "الكتالوج مش مخزون حي.",
+            "sourceText": "الكتالوج مش مخزون حي.",
+            "originalCompoundClaim": "الكتالوج مش مخزون حي.",
+            "propositionText": "الكتالوج مش مخزون حي.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-2",
+            "factual": true,
+            "classification": "UNSUPPORTED",
+            "confidence": 0.7674,
+            "evidenceChunkIds": [
+              "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b"
+            ],
+            "similarity": 0.0647,
+            "keywordOverlap": 0.25,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
+            "matchedSentence": "قاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.",
+            "semanticScore": 0.0647,
+            "numericResult": {
+              "relation": "NONE",
+              "claimQuantities": [],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": true,
+              "evidenceNegated": true,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "UNSUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [
+          "الكتالوج مش مخزون حي."
+        ],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46"
+        ],
+        "uniqueEvidenceChunks": 2,
+        "durationMs": 18.405
+      },
+      "upstreamDecision": null,
+      "shadowMode": false,
+      "enforcementActive": true
+    }
+  },
+  {
+    "i": 26,
+    "raw": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+    "requestId": "e3d284be-39ca-461c-bd52-846315245290",
+    "gate": {
+      "query": "بقدر أحجز فني لليوم؟",
+      "chunks": [
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6396566400000001,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "لا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.\n\nلا يوجد سعر ثابت لتقوية السطح أو الأعمال المدنية؛ تحتاج معاينة وعرضًا.\n\nلا توجد بيانات إنتاج كهرباء حية لنظام عميل بعينه.\n\nلا توجد معلومة عن حالة طلب أو دفعة أو موعد عميل بعينه دون مصدر حي منفصل.\n\n16. التواصل\n\nخدمة العملاء: 09-555-3610\n\nالدعم الفني للحالات القائمة: 0597-330-814\n\nطلبات الشركات: 0568-220-906\n\n17. قواعد تفسير\n\nطبّق > و >= و < و <= و = حرفيًا ولا تغيّر شمول الحدود.\n\nلا تستخدم رقمًا أو شرطًا من سياسة لإثبات نتيجة سياسة مختلفة.\n\nإذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.63058064,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "طيب هسّا عالواحدة ولا عالثلاثة؟"
+        },
+        {
+          "role": "assistant",
+          "content": "عالثلاثة. السبت 09:00–15:00."
+        },
+        {
+          "role": "user",
+          "content": "عندكم بطارية 10kWh متوفرة هسّا؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        },
+        {
+          "role": "user",
+          "content": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        }
+      ],
+      "tenantId": "default"
+    },
+    "boundary": {
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "question": "بقدر أحجز فني لليوم؟",
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "serverEvidence": [
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6396566400000001,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "لا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.\n\nلا يوجد سعر ثابت لتقوية السطح أو الأعمال المدنية؛ تحتاج معاينة وعرضًا.\n\nلا توجد بيانات إنتاج كهرباء حية لنظام عميل بعينه.\n\nلا توجد معلومة عن حالة طلب أو دفعة أو موعد عميل بعينه دون مصدر حي منفصل.\n\n16. التواصل\n\nخدمة العملاء: 09-555-3610\n\nالدعم الفني للحالات القائمة: 0597-330-814\n\nطلبات الشركات: 0568-220-906\n\n17. قواعد تفسير\n\nطبّق > و >= و < و <= و = حرفيًا ولا تغيّر شمول الحدود.\n\nلا تستخدم رقمًا أو شرطًا من سياسة لإثبات نتيجة سياسة مختلفة.\n\nإذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.63058064,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "validation": {
+        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "overallStatus": "UNSUPPORTED",
+        "validationState": "UNSUPPORTED",
+        "confidenceScore": 0.4664,
+        "confidenceLabel": "Low",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+            "sourceText": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+            "originalCompoundClaim": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+            "propositionText": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "UNSUPPORTED",
+            "confidence": 0.58,
+            "evidenceChunkIds": [
+              "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+              "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01"
+            ],
+            "similarity": 0.3526,
+            "keywordOverlap": 0.4211,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+            "matchedSentence": "يمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.",
+            "semanticScore": 0.3526,
+            "numericResult": {
+              "relation": "NONE",
+              "claimQuantities": [],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": true,
+              "evidenceNegated": true,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "UNSUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [
+          "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي."
+        ],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01"
+        ],
+        "uniqueEvidenceChunks": 2,
+        "durationMs": 66.072
+      },
+      "upstreamDecision": null,
+      "shadowMode": false,
+      "enforcementActive": true
+    }
+  },
+  {
+    "i": 28,
+    "raw": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+    "requestId": "178546bb-77f2-45c8-9b03-7cf05b2295be",
+    "gate": {
+      "query": "بما إنكم بتخدموا نابلس، أكيد في فني متوفر اليوم بنابلس صح؟",
+      "chunks": [
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6793689359999999,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6240689600000001,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "history": [
+        {
+          "role": "user",
+          "content": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        },
+        {
+          "role": "user",
+          "content": "بقدر أحجز فني لليوم؟"
+        },
+        {
+          "role": "assistant",
+          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
+        },
+        {
+          "role": "user",
+          "content": "طيب شوفلي إذا في موعد بكرا الصبح."
+        },
+        {
+          "role": "assistant",
+          "content": "لا. هاي المعلومة مش متوفرة عندي حاليًا."
+        }
+      ],
+      "tenantId": "default"
+    },
+    "boundary": {
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "question": "بما إنكم بتخدموا نابلس، أكيد في فني متوفر اليوم بنابلس صح؟",
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "serverEvidence": [
+        {
+          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6793689359999999,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        },
+        {
+          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
+          "tenantId": "default",
+          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
+          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
+          "sourceType": "uploaded_document",
+          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
+          "retrievalScore": 0.6240689600000001,
+          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
+        }
+      ],
+      "validation": {
+        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "overallStatus": "UNSUPPORTED",
+        "validationState": "UNSUPPORTED",
+        "confidenceScore": 0.1865,
+        "confidenceLabel": "Reject",
+        "evidenceCoverage": 0,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+            "sourceText": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+            "originalCompoundClaim": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+            "propositionText": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "UNSUPPORTED",
+            "confidence": 0.736,
+            "evidenceChunkIds": [],
+            "similarity": 0.1425,
+            "keywordOverlap": 0.25,
+            "citationCoverage": 0,
+            "missingEvidence": true,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
+            "matchedSentence": "وجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.",
+            "semanticScore": 0.1425,
+            "numericResult": {
+              "relation": "NONE",
+              "claimQuantities": [],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": true,
+              "evidenceNegated": true,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "UNSUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [
+          "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم."
+        ],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
+          "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2"
+        ],
+        "uniqueEvidenceChunks": 2,
+        "durationMs": 65.284
+      },
+      "upstreamDecision": null,
+      "shadowMode": false,
+      "enforcementActive": true
+    }
+  }
+]

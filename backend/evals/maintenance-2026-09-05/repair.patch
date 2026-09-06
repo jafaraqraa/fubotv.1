@@ -1,0 +1,1503 @@
+--- a/backend/src/rag/intelligence/answerValidator.js
++++ b/backend/src/rag/intelligence/answerValidator.js
+@@ -1,4 +1,6 @@
+ const { tableFacts } = require('../processing/tableStructure');
++const { normalizeProposition } = require('./propositionNormalization');
++const { proveDiscountEligibility } = require('./discountEligibilityProof');
+ const { requestedFields, missingAmountEvidence, asksAmount } = require('./retrievalRelevance');
+ const { performance } = require('perf_hooks');
+ const {
+@@ -103,7 +105,7 @@
+ }
+ 
+ function canonicalTokens(text) {
+-    return tokenize(text).map(token => {
++    return tokenize(normalizeProposition(text)).map(token => {
+         if (ARABIC_TOKEN_ALIASES.has(token)) return ARABIC_TOKEN_ALIASES.get(token);
+         if (/^[\u0600-\u06FF]+$/u.test(token)) {
+             const withoutArticle = token.startsWith('ال') && token.length > 4 ? token.slice(2) : token;
+@@ -251,6 +253,7 @@
+ function splitIntoSentences(text) {
+     if (!text) return [];
+     return String(text).replace(/(^|\s)د\.(?=\s|$)/gu, '$1د․')
++        .replace(/(^|\n|(?<=[.!؟])\s+)(لا|نعم|آه)\.\s+(?=\S)/gu, '$1$2، ')
+         .replace(/```[\s\S]*?```/g, ' ')
+         .split(/(?<=[.!?؟؛])\s+|\n+|(?<=\S)[؛;]+|(?=\s*(?:وصف صور[ةه]|نوع المصدر|صور[ةه] معتمد قابل للارسال):)/i)
+         .map(value => value.replace(/․/g, '.').replace(/^\s*(?:[-*+]|\d+[.)])\s*/, '').trim())
+@@ -319,7 +322,7 @@
+         const compoundId = `compound-${sentenceIndex + 1}`;
+         let parts;
+         let relationshipType;
+-        if (/(?:لا|لن).+إلا\s+بعد|بس\s+على/iu.test(sentence)) {
++        if (/(?:لا|لن|ما).+(?:إلا|الا)\s+بعد|بس\s+على/iu.test(sentence)) {
+             parts = [{ sourceText: sentence, text: sentence, connector: null }];
+             relationshipType = PROPOSITION_RELATION.SINGLE;
+         } else if (CAUSAL_CONNECTOR.test(sentence)) {
+@@ -360,7 +363,7 @@
+     // A leading "لا،" may answer a negative yes/no question (for example
+     // "عليها رسوم؟") while the factual proposition that follows is positive.
+     const withoutDiscourseNo = String(text || '').replace(/^\s*لا\s*[,،]\s*/, '');
+-    const normalized = normalizeText(withoutDiscourseNo);
++    const normalized = normalizeText(withoutDiscourseNo).replace(/ما\s+بيرجع/gu,'غير مسترد');
+     if (/(?:^|\s)(?:ما\s+(?:بيعطي|بيعطى|بعطي|يمنح|بيمنح|في|بتقدر|بقدر|ب?ت[ن]?خصم|بينزلش|يعنيش|عنا|عندنا|بيصير)|مش\s|مو\s)/u.test(normalized)) return true;
+     if (/\b(?:not|never|no|cannot|can't|doesn't|isn't|without)\b/i.test(normalized)) return true;
+     const tokens = new Set(normalized.split(/\s+/));
+@@ -386,6 +389,7 @@
+         ['الحاديه عشر', 11], ['الثانيه عشر', 12]
+     ]);
+     let normalized = normalizeText(String(text || '').replace(/٫/g, '.'))
++        .replace(/(?:^|\s)ب(?=\d+\s*(?:ايام|يوم|ساعه|ساعات|دقيقه|دقائق))/gu,' ')
+         .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+         .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)));
+     normalized=normalized.replace(/(?:^|\s)عال(?=واحده|ثالثه|ثلاثه|ثانيه)/gu,' الساعه ال').replace(/الثلاثه/g,'الثالثه');
+@@ -827,12 +831,34 @@
+     if (adjacentListSupport) classification = STATUS.SUPPORTED;
+     if (policyGuard.relation === POLICY_RELATION.SUPPORTED) classification = STATUS.SUPPORTED;
+     if (policyGuard.relation === POLICY_RELATION.BLOCK) classification = STATUS.CONTRADICTED;
++    const eligibilityProof=proveDiscountEligibility(claim.text,options.question || '',chunks,options.tenantId);
++    if(eligibilityProof && policyGuard.relation!==POLICY_RELATION.BLOCK)classification=STATUS.SUPPORTED;
+     // These are vetoes, never overrides that make an unproven claim supported.
+     // Run after every recovery/proof path so a lexical match cannot rescue them.
+     if (contradictoryComparison(claim.text)) classification = STATUS.CONTRADICTED;
+     const laborVeto=conditionalLaborVeto(claim.text,options.question || '',chunks);
+     if(laborVeto) classification=STATUS.CONTRADICTED;
+     const targetCodes = productCodes(options.question || claim.text);
++    // A verbatim shared rule may name the requested product alongside another
++    // product. This only removes the identity veto, never proves the claim.
++    const exactSharedRule=targetCodes.length===1 && productCodes(claim.text).includes(targetCodes[0])
++        && chunks.some(c=>String(c.tenantId)===String(options.tenantId)
++            && splitIntoSentences(c.text).some(line=>normalizeText(line)===normalizeText(claim.text)));
++    const wrongExplicitProduct=targetCodes.length===1&&productCodes(claim.text).some(code=>!targetCodes.includes(code))&&!exactSharedRule;
++    if(wrongExplicitProduct)classification=STATUS.CONTRADICTED;
++    if(targetCodes.length===1 && /مؤهل/u.test(claim.text)){
++        const eligibilityLines=chunks.flatMap(c=>c.text.split(/[\n؛]+/u)).filter(line=>
++            productCodes(line).includes(targetCodes[0])&&/مؤهل/u.test(line));
++        if(eligibilityLines.some(line=>/غير مؤهل/u.test(line)!==/غير مؤهل/u.test(claim.text)))classification=STATUS.CONTRADICTED;
++    }
++    const proposition=normalizeText(normalizeProposition(claim.text));
++    const positiveCatalogInference=/كتالوج|قائمه/u.test(proposition)&&/يثبت|يعني|يساوي/u.test(proposition)
++        && /توفر|مخزون/u.test(proposition)&&!hasNegation(claim.text);
++    const catalogDenial=chunks.some(c=>c.text.split(/\n+|(?<=[.!؟])\s+/u).some(line=>
++        /كتالوج|قائمه/u.test(normalizeText(line))&&/لا يثبت|لا يعني|لا يساوي|لا يجوز استنتاج/u.test(normalizeText(line))));
++    if(positiveCatalogInference&&catalogDenial)classification=STATUS.CONTRADICTED;
++    if(targetCodes.length && /تركيب.*مجاني/u.test(proposition)
++        && !chunks.some(c=>identityRows(c.text,targetCodes).some(row=>/تركيب.*مجاني/u.test(normalizeText(row)))))classification=STATUS.UNSUPPORTED;
+     const monetaryClaim = extractQuantities(claim.text).filter(q=>['ILS','USD'].includes(q.unit) && q.operator==='=');
+     if (targetCodes.length && monetaryClaim.length && /سعر|ثمن|price|cost|خصم|احسب/iu.test(`${options.question || ''} ${claim.text}`)) {
+         const rows=chunks.flatMap(chunk=>identityRows(tableFacts(chunk.text),targetCodes));
+@@ -840,7 +866,7 @@
+         const calculatedResult=/بعد\s+(?:الخصم|التخفيض|الزيادة)|after\s+(?:discount|increase)/iu.test(claim.text);
+         const wrongEntity=targetCodes.length===1 && productCodes(claim.text).some(code=>!targetCodes.includes(code));
+         if(wrongEntity)classification=STATUS.CONTRADICTED;
+-        if (derivedResult?.status !== DERIVED_STATUS.SUPPORTED && (calculatedResult || monetaryClaim.some(q=>
++        if (!eligibilityProof && derivedResult?.status !== DERIVED_STATUS.SUPPORTED && (calculatedResult || monetaryClaim.some(q=>
+             !namedValues.some(v=>v.unit===q.unit && v.value===q.value && v.operator==='=')))) {
+             classification=STATUS.CONTRADICTED;
+         }
+@@ -876,7 +902,7 @@
+         ],
+         evidenceIds: policyGuard.evidenceIds
+     } : null;
+-    const effectiveDerivedProvenance = policyProvenance || (derivedResult?.status === DERIVED_STATUS.SUPPORTED
++    const effectiveDerivedProvenance = eligibilityProof || policyProvenance || (derivedResult?.status === DERIVED_STATUS.SUPPORTED
+         ? derivedResult.provenance : numericDerivedProvenance);
+ 
+     const supporting = matches
+@@ -907,9 +933,9 @@
+         contradictionScore: Number(best.contradiction.toFixed(4)),
+         numericExact: best.numericExact,
+         matchedEvidenceId: evidenceChunkIds[0] || best.chunk.id,
+-        matchedSentence: adjacentListSupport?.text || best.matchedEvidence,
++        matchedSentence: eligibilityProof?.evidenceText || adjacentListSupport?.text || best.matchedEvidence,
+         semanticScore: Number(best.semantic.toFixed(4)),
+-        numericResult: policyProvenance || derivedResult?.status === DERIVED_STATUS.SUPPORTED
++        numericResult: eligibilityProof || policyProvenance || derivedResult?.status === DERIVED_STATUS.SUPPORTED
+             ? { relation: 'ENTAILED', derived: true,
+                 claimQuantities: extractQuantities(claim.text), evidenceQuantities: [] }
+             : best.numericResult,
+@@ -1028,21 +1054,30 @@
+         && (requestedFields(answer).length > 0 || !extractQuantities(answer).some(q => ['ILS', 'USD', 'UNSPECIFIED'].includes(q.unit)))
+         && missingAmountEvidence(options.question, [{ text: answer }]);
+     const genericPriceQuestion=asksAmount(options.question || '') && /سعر|ثمن|price|cost/iu.test(options.question || '');
+-    const missingPrice=genericPriceQuestion && !extractQuantities(answer).some(q=>['ILS','USD'].includes(q.unit)) && !nakedAmount;
++    const explicitQuoteOnly=/لا يوجد سعر ثابت|ما في سعر ثابت/u.test(normalizeText(answer))
++        && chunks.some(c=>/لا يوجد سعر ثابت/u.test(normalizeText(c.text)));
++    const missingPrice=genericPriceQuestion && !extractQuantities(answer).some(q=>['ILS','USD'].includes(q.unit)) && !nakedAmount && !explicitQuoteOnly;
+     const questionText=normalizeText(options.question || ''),answerText=normalizeText(answer);
++    const renterThresholds=chunks.flatMap(c=>splitIntoSentences(c.text)).filter(line=>/مستاجر/u.test(normalizeText(line))&&!/مشغل/u.test(normalizeText(line))&&/سنه|عام|year/u.test(normalizeText(line)))
++        .flatMap(line=>extractQuantities(line));
+     const missingRole=/(?:استاجر|تستاجر)/u.test(questionText) && /اشغل|تشغل/u.test(questionText)
+         && chunks.some(c=>/مستاجر/u.test(normalizeText(c.text)) && /مشغل/u.test(normalizeText(c.text)))
+-        && (!/مستاجر|استاجر|تستاجر/u.test(answerText) || !/مشغل|اشغل|تشغل/u.test(answerText));
++        && (!/مستاجر|استاجر|تستاجر/u.test(answerText) || !/مشغل|اشغل|تشغل/u.test(answerText)
++            || renterThresholds.some(t=>!extractQuantities(answer).some(q=>q.value===t.value&&q.unit===t.unit)));
+     const missingHistorical=/كان\s+(?:مكتب|فرع)/u.test(questionText)
+         && chunks.some(c=>/كان\s+(?:مكتب|فرع)/u.test(normalizeText(c.text)))
+         && !/كان\s+(?:مكتب|فرع)|حتي\s+\d{4}|تاريخي|سابق/u.test(answerText);
+-    if (nonresponsiveAmount || missingPrice || missingRole || missingHistorical) {
++    const asksLiveSlot=/(?:موعد|فني)/u.test(questionText)&&/(?:اليوم|لليوم|بكرا|غدا|الصبح|هسا)/u.test(questionText);
++    const knownNoLiveSchedule=chunks.some(c=>/لا تحتوي.*جدول|لا توجد.*(?:بيانات|معلومات).*(?:موعد|جدول)/u.test(normalizeText(c.text)));
++    const statesUnknown=/(?:لا|ما|مش).*(?:معلوم|بيانات|جدول|اعرف|نعرف|اقدر اؤكد)|لا (?:يثبت|يجوز استنتاج).*توفر/u.test(answerText);
++    const missingLiveAnswer=asksLiveSlot&&knownNoLiveSchedule&&!statesUnknown;
++    if (nonresponsiveAmount || missingPrice || missingRole || missingHistorical || missingLiveAnswer) {
+         for (const claim of claims.filter(item => item.factual)) {
+             claim.classification = STATUS.UNSUPPORTED;
+             claim.finalClassification = STATUS.UNSUPPORTED;
+             claim.missingEvidence = true;
+             claim.evidenceChunkIds = [];
+-            claim.responsivenessReason = missingHistorical ? 'requested_history_missing_from_answer' : missingRole ? 'requested_role_missing_from_answer' : 'requested_amount_missing_from_answer';
++            claim.responsivenessReason = missingLiveAnswer ? 'live_availability_not_answered' : missingHistorical ? 'requested_history_missing_from_answer' : missingRole ? 'requested_role_missing_from_answer' : 'requested_amount_missing_from_answer';
+         }
+     }
+     const status = overallStatus(claims, chunks.length > 0);
+--- a/backend/src/rag/intelligence/derivedClaimValidator.js
++++ b/backend/src/rag/intelligence/derivedClaimValidator.js
+@@ -189,6 +189,11 @@
+ }
+ 
+ function validateDerivedClaim({ claim, question = '', chunks = [], tenantId = '', now = new Date() }) {
++    // ISO dates and clock punctuation are facts, not arithmetic operators.
++    // Never derive a historical clock/date from unrelated numbers in a chunk.
++    if (/\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}/u.test(normalizeNumbers(claim))) {
++        return {status:DERIVED_STATUS.NOT_PROVEN,reason:'temporal_fact_requires_direct_evidence'};
++    }
+     const operation = detectOperation(`${question} ${claim}`);
+     if (!operation) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'not_derived' };
+     const trusted = trustedChunks(chunks, tenantId, question, now);
+--- a/backend/src/rag/intelligence/discountEligibilityProof.js
++++ b/backend/src/rag/intelligence/discountEligibilityProof.js
+@@ -0,0 +1,44 @@
++'use strict';
++const {normalizeNumbers,productCodes,identityRows}=require('./numericIdentity');
++const norm=t=>normalizeNumbers(t).normalize('NFKC').replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[إأآٱ]/g,'ا').replace(/ة/g,'ه');
++function proveDiscountEligibility(claim,question,chunks,tenantId){
++ const codes=productCodes(question);if(codes.length!==1||!tenantId)return null;
++ const c=norm(claim),code=codes[0];
++ const negative=/غير مؤهل|لا.*مؤهل/u.test(c);
++ if(!/خصم/u.test(c)||/بطاري|تركيب|مجاني/u.test(c)||(!negative&&/بعد الخصم|السعر بعد/u.test(c)))return null;
++ if(productCodes(c).some(v=>v!==code))return null;
++ // A closed grammatical vocabulary prevents an eligibility proof from also
++ // approving unrelated promises, conditions or product attributes.
++ let residue=c;for(const id of productCodes(c))residue=residue.replace(new RegExp(id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),' ');
++ residue=residue.replace(/\d+(?:\.\d+)?/g,' ').replace(/[\s%≥≤><=().،,—-]/g,' ');
++ const words=new Set('اه نعم لا عليها عليه باقه الباقه سعرها مؤهل مؤهله غير لخصم للخصم خصم الخصم بنسبه على سعر سعره السعر الاساسيه الاساسي لان لانه لانها بسعر شيكل شيقل ILS USD دولار او اكثر اقل من بعد هو هي وهي وهو وما ما'.split(' '));
++ if(residue.trim().split(/\s+/).some(w=>!words.has(w)))return null;
++ const trusted=chunks.filter(x=>String(x.tenantId)===String(tenantId)&&x.id);
++ const eligibility=trusted.flatMap(x=>x.text.split(/[\n؛]+/u).map(text=>({text,id:x.id})))
++  .filter(x=>productCodes(x.text).includes(code)&&/مؤهل/u.test(norm(x.text)));
++ if(!eligibility.length||eligibility.some(x=>/غير مؤهل/u.test(norm(x.text))!==negative))return null;
++ const rules=trusted.filter(x=>eligibility.some(e=>e.id===x.id)).flatMap(x=>x.text.split(/\n+/u).map(text=>({text: norm(text),id:x.id})))
++  .filter(x=>/خصم/u.test(x.text)&&/\d+\s*%/u.test(x.text)&&!/لا يطبق|لا يشمل/u.test(x.text));
++ if(rules.length!==1)return null;
++ const rule=rules[0],rate=Number(rule.text.match(/(\d+(?:\.\d+)?)\s*%/u)[1]);
++ const rates=[...c.matchAll(/(\d+(?:\.\d+)?)\s*%/gu)];
++ if((!rates.length&&!negative)||rates.some(m=>Number(m[1])!==rate))return null;
++ const monetary=/(\d+(?:\.\d+)?)\s*(شيكل|شيقل|ILS|USD|دولار)/giu;
++ const bases=trusted.flatMap(x=>identityRows(x.text,[code]).filter(t=>/سعر|ثمن/u.test(t)).flatMap(t=>[...norm(t).matchAll(monetary)].map(m=>({value:Number(m[1]),unit:/USD|دولار/i.test(m[2])?'USD':'ILS',id:x.id}))));
++ const threshold=rule.text.match(/(\d+(?:\.\d+)?)\s*(شيكل|شيقل|ILS|USD|دولار)\s+او اكثر/u);
++ const claimMoney=[...c.matchAll(monetary)];
++ let bare=c.replace(monetary,' ').replace(/\d+(?:\.\d+)?\s*%/gu,' ');
++ for(const id of productCodes(c))bare=bare.replace(new RegExp(id,'gi'),' ');
++ const comparisons=[...bare.matchAll(/(≥|>=|<|اقل من)\s*(\d+(?:\.\d+)?)/gu)];
++ if(/\d/u.test(bare.replace(/(≥|>=|<|اقل من)\s*\d+(?:\.\d+)?/gu,'')))return null;
++ if(claimMoney.length||comparisons.length){
++  if(bases.length!==1||!threshold)return null;
++  const b=bases[0],t=Number(threshold[1]),unit=/USD|دولار/i.test(threshold[2])?'USD':'ILS';
++  if(b.unit!==unit||negative!==(b.value<t))return null;
++  if(claimMoney.some(m=>Number(m[1])!==b.value||(/USD|دولار/i.test(m[2])?'USD':'ILS')!==b.unit))return null;
++  if(comparisons.some(m=>Number(m[2])!==t||negative!==(/<|اقل/.test(m[1]))))return null;
++ }
++ return {operation:'DISCOUNT_ELIGIBILITY',evidenceText:eligibility.map(x=>x.text).join('\n'),evidenceIds:[...new Set([...eligibility.map(x=>x.id),rule.id,...(claimMoney.length?bases.map(x=>x.id):[])])],
++  inputs:[{semanticRole:'DISCOUNT',value:rate,unit:'PERCENT',evidenceId:rule.id},...bases.map(b=>({...b,semanticRole:'BASE_VALUE',evidenceId:b.id})),...(threshold?[{semanticRole:'ELIGIBILITY_MINIMUM',value:Number(threshold[1]),unit:/USD|دولار/i.test(threshold[2])?'USD':'ILS',operator:'>=',evidenceId:rule.id}]:[])],eligible:!negative};
++}
++module.exports={proveDiscountEligibility};
+--- a/backend/src/rag/intelligence/evidenceDecisionGate.js
++++ b/backend/src/rag/intelligence/evidenceDecisionGate.js
+@@ -263,7 +263,8 @@
+     // A schedule can be stated as an entity "works/operates" followed by a
+     // clock range without repeating the query noun "hours".
+     const asksForHours = /(?:دوام|فاتح|مفتوح|اغلاق|سكر)/u.test(query);
+-    const provesHours = /(?:يعمل|تعمل|نعمل|العمل).{0,100}\d{1,2}\s+\d{2}.{0,12}\d{1,2}\s+\d{2}/u.test(evidence);
++    const provesHours = /(?:يعمل|تعمل|نعمل|العمل).{0,100}\d{1,2}\s+\d{2}.{0,12}\d{1,2}\s+\d{2}/u.test(evidence)
++        || /(?:مكتب|فرع).{0,60}(?:يغلق|يفتح|ساعات).{0,40}\d{1,2}\s+\d{2}/u.test(evidence);
+     return asksForHours && provesHours;
+ }
+ 
+--- a/backend/src/rag/intelligence/evidenceExcerptRecovery.js
++++ b/backend/src/rag/intelligence/evidenceExcerptRecovery.js
+@@ -1,5 +1,6 @@
+ 'use strict';
+-const { normalizeChunks, splitIntoSentences, validateDetailed } = require('./answerValidator');
++const { normalizeChunks, splitIntoSentences, validateDetailed, extractQuantities } = require('./answerValidator');
++const {evaluateConditionalPolicy,policyTopics}=require('../security/conditionalPolicyGuard');
+ const { tableFacts } = require('../processing/tableStructure');
+ const { requestedFields, contentTokens } = require('./retrievalRelevance');
+ const { entities } = require('./conversationReferent');
+@@ -11,11 +12,41 @@
+ // still decide whether these excerpts can be delivered.
+ function recoverEvidenceExcerpt(question, context, tenantId) {
+     // Amount excerpts cannot answer inclusion, refund, or availability questions.
+-    if (/متوفر|متاح|available/iu.test(question)) return null;
++    const liveQuestion=/(?:موعد|فني|متوفر|متاح|مخزن|مخزون)/u.test(question)
++        && /اليوم|لليوم|بكرا|غدا|هسا|الآن|الان|حاليا|صح/u.test(question);
+     const fields = requestedFields(question);
+     const field = ['inclusion', 'age', 'minimum', 'credit', 'weekly', 'daily', 'deposit'].find(value => fields.includes(value));
+     if (!tenantId) return null;
+     const chunks = normalizeChunks(context).filter(chunk => String(chunk.tenantId) === String(tenantId));
++    if(policyTopics(question).some(topic=>['cancellation','late_return'].includes(topic)) && extractQuantities(question).length){
++        const proof=evaluateConditionalPolicy({claim:'',question,chunks,tenantId,extractQuantities});
++        if(proof.active?.evidenceId){
++            const answer=`${proof.active.conditionText}: ${proof.active.outcome}`;
++            const validation=validateDetailed(answer,chunks,{question,tenantId});
++            if(validation.overallStatus==='SUPPORTED')return {answer,validation,evidenceIds:[proof.active.evidenceId]};
++        }
++    }
++    if(liveQuestion){
++        // Recover only explicit limitations, never infer a slot, inventory,
++        // cancellation, booking action or promised follow-up from a catalog.
++        const lines=chunks.flatMap(chunk=>chunk.text.split(/\n+/u).map(text=>({text,id:chunk.id})));
++        const relevant=lines.filter(x=>/لا تحتوي.*(?:جدول|مخزون)|لا يجوز استنتاج توفر|ضمن نطاق الخدمة لا يثبت توفر|(?:الكتالوج|القائمة) لا يثبت/u.test(x.text));
++        const unique=[...new Map(relevant.map(x=>[x.text,x])).values()];
++        if(!unique.length||unique.length>3)return null;
++        const answer=unique.map(x=>x.text).join('\n');
++        const validation=validateDetailed(answer,chunks,{question,tenantId});
++        if(validation.overallStatus!=='SUPPORTED')return null;
++        return {answer,validation,evidenceIds:[...new Set(unique.map(x=>x.id))]};
++    }
++    if (/متوفر|متاح|available/iu.test(question)) return null;
++    if(field==='age' && /مستأجر|استأجر|أستأجر/u.test(question) && /أشغل|اشغل|مشغل/u.test(question)){
++        const selected=chunks.flatMap(c=>splitIntoSentences(c.text).filter(line=>/مستأجر|مستاجر|مشغل/u.test(line)&&/\d/u.test(line)).map(text=>({text,id:c.id})));
++        const unique=[...new Map(selected.map(x=>[x.text,x])).values()];
++        if(unique.length && unique.length<=6){
++            const answer=unique.map(x=>x.text).join('\n'),validation=validateDetailed(answer,chunks,{question,tenantId});
++            if(validation.overallStatus==='SUPPORTED')return {answer,validation,evidenceIds:[...new Set(unique.map(x=>x.id))]};
++        }
++    }
+     // Exact rule recovery retains complete conditions/exclusions and passes the
+     // same validator and Boundary. Never synthesize a numeric result here.
+     if (!field) {
+@@ -44,6 +75,9 @@
+     const candidates = [];
+     for (const chunk of chunks) {
+         for (const sentence of splitIntoSentences(tableFacts(chunk.text))) {
++            // A trailing colon introduces conditions/list items; the header
++            // alone cannot be delivered as an unconditional policy statement.
++            if (/[:：]\s*$/u.test(sentence)) continue;
+             if (/^\s*#/u.test(sentence) || !requestedFields(sentence).includes(field)) continue;
+             const row = sentence.includes('|');
+             if (field === 'inclusion' && (row || !fields.every(value=>requestedFields(sentence).includes(value)))) continue;
+--- a/backend/src/rag/intelligence/propositionNormalization.js
++++ b/backend/src/rag/intelligence/propositionNormalization.js
+@@ -0,0 +1,16 @@
++'use strict';
++// Linguistic equivalences only. No business facts or default units are added.
++function normalizeProposition(text) {
++ return String(text || '').normalize('NFKC')
++  .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
++  .replace(/[إأآٱ]/g, 'ا').replace(/ة/g, 'ه')
++  .replace(/^(?:لا|اه|نعم)\s*[.،,—-]\s*/u, '')
++  .replace(/(?:ما\s+يعنيش|ما\s+يعني|لا\s+يعني|ما\s+بيثبت|لا\s+يثبت)/gu, 'لا يثبت')
++  .replace(/(?:ما\s+(?:بصير|بيصير)|لا\s+يصبح)/gu, 'لا يصبح')
++  .replace(/ما في سعر ثابت/gu, 'لا يوجد سعر ثابت')
++  .replace(/(?:فيك|بامكانك)\s+تطلب/gu, 'يمكن طلب')
++  .replace(/(?:مش\s+مخزون\s+حي|لا\s+يساوي\s+مخزونا?\s+حيا?)/gu, 'لا يثبت توفر المخزون')
++  .replace(/(?:بالقائمه|في القائمه)/gu, 'في الكتالوج')
++  .replace(/(?:بالمخزن|في المخزن)/gu, 'في المخزون');
++}
++module.exports={normalizeProposition};
+--- a/backend/src/rag/security/conditionalPolicyGuard.js
++++ b/backend/src/rag/security/conditionalPolicyGuard.js
+@@ -30,6 +30,7 @@
+ }
+ 
+ function hasNegation(value) {
++    if (/ما\s+بيرجع/u.test(normalize(value))) return true;
+     const tokens = new Set(normalize(String(value || '').replace(/^\s*لا\s*[,،]\s*/, '')).split(/\s+/));
+     return ['لا', 'ليس', 'ليست', 'غير', 'لن', 'لم', 'بدون', 'دون', 'يفقد', 'مش']
+         .some(token => tokens.has(token));
+--- a/backend/src/rag/services/hybridRetrievalService.js
++++ b/backend/src/rag/services/hybridRetrievalService.js
+@@ -137,11 +137,11 @@
+         console.log(`[RAG Retrieval] tenant=${tenantId} operation=hybrid results=${cachedResult.candidates?.length || 0} cache=hit durationMs=${(performance.now() - retrievalStartedAt).toFixed(1)}`);
+         return {
+             ...cachedResult,
+-            metadata: createMetadata({
++            metadata: {...createMetadata({
+                 ...(cachedResult.metadata || {}),
+                 retrievalMode: RETRIEVAL_MODE.CACHE_ONLY,
+                 cacheHit: true
+-            })
++            }),embeddingCacheHit:null,embeddingCacheChecked:false}
+         };
+     }
+ 
+@@ -149,7 +149,8 @@
+     let queryVector;
+     const tEmbedStart = performance.now();
+     const embeddingCacheKey = `${embeddingModel}:${versionedCache.normalizeQuery(query)}`;
+-    if (embeddingsCache.has(embeddingCacheKey)) {
++    const embeddingCacheHit = embeddingsCache.has(embeddingCacheKey);
++    if (embeddingCacheHit) {
+         queryVector = embeddingsCache.get(embeddingCacheKey);
+     } else {
+         queryVector = await generateEmbeddings(query, profiler, {
+@@ -284,7 +285,7 @@
+             vectorSearch: durationQdrantSearch + durationBuild + durationResultParsing,
+             keywordSearch: performance.now() - tKeywordStart
+         },
+-        metadata: { ...createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL }), lexicalMode: 'INDEPENDENT_FILTERED_TEXT', vectorCount: vectorResults.length, lexicalCount: lexicalResults.length }
++        metadata: { ...createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL }), embeddingCacheHit, embeddingCacheChecked:true, lexicalMode: 'INDEPENDENT_FILTERED_TEXT', vectorCount: vectorResults.length, lexicalCount: lexicalResults.length }
+     };
+ 
+     versionedCache.set(cacheKey, result, {
+--- a/backend/src/rag/services/knowledgeDocumentService.js
++++ b/backend/src/rag/services/knowledgeDocumentService.js
+@@ -821,6 +821,8 @@
+             is_active: 1,
+             chunk_count: richChunks.length,
+             vector_count: richChunks.length,
++            embedding_model: modelName,
++            vector_dimension: dimension,
+             index_fingerprint: fingerprint,
+             fencing_token: lease.fencingToken,
+             operation_id: lease.operationId,
+--- a/backend/src/services/ai.js
++++ b/backend/src/services/ai.js
+@@ -469,12 +469,14 @@
+     let rawResponse = null;
+     let trackSuccess = 1;
+     let trackErrorMessage = null;
++    let providerFailureDetails = null;
+ 
+     try {
+         rawResponse = await callOpenRouter(messagesPayload, activeTask, { media: isImage ? mediaObj : null });
+     } catch (apiErr) {
+         trackSuccess = 0;
+-        trackErrorMessage = apiErr.message;
++        providerFailureDetails = require('./providerFailure').providerFailure(apiErr);
++        trackErrorMessage = providerFailureDetails.message;
+     }
+ 
+     const apiEnd = Date.now();
+@@ -763,8 +765,13 @@
+     }
+ 
+     if (!rawResponse) {
++        const failure=providerFailureDetails || require('./providerFailure').providerFailure(trackErrorMessage);
++        const reliability=JSON.parse(ragTraceRepo.getTrace(requestId)?.reliability_json || '{}');
++        ragTraceRepo.updateTrace(requestId,{reliability_json:{...reliability,providerFailure:{...failure,provider:activeProviderName,model:activeModel}},final_response_type:'PROVIDER_ERROR'});
+         const error = new Error(trackErrorMessage || 'AI provider returned an empty response');
+         error.code = 'AI_PROVIDER_FAILED';
++        error.failureKind = failure.kind;
++        error.retryable = failure.retryable;
+         throw error;
+     }
+ 
+--- a/backend/src/services/providerFailure.js
++++ b/backend/src/services/providerFailure.js
+@@ -0,0 +1,8 @@
++'use strict';
++function providerFailure(error){
++ const message=String(error?.message || error || '');
++ if(/key limit exceeded|quota|insufficient.*(?:credit|balance)|payment required|credit.*exhausted/i.test(message))return {kind:'BUDGET_EXHAUSTED',retryable:false,message:'تعذر توليد الرد: حد استخدام مزوّد الذكاء الاصطناعي مستنفد. يلزم مراجعة المسؤول.'};
++ if(/timeout|timed out|abort/i.test(message))return {kind:'TIMEOUT',retryable:true,message:'تعذر توليد الرد بسبب انتهاء مهلة مزوّد الذكاء الاصطناعي.'};
++ return {kind:'PROVIDER_UNAVAILABLE',retryable:true,message:'تعذر توليد الرد بسبب مشكلة تقنية لدى مزوّد الذكاء الاصطناعي.'};
++}
++module.exports={providerFailure};
+--- a/backend/test/fixtures/reliability/maintenance-extra.json
++++ b/backend/test/fixtures/reliability/maintenance-extra.json
+@@ -0,0 +1,68 @@
++[
++  {
++    "i": 13,
++    "raw": "سعر Home 3K بعد الخصم هو 12,900 شيكل لأنه غير مؤهل للخصم.",
++    "gate": {
++      "query": "احسبلي Home 3K بعد الخصم.",
++      "chunks": [
++        {
++          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
++          "tenantId": "maintenance-shorouq",
++          "documentId": "doc_3201c74d64474b268917a41575155eca",
++          "documentVersionId": "doc_3201c74d64474b268917a41575155eca:v1",
++          "chunkId": "doc_3201c74d64474b268917a41575155eca_chunk_3_5822dc0cc329",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.9,
++          "indexVersionId": "doc_3201c74d64474b268917a41575155eca:v1"
++        },
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "maintenance-shorouq",
++          "documentId": "doc_3201c74d64474b268917a41575155eca",
++          "documentVersionId": "doc_3201c74d64474b268917a41575155eca:v1",
++          "chunkId": "doc_3201c74d64474b268917a41575155eca_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.72076896,
++          "indexVersionId": "doc_3201c74d64474b268917a41575155eca:v1"
++        }
++      ],
++      "history": [],
++      "tenantId": "maintenance-shorouq"
++    }
++  },
++  {
++    "i": 14,
++    "raw": "ما في سعر ثابت لتقوية السطح، لازم معاينة وعرض سعر.",
++    "gate": {
++      "query": "قديش تكلفة تقوية السطح؟",
++      "chunks": [
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "maintenance-shorouq",
++          "documentId": "doc_3201c74d64474b268917a41575155eca",
++          "documentVersionId": "doc_3201c74d64474b268917a41575155eca:v1",
++          "chunkId": "doc_3201c74d64474b268917a41575155eca_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.73365704,
++          "indexVersionId": "doc_3201c74d64474b268917a41575155eca:v1"
++        },
++        {
++          "text": "لا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.\n\nلا يوجد سعر ثابت لتقوية السطح أو الأعمال المدنية؛ تحتاج معاينة وعرضًا.\n\nلا توجد بيانات إنتاج كهرباء حية لنظام عميل بعينه.\n\nلا توجد معلومة عن حالة طلب أو دفعة أو موعد عميل بعينه دون مصدر حي منفصل.\n\n16. التواصل\n\nخدمة العملاء: 09-555-3610\n\nالدعم الفني للحالات القائمة: 0597-330-814\n\nطلبات الشركات: 0568-220-906\n\n17. قواعد تفسير\n\nطبّق > و >= و < و <= و = حرفيًا ولا تغيّر شمول الحدود.\n\nلا تستخدم رقمًا أو شرطًا من سياسة لإثبات نتيجة سياسة مختلفة.\n\nإذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.",
++          "tenantId": "maintenance-shorouq",
++          "documentId": "doc_3201c74d64474b268917a41575155eca",
++          "documentVersionId": "doc_3201c74d64474b268917a41575155eca:v1",
++          "chunkId": "doc_3201c74d64474b268917a41575155eca_chunk_8_688223855e01",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.7741979999999999,
++          "indexVersionId": "doc_3201c74d64474b268917a41575155eca:v1"
++        }
++      ],
++      "history": [],
++      "tenantId": "maintenance-shorouq"
++    }
++  }
++]
+\ No newline at end of file
+--- a/backend/test/fixtures/reliability/maintenance-traces.json
++++ b/backend/test/fixtures/reliability/maintenance-traces.json
+@@ -0,0 +1,922 @@
++[
++  {
++    "i": 10,
++    "raw": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
++    "requestId": "dbfb7526-d10f-42c1-a406-b9b44d3320e9",
++    "gate": {
++      "query": "الـHome 5K عليه خصم؟",
++      "chunks": [
++        {
++          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.77428932,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.65027712,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "طيب لو كانوا 15 لوح؟"
++        },
++        {
++          "role": "assistant",
++          "content": "300 شيكل."
++        },
++        {
++          "role": "user",
++          "content": "طيب لو كانوا 15 لوح؟"
++        },
++        {
++          "role": "assistant",
++          "content": "300 شيكل"
++        },
++        {
++          "role": "user",
++          "content": "فحص الإنفرتر بدون قطع قديش؟"
++        },
++        {
++          "role": "assistant",
++          "content": "120 شيكل."
++        }
++      ],
++      "tenantId": "default"
++    },
++    "boundary": {
++      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "question": "الـHome 5K عليه خصم؟",
++      "tenantId": "default",
++      "route": "COMPANY_KNOWLEDGE",
++      "serverEvidence": [
++        {
++          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.77428932,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.65027712,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "validation": {
++        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++        "overallStatus": "CONTRADICTED",
++        "validationState": "CONTRADICTED",
++        "confidenceScore": 0,
++        "confidenceLabel": "Reject",
++        "evidenceCoverage": 0,
++        "claims": [
++          {
++            "id": "claim-1",
++            "text": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
++            "sourceText": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
++            "originalCompoundClaim": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
++            "propositionText": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-1",
++            "factual": true,
++            "classification": "CONTRADICTED",
++            "confidence": 0,
++            "evidenceChunkIds": [],
++            "similarity": 0.3648,
++            "keywordOverlap": 0.6154,
++            "citationCoverage": 0,
++            "missingEvidence": true,
++            "contradictionScore": 0,
++            "numericExact": false,
++            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++            "matchedSentence": "للباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.",
++            "semanticScore": 0.3648,
++            "numericResult": {
++              "relation": "UNKNOWN",
++              "reason": "unit_missing",
++              "claimQuantities": [
++                {
++                  "value": 5,
++                  "unit": "PERCENT",
++                  "operator": "="
++                },
++                {
++                  "value": 18700,
++                  "unit": "ILS",
++                  "operator": "="
++                },
++                {
++                  "value": 18000,
++                  "unit": "UNSPECIFIED",
++                  "operator": "="
++                }
++              ],
++              "evidenceQuantities": [
++                {
++                  "value": 18000,
++                  "unit": "ILS",
++                  "operator": ">="
++                },
++                {
++                  "value": 5,
++                  "unit": "PERCENT",
++                  "operator": "="
++                }
++              ]
++            },
++            "derivedStatus": "NOT_PROVEN",
++            "derivedProvenance": null,
++            "completeListEntailed": false,
++            "negationResult": {
++              "claimNegated": false,
++              "evidenceNegated": false,
++              "relation": "ALIGNED"
++            },
++            "finalClassification": "CONTRADICTED",
++            "numericSafetyVeto": null,
++            "policyGuard": {
++              "relation": "NOT_APPLICABLE",
++              "branches": []
++            }
++          }
++        ],
++        "supportedClaims": [],
++        "partiallySupportedClaims": [],
++        "unsupportedClaims": [],
++        "contradictedClaims": [
++          "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000)."
++        ],
++        "ignoredPromptInjectionChunks": [
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a"
++        ],
++        "uniqueEvidenceChunks": 2,
++        "durationMs": 78.285
++      },
++      "upstreamDecision": null,
++      "shadowMode": false,
++      "enforcementActive": true
++    }
++  },
++  {
++    "i": 11,
++    "raw": "لا. Home 3K غير مؤهلة لخصم 5%.",
++    "requestId": "47683c35-93b5-40b9-86bb-519fb21bdf46",
++    "gate": {
++      "query": "طيب Home 3K عليه نفس الخصم؟",
++      "chunks": [
++        {
++          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.8186370133333333,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.72025496,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "طيب لو كانوا 15 لوح؟"
++        },
++        {
++          "role": "assistant",
++          "content": "300 شيكل"
++        },
++        {
++          "role": "user",
++          "content": "فحص الإنفرتر بدون قطع قديش؟"
++        },
++        {
++          "role": "assistant",
++          "content": "120 شيكل."
++        },
++        {
++          "role": "user",
++          "content": "الـHome 5K عليه خصم؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        }
++      ],
++      "tenantId": "default"
++    },
++    "boundary": {
++      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "question": "طيب Home 3K عليه نفس الخصم؟",
++      "tenantId": "default",
++      "route": "COMPANY_KNOWLEDGE",
++      "serverEvidence": [
++        {
++          "text": "بطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.\n\nإضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.\n\nوجود البطارية في الكتالوج لا يثبت توفرها في المخزون الآن.\n\n6. خصم الأنظمة\n\nللباقات المنزلية Home فقط: إذا كانت قيمة الباقة الأساسية 18,000 شيكل أو أكثر، يطبق خصم 5% على سعر الباقة الأساسية.\n\nHome 5K وHome 8K مؤهلتان وفق الأسعار الحالية؛ Home 3K غير مؤهلة.\n\nالخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.\n\nأي عرض آخر يحتاج نصًا مكتوبًا مستقلًا.\n\n7. الدفعات\n\nلتركيب نظام جديد: 30% دفعة حجز بعد قبول العرض، 60% قبل بدء التركيب، و10% بعد الفحص والتسليم.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.8186370133333333,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "هذه أسعار الخدمات المذكورة فقط، ولا تثبت سعر أي قطعة غيار.\n\n4. باقات الأنظمة الجديدة\n\nHome 3K: قدرة اسمية 3kW، سعر أساسي 12,900 شيكل.\n\nHome 5K: قدرة اسمية 5kW، سعر أساسي 18,700 شيكل.\n\nHome 8K: قدرة اسمية 8kW، سعر أساسي 27,900 شيكل.\n\nالأسعار الأساسية تشمل الألواح والإنفرتر والهياكل والتركيب القياسي داخل نطاق الخدمة القياسي.\n\nالأسعار الأساسية لا تشمل البطاريات، الأعمال المدنية غير القياسية، تقوية السطح، أو تمديدات إضافية تتجاوز 20 مترًا.\n\nهذه قائمة الباقات المنزلية الحالية الكاملة.\n\n5. البطاريات\n\nبطارية LFP 5kWh: 6,400 شيكل.\n\nبطارية LFP 10kWh: 11,800 شيكل.\n\nتركيب بطارية على نظام جديد ضمن نفس المشروع: بدون أجرة تركيب بطارية إضافية.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.72025496,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "validation": {
++        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++        "overallStatus": "UNSUPPORTED",
++        "validationState": "UNSUPPORTED",
++        "confidenceScore": 0.2734,
++        "confidenceLabel": "Reject",
++        "evidenceCoverage": 0,
++        "claims": [
++          {
++            "id": "claim-1",
++            "text": "لا.",
++            "sourceText": "لا.",
++            "originalCompoundClaim": "لا.",
++            "propositionText": "لا.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-1",
++            "factual": false,
++            "classification": "UNKNOWN",
++            "confidence": 0.5,
++            "evidenceChunkIds": [],
++            "similarity": 0,
++            "keywordOverlap": 0,
++            "citationCoverage": 0,
++            "missingEvidence": false,
++            "contradictionScore": 0
++          },
++          {
++            "id": "claim-2",
++            "text": "Home 3K غير مؤهلة لخصم 5%.",
++            "sourceText": "Home 3K غير مؤهلة لخصم 5%.",
++            "originalCompoundClaim": "Home 3K غير مؤهلة لخصم 5%.",
++            "propositionText": "Home 3K غير مؤهلة لخصم 5%.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-2",
++            "factual": true,
++            "classification": "UNSUPPORTED",
++            "confidence": 0.3453,
++            "evidenceChunkIds": [],
++            "similarity": 0.6433,
++            "keywordOverlap": 0.6667,
++            "citationCoverage": 0,
++            "missingEvidence": true,
++            "contradictionScore": 0,
++            "numericExact": false,
++            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++            "matchedSentence": "Home 3K غير مؤهلة.",
++            "semanticScore": 0.6433,
++            "numericResult": {
++              "relation": "UNKNOWN",
++              "claimQuantities": [
++                {
++                  "value": 5,
++                  "unit": "PERCENT",
++                  "operator": "="
++                }
++              ],
++              "evidenceQuantities": []
++            },
++            "derivedStatus": "NOT_PROVEN",
++            "derivedProvenance": null,
++            "completeListEntailed": false,
++            "negationResult": {
++              "claimNegated": true,
++              "evidenceNegated": true,
++              "relation": "ALIGNED"
++            },
++            "finalClassification": "UNSUPPORTED",
++            "numericSafetyVeto": null,
++            "policyGuard": {
++              "relation": "NOT_APPLICABLE",
++              "branches": []
++            }
++          }
++        ],
++        "supportedClaims": [],
++        "partiallySupportedClaims": [],
++        "unsupportedClaims": [
++          "Home 3K غير مؤهلة لخصم 5%."
++        ],
++        "contradictedClaims": [],
++        "ignoredPromptInjectionChunks": [
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_3_5822dc0cc329",
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_2_73f7e4c2475a"
++        ],
++        "uniqueEvidenceChunks": 2,
++        "durationMs": 40.45
++      },
++      "upstreamDecision": null,
++      "shadowMode": false,
++      "enforcementActive": true
++    }
++  },
++  {
++    "i": 22,
++    "raw": null,
++    "requestId": "7cc39521-b6df-48d9-93e5-ee4ed0e3e48b",
++    "gate": {
++      "query": "مش كان مكتب رام الله يسكر السبت عالواحدة؟",
++      "chunks": [
++        {
++          "text": "لا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل\n\nبعض الشركات المعتمدة قد تحصل على حساب آجل بموافقة مالية مسبقة.\n\nتنفيذ مشروع سابق أو دفع فاتورة سابقة لا يمنح حسابًا آجلًا تلقائيًا.\n\nلا توجد مدة ائتمان عامة موحدة لجميع الشركات.\n\n14. معلومات تاريخية\n\nحتى 2026-04-30 كان مكتب رام الله يغلق السبت الساعة 13:00.\n\nمن 2026-05-01 أصبحت ساعات السبت الحالية لمكتب رام الله 09:00–15:00.\n\nعند السؤال عن الوضع الحالي استخدم السياسة الحالية، لا التاريخية.\n\n15. معلومات غير متوفرة عمدًا\n\nلا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_7_75bac687de92",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.7373950628571428,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6944016022857143,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "شو كل مكاتبكم الحالية؟"
++        },
++        {
++          "role": "assistant",
++          "content": "مكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\nهذه قائمة المكاتب الحالية الكاملة.\nلا يوجد مكتب حالي في جنين أو طولكرم أو الخليل."
++        },
++        {
++          "role": "user",
++          "content": "مكتب نابلس بفتح الجمعة؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا، الجمعة مغلق."
++        },
++        {
++          "role": "user",
++          "content": "رام الله السبت لأي ساعة؟"
++        },
++        {
++          "role": "assistant",
++          "content": "السبت 09:00–15:00."
++        }
++      ],
++      "tenantId": "default"
++    }
++  },
++  {
++    "i": 25,
++    "raw": "لا. الكتالوج مش مخزون حي.",
++    "requestId": "e6b99d70-8d67-4346-80d5-6b0ae96d7f71",
++    "gate": {
++      "query": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟",
++      "chunks": [
++        {
++          "text": "إذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.\n\nالكتالوج لا يساوي مخزونًا حيًا، ونطاق الخدمة لا يساوي موعدًا متاحًا.\n\nفي الحسابات استخدم فقط القيم والقواعد المثبتة هنا.\n\nإذا كانت المعلومة غير موجودة أو تحتاج بيانات حية، لا تفترضها.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.66596328,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.659616376,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "مش كان مكتب رام الله يسكر السبت عالواحدة؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        },
++        {
++          "role": "user",
++          "content": "طيب هسّا عالواحدة ولا عالثلاثة؟"
++        },
++        {
++          "role": "assistant",
++          "content": "عالثلاثة. السبت 09:00–15:00."
++        },
++        {
++          "role": "user",
++          "content": "عندكم بطارية 10kWh متوفرة هسّا؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        }
++      ],
++      "tenantId": "default"
++    },
++    "boundary": {
++      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "question": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟",
++      "tenantId": "default",
++      "route": "COMPANY_KNOWLEDGE",
++      "serverEvidence": [
++        {
++          "text": "إذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.\n\nالكتالوج لا يساوي مخزونًا حيًا، ونطاق الخدمة لا يساوي موعدًا متاحًا.\n\nفي الحسابات استخدم فقط القيم والقواعد المثبتة هنا.\n\nإذا كانت المعلومة غير موجودة أو تحتاج بيانات حية، لا تفترضها.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.66596328,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.659616376,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "validation": {
++        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++        "overallStatus": "UNSUPPORTED",
++        "validationState": "UNSUPPORTED",
++        "confidenceScore": 0.426,
++        "confidenceLabel": "Low",
++        "evidenceCoverage": 1,
++        "claims": [
++          {
++            "id": "claim-1",
++            "text": "لا.",
++            "sourceText": "لا.",
++            "originalCompoundClaim": "لا.",
++            "propositionText": "لا.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-1",
++            "factual": false,
++            "classification": "UNKNOWN",
++            "confidence": 0.5,
++            "evidenceChunkIds": [],
++            "similarity": 0,
++            "keywordOverlap": 0,
++            "citationCoverage": 0,
++            "missingEvidence": false,
++            "contradictionScore": 0
++          },
++          {
++            "id": "claim-2",
++            "text": "الكتالوج مش مخزون حي.",
++            "sourceText": "الكتالوج مش مخزون حي.",
++            "originalCompoundClaim": "الكتالوج مش مخزون حي.",
++            "propositionText": "الكتالوج مش مخزون حي.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-2",
++            "factual": true,
++            "classification": "UNSUPPORTED",
++            "confidence": 0.7674,
++            "evidenceChunkIds": [
++              "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b"
++            ],
++            "similarity": 0.0647,
++            "keywordOverlap": 0.25,
++            "citationCoverage": 1,
++            "missingEvidence": false,
++            "contradictionScore": 0,
++            "numericExact": true,
++            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_9_e21270dd0d2b",
++            "matchedSentence": "قاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.",
++            "semanticScore": 0.0647,
++            "numericResult": {
++              "relation": "NONE",
++              "claimQuantities": [],
++              "evidenceQuantities": []
++            },
++            "derivedStatus": "NOT_PROVEN",
++            "derivedProvenance": null,
++            "completeListEntailed": false,
++            "negationResult": {
++              "claimNegated": true,
++              "evidenceNegated": true,
++              "relation": "ALIGNED"
++            },
++            "finalClassification": "UNSUPPORTED",
++            "numericSafetyVeto": null,
++            "policyGuard": {
++              "relation": "NOT_APPLICABLE",
++              "branches": []
++            }
++          }
++        ],
++        "supportedClaims": [],
++        "partiallySupportedClaims": [],
++        "unsupportedClaims": [
++          "الكتالوج مش مخزون حي."
++        ],
++        "contradictedClaims": [],
++        "ignoredPromptInjectionChunks": [
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46"
++        ],
++        "uniqueEvidenceChunks": 2,
++        "durationMs": 18.405
++      },
++      "upstreamDecision": null,
++      "shadowMode": false,
++      "enforcementActive": true
++    }
++  },
++  {
++    "i": 26,
++    "raw": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
++    "requestId": "e3d284be-39ca-461c-bd52-846315245290",
++    "gate": {
++      "query": "بقدر أحجز فني لليوم؟",
++      "chunks": [
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6396566400000001,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "لا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.\n\nلا يوجد سعر ثابت لتقوية السطح أو الأعمال المدنية؛ تحتاج معاينة وعرضًا.\n\nلا توجد بيانات إنتاج كهرباء حية لنظام عميل بعينه.\n\nلا توجد معلومة عن حالة طلب أو دفعة أو موعد عميل بعينه دون مصدر حي منفصل.\n\n16. التواصل\n\nخدمة العملاء: 09-555-3610\n\nالدعم الفني للحالات القائمة: 0597-330-814\n\nطلبات الشركات: 0568-220-906\n\n17. قواعد تفسير\n\nطبّق > و >= و < و <= و = حرفيًا ولا تغيّر شمول الحدود.\n\nلا تستخدم رقمًا أو شرطًا من سياسة لإثبات نتيجة سياسة مختلفة.\n\nإذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.63058064,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "طيب هسّا عالواحدة ولا عالثلاثة؟"
++        },
++        {
++          "role": "assistant",
++          "content": "عالثلاثة. السبت 09:00–15:00."
++        },
++        {
++          "role": "user",
++          "content": "عندكم بطارية 10kWh متوفرة هسّا؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        },
++        {
++          "role": "user",
++          "content": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        }
++      ],
++      "tenantId": "default"
++    },
++    "boundary": {
++      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "question": "بقدر أحجز فني لليوم؟",
++      "tenantId": "default",
++      "route": "COMPANY_KNOWLEDGE",
++      "serverEvidence": [
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6396566400000001,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "لا توجد سياسة معتمدة في هذه القاعدة لتركيب أنظمة خارج الضفة الغربية.\n\nلا توجد أسماء شركات التأمين على مشاريع العملاء.\n\nلا يوجد سعر ثابت لتقوية السطح أو الأعمال المدنية؛ تحتاج معاينة وعرضًا.\n\nلا توجد بيانات إنتاج كهرباء حية لنظام عميل بعينه.\n\nلا توجد معلومة عن حالة طلب أو دفعة أو موعد عميل بعينه دون مصدر حي منفصل.\n\n16. التواصل\n\nخدمة العملاء: 09-555-3610\n\nالدعم الفني للحالات القائمة: 0597-330-814\n\nطلبات الشركات: 0568-220-906\n\n17. قواعد تفسير\n\nطبّق > و >= و < و <= و = حرفيًا ولا تغيّر شمول الحدود.\n\nلا تستخدم رقمًا أو شرطًا من سياسة لإثبات نتيجة سياسة مختلفة.\n\nإذا كانت القائمة موصوفة بأنها كاملة وحالية يمكن نفي عنصر غير مدرج؛ غير ذلك لا تستنتج النفي.\n\nفرّق بين الحالي والتاريخي.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.63058064,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "validation": {
++        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++        "overallStatus": "UNSUPPORTED",
++        "validationState": "UNSUPPORTED",
++        "confidenceScore": 0.4664,
++        "confidenceLabel": "Low",
++        "evidenceCoverage": 1,
++        "claims": [
++          {
++            "id": "claim-1",
++            "text": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
++            "sourceText": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
++            "originalCompoundClaim": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
++            "propositionText": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-1",
++            "factual": true,
++            "classification": "UNSUPPORTED",
++            "confidence": 0.58,
++            "evidenceChunkIds": [
++              "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++              "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01"
++            ],
++            "similarity": 0.3526,
++            "keywordOverlap": 0.4211,
++            "citationCoverage": 1,
++            "missingEvidence": false,
++            "contradictionScore": 0,
++            "numericExact": true,
++            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++            "matchedSentence": "يمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.",
++            "semanticScore": 0.3526,
++            "numericResult": {
++              "relation": "NONE",
++              "claimQuantities": [],
++              "evidenceQuantities": []
++            },
++            "derivedStatus": "NOT_PROVEN",
++            "derivedProvenance": null,
++            "completeListEntailed": false,
++            "negationResult": {
++              "claimNegated": true,
++              "evidenceNegated": true,
++              "relation": "ALIGNED"
++            },
++            "finalClassification": "UNSUPPORTED",
++            "numericSafetyVeto": null,
++            "policyGuard": {
++              "relation": "NOT_APPLICABLE",
++              "branches": []
++            }
++          }
++        ],
++        "supportedClaims": [],
++        "partiallySupportedClaims": [],
++        "unsupportedClaims": [
++          "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي."
++        ],
++        "contradictedClaims": [],
++        "ignoredPromptInjectionChunks": [
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_8_688223855e01"
++        ],
++        "uniqueEvidenceChunks": 2,
++        "durationMs": 66.072
++      },
++      "upstreamDecision": null,
++      "shadowMode": false,
++      "enforcementActive": true
++    }
++  },
++  {
++    "i": 28,
++    "raw": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
++    "requestId": "178546bb-77f2-45c8-9b03-7cf05b2295be",
++    "gate": {
++      "query": "بما إنكم بتخدموا نابلس، أكيد في فني متوفر اليوم بنابلس صح؟",
++      "chunks": [
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6793689359999999,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6240689600000001,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "history": [
++        {
++          "role": "user",
++          "content": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        },
++        {
++          "role": "user",
++          "content": "بقدر أحجز فني لليوم؟"
++        },
++        {
++          "role": "assistant",
++          "content": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل."
++        },
++        {
++          "role": "user",
++          "content": "طيب شوفلي إذا في موعد بكرا الصبح."
++        },
++        {
++          "role": "assistant",
++          "content": "لا. هاي المعلومة مش متوفرة عندي حاليًا."
++        }
++      ],
++      "tenantId": "default"
++    },
++    "boundary": {
++      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "validatedAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++      "question": "بما إنكم بتخدموا نابلس، أكيد في فني متوفر اليوم بنابلس صح؟",
++      "tenantId": "default",
++      "route": "COMPANY_KNOWLEDGE",
++      "serverEvidence": [
++        {
++          "text": "لا يوجد في هذه القاعدة وعد بأن كل عطل سيتم إصلاحه مجانًا؛ يجب تحديد سبب العطل وتغطية الضمان.\n\n11. الأعطال والطوارئ\n\nإذا ظهرت رائحة احتراق أو شرر أو سخونة غير طبيعية: أوقف النظام من مفتاح الفصل الآمن إذا كان ذلك ممكنًا بدون خطر، ولا تفتح الإنفرتر أو البطارية بنفسك، واتصل بالدعم الفني.\n\nلا تنفذ الشركة تشخيصًا نهائيًا لسبب العطل من رسالة نصية فقط.\n\n12. المواعيد والتوفر الحي\n\nيمكن طلب موعد كشف أو صيانة، لكن الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.\n\nقاعدة المعرفة لا تحتوي جدول الفنيين الحي ولا مخزون القطع أو البطاريات اللحظي.\n\nلا يجوز استنتاج توفر موعد اليوم أو توفر قطعة الآن من وجود الخدمة أو المنتج في القائمة.\n\n13. الشركات والحساب الآجل",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6793689359999999,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        },
++        {
++          "text": "قاعدة معرفة — شُروق لحلول الطاقة الشمسية\n\nشركة خيالية مخصّصة لاختبار FuBot. العملة: شيكل (ILS). هذه الوثيقة هي مصدر حقائق الشركة في الاختبار.\n\n1. الفروع ومناطق الخدمة\n\nمكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\n\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\n\nهذه قائمة المكاتب الحالية الكاملة. لا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.\n\nالخدمة الميدانية القياسية متاحة في محافظات نابلس ورام الله والبيرة وطولكرم وقلقيلية. المناطق الأخرى تحتاج موافقة وعرض منفصل.\n\nوجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.\n\n2. زيارة الكشف\n\nرسوم زيارة الكشف داخل نطاق الخدمة القياسي: 80 شيكل.",
++          "tenantId": "default",
++          "documentId": "doc_b1bbceecf84e417aa20015f12379707f",
++          "documentVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1",
++          "chunkId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
++          "sourceType": "uploaded_document",
++          "sourceName": "Shorouq_Solar_Knowledge_Base.docx",
++          "retrievalScore": 0.6240689600000001,
++          "indexVersionId": "doc_b1bbceecf84e417aa20015f12379707f:v1"
++        }
++      ],
++      "validation": {
++        "finalAnswer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
++        "overallStatus": "UNSUPPORTED",
++        "validationState": "UNSUPPORTED",
++        "confidenceScore": 0.1865,
++        "confidenceLabel": "Reject",
++        "evidenceCoverage": 0,
++        "claims": [
++          {
++            "id": "claim-1",
++            "text": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
++            "sourceText": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
++            "originalCompoundClaim": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
++            "propositionText": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
++            "propositionType": "SINGLE",
++            "relationshipType": "SINGLE",
++            "compoundId": "compound-1",
++            "factual": true,
++            "classification": "UNSUPPORTED",
++            "confidence": 0.736,
++            "evidenceChunkIds": [],
++            "similarity": 0.1425,
++            "keywordOverlap": 0.25,
++            "citationCoverage": 0,
++            "missingEvidence": true,
++            "contradictionScore": 0,
++            "numericExact": true,
++            "matchedEvidenceId": "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2",
++            "matchedSentence": "وجود منطقة ضمن نطاق الخدمة لا يثبت توفر موعد اليوم.",
++            "semanticScore": 0.1425,
++            "numericResult": {
++              "relation": "NONE",
++              "claimQuantities": [],
++              "evidenceQuantities": []
++            },
++            "derivedStatus": "NOT_PROVEN",
++            "derivedProvenance": null,
++            "completeListEntailed": false,
++            "negationResult": {
++              "claimNegated": true,
++              "evidenceNegated": true,
++              "relation": "ALIGNED"
++            },
++            "finalClassification": "UNSUPPORTED",
++            "numericSafetyVeto": null,
++            "policyGuard": {
++              "relation": "NOT_APPLICABLE",
++              "branches": []
++            }
++          }
++        ],
++        "supportedClaims": [],
++        "partiallySupportedClaims": [],
++        "unsupportedClaims": [
++          "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم."
++        ],
++        "contradictedClaims": [],
++        "ignoredPromptInjectionChunks": [
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_6_e1c3b62e8a46",
++          "doc_b1bbceecf84e417aa20015f12379707f_chunk_0_8802f1aa45b2"
++        ],
++        "uniqueEvidenceChunks": 2,
++        "durationMs": 65.284
++      },
++      "upstreamDecision": null,
++      "shadowMode": false,
++      "enforcementActive": true
++    }
++  }
++]
+\ No newline at end of file
+--- a/backend/test/rag_indexing_success_contract.test.js
++++ b/backend/test/rag_indexing_success_contract.test.js
+@@ -87,6 +87,8 @@
+         assertActiveDocument(doc);
+         assert.strictEqual(doc.status, 'active');
+         assert.strictEqual(doc.chunk_count, doc.vector_count);
++        assert.strictEqual(doc.vector_dimension, 3);
++        assert.ok(doc.embedding_model);
+     });
+ 
+     await t.test('2 extraction failure is typed and persisted failed', async () => {
+--- a/backend/test/reliability_maintenance.test.js
++++ b/backend/test/reliability_maintenance.test.js
+@@ -0,0 +1,85 @@
++const test=require('node:test'),assert=require('node:assert/strict');
++const fixtures=require('./fixtures/reliability/maintenance-traces.json');
++const {validateDetailed}=require('../src/rag/intelligence/answerValidator');
++const {decideEvidence}=require('../src/rag/intelligence/evidenceDecisionGate');
++const {recoverEvidenceExcerpt}=require('../src/rag/intelligence/evidenceExcerptRecovery');
++const {applyGroundingSafetyBoundary}=require('../src/rag/security/groundingSafetyBoundary');
++const validate=(answer,g)=>validateDetailed(answer,g.chunks,{question:g.query,tenantId:g.tenantId});
++for(const f of fixtures)test(`original trace replay ${f.i}: gate, validator and delivery boundary`,()=>{
++ assert.equal(decideEvidence(f.gate).decision,'ANSWER');
++ let answer=f.raw || recoverEvidenceExcerpt(f.gate.query,f.gate.chunks,f.gate.tenantId)?.answer;
++ let v=validate(answer,f.gate);
++ if(v.overallStatus!=='SUPPORTED'){
++  const recovered=recoverEvidenceExcerpt(f.gate.query,f.gate.chunks,f.gate.tenantId);
++  assert.ok(recovered,'safe source recovery must be available');answer=recovered.answer;v=recovered.validation;
++ }
++ assert.equal(v.overallStatus,'SUPPORTED');
++ const b=applyGroundingSafetyBoundary({...f.boundary,answer,validatedAnswer:answer,question:f.gate.query,tenantId:f.gate.tenantId,serverEvidence:f.gate.chunks,validation:v,shadowMode:false,enforcementActive:true});
++ assert.equal(b.decision,'ALLOW',JSON.stringify(b.reasons));
++});
++test('eligibility proof rejects wrong product, unit, threshold, percentage and tenant',()=>{
++ const g=fixtures.find(f=>f.i===10).gate;
++ for(const a of ['Home 8K عليه خصم 5%.','عليها خصم 5% لأن السعر الأساسي 18,700 دولار (≥ 18,000).','عليها خصم 5% لأن السعر الأساسي 18,700 شيكل (≥ 19,000).','عليها خصم 6%.','عليها خصم 5% والتركيب مجاني.'])assert.notEqual(validate(a,g).overallStatus,'SUPPORTED',a);
++ assert.notEqual(validate('آه، عليها خصم 5%.',{...g,tenantId:'other-company'}).overallStatus,'SUPPORTED');
++ assert.notEqual(validate('Home 3K مؤهلة لخصم 5%.',fixtures.find(f=>f.i===11).gate).overallStatus,'SUPPORTED');
++});
++test('negation reversal never inherits a catalog denial proof',()=>{
++ const g=fixtures.find(f=>f.i===25).gate;
++ for(const a of ['الكتالوج يثبت توفر المخزون.','وجود البطارية بالقائمة يعني توفرها في المخزن الآن.'])assert.notEqual(validate(a,g).overallStatus,'SUPPORTED',a);
++});
++test('tomorrow availability requires explicit uncertainty, not confirmation rule alone',()=>{
++ const g={...fixtures.find(f=>f.i===26).gate,query:'في موعد بكرا الصبح؟'};
++ for(const a of ['الموعد لا يصبح مؤكدًا إلا بعد تأكيد الشركة.','لا يوجد موعد بكرا.','حجزت لك موعد بكرا.','سأتابع وأرجعلك بالموعد.'])assert.notEqual(validate(a,g).overallStatus,'SUPPORTED',a);
++ const recovery=recoverEvidenceExcerpt(g.query,g.chunks,g.tenantId);assert.ok(recovery);assert.match(recovery.answer,/لا تحتوي.*جدول/u);
++});
++test('provider failures are technical and redact upstream URLs and key details',()=>{
++ const {providerFailure}=require('../src/services/providerFailure');
++ const quota=providerFailure(new Error('Key limit exceeded (total limit). https://provider.invalid/keys/private-id'));
++ assert.equal(quota.kind,'BUDGET_EXHAUSTED');assert.equal(quota.retryable,false);assert.doesNotMatch(quota.message,/private-id|https|المعلومة غير/);
++ assert.equal(providerFailure(new Error('request timed out')).kind,'TIMEOUT');
++});
++for(const f of require('./fixtures/reliability/maintenance-extra.json'))test(`new live regression ${f.i}`,()=>{
++ const validation=validate(f.raw,f.gate);
++ assert.equal(validation.overallStatus,'SUPPORTED');
++ assert.equal(applyGroundingSafetyBoundary({answer:f.raw,validatedAnswer:f.raw,question:f.gate.query,tenantId:f.gate.tenantId,serverEvidence:f.gate.chunks,validation,shadowMode:false,enforcementActive:true}).decision,'ALLOW');
++ if(f.i===13)assert.notEqual(validate(f.raw.replace('12,900','12,255'),f.gate).overallStatus,'SUPPORTED');
++ if(f.i===13){
++  const answer='باقة Home 3K سعرها الأساسي 12,900 شيكل، وهي غير مؤهلة للخصم.';
++  const v=validate(answer,f.gate);assert.equal(v.overallStatus,'SUPPORTED');
++  assert.equal(applyGroundingSafetyBoundary({answer,validatedAnswer:answer,question:f.gate.query,tenantId:f.gate.tenantId,serverEvidence:f.gate.chunks,validation:v,shadowMode:false,enforcementActive:true}).decision,'ALLOW');
++ }
++});
++test('calendar punctuation is never interpreted as a subtraction proof',()=>{
++ const {validateDerivedClaim}=require('../src/rag/intelligence/derivedClaimValidator');
++ assert.equal(validateDerivedClaim({claim:'حتى 2026-04-30 كان المكتب يغلق 13:00.',question:'ساعات المكتب سابقا؟',chunks:[]}).status,'NOT_PROVEN');
++});
++test('dialect refund negation preserves the less-than-three-days branch',()=>{
++ const g={query:'قبل يومين إلغاء الحجز؟',tenantId:'test',chunks:[{id:'cancel',tenantId:'test',text:'إذا أُلغي قبل الموعد بأقل من 3 أيام: مبلغ الحجز غير مسترد.'}]};
++ assert.equal(validate('إذا ألغيت الحجز قبل يومين (أي أقل من 3 أيام)، مبلغ الحجز ما بيرجع.',g).overallStatus,'SUPPORTED');
++ assert.notEqual(validate('إذا ألغيت الحجز قبل يومين، مبلغ الحجز بيرجع.',g).overallStatus,'SUPPORTED');
++});
++test('conditional source recovery copies the unique applicable inclusive branch',()=>{
++ const chunks=[{id:'refund',tenantId:'test',text:'إلغاء الحجز\nقبل أكثر من 48 ساعة: يُرد كامل مبلغ الحجز.\nقبل 24 ساعة أو أكثر وحتى 48 ساعة شاملة: يُرد 50% من مبلغ الحجز.\nقبل أقل من 24 ساعة: مبلغ الحجز غير مسترد.'}];
++ const q='إذا ألغيت قبل 24 ساعة، كم بسترد؟';
++ const recovered=recoverEvidenceExcerpt(q,chunks,'test');assert.ok(recovered);assert.match(recovered.answer,/50%/);
++ assert.equal(recoverEvidenceExcerpt(q,chunks,'foreign'),null);
++ const boundary=applyGroundingSafetyBoundary({answer:recovered.answer,validatedAnswer:recovered.answer,question:q,tenantId:'test',serverEvidence:chunks,validation:recovered.validation,shadowMode:false,enforcementActive:true});
++ assert.equal(boundary.decision,'ALLOW');
++});
++test('attached duration preposition remains a quantity for branch selection',()=>{
++ const {extractQuantities}=require('../src/rag/intelligence/answerValidator');
++ assert.ok(extractQuantities('قبل التركيب بـ8 أيام').some(q=>q.value===8&&q.unit==='DAY'));
++});
++test('mentioning both roles without the renter threshold is not responsive',()=>{
++ const g={query:'عمري 22 سنة بقدر أستأجر وأشغل؟',tenantId:'test',chunks:[{id:'ages',tenantId:'test',text:'المستأجر الأساسي يجب أن يكون 21 سنة أو أكثر. مشغل المعدة يجب أن يكون 23 سنة أو أكثر. شرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.'}]};
++ assert.notEqual(validate('شرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.',g).overallStatus,'SUPPORTED');
++ const recovered=recoverEvidenceExcerpt(g.query,g.chunks,g.tenantId);assert.ok(recovered);assert.match(recovered.answer,/21/);assert.match(recovered.answer,/23/);
++});
++test('verbatim shared operator rule retains both source product identities',()=>{
++ const question='عمري 22 سنة، بقدر أستأجر الحفارة MX20 وأشغلها أنا؟';
++ const chunks=[{id:'shared-age',tenantId:'test',text:'المستأجر الأساسي يجب أن يكون **21 سنة أو أكثر** مع هوية سارية ورقم هاتف فعال. مشغل MX20 أو SL10 يجب أن يكون **23 سنة أو أكثر**. شرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.'}];
++ const recovered=recoverEvidenceExcerpt(question,chunks,'test');assert.ok(recovered);assert.match(recovered.answer,/21/);assert.match(recovered.answer,/23/);
++ assert.equal(applyGroundingSafetyBoundary({answer:recovered.answer,validatedAnswer:recovered.answer,question,tenantId:'test',serverEvidence:chunks,validation:recovered.validation,shadowMode:false,enforcementActive:true}).decision,'ALLOW');
++ assert.equal(recoverEvidenceExcerpt(question,chunks,'foreign'),null);
++ assert.notEqual(validateDetailed('مشغل MX20 أو SL10 يجب أن يكون 21 سنة أو أكثر.',chunks,{question,tenantId:'test'}).overallStatus,'SUPPORTED');
++});

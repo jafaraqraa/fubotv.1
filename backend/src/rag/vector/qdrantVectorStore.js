@@ -194,6 +194,20 @@ async function scrollPointsPage(filter, offset, limit, signal, stage) {
     return { points: result.points || [], nextOffset: result.next_page_offset ?? null };
 }
 
+async function searchLexicalPoints(tenantId, baseFilter, terms, options = {}) {
+    tenantId = requireTenantId(tenantId, 'qdrant-lexical-search');
+    const safeTerms = [...new Set((terms || []).filter(term => typeof term === 'string' && term.length >= 3))].slice(0, 16);
+    if (!safeTerms.length) return [];
+    // The original lifecycle/version/media filters remain mandatory, nested
+    // separately from the lexical OR so neither can satisfy the other.
+    const filter = { must: [
+        { key: 'tenantId', match: { value: tenantId } }, baseFilter,
+        { should: safeTerms.map(text => ({ key: 'text', match: { text } })) }
+    ] };
+    const result = await scrollPointsPage(filter, null, Math.min(100, options.limit || 100), options.signal, 'lexical retrieval');
+    return result.points.filter(point => point.payload?.tenantId === tenantId);
+}
+
 async function scrollTenantPointsPage(tenantId, options = {}) {
     tenantId = requireTenantId(tenantId, 'qdrant-reconcile-scroll');
     const limit = Math.max(1, Math.min(500, Number(options.limit) || 100));
@@ -738,5 +752,6 @@ module.exports = {
     scrollUnownedPointsPage,
     deleteTenantPointsByIds,
     searchPoints,
+    searchLexicalPoints,
     countPoints
 };

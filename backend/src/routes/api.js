@@ -1291,7 +1291,7 @@ router.post('/rag/access/unlock', (req, res) => {
             actorId: req.session.userId, tenantId: req.ragTenantId,
             action: 'rag_access_unlock', resourceType: 'rag', outcome: 'failure'
         });
-        return res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
+        return res.status(403).json({ success: false, code: 'RAG_PASSWORD_INVALID', error: 'كلمة المرور غير صحيحة.' });
     }
 
     req.session.ragAccessUnlockedAt = now;
@@ -1493,6 +1493,15 @@ router.post('/rag/reindex', rateLimitReindex, async (req, res) => {
             error.code = 'RAG_FINAL_STATE_INVALID';
             error.stage = 'activation';
             throw error;
+        }
+        if (process.env.RAG_IMPLEMENTATION === 'v2') {
+            const manualPath = getManualKnowledgePath(req.ragTenantId);
+            await require('../rag_v2/ingestion/productionSync').syncManualKnowledgeToV2({
+                tenantId: req.ragTenantId,
+                originalText: fs.readFileSync(manualPath, 'utf8'),
+                sourceUri: manualPath,
+                signal: cancellation.signal
+            });
         }
         res.status(200).json({
             success: true,

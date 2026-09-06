@@ -270,16 +270,21 @@ function existsByExternalId(channel, externalMsgId, tenantId = null) {
     return !!row;
 }
 
-function getChatHistoryForAI(userId, tenantId = 'default', channel = null) {
+function getChatHistoryForAI(userId, tenantId = 'default', channel = null, options = {}) {
     const conversationId = getConversationIdByUserId(userId, tenantId, channel);
     if (!conversationId) return [];
 
-    const rows = db.prepare(`
-        SELECT sender_type, role, content as text
-        FROM messages
-        WHERE conversation_id = ? AND is_internal_note = 0
-        ORDER BY created_at ASC
-    `).all(conversationId);
+    const rows = options.userOnly
+        ? db.prepare(`
+            SELECT sender_type, role, content as text FROM messages
+            WHERE conversation_id = ? AND is_internal_note = 0 AND role = 'user'
+            ORDER BY created_at DESC, id DESC LIMIT 24
+        `).all(conversationId).reverse()
+        : db.prepare(`
+            SELECT sender_type, role, content as text FROM messages
+            WHERE conversation_id = ? AND is_internal_note = 0
+            ORDER BY created_at ASC
+        `).all(conversationId);
 
     const filtered = rows.filter(msg => {
         // Exclude system responses
@@ -290,7 +295,9 @@ function getChatHistoryForAI(userId, tenantId = 'default', channel = null) {
         return true;
     });
 
-    const recent = filtered.slice(-6);
+    const recent = options.userOnly
+        ? filtered.filter(msg => msg.role === 'user').slice(-24)
+        : filtered.slice(-6);
 
     return recent.map(msg => ({
         role: msg.role,

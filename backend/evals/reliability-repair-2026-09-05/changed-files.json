@@ -1,0 +1,127 @@
+[
+  {
+    "path": "backend/src/services/knowledge.js",
+    "change": "modified",
+    "sha256": "d6e384bdd8293d0a0007cc47a3401146ae97fcf720d1005b56437da5a5450540"
+  },
+  {
+    "path": "backend/src/services/ai.js",
+    "change": "modified",
+    "sha256": "f5f6f8c774718bbae4feaf4ad9656f149abe69d7d2046247f056974008c8cdbe"
+  },
+  {
+    "path": "backend/src/rag/security/conditionalPolicyGuard.js",
+    "change": "modified",
+    "sha256": "33693f6221c2d83dd60ab0869f724f03e8ed62f3630ac88551b0f6f5ced6c1ec"
+  },
+  {
+    "path": "backend/src/rag/intelligence/evidenceDecisionGate.js",
+    "change": "modified",
+    "sha256": "4fa55e64540fe1f1ed62ca0c7cabc9806019a4a26ea3e59ee37b62beb365f2e8"
+  },
+  {
+    "path": "backend/src/rag/intelligence/answerValidator.js",
+    "change": "modified",
+    "sha256": "87a2cf9974ac37b87dcf2e33adf52783955f2910d5258d82e9b8591c99e718f7"
+  },
+  {
+    "path": "backend/src/rag/intelligence/conversationReferent.js",
+    "change": "added",
+    "sha256": "bbe1a0feda260ddfe8022e5a55e564d14c9794fdde98027b79b31af8f1bfe8d0"
+  },
+  {
+    "path": "backend/src/rag/intelligence/retrievalRelevance.js",
+    "change": "added",
+    "sha256": "3db58e8b477558f68b2c3f9a491d4905e7d3d828b77621cd96e2fcb57c32ef6d"
+  },
+  {
+    "path": "backend/src/rag/vector/qdrantVectorStore.js",
+    "change": "modified",
+    "sha256": "b7fc9c89397ae73dab418d0875c82fa81457d5881e0835c04f296bb610922c0e"
+  },
+  {
+    "path": "backend/src/rag/processing/tableStructure.js",
+    "change": "added",
+    "sha256": "d541af79cc061b5b90a5592487adb5698e3923e74e6ad96598b9e721a24daaad"
+  },
+  {
+    "path": "backend/src/rag/processing/documentChunker.js",
+    "change": "modified",
+    "sha256": "00a7a6af4854d22d689d55fb0516bed23a4e828effc2d60255050e380f12fb8f"
+  },
+  {
+    "path": "backend/src/rag/services/hybridRetrievalService.js",
+    "change": "modified",
+    "sha256": "8270fa8263ec90b6128b0edb90ba6ae4c72f67174b2354afa039df3dd60b6581"
+  },
+  {
+    "path": "backend/src/rag/services/rerankingService.js",
+    "change": "modified",
+    "sha256": "4b9e58c2141e1a43ccc1f0fc288b1ab57b09eb5320efed9b860ab0c3f1766848"
+  },
+  {
+    "path": "backend/src/rag/loaders/documentExtractionService.js",
+    "change": "modified",
+    "sha256": "81fcf8925520176920b691e3d232f5037bcfe7101f291f0df5b65e79fdcb7b10"
+  },
+  {
+    "path": "backend/src/database/repositories/ragRequestTraceRepository.js",
+    "change": "modified",
+    "sha256": "5e69b7858c5962a0f361f7e94e0db8d5a905a1312ea125ca5bc5d6f082cf7101"
+  },
+  {
+    "path": "backend/src/database/repositories/messageRepository.js",
+    "change": "modified",
+    "sha256": "ff85bf422daec2808a6abc5000b12c53ea15f951685ee79316551b4b69e92b9b"
+  },
+  {
+    "path": "backend/src/database/migrations/033_rag_reliability_metadata.sql",
+    "change": "added",
+    "sha256": "c238877eb7f0ad04b6c7a38e730c49569bea1717be1f0f4ae1d51c162bc580bd"
+  },
+  {
+    "path": "backend/package.json",
+    "change": "modified",
+    "sha256": "d7586e621210dc393d805dab787e860eb5d859f1b8cb08354ebacf7bd46b1a45"
+  },
+  {
+    "path": "REPAIR_README_AR.md",
+    "change": "added",
+    "sha256": "867b6711e8748f9c7f35cf7b0c9174ccf8e10743815263e8f4bfb2fd1015371e"
+  },
+  {
+    "path": "backend/test/reliability_policy_scope.test.js",
+    "change": "added",
+    "sha256": "7ec6bfc4085f3a4981890ef8461c4da78ffbe89e637b7ca943ff2817884753ab"
+  },
+  {
+    "path": "backend/test/reliability_lexical_search.test.js",
+    "change": "added",
+    "sha256": "f9d91449445245af2215501a4fd8b889c487306a60c52bfb90d5d0cc868717e5"
+  },
+  {
+    "path": "backend/test/reliability_cross_sector.test.js",
+    "change": "added",
+    "sha256": "7f46e69ba267074040eac00ee4d94293ee19274fd8c58f23733d290d5f343dd3"
+  },
+  {
+    "path": "backend/test/reliability_retrieval_contract.test.js",
+    "change": "added",
+    "sha256": "f8becdb9506234c7929110cb715e8a2c5ee7d392ae9d39c652a534b8d1b04ab0"
+  },
+  {
+    "path": "backend/test/reliability_extraction.test.js",
+    "change": "added",
+    "sha256": "53a48897cb86731d9012ccd8d4ed90ccdb3da1f25c876684eb1cf9fff867429a"
+  },
+  {
+    "path": "backend/test/fixtures/reliability/table.docx",
+    "change": "added",
+    "sha256": "a68741e31dafabecab76254d54139bdfd13c470c4ea13a4766fc6f08c0e325f2"
+  },
+  {
+    "path": "backend/test/fixtures/reliability/readable.pdf",
+    "change": "added",
+    "sha256": "a968dc85e99fd64bf811d5987e3e0a11c31b20c79361a6d950c96cc3f9d7c6ca"
+  }
+]

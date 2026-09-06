@@ -1,0 +1,77 @@
+[
+  {
+    "file": "backend/src/rag/intelligence/answerValidator.js",
+    "before": "b474b80095dd7e620dda7c1a4bcb252354f177f77531685590eef47412187035",
+    "after": "7187bb578d2ac6b9e27cf9152baf11092f80f0668464df273b39cce0b81f8a11"
+  },
+  {
+    "file": "backend/src/rag/intelligence/derivedClaimValidator.js",
+    "before": "caa9b61039e7a3903559cc3ee37f0197d74cafab9add7e32d33f5929aa9cae95",
+    "after": "7e6231121946d61c8b81f98babceffa496bf2eadf4ca11fada99b3342f214fae"
+  },
+  {
+    "file": "backend/src/rag/intelligence/discountEligibilityProof.js",
+    "before": null,
+    "after": "667767cba6823603a987636239c8af4fd3f80469178676e76c610eaf972eeb24"
+  },
+  {
+    "file": "backend/src/rag/intelligence/evidenceDecisionGate.js",
+    "before": "0d79d94deb092792ad0023378fe502bc301c9c24196507d356f105ca11a7ae02",
+    "after": "2c57e58116bb4c08d2c2898d462507d385f09309bb2009085f74b2378d72b291"
+  },
+  {
+    "file": "backend/src/rag/intelligence/evidenceExcerptRecovery.js",
+    "before": "cf43de202647b3596b2b511df0f54a6062673d8199fc5db3f43dd94f7235727b",
+    "after": "0799a67fbf3d340df236d91933bffa927e74a3d68d4f52998bed9696257be6a8"
+  },
+  {
+    "file": "backend/src/rag/intelligence/propositionNormalization.js",
+    "before": null,
+    "after": "b7b402761087811b06da404f49983a96f6770da42da500d1b370dcbcc4eef6a0"
+  },
+  {
+    "file": "backend/src/rag/security/conditionalPolicyGuard.js",
+    "before": "406d5145081d4a706b24168b8678c185739ad751c3aa540f3a9784b2da40452a",
+    "after": "e3d9dd7bfb20aeab2218b67352b6f6c1f42d57e322f6b20ba4673e43021f242d"
+  },
+  {
+    "file": "backend/src/rag/services/hybridRetrievalService.js",
+    "before": "8270fa8263ec90b6128b0edb90ba6ae4c72f67174b2354afa039df3dd60b6581",
+    "after": "27d57097362f96e03131a6e0c281ef6c3c1a9ef52fcdb82b4274f41ca5e27f2e"
+  },
+  {
+    "file": "backend/src/rag/services/knowledgeDocumentService.js",
+    "before": "c53c19e4d789f6886371926719d35085518c647b88241925560e6aa60763e7a8",
+    "after": "35630edf551ac6aad8e9ba7d5e97be0e23a981c85c9ae2636fedb3c160430b59"
+  },
+  {
+    "file": "backend/src/services/ai.js",
+    "before": "447bbe6516de38eb6b065f260993593473281b2c7db4d684f61cee361acb75ed",
+    "after": "ce3f9ebc1c6957e83140bd24a3bfc1dc193c8632562eb546f005c850b3a5601a"
+  },
+  {
+    "file": "backend/src/services/providerFailure.js",
+    "before": null,
+    "after": "104e95a2ef1ed5ccfeadb4322aefb02a6d094c5cb39819fd42b197833bd03331"
+  },
+  {
+    "file": "backend/test/fixtures/reliability/maintenance-extra.json",
+    "before": null,
+    "after": "12c63a0594b62f4ed922e00b6740162020142de2daf91e0fac0fa7bc06a7aca9"
+  },
+  {
+    "file": "backend/test/fixtures/reliability/maintenance-traces.json",
+    "before": null,
+    "after": "7641ab260996a6f025954c732cd6f2722c8e2033dd64c9f17f0cbbcd8fb743b5"
+  },
+  {
+    "file": "backend/test/rag_indexing_success_contract.test.js",
+    "before": "eb5d3ba19de961ab972ce50784bedc61fe6b432ccde8bdaaa933052d4ed525ea",
+    "after": "6ce5394f3c1855ba3fbb437fc8dfca755380cb63ac67c90b0e0e77fd293517fe"
+  },
+  {
+    "file": "backend/test/reliability_maintenance.test.js",
+    "before": null,
+    "after": "d9b3fe6bc3ca5d3668f3c89d4a5737f76b05285a8239de2ae3768ba040a75013"
+  }
+]

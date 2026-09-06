@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { tableRows } = require('./tableStructure');
 const { normalizeArabic } = require('./arabicNormalizer');
 
 /**
@@ -24,7 +25,7 @@ function validateChunkParams(chunkSize, chunkOverlap) {
  */
 function splitIntoStructuralUnits(text, maxUnitSize) {
     // 1. Try splitting by paragraph (double newlines)
-    const paragraphs = text.split('\n\n').map(p => p.trim()).filter(Boolean);
+    const paragraphs = tableRows(text).split(/\n\n|\n(?=[^\n]*\|)/u).map(p => p.trim()).filter(Boolean);
     const units = [];
 
     for (const paragraph of paragraphs) {
@@ -95,18 +96,15 @@ function chunkDocument(document, chunkSize = 800, chunkOverlap = 120) {
 
             // Build the next chunk starting with overlap from the current chunk
             let overlapText = '';
-            if (chunkOverlap > 0 && currentChunkText.length > chunkOverlap) {
-                const sliceStart = currentChunkText.length - chunkOverlap;
-                const rawSlice = currentChunkText.substring(sliceStart);
-                // Align to word boundary to prevent word splitting
-                const firstSpaceIndex = rawSlice.indexOf(' ');
-                if (firstSpaceIndex !== -1 && firstSpaceIndex < rawSlice.length - 1) {
-                    overlapText = rawSlice.substring(firstSpaceIndex + 1);
-                } else {
-                    overlapText = rawSlice;
-                }
+            // Overlap whole structural units only. A word-aligned suffix can
+            // remove a negation or an eligibility condition and reverse a fact.
+            for (const prior of currentChunkText.split('\n\n').reverse()) {
+                const candidate = overlapText ? `${prior}\n\n${overlapText}` : prior;
+                if (candidate.length > chunkOverlap) break;
+                overlapText = candidate;
             }
 
+            if (overlapText.length + 2 + unit.length > chunkSize) overlapText = '';
             currentChunkText = overlapText ? (overlapText + '\n\n' + unit) : unit;
             chunkHeading = currentHeading;
         } else {

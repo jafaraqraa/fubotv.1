@@ -1,0 +1,31 @@
+{
+  "companies": [
+    {"tenantId":"audit_clinic","company":"عيادة الاختبار","domain":"clinic","documents":[
+      {"id":"clinic-services","name":"services.md","content":"# الخدمات\n| الخدمة | السعر | المدة |\n|---|---:|---:|\n| فحص النظر | 90 شيكل | 30 دقيقة |\n| تنظيف الأسنان | 180 شيكل | 45 دقيقة |"},
+      {"id":"clinic-policy","name":"policy.md","content":"# الإلغاء\nالإلغاء قبل أكثر من 24 ساعة يعيد 100%. الإلغاء خلال 24 ساعة لا يعيد الرسوم."}]},
+    {"tenantId":"audit_bakery","company":"مخبز الاختبار","domain":"bakery","documents":[
+      {"id":"bakery-menu","name":"menu.md","content":"# القائمة الكاملة الحالية\n| الصنف | سعر القطعة | الحد الأدنى |\n|---|---:|---:|\n| كعكة تمر | 12 شيكل | 6 قطع |\n| رغيف زيتون | 8 شيكل | 4 قطع |"},
+      {"id":"bakery-delivery","name":"delivery.md","content":"التوصيل داخل المدينة 15 شيكل. لا تتوفر بيانات حية عن المخزون."}]},
+    {"tenantId":"audit_electronics","company":"متجر الاختبار","domain":"electronics","documents":[
+      {"id":"electronic-products","name":"products.md","content":"# المنتجات\n| المنتج | السعر | الضمان |\n|---|---:|---:|\n| هاتف Z7 | 1300 شيكل | 18 شهراً |\n| شاشة Q4 | 900 شيكل | 24 شهراً |"},
+      {"id":"electronic-payment","name":"payment.md","content":"الدفع نقداً أو بالبطاقة. العملات الرقمية غير مقبولة."}]},
+    {"tenantId":"audit_training","company":"مركز الاختبار","domain":"training","documents":[
+      {"id":"training-courses","name":"courses.md","content":"# الدورات\n| الدورة | السعر الأسبوعي | العمر الأدنى |\n|---|---:|---:|\n| أساس البرمجة | 240 شيكل | 16 سنة |\n| روبوتات ناشئة | 300 شيكل | 12 سنة |"},
+      {"id":"training-credit","name":"credit.md","content":"الحساب الآجل يحتاج موافقة مسبقة، والحضور السابق لا يمنحه تلقائياً."}]}
+  ],
+  "cases": [
+    {"id":"c1","tenantId":"audit_clinic","company":"عيادة الاختبار","domain":"clinic","question":"قديش سعر فحص النظر؟","expectedDecision":"ANSWER","expectedFacts":["90 شيكل"],"tags":["table"]},
+    {"id":"c2","tenantId":"audit_clinic","company":"عيادة الاختبار","domain":"clinic","question":"قديش مدة تنظيف الأسنان؟","expectedDecision":"ANSWER","expectedFacts":["45 دقيقة"],"tags":["table"]},
+    {"id":"c3","tenantId":"audit_clinic","company":"عيادة الاختبار","domain":"clinic","question":"شو سعر هاتف Z7؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"tags":["isolation"]},
+    {"id":"b1","tenantId":"audit_bakery","company":"مخبز الاختبار","domain":"bakery","question":"قديش سعر كعكة التمر؟","expectedDecision":"ANSWER","expectedFacts":["12 شيكل"],"tags":["table"]},
+    {"id":"b2","tenantId":"audit_bakery","company":"مخبز الاختبار","domain":"bakery","question":"شو الحد الأدنى لكعكة التمر؟","expectedDecision":"ANSWER","expectedFacts":["6 قطع"],"tags":["table"]},
+    {"id":"b3","tenantId":"audit_bakery","company":"مخبز الاختبار","domain":"bakery","question":"كعكة التمر متوفرة هسا؟","expectedDecision":"NO_ANSWER","expectedFacts":[],"tags":["live"]},
+    {"id":"e1","tenantId":"audit_electronics","company":"متجر الاختبار","domain":"electronics","question":"قديش سعر هاتف Z7؟","expectedDecision":"ANSWER","expectedFacts":["1300 شيكل"],"tags":["table"]},
+    {"id":"e2","tenantId":"audit_electronics","company":"متجر الاختبار","domain":"electronics","question":"قديش ضمان شاشة Q4؟","expectedDecision":"ANSWER","expectedFacts":["24 شهراً"],"tags":["table"]},
+    {"id":"e3","tenantId":"audit_electronics","company":"متجر الاختبار","domain":"electronics","question":"بتقبلوا عملات رقمية؟","expectedDecision":"ANSWER","expectedFacts":["غير مقبولة"],"tags":["negative"]},
+    {"id":"t1","tenantId":"audit_training","company":"مركز الاختبار","domain":"training","question":"قديش دورة أساس البرمجة بالأسبوع؟","expectedDecision":"ANSWER","expectedFacts":["240 شيكل"],"tags":["table"]},
+    {"id":"t2","tenantId":"audit_training","company":"مركز الاختبار","domain":"training","question":"عمري 15، بقدر أسجل أساس البرمجة؟","expectedDecision":"ANSWER","expectedFacts":["16 سنة"],"tags":["policy"]},
+    {"id":"t3","tenantId":"audit_training","company":"مركز الاختبار","domain":"training","question":"حضرت قبل، يعني الحساب الآجل تلقائي؟","expectedDecision":"ANSWER","expectedFacts":["موافقة مسبقة"],"tags":["policy"]}
+  ]
+}
+

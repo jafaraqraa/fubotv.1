@@ -1,0 +1,487 @@
+{
+  "at": "2026-09-05T15:41:56.562Z",
+  "settings": {
+    "RAG_CHUNK_SIZE": {
+      "value": "700",
+      "source": "database"
+    },
+    "RAG_CHUNK_OVERLAP": {
+      "value": "120",
+      "source": "database"
+    },
+    "RAG_EMBEDDING_MODEL": {
+      "value": "nomic-embed-text",
+      "source": "database"
+    },
+    "QDRANT_COLLECTION": {
+      "value": "futhing_knowledge",
+      "source": "database"
+    },
+    "RAG_INDEX_ON_STARTUP": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_ENABLE_FALLBACK": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_ALLOW_RERANK_FALLBACK": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_ALLOW_EMBEDDING_PROVIDER_SWITCH": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_FAIL_OPEN_ON_VALIDATOR": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_FAIL_OPEN_ON_PROMPT_GUARD": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_ALLOW_OPEN_DOMAIN": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_KNOWLEDGE_BASE_ONLY": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_EVIDENCE_GATE_ENABLED": {
+      "value": "true",
+      "source": "env"
+    },
+    "RAG_GROUNDING_SAFETY_BOUNDARY_ENABLED": {
+      "value": "true",
+      "source": "env"
+    },
+    "RAG_GROUNDING_SAFETY_BOUNDARY_SHADOW": {
+      "value": "false",
+      "source": "env"
+    },
+    "RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT": {
+      "value": "100",
+      "source": "env"
+    },
+    "QDRANT_URL": {
+      "value": "http://127.0.0.1:6333",
+      "source": "default"
+    },
+    "OLLAMA_BASE_URL": {
+      "value": "http://127.0.0.1:11434",
+      "source": "default"
+    },
+    "RAG_EMBEDDING_TIMEOUT_MS": {
+      "value": 30000,
+      "source": "default"
+    },
+    "RAG_OLLAMA_EMBED_TIMEOUT_MS": {
+      "value": 30000,
+      "source": "default"
+    },
+    "RAG_OLLAMA_HEALTH_TIMEOUT_MS": {
+      "value": 5000,
+      "source": "default"
+    },
+    "RAG_EMBEDDING_DIMENSION": {
+      "value": 768,
+      "source": "default"
+    },
+    "RAG_QDRANT_SEARCH_TIMEOUT_MS": {
+      "value": 10000,
+      "source": "default"
+    },
+    "RAG_QDRANT_UPLOAD_TIMEOUT_MS": {
+      "value": 30000,
+      "source": "default"
+    },
+    "RAG_QDRANT_DELETE_TIMEOUT_MS": {
+      "value": 15000,
+      "source": "default"
+    },
+    "RAG_QDRANT_COUNT_TIMEOUT_MS": {
+      "value": 10000,
+      "source": "default"
+    },
+    "RAG_QDRANT_SCROLL_TIMEOUT_MS": {
+      "value": 15000,
+      "source": "default"
+    },
+    "RAG_QDRANT_HEALTH_TIMEOUT_MS": {
+      "value": 5000,
+      "source": "default"
+    },
+    "RAG_QDRANT_UPLOAD_BATCH_SIZE": {
+      "value": 64,
+      "source": "default"
+    },
+    "RAG_RETRY_MAX_ATTEMPTS": {
+      "value": 3,
+      "source": "default"
+    },
+    "RAG_RETRY_BASE_DELAY_MS": {
+      "value": 300,
+      "source": "default"
+    },
+    "RAG_RETRY_MAX_DELAY_MS": {
+      "value": 3000,
+      "source": "default"
+    },
+    "RAG_MAX_CHUNKS_PER_DOCUMENT": {
+      "value": 5000,
+      "source": "default"
+    },
+    "RAG_MAX_FILE_SIZE_BYTES": {
+      "value": 10485760,
+      "source": "default"
+    },
+    "RAG_MAX_EXTRACTED_TEXT_LENGTH": {
+      "value": 10000000,
+      "source": "default"
+    },
+    "RAG_SHUTDOWN_GRACE_MS": {
+      "value": 15000,
+      "source": "default"
+    },
+    "RAG_MIN_TOP_K": {
+      "value": "3",
+      "source": "database"
+    },
+    "RAG_DEFAULT_TOP_K": {
+      "value": "8",
+      "source": "database"
+    },
+    "RAG_MAX_TOP_K": {
+      "value": "8",
+      "source": "database"
+    },
+    "RAG_CANDIDATE_MULTIPLIER": {
+      "value": 3,
+      "source": "default"
+    },
+    "RAG_SEMANTIC_WEIGHT": {
+      "value": "0.8",
+      "source": "database"
+    },
+    "RAG_SIMILARITY_THRESHOLD": {
+      "value": "0.4",
+      "source": "database"
+    },
+    "RAG_RETRIEVAL_CACHE_TTL_MS": {
+      "value": 300000,
+      "source": "default"
+    },
+    "RAG_RETRIEVAL_CACHE_MAX_ENTRIES": {
+      "value": 1000,
+      "source": "default"
+    },
+    "RAG_EMBEDDING_CONCURRENCY": {
+      "value": 4,
+      "source": "default"
+    },
+    "RAG_QDRANT_TIMEOUT_MS": {
+      "value": 30000,
+      "source": "default"
+    },
+    "RAG_RECONCILIATION_ENABLED": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_RECONCILIATION_INTERVAL_HOURS": {
+      "value": 24,
+      "source": "default"
+    },
+    "RAG_RECONCILIATION_BATCH_SIZE": {
+      "value": 100,
+      "source": "default"
+    },
+    "RAG_RECONCILIATION_MAX_RUNTIME_MS": {
+      "value": 30000,
+      "source": "default"
+    },
+    "RAG_RECONCILIATION_LOCK_TTL_MS": {
+      "value": 600000,
+      "source": "default"
+    },
+    "RAG_ORPHAN_GRACE_PERIOD_HOURS": {
+      "value": 24,
+      "source": "default"
+    },
+    "RAG_NEIGHBOR_EXPANSION": {
+      "value": "false",
+      "source": "database"
+    },
+    "RAG_MULTI_QUERY_ENABLED": {
+      "value": "false",
+      "source": "default"
+    },
+    "RAG_CONTEXT_BUDGET": {
+      "value": "3000",
+      "source": "database"
+    },
+    "RAG_INJECTION_GUARD_ENABLED": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_INJECTION_BLOCK_HIGH_RISK": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_INJECTION_SCAN_ON_INGEST": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_INJECTION_SCAN_ON_RETRIEVAL": {
+      "value": "true",
+      "source": "default"
+    },
+    "RAG_INJECTION_MAX_SIGNALS": {
+      "value": 20,
+      "source": "default"
+    }
+  },
+  "validation": {
+    "valid": true
+  },
+  "documents": [
+    {
+      "document_key": "doc_bbdfce59a3cf4776937f484e07796152",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_bbdfce59a3cf4776937f484e07796152:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:11.525Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_9797d987069a4619a031d178eac0cb24",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_9797d987069a4619a031d178eac0cb24:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:12.317Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_bfdba9bceef3487885b25f093ae79849",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_bfdba9bceef3487885b25f093ae79849:v1",
+      "chunk_count": 2,
+      "indexed_at": "2026-09-05T12:42:19.664Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_f101f1f3decc4299b40a9ce15ddb9315",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_f101f1f3decc4299b40a9ce15ddb9315:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:14.742Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_806c9f2361d74b70b03e26f54f178ebd",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_806c9f2361d74b70b03e26f54f178ebd:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:15.674Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_7585aa3da3e44ea896f30f23f832d86c",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_7585aa3da3e44ea896f30f23f832d86c:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:16.796Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_93db40d0fdc847aebfbd72c3cf9e6997",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_93db40d0fdc847aebfbd72c3cf9e6997:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:17.600Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_d519f9dbfe594ca18b26873d797b2b35",
+      "tenant_id": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_d519f9dbfe594ca18b26873d797b2b35:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:18.568Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_4c56531aba50445b89a466c69829a151",
+      "tenant_id": "accept_conflict_ceramics_20260904",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_4c56531aba50445b89a466c69829a151:v1",
+      "chunk_count": 1,
+      "indexed_at": "2026-09-04T17:00:33.217Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    },
+    {
+      "document_key": "doc_b1bbceecf84e417aa20015f12379707f",
+      "tenant_id": "default",
+      "status": "active",
+      "is_active": 1,
+      "version_id": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+      "chunk_count": 10,
+      "indexed_at": "2026-09-05T15:36:46.365Z",
+      "embedding_model": null,
+      "vector_dimension": null,
+      "sourceExists": true
+    }
+  ],
+  "runtimeValidation": true,
+  "qdrant": {
+    "status": "green",
+    "optimizer_status": "ok",
+    "indexed_vectors_count": 0,
+    "points_count": 23,
+    "segments_count": 4,
+    "config": {
+      "params": {
+        "vectors": {
+          "size": 768,
+          "distance": "Cosine"
+        },
+        "shard_number": 1,
+        "replication_factor": 1,
+        "write_consistency_factor": 1,
+        "on_disk_payload": true
+      },
+      "hnsw_config": {
+        "m": 16,
+        "ef_construct": 100,
+        "full_scan_threshold": 10000,
+        "max_indexing_threads": 0,
+        "on_disk": false
+      },
+      "optimizer_config": {
+        "deleted_threshold": 0.2,
+        "vacuum_min_vector_number": 1000,
+        "default_segment_number": 0,
+        "max_segment_size": null,
+        "memmap_threshold": null,
+        "indexing_threshold": 10000,
+        "flush_interval_sec": 5,
+        "max_optimization_threads": null,
+        "prevent_unoptimized": null
+      },
+      "wal_config": {
+        "wal_capacity_mb": 32,
+        "wal_segments_ahead": 0,
+        "wal_retain_closed": 1
+      },
+      "quantization_config": null
+    },
+    "payload_schema": {},
+    "update_queue": {
+      "length": 0
+    }
+  },
+  "points": {
+    "total": 23,
+    "unowned": 2,
+    "missingModel": 2,
+    "missingDimension": 2,
+    "byDocument": {
+      "default|doc_b1bbceecf84e417aa20015f12379707f|doc_b1bbceecf84e417aa20015f12379707f:v1|": 10,
+      "default|knowledge.txt:kb_default_70b1e4b7b3354f62bc9034444169fcbf|kb_default_70b1e4b7b3354f62bc9034444169fcbf|": 1,
+      "accept_cedar_ceramics_20260904|doc_93db40d0fdc847aebfbd72c3cf9e6997|doc_93db40d0fdc847aebfbd72c3cf9e6997:v1|": 1,
+      "accept_cedar_ceramics_20260904|doc_9797d987069a4619a031d178eac0cb24|doc_9797d987069a4619a031d178eac0cb24:v1|": 1,
+      "accept_cedar_ceramics_20260904|doc_bfdba9bceef3487885b25f093ae79849|doc_bfdba9bceef3487885b25f093ae79849:v1|": 2,
+      "|doc_827dfd76d1f54544b6386f20656570e7||": 1,
+      "accept_cedar_ceramics_20260904|doc_7585aa3da3e44ea896f30f23f832d86c|doc_7585aa3da3e44ea896f30f23f832d86c:v1|": 1,
+      "accept_cedar_ceramics_20260904|doc_d519f9dbfe594ca18b26873d797b2b35|doc_d519f9dbfe594ca18b26873d797b2b35:v1|": 1,
+      "accept_cedar_ceramics_20260904|doc_f101f1f3decc4299b40a9ce15ddb9315|doc_f101f1f3decc4299b40a9ce15ddb9315:v1|": 1,
+      "accept_cedar_ceramics_20260904|doc_bbdfce59a3cf4776937f484e07796152|doc_bbdfce59a3cf4776937f484e07796152:v1|": 1,
+      "accept_conflict_ceramics_20260904|doc_4c56531aba50445b89a466c69829a151|doc_4c56531aba50445b89a466c69829a151:v1|": 1,
+      "|knowledge.txt||": 1,
+      "accept_cedar_ceramics_20260904|doc_806c9f2361d74b70b03e26f54f178ebd|doc_806c9f2361d74b70b03e26f54f178ebd:v1|": 1
+    }
+  },
+  "ollama": [
+    {
+      "name": "kimi-k2.7-code:cloud"
+    },
+    {
+      "name": "nomic-embed-text:latest"
+    },
+    {
+      "name": "llama3:latest"
+    },
+    {
+      "name": "glm4:9b"
+    },
+    {
+      "name": "glm-5.2:cloud"
+    }
+  ],
+  "health": {
+    "status": "OK",
+    "uptime": 1290.33368041,
+    "runtime": "ready"
+  },
+  "traceSummary": [
+    {
+      "evidence_gate_decision": null,
+      "boundary_decision": null,
+      "final_response_type": "ANSWER",
+      "count": 4
+    },
+    {
+      "evidence_gate_decision": "ANSWER",
+      "boundary_decision": "ALLOW",
+      "final_response_type": "ANSWER",
+      "count": 2
+    },
+    {
+      "evidence_gate_decision": "ANSWER",
+      "boundary_decision": "ALLOW",
+      "final_response_type": "NO_ANSWER",
+      "count": 6
+    },
+    {
+      "evidence_gate_decision": "ANSWER",
+      "boundary_decision": "BLOCK",
+      "final_response_type": "NO_ANSWER",
+      "count": 3
+    }
+  ]
+}

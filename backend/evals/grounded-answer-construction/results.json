@@ -1,0 +1,4855 @@
+{
+  "generatedAt": "2026-09-05T10:21:01.226Z",
+  "scope": "offline answer-construction scenarios; CURRENT is a gold-answer production-validator proxy, not live generation",
+  "scenarioCount": 30,
+  "current": {
+    "correctAnswerRate": 0.9411764705882353,
+    "falseSafeFallbackRate": 0.058823529411764705,
+    "clarifyPrecision": 1,
+    "clarifyRecall": 1,
+    "noAnswerAccuracy": 1,
+    "exactDecisionAccuracy": 0.9666666666666667,
+    "unsupportedFactsDelivered": 0,
+    "incorrectAnswers": 0,
+    "tenantLeakage": 0,
+    "naturalness": 0,
+    "latency": {
+      "meanMs": 3.648829066666667,
+      "p95Ms": 3.309208550000001
+    },
+    "paraphraseFallbackRate": null
+  },
+  "constructionA": {
+    "correctAnswerRate": 0.7647058823529411,
+    "falseSafeFallbackRate": 0.23529411764705882,
+    "clarifyPrecision": 1,
+    "clarifyRecall": 0.5,
+    "noAnswerAccuracy": 1,
+    "exactDecisionAccuracy": 0.8,
+    "unsupportedFactsDelivered": 0,
+    "incorrectAnswers": 1,
+    "tenantLeakage": 0,
+    "naturalness": 2.6000000000000005,
+    "latency": {
+      "meanMs": 0.2639241000000039,
+      "p95Ms": 0.3922719000000097
+    },
+    "paraphraseFallbackRate": null
+  },
+  "constructionB": {
+    "correctAnswerRate": 0.7647058823529411,
+    "falseSafeFallbackRate": 0.23529411764705882,
+    "clarifyPrecision": 1,
+    "clarifyRecall": 0.5,
+    "noAnswerAccuracy": 1,
+    "exactDecisionAccuracy": 0.8,
+    "unsupportedFactsDelivered": 0,
+    "incorrectAnswers": 1,
+    "tenantLeakage": 0,
+    "naturalness": 3,
+    "latency": {
+      "meanMs": 0.3008311666666652,
+      "p95Ms": 0.6056693499999859
+    },
+    "paraphraseFallbackRate": 0
+  },
+  "safety": {
+    "policyCorrect": 1,
+    "numericCorrect": 0.8,
+    "temporalCorrect": 0.75,
+    "completeListCorrect": 0.8
+  },
+  "categories": {
+    "current": {
+      "availability-static": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "clarify": {
+        "total": 4,
+        "correct": 4,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "complete-list": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "conditional-policy": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "contact": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "date-day": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "derived-arithmetic": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "duration": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "historical-current": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "incomplete-list": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "location": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "membership": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "multi-value": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "negative-membership": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "negative-polarity": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "price": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "quantity": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "range": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "related-not-answering": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "tenant-isolation": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "threshold": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "unit-mismatch": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "unrelated": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "working-hours": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      }
+    },
+    "constructionA": {
+      "availability-static": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "clarify": {
+        "total": 4,
+        "correct": 2,
+        "unsafe": 1,
+        "falseFallback": 0
+      },
+      "complete-list": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "conditional-policy": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "contact": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "date-day": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "derived-arithmetic": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "duration": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "historical-current": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "incomplete-list": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "location": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "membership": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "multi-value": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "negative-membership": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "negative-polarity": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "price": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "quantity": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "range": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "related-not-answering": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "tenant-isolation": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "threshold": {
+        "total": 2,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "unit-mismatch": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "unrelated": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "working-hours": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      }
+    },
+    "constructionB": {
+      "availability-static": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "clarify": {
+        "total": 4,
+        "correct": 2,
+        "unsafe": 1,
+        "falseFallback": 0
+      },
+      "complete-list": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "conditional-policy": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "contact": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "date-day": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "derived-arithmetic": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "duration": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "historical-current": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "incomplete-list": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "location": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "membership": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "multi-value": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "negative-membership": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "negative-polarity": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "price": {
+        "total": 2,
+        "correct": 2,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "quantity": {
+        "total": 1,
+        "correct": 0,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "range": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "related-not-answering": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "tenant-isolation": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "threshold": {
+        "total": 2,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 1
+      },
+      "unit-mismatch": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "unrelated": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      },
+      "working-hours": {
+        "total": 1,
+        "correct": 1,
+        "unsafe": 0,
+        "falseFallback": 0
+      }
+    }
+  },
+  "failureAttribution": {
+    "PROPOSITION_SELECTION": 4,
+    "QUESTION_RELATION_MAPPING": 2
+  },
+  "rows": [
+    {
+      "id": "gac-001",
+      "tenantId": "eval-tenant",
+      "category": "price",
+      "expectedDecision": "ANSWER",
+      "question": "كم السعر؟",
+      "evidence": [
+        {
+          "id": "ev-1",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-1",
+          "trusted": true,
+          "text": "سعر الخدمة 150 شيكل."
+        }
+      ],
+      "goldAnswer": "سعر الخدمة 150 شيكل.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 84.86334400000001
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "سعر الخدمة 150 شيكل.",
+        "propositions": [
+          {
+            "propositionId": "prop_64dff5bed138f154b0e7",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-1"
+            ],
+            "sourceDocumentIds": [
+              "doc-1"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-1",
+              "documentId": "doc-1",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_64dff5bed138f154b0e7",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-1"
+            ],
+            "sourceDocumentIds": [
+              "doc-1"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-1",
+              "documentId": "doc-1",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 1.7694550000000007,
+          "selectionMs": 1.4260609999999971,
+          "renderingMs": 0.02928399999999698,
+          "totalMs": 3.224799999999995
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، سعر الخدمة 150 شيكل.",
+        "propositions": [
+          {
+            "propositionId": "prop_64dff5bed138f154b0e7",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-1"
+            ],
+            "sourceDocumentIds": [
+              "doc-1"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-1",
+              "documentId": "doc-1",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_64dff5bed138f154b0e7",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-1"
+            ],
+            "sourceDocumentIds": [
+              "doc-1"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-1",
+              "documentId": "doc-1",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.43599499999999836,
+          "selectionMs": 0.3613110000000006,
+          "renderingMs": 2.887082999999997,
+          "totalMs": 3.684388999999996
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-002",
+      "tenantId": "eval-tenant",
+      "category": "price",
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل السعر 120 شيكل؟",
+      "evidence": [
+        {
+          "id": "ev-2",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-2",
+          "trusted": true,
+          "text": "سعر الخدمة 150 شيكل."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_f433cec3b304a790bd36",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-2"
+            ],
+            "sourceDocumentIds": [
+              "doc-2"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-2",
+              "documentId": "doc-2",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.12609199999999987,
+          "selectionMs": 0.07977700000000709,
+          "renderingMs": 0,
+          "totalMs": 0.20586900000000696
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_f433cec3b304a790bd36",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-2"
+            ],
+            "sourceDocumentIds": [
+              "doc-2"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-2",
+              "documentId": "doc-2",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.18209400000000642,
+          "selectionMs": 0.042740000000009104,
+          "renderingMs": 0,
+          "totalMs": 0.22483400000001552
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-003",
+      "tenantId": "eval-tenant",
+      "category": "duration",
+      "expectedDecision": "ANSWER",
+      "question": "كم مدة الخدمة؟",
+      "evidence": [
+        {
+          "id": "ev-3",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-3",
+          "trusted": true,
+          "text": "مدة الخدمة 30 دقيقة."
+        }
+      ],
+      "goldAnswer": "مدة الخدمة 30 دقيقة.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 3.0649310000000014
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "مدة الخدمة 30 دقيقة.",
+        "propositions": [
+          {
+            "propositionId": "prop_efe213831beea4b9fd3f",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-3"
+            ],
+            "sourceDocumentIds": [
+              "doc-3"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-3",
+              "documentId": "doc-3",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_efe213831beea4b9fd3f",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-3"
+            ],
+            "sourceDocumentIds": [
+              "doc-3"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-3",
+              "documentId": "doc-3",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.17375300000000493,
+          "selectionMs": 0.13632499999999936,
+          "renderingMs": 0.0027220000000056643,
+          "totalMs": 0.31280000000000996
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، مدة الخدمة 30 دقيقة.",
+        "propositions": [
+          {
+            "propositionId": "prop_efe213831beea4b9fd3f",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-3"
+            ],
+            "sourceDocumentIds": [
+              "doc-3"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-3",
+              "documentId": "doc-3",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_efe213831beea4b9fd3f",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-3"
+            ],
+            "sourceDocumentIds": [
+              "doc-3"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-3",
+              "documentId": "doc-3",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.09554299999999216,
+          "selectionMs": 0.09723999999999933,
+          "renderingMs": 0.10905600000000959,
+          "totalMs": 0.3018390000000011
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-004",
+      "tenantId": "eval-tenant",
+      "category": "working-hours",
+      "expectedDecision": "ANSWER",
+      "question": "متى الدوام يوم الخميس؟",
+      "evidence": [
+        {
+          "id": "ev-4",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-4",
+          "trusted": true,
+          "text": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00."
+        }
+      ],
+      "goldAnswer": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.8774410000000046
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00.",
+        "propositions": [
+          {
+            "propositionId": "prop_3787b66c9ea728b25a8e",
+            "tenantId": "eval-tenant",
+            "type": "WORKING_HOURS",
+            "subject": "الدوام_من_الاحد_الي_الخميس",
+            "relation": "working_hours",
+            "value": [
+              "9",
+              "00",
+              "17",
+              "00"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-4"
+            ],
+            "sourceDocumentIds": [
+              "doc-4"
+            ],
+            "renderableText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-4",
+              "documentId": "doc-4",
+              "exactText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_3787b66c9ea728b25a8e",
+            "tenantId": "eval-tenant",
+            "type": "WORKING_HOURS",
+            "subject": "الدوام_من_الاحد_الي_الخميس",
+            "relation": "working_hours",
+            "value": [
+              "9",
+              "00",
+              "17",
+              "00"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-4"
+            ],
+            "sourceDocumentIds": [
+              "doc-4"
+            ],
+            "renderableText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-4",
+              "documentId": "doc-4",
+              "exactText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.16432600000001685,
+          "selectionMs": 0.06856799999999907,
+          "renderingMs": 0.003597000000013395,
+          "totalMs": 0.23649100000002932
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، الدوام من الأحد إلى الخميس من 9:00 حتى 17:00.",
+        "propositions": [
+          {
+            "propositionId": "prop_3787b66c9ea728b25a8e",
+            "tenantId": "eval-tenant",
+            "type": "WORKING_HOURS",
+            "subject": "الدوام_من_الاحد_الي_الخميس",
+            "relation": "working_hours",
+            "value": [
+              "9",
+              "00",
+              "17",
+              "00"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-4"
+            ],
+            "sourceDocumentIds": [
+              "doc-4"
+            ],
+            "renderableText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-4",
+              "documentId": "doc-4",
+              "exactText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_3787b66c9ea728b25a8e",
+            "tenantId": "eval-tenant",
+            "type": "WORKING_HOURS",
+            "subject": "الدوام_من_الاحد_الي_الخميس",
+            "relation": "working_hours",
+            "value": [
+              "9",
+              "00",
+              "17",
+              "00"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-4"
+            ],
+            "sourceDocumentIds": [
+              "doc-4"
+            ],
+            "renderableText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-4",
+              "documentId": "doc-4",
+              "exactText": "الدوام من الأحد إلى الخميس من 9:00 حتى 17:00."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.10718400000001793,
+          "selectionMs": 0.03483500000001527,
+          "renderingMs": 0.17450399999998467,
+          "totalMs": 0.3165230000000179
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-005",
+      "tenantId": "eval-tenant",
+      "category": "location",
+      "expectedDecision": "ANSWER",
+      "question": "وين الموقع؟",
+      "evidence": [
+        {
+          "id": "ev-5",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-5",
+          "trusted": true,
+          "text": "موقع الفرع في شارع الجامعة."
+        }
+      ],
+      "goldAnswer": "موقع الفرع في شارع الجامعة.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.1487769999999955
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "موقع الفرع في شارع الجامعة.",
+        "propositions": [
+          {
+            "propositionId": "prop_ce6a0081597122101020",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-5"
+            ],
+            "sourceDocumentIds": [
+              "doc-5"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-5",
+              "documentId": "doc-5",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_ce6a0081597122101020",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-5"
+            ],
+            "sourceDocumentIds": [
+              "doc-5"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-5",
+              "documentId": "doc-5",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.15331299999999715,
+          "selectionMs": 0.09144100000000321,
+          "renderingMs": 0.003725000000002865,
+          "totalMs": 0.24847900000000323
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، موقع الفرع في شارع الجامعة.",
+        "propositions": [
+          {
+            "propositionId": "prop_ce6a0081597122101020",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-5"
+            ],
+            "sourceDocumentIds": [
+              "doc-5"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-5",
+              "documentId": "doc-5",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_ce6a0081597122101020",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-5"
+            ],
+            "sourceDocumentIds": [
+              "doc-5"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-5",
+              "documentId": "doc-5",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.0892470000000003,
+          "selectionMs": 0.04346800000001849,
+          "renderingMs": 0.11020600000000513,
+          "totalMs": 0.24292100000002392
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-006",
+      "tenantId": "eval-tenant",
+      "category": "contact",
+      "expectedDecision": "ANSWER",
+      "question": "ما رقم التواصل؟",
+      "evidence": [
+        {
+          "id": "ev-6",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-6",
+          "trusted": true,
+          "text": "رقم التواصل 0599000000."
+        }
+      ],
+      "goldAnswer": "رقم التواصل 0599000000.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.151284000000004
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "رقم التواصل 0599000000.",
+        "propositions": [
+          {
+            "propositionId": "prop_0c68614687cf759a72af",
+            "tenantId": "eval-tenant",
+            "type": "CONTACT_OR_IDENTIFIER",
+            "subject": "رقم_التواصل_0599000000.",
+            "relation": "contact_or_identifier",
+            "value": "0599000000",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-6"
+            ],
+            "sourceDocumentIds": [
+              "doc-6"
+            ],
+            "renderableText": "رقم التواصل 0599000000",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-6",
+              "documentId": "doc-6",
+              "exactText": "رقم التواصل 0599000000."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_0c68614687cf759a72af",
+            "tenantId": "eval-tenant",
+            "type": "CONTACT_OR_IDENTIFIER",
+            "subject": "رقم_التواصل_0599000000.",
+            "relation": "contact_or_identifier",
+            "value": "0599000000",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-6"
+            ],
+            "sourceDocumentIds": [
+              "doc-6"
+            ],
+            "renderableText": "رقم التواصل 0599000000",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-6",
+              "documentId": "doc-6",
+              "exactText": "رقم التواصل 0599000000."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.07978199999999447,
+          "selectionMs": 0.059029000000009546,
+          "renderingMs": 0.00429500000001326,
+          "totalMs": 0.14310600000001727
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، رقم التواصل 0599000000.",
+        "propositions": [
+          {
+            "propositionId": "prop_0c68614687cf759a72af",
+            "tenantId": "eval-tenant",
+            "type": "CONTACT_OR_IDENTIFIER",
+            "subject": "رقم_التواصل_0599000000.",
+            "relation": "contact_or_identifier",
+            "value": "0599000000",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-6"
+            ],
+            "sourceDocumentIds": [
+              "doc-6"
+            ],
+            "renderableText": "رقم التواصل 0599000000",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-6",
+              "documentId": "doc-6",
+              "exactText": "رقم التواصل 0599000000."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_0c68614687cf759a72af",
+            "tenantId": "eval-tenant",
+            "type": "CONTACT_OR_IDENTIFIER",
+            "subject": "رقم_التواصل_0599000000.",
+            "relation": "contact_or_identifier",
+            "value": "0599000000",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-6"
+            ],
+            "sourceDocumentIds": [
+              "doc-6"
+            ],
+            "renderableText": "رقم التواصل 0599000000",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-6",
+              "documentId": "doc-6",
+              "exactText": "رقم التواصل 0599000000."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.05722400000001926,
+          "selectionMs": 0.028384999999985894,
+          "renderingMs": 0.10595299999999952,
+          "totalMs": 0.19156200000000467
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-007",
+      "tenantId": "eval-tenant",
+      "category": "complete-list",
+      "expectedDecision": "ANSWER",
+      "question": "ما القائمة الكاملة؟",
+      "evidence": [
+        {
+          "id": "ev-7",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-7",
+          "trusted": true,
+          "text": "القائمة الكاملة للألوان: أسود، أبيض، رمادي."
+        }
+      ],
+      "goldAnswer": "القائمة الكاملة للألوان: أسود، أبيض، رمادي.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 3.5090720000000033
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_df9a9f97ba12b0d7daa3",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "القائمه_الكامله_للالوان:_اسود،_ابيض،",
+            "relation": "conditional_policy",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": "القائمة الكاملة للألوان: أسود، أبيض، رمادي.",
+            "evidenceIds": [
+              "ev-7"
+            ],
+            "sourceDocumentIds": [
+              "doc-7"
+            ],
+            "renderableText": "القائمة الكاملة للألوان: أسود، أبيض، رمادي",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-7",
+              "documentId": "doc-7",
+              "exactText": "القائمة الكاملة للألوان: أسود، أبيض، رمادي."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.10829599999999573,
+          "selectionMs": 0.32786799999999516,
+          "renderingMs": 0,
+          "totalMs": 0.4361639999999909
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_df9a9f97ba12b0d7daa3",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "القائمه_الكامله_للالوان:_اسود،_ابيض،",
+            "relation": "conditional_policy",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": "القائمة الكاملة للألوان: أسود، أبيض، رمادي.",
+            "evidenceIds": [
+              "ev-7"
+            ],
+            "sourceDocumentIds": [
+              "doc-7"
+            ],
+            "renderableText": "القائمة الكاملة للألوان: أسود، أبيض، رمادي",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-7",
+              "documentId": "doc-7",
+              "exactText": "القائمة الكاملة للألوان: أسود، أبيض، رمادي."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07788899999999899,
+          "selectionMs": 0.21056999999998993,
+          "renderingMs": 0,
+          "totalMs": 0.2884589999999889
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-008",
+      "tenantId": "eval-tenant",
+      "category": "negative-membership",
+      "expectedDecision": "ANSWER",
+      "question": "هل عندكم فرع الخليل؟",
+      "evidence": [
+        {
+          "id": "ev-8",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-8",
+          "trusted": true,
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "goldAnswer": "لا، الخليل مش ضمن القائمة الحالية المذكورة.",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": false,
+        "latencyMs": 1.4850720000000024
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "لا، الخليل مش ضمن القائمة الحالية المذكورة.",
+        "propositions": [
+          {
+            "propositionId": "prop_13faae4a224be95339ba",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-8"
+            ],
+            "sourceDocumentIds": [
+              "doc-8"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-8",
+              "documentId": "doc-8",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "derived_9233017e9e1a5f504d79",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "negative_membership",
+            "value": "الخليل",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-8"
+            ],
+            "sourceDocumentIds": [
+              "doc-8"
+            ],
+            "renderableText": "لا، الخليل مش ضمن القائمة الحالية المذكورة",
+            "derived": true,
+            "derivedFromPropositionIds": [
+              "prop_13faae4a224be95339ba"
+            ],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-8",
+              "documentId": "doc-8",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.13460399999999595,
+          "selectionMs": 0.1801580000000058,
+          "renderingMs": 0.007143000000013444,
+          "totalMs": 0.3219050000000152
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، لا، الخليل مش ضمن القائمة الحالية المذكورة.",
+        "propositions": [
+          {
+            "propositionId": "prop_13faae4a224be95339ba",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-8"
+            ],
+            "sourceDocumentIds": [
+              "doc-8"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-8",
+              "documentId": "doc-8",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "derived_9233017e9e1a5f504d79",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "negative_membership",
+            "value": "الخليل",
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-8"
+            ],
+            "sourceDocumentIds": [
+              "doc-8"
+            ],
+            "renderableText": "لا، الخليل مش ضمن القائمة الحالية المذكورة",
+            "derived": true,
+            "derivedFromPropositionIds": [
+              "prop_13faae4a224be95339ba"
+            ],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-8",
+              "documentId": "doc-8",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.10301300000000424,
+          "selectionMs": 0.07984199999998509,
+          "renderingMs": 0.546607999999992,
+          "totalMs": 0.7294629999999813
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-009",
+      "tenantId": "eval-tenant",
+      "category": "membership",
+      "expectedDecision": "ANSWER",
+      "question": "هل عندكم فرع جنين؟",
+      "evidence": [
+        {
+          "id": "ev-9",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-9",
+          "trusted": true,
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "goldAnswer": "القائمة الكاملة للفروع: رام الله، جنين.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.3167980000000057
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "القائمة الكاملة للفروع: رام الله، جنين.",
+        "propositions": [
+          {
+            "propositionId": "prop_dcb033a70e93786c53e8",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-9"
+            ],
+            "sourceDocumentIds": [
+              "doc-9"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-9",
+              "documentId": "doc-9",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_dcb033a70e93786c53e8",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-9"
+            ],
+            "sourceDocumentIds": [
+              "doc-9"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-9",
+              "documentId": "doc-9",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.10567999999997824,
+          "selectionMs": 0.045802000000009,
+          "renderingMs": 0.0010300000000142973,
+          "totalMs": 0.15251200000000154
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، القائمة الكاملة للفروع: رام الله، جنين.",
+        "propositions": [
+          {
+            "propositionId": "prop_dcb033a70e93786c53e8",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-9"
+            ],
+            "sourceDocumentIds": [
+              "doc-9"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-9",
+              "documentId": "doc-9",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_dcb033a70e93786c53e8",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للفروع:_رام_الله،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-9"
+            ],
+            "sourceDocumentIds": [
+              "doc-9"
+            ],
+            "renderableText": "القائمة الكاملة للفروع: رام الله، جنين",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-9",
+              "documentId": "doc-9",
+              "exactText": "القائمة الكاملة للفروع: رام الله، جنين."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.05516299999999319,
+          "selectionMs": 0.032335000000017544,
+          "renderingMs": 0.10615900000001943,
+          "totalMs": 0.19365700000003017
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-010",
+      "tenantId": "eval-tenant",
+      "category": "incomplete-list",
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل عندكم فرع الخليل؟",
+      "evidence": [
+        {
+          "id": "ev-10",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-10",
+          "trusted": true,
+          "text": "يوجد فرع في رام الله."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_9f3cf41fee482e441a2a",
+            "tenantId": "eval-tenant",
+            "type": "MEMBERSHIP",
+            "subject": "يوجد_فرع_في_رام_الله.",
+            "relation": "membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-10"
+            ],
+            "sourceDocumentIds": [
+              "doc-10"
+            ],
+            "renderableText": "يوجد فرع في رام الله",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-10",
+              "documentId": "doc-10",
+              "exactText": "يوجد فرع في رام الله."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.08551699999998164,
+          "selectionMs": 0.03876099999999383,
+          "renderingMs": 0,
+          "totalMs": 0.12427799999997546
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_9f3cf41fee482e441a2a",
+            "tenantId": "eval-tenant",
+            "type": "MEMBERSHIP",
+            "subject": "يوجد_فرع_في_رام_الله.",
+            "relation": "membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-10"
+            ],
+            "sourceDocumentIds": [
+              "doc-10"
+            ],
+            "renderableText": "يوجد فرع في رام الله",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-10",
+              "documentId": "doc-10",
+              "exactText": "يوجد فرع في رام الله."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.06741799999997511,
+          "selectionMs": 0.030184999999988804,
+          "renderingMs": 0,
+          "totalMs": 0.09760299999996391
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-011",
+      "tenantId": "eval-tenant",
+      "category": "conditional-policy",
+      "expectedDecision": "ANSWER",
+      "question": "لو ألغيت قبل 72 ساعة شو بصير؟",
+      "evidence": [
+        {
+          "id": "ev-11",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-11",
+          "trusted": true,
+          "text": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+        }
+      ],
+      "goldAnswer": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 2.078281000000004
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+        "propositions": [
+          {
+            "propositionId": "prop_f1a67c70ed87d9e3befd",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-11"
+            ],
+            "sourceDocumentIds": [
+              "doc-11"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-11",
+              "documentId": "doc-11",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_f1a67c70ed87d9e3befd",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-11"
+            ],
+            "sourceDocumentIds": [
+              "doc-11"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-11",
+              "documentId": "doc-11",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.08387600000000361,
+          "selectionMs": 0.2531580000000133,
+          "renderingMs": 0.0015920000000164691,
+          "totalMs": 0.3386260000000334
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+        "propositions": [
+          {
+            "propositionId": "prop_f1a67c70ed87d9e3befd",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-11"
+            ],
+            "sourceDocumentIds": [
+              "doc-11"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-11",
+              "documentId": "doc-11",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_f1a67c70ed87d9e3befd",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-11"
+            ],
+            "sourceDocumentIds": [
+              "doc-11"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-11",
+              "documentId": "doc-11",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.0680449999999837,
+          "selectionMs": 0.042884999999984075,
+          "renderingMs": 0.12492999999997778,
+          "totalMs": 0.23585999999994556
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-012",
+      "tenantId": "eval-tenant",
+      "category": "conditional-policy",
+      "expectedDecision": "NO_ANSWER",
+      "question": "لو ألغيت قبل 12 ساعة شو بصير؟",
+      "evidence": [
+        {
+          "id": "ev-12",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-12",
+          "trusted": true,
+          "text": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_c8b2251e273fd960f7f1",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-12"
+            ],
+            "sourceDocumentIds": [
+              "doc-12"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-12",
+              "documentId": "doc-12",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.12600100000000225,
+          "selectionMs": 0.05224700000002258,
+          "renderingMs": 0,
+          "totalMs": 0.17824800000002483
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_c8b2251e273fd960f7f1",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "الالغاء_مجاني_اذا_كان_قبل",
+            "relation": "conditional_policy",
+            "value": "48",
+            "unit": "ساعه",
+            "comparator": ">",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة.",
+            "evidenceIds": [
+              "ev-12"
+            ],
+            "sourceDocumentIds": [
+              "doc-12"
+            ],
+            "renderableText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-12",
+              "documentId": "doc-12",
+              "exactText": "الإلغاء مجاني إذا كان قبل الموعد بأكثر من 48 ساعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.0686279999999897,
+          "selectionMs": 0.04776499999999828,
+          "renderingMs": 0,
+          "totalMs": 0.11639299999998798
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-013",
+      "tenantId": "eval-tenant",
+      "category": "threshold",
+      "expectedDecision": "ANSWER",
+      "question": "لو العدد 20 والشرط على الأقل 20؟",
+      "evidence": [
+        {
+          "id": "ev-13",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-13",
+          "trusted": true,
+          "text": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+        }
+      ],
+      "goldAnswer": "تطبق الخدمة إذا كان العدد 20 أو أكثر.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.5851989999999887
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_a6fd0e3645ce5eb88966",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "تطبق_الخدمه_اذا_كان_العدد",
+            "relation": "conditional_policy",
+            "value": "20",
+            "unit": [],
+            "comparator": ">=",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "تطبق الخدمة إذا كان العدد 20 أو أكثر.",
+            "evidenceIds": [
+              "ev-13"
+            ],
+            "sourceDocumentIds": [
+              "doc-13"
+            ],
+            "renderableText": "تطبق الخدمة إذا كان العدد 20 أو أكثر",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-13",
+              "documentId": "doc-13",
+              "exactText": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07845300000002453,
+          "selectionMs": 0.09220300000001203,
+          "renderingMs": 0,
+          "totalMs": 0.17065600000003656
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_a6fd0e3645ce5eb88966",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "تطبق_الخدمه_اذا_كان_العدد",
+            "relation": "conditional_policy",
+            "value": "20",
+            "unit": [],
+            "comparator": ">=",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "تطبق الخدمة إذا كان العدد 20 أو أكثر.",
+            "evidenceIds": [
+              "ev-13"
+            ],
+            "sourceDocumentIds": [
+              "doc-13"
+            ],
+            "renderableText": "تطبق الخدمة إذا كان العدد 20 أو أكثر",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-13",
+              "documentId": "doc-13",
+              "exactText": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.09908500000000231,
+          "selectionMs": 0.044970000000006394,
+          "renderingMs": 0,
+          "totalMs": 0.1440550000000087
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-014",
+      "tenantId": "eval-tenant",
+      "category": "threshold",
+      "expectedDecision": "NO_ANSWER",
+      "question": "لو العدد 19 والشرط على الأقل 20؟",
+      "evidence": [
+        {
+          "id": "ev-14",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-14",
+          "trusted": true,
+          "text": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_a6854eafb7df215aabac",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "تطبق_الخدمه_اذا_كان_العدد",
+            "relation": "conditional_policy",
+            "value": "20",
+            "unit": [],
+            "comparator": ">=",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "تطبق الخدمة إذا كان العدد 20 أو أكثر.",
+            "evidenceIds": [
+              "ev-14"
+            ],
+            "sourceDocumentIds": [
+              "doc-14"
+            ],
+            "renderableText": "تطبق الخدمة إذا كان العدد 20 أو أكثر",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-14",
+              "documentId": "doc-14",
+              "exactText": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.14589800000001674,
+          "selectionMs": 0.05366900000001351,
+          "renderingMs": 0,
+          "totalMs": 0.19956700000003025
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_a6854eafb7df215aabac",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "تطبق_الخدمه_اذا_كان_العدد",
+            "relation": "conditional_policy",
+            "value": "20",
+            "unit": [],
+            "comparator": ">=",
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": "تطبق الخدمة إذا كان العدد 20 أو أكثر.",
+            "evidenceIds": [
+              "ev-14"
+            ],
+            "sourceDocumentIds": [
+              "doc-14"
+            ],
+            "renderableText": "تطبق الخدمة إذا كان العدد 20 أو أكثر",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-14",
+              "documentId": "doc-14",
+              "exactText": "تطبق الخدمة إذا كان العدد 20 أو أكثر."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07496600000001763,
+          "selectionMs": 0.04468599999998446,
+          "renderingMs": 0,
+          "totalMs": 0.11965200000000209
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-015",
+      "tenantId": "eval-tenant",
+      "category": "historical-current",
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل الخدمة متاحة حاليا؟",
+      "evidence": [
+        {
+          "id": "ev-15",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-15",
+          "trusted": true,
+          "text": "كانت الخدمة متاحة الأسبوع الماضي."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_717ef772dabc99d0d0c5",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "كانت_الخدمه_متاحه_الاسبوع_الماضي.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": null,
+            "evidenceIds": [
+              "ev-15"
+            ],
+            "sourceDocumentIds": [
+              "doc-15"
+            ],
+            "renderableText": "كانت الخدمة متاحة الأسبوع الماضي",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-15",
+              "documentId": "doc-15",
+              "exactText": "كانت الخدمة متاحة الأسبوع الماضي."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07390800000001718,
+          "selectionMs": 0.09418200000001775,
+          "renderingMs": 0,
+          "totalMs": 0.16809000000003493
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_717ef772dabc99d0d0c5",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "كانت_الخدمه_متاحه_الاسبوع_الماضي.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "HISTORICAL",
+            "condition": null,
+            "evidenceIds": [
+              "ev-15"
+            ],
+            "sourceDocumentIds": [
+              "doc-15"
+            ],
+            "renderableText": "كانت الخدمة متاحة الأسبوع الماضي",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-15",
+              "documentId": "doc-15",
+              "exactText": "كانت الخدمة متاحة الأسبوع الماضي."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07477299999999332,
+          "selectionMs": 0.03542699999999854,
+          "renderingMs": 0,
+          "totalMs": 0.11019999999999186
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-016",
+      "tenantId": "eval-tenant",
+      "category": "availability-static",
+      "expectedDecision": "ANSWER",
+      "question": "هل الخدمة متاحة؟",
+      "evidence": [
+        {
+          "id": "ev-16",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-16",
+          "trusted": true,
+          "text": "الخدمة متاحة للحجز."
+        }
+      ],
+      "goldAnswer": "الخدمة متاحة للحجز.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.1810839999999985
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "الخدمة متاحة للحجز.",
+        "propositions": [
+          {
+            "propositionId": "prop_e8d56a48d07829f1bf6f",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-16"
+            ],
+            "sourceDocumentIds": [
+              "doc-16"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-16",
+              "documentId": "doc-16",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_e8d56a48d07829f1bf6f",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-16"
+            ],
+            "sourceDocumentIds": [
+              "doc-16"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-16",
+              "documentId": "doc-16",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.05959300000000667,
+          "selectionMs": 0.03293399999998314,
+          "renderingMs": 0.0011540000000138662,
+          "totalMs": 0.09368100000000368
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، الخدمة متاحة للحجز.",
+        "propositions": [
+          {
+            "propositionId": "prop_e8d56a48d07829f1bf6f",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-16"
+            ],
+            "sourceDocumentIds": [
+              "doc-16"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-16",
+              "documentId": "doc-16",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_e8d56a48d07829f1bf6f",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-16"
+            ],
+            "sourceDocumentIds": [
+              "doc-16"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-16",
+              "documentId": "doc-16",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.05771599999999921,
+          "selectionMs": 0.05219900000000166,
+          "renderingMs": 0.1228839999999991,
+          "totalMs": 0.23279899999999998
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-017",
+      "tenantId": "eval-tenant",
+      "category": "negative-polarity",
+      "expectedDecision": "ANSWER",
+      "question": "هل الخدمة لا تشمل الشحن؟",
+      "evidence": [
+        {
+          "id": "ev-17",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-17",
+          "trusted": true,
+          "text": "الخدمة لا تشمل الشحن."
+        }
+      ],
+      "goldAnswer": "الخدمة لا تشمل الشحن.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 0.653018000000003
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "الخدمة لا تشمل الشحن.",
+        "propositions": [
+          {
+            "propositionId": "prop_d4d797d2053106d311af",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-17"
+            ],
+            "sourceDocumentIds": [
+              "doc-17"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-17",
+              "documentId": "doc-17",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_d4d797d2053106d311af",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-17"
+            ],
+            "sourceDocumentIds": [
+              "doc-17"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-17",
+              "documentId": "doc-17",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.08818099999999163,
+          "selectionMs": 0.03419600000000855,
+          "renderingMs": 0.0008080000000063592,
+          "totalMs": 0.12318500000000654
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، الخدمة لا تشمل الشحن.",
+        "propositions": [
+          {
+            "propositionId": "prop_d4d797d2053106d311af",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-17"
+            ],
+            "sourceDocumentIds": [
+              "doc-17"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-17",
+              "documentId": "doc-17",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_d4d797d2053106d311af",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-17"
+            ],
+            "sourceDocumentIds": [
+              "doc-17"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-17",
+              "documentId": "doc-17",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.049611999999996215,
+          "selectionMs": 0.029106000000012955,
+          "renderingMs": 0.0836970000000008,
+          "totalMs": 0.16241500000000997
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-018",
+      "tenantId": "eval-tenant",
+      "category": "related-not-answering",
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل يوجد موعد متاح الأحد؟",
+      "evidence": [
+        {
+          "id": "ev-18",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-18",
+          "trusted": true,
+          "text": "الطبيب يعمل يوم الأحد."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_fc82ec89a217000d32fa",
+            "tenantId": "eval-tenant",
+            "type": "DATE_OR_DAY",
+            "subject": "الطبيب_يعمل_يوم_الاحد.",
+            "relation": "date_or_day",
+            "value": [],
+            "unit": "يوم",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-18"
+            ],
+            "sourceDocumentIds": [
+              "doc-18"
+            ],
+            "renderableText": "الطبيب يعمل يوم الأحد",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-18",
+              "documentId": "doc-18",
+              "exactText": "الطبيب يعمل يوم الأحد."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.11202199999999607,
+          "selectionMs": 0.0342990000000043,
+          "renderingMs": 0,
+          "totalMs": 0.14632100000000037
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_fc82ec89a217000d32fa",
+            "tenantId": "eval-tenant",
+            "type": "DATE_OR_DAY",
+            "subject": "الطبيب_يعمل_يوم_الاحد.",
+            "relation": "date_or_day",
+            "value": [],
+            "unit": "يوم",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-18"
+            ],
+            "sourceDocumentIds": [
+              "doc-18"
+            ],
+            "renderableText": "الطبيب يعمل يوم الأحد",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-18",
+              "documentId": "doc-18",
+              "exactText": "الطبيب يعمل يوم الأحد."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.04766100000000506,
+          "selectionMs": 0.028323999999997795,
+          "renderingMs": 0,
+          "totalMs": 0.07598500000000286
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-019",
+      "tenantId": "eval-tenant",
+      "category": "unrelated",
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم السعر؟",
+      "evidence": [
+        {
+          "id": "ev-19",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-19",
+          "trusted": true,
+          "text": "موقع الفرع في شارع الجامعة."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_fbc979225050a11e735c",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-19"
+            ],
+            "sourceDocumentIds": [
+              "doc-19"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-19",
+              "documentId": "doc-19",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.05007799999998497,
+          "selectionMs": 0.023744999999991023,
+          "renderingMs": 0,
+          "totalMs": 0.07382299999997599
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_fbc979225050a11e735c",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-19"
+            ],
+            "sourceDocumentIds": [
+              "doc-19"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-19",
+              "documentId": "doc-19",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.044669999999996435,
+          "selectionMs": 0.022626999999999953,
+          "renderingMs": 0,
+          "totalMs": 0.06729699999999639
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-020",
+      "tenantId": "eval-tenant",
+      "category": "unit-mismatch",
+      "expectedDecision": "NO_ANSWER",
+      "question": "هل المدة 30 ساعة؟",
+      "evidence": [
+        {
+          "id": "ev-20",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-20",
+          "trusted": true,
+          "text": "مدة الخدمة 30 دقيقة."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_421c49ef836bab410423",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-20"
+            ],
+            "sourceDocumentIds": [
+              "doc-20"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-20",
+              "documentId": "doc-20",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.046406999999987875,
+          "selectionMs": 0.04609299999998484,
+          "renderingMs": 0,
+          "totalMs": 0.09249999999997272
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_421c49ef836bab410423",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-20"
+            ],
+            "sourceDocumentIds": [
+              "doc-20"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-20",
+              "documentId": "doc-20",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.04871599999998466,
+          "selectionMs": 0.030648999999982607,
+          "renderingMs": 0,
+          "totalMs": 0.07936499999996727
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-021",
+      "tenantId": "eval-tenant",
+      "category": "multi-value",
+      "expectedDecision": "ANSWER",
+      "question": "ما القائمة الكاملة؟",
+      "evidence": [
+        {
+          "id": "ev-21",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-21",
+          "trusted": true,
+          "text": "القائمة الكاملة للخيارات: أ، ب، ج."
+        }
+      ],
+      "goldAnswer": "القائمة الكاملة للخيارات: أ، ب، ج.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.3016000000000076
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "القائمة الكاملة للخيارات: أ، ب، ج.",
+        "propositions": [
+          {
+            "propositionId": "prop_50fc90710a24dde30d9b",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للخيارات:_ا،_ب،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-21"
+            ],
+            "sourceDocumentIds": [
+              "doc-21"
+            ],
+            "renderableText": "القائمة الكاملة للخيارات: أ، ب، ج",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-21",
+              "documentId": "doc-21",
+              "exactText": "القائمة الكاملة للخيارات: أ، ب، ج."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_50fc90710a24dde30d9b",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للخيارات:_ا،_ب،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-21"
+            ],
+            "sourceDocumentIds": [
+              "doc-21"
+            ],
+            "renderableText": "القائمة الكاملة للخيارات: أ، ب، ج",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-21",
+              "documentId": "doc-21",
+              "exactText": "القائمة الكاملة للخيارات: أ، ب، ج."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.053691999999983864,
+          "selectionMs": 0.030768999999992275,
+          "renderingMs": 0.000922000000002754,
+          "totalMs": 0.08538299999997889
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، القائمة الكاملة للخيارات: أ، ب، ج.",
+        "propositions": [
+          {
+            "propositionId": "prop_50fc90710a24dde30d9b",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للخيارات:_ا،_ب،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-21"
+            ],
+            "sourceDocumentIds": [
+              "doc-21"
+            ],
+            "renderableText": "القائمة الكاملة للخيارات: أ، ب، ج",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-21",
+              "documentId": "doc-21",
+              "exactText": "القائمة الكاملة للخيارات: أ، ب، ج."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_50fc90710a24dde30d9b",
+            "tenantId": "eval-tenant",
+            "type": "COMPLETE_LIST",
+            "subject": "القائمه_الكامله_للخيارات:_ا،_ب،",
+            "relation": "complete_list",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-21"
+            ],
+            "sourceDocumentIds": [
+              "doc-21"
+            ],
+            "renderableText": "القائمة الكاملة للخيارات: أ، ب، ج",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-21",
+              "documentId": "doc-21",
+              "exactText": "القائمة الكاملة للخيارات: أ، ب، ج."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.04770199999998681,
+          "selectionMs": 0.04811300000000074,
+          "renderingMs": 0.09156800000002363,
+          "totalMs": 0.18738300000001118
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-022",
+      "tenantId": "eval-tenant",
+      "category": "quantity",
+      "expectedDecision": "ANSWER",
+      "question": "كم عدد الوحدات؟",
+      "evidence": [
+        {
+          "id": "ev-22",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-22",
+          "trusted": true,
+          "text": "عدد الوحدات 8 قطعة."
+        }
+      ],
+      "goldAnswer": "عدد الوحدات 8 قطعة.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.0296979999999962
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_e5b9fe4ab5c14b075160",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "عدد_الوحدات_8_قطعه.",
+            "relation": "conditional_policy",
+            "value": "8",
+            "unit": "قطعه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": "عدد الوحدات 8 قطعة.",
+            "evidenceIds": [
+              "ev-22"
+            ],
+            "sourceDocumentIds": [
+              "doc-22"
+            ],
+            "renderableText": "عدد الوحدات 8 قطعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-22",
+              "documentId": "doc-22",
+              "exactText": "عدد الوحدات 8 قطعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.07799499999998716,
+          "selectionMs": 0.0377679999999998,
+          "renderingMs": 0,
+          "totalMs": 0.11576299999998696
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_e5b9fe4ab5c14b075160",
+            "tenantId": "eval-tenant",
+            "type": "CONDITIONAL_POLICY",
+            "subject": "عدد_الوحدات_8_قطعه.",
+            "relation": "conditional_policy",
+            "value": "8",
+            "unit": "قطعه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": "عدد الوحدات 8 قطعة.",
+            "evidenceIds": [
+              "ev-22"
+            ],
+            "sourceDocumentIds": [
+              "doc-22"
+            ],
+            "renderableText": "عدد الوحدات 8 قطعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-22",
+              "documentId": "doc-22",
+              "exactText": "عدد الوحدات 8 قطعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.04690800000000195,
+          "selectionMs": 0.03460000000001173,
+          "renderingMs": 0,
+          "totalMs": 0.08150800000001368
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-023",
+      "tenantId": "eval-tenant",
+      "category": "date-day",
+      "expectedDecision": "ANSWER",
+      "question": "متى الخدمة يوم الثلاثاء؟",
+      "evidence": [
+        {
+          "id": "ev-23",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-23",
+          "trusted": true,
+          "text": "الخدمة متاحة يوم الثلاثاء."
+        }
+      ],
+      "goldAnswer": "الخدمة متاحة يوم الثلاثاء.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 0.7130850000000066
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_99d79dabf009d3ebe71d",
+            "tenantId": "eval-tenant",
+            "type": "DATE_OR_DAY",
+            "subject": "الخدمه_متاحه_يوم_الثلاثاء.",
+            "relation": "date_or_day",
+            "value": [],
+            "unit": "يوم",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-23"
+            ],
+            "sourceDocumentIds": [
+              "doc-23"
+            ],
+            "renderableText": "الخدمة متاحة يوم الثلاثاء",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-23",
+              "documentId": "doc-23",
+              "exactText": "الخدمة متاحة يوم الثلاثاء."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.0831009999999992,
+          "selectionMs": 0.03483099999999695,
+          "renderingMs": 0,
+          "totalMs": 0.11793199999999615
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_99d79dabf009d3ebe71d",
+            "tenantId": "eval-tenant",
+            "type": "DATE_OR_DAY",
+            "subject": "الخدمه_متاحه_يوم_الثلاثاء.",
+            "relation": "date_or_day",
+            "value": [],
+            "unit": "يوم",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-23"
+            ],
+            "sourceDocumentIds": [
+              "doc-23"
+            ],
+            "renderableText": "الخدمة متاحة يوم الثلاثاء",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-23",
+              "documentId": "doc-23",
+              "exactText": "الخدمة متاحة يوم الثلاثاء."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.048776000000003705,
+          "selectionMs": 0.02987099999998577,
+          "renderingMs": 0,
+          "totalMs": 0.07864699999998948
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-024",
+      "tenantId": "eval-tenant",
+      "category": "range",
+      "expectedDecision": "ANSWER",
+      "question": "ما النطاق بين 18 و 60؟",
+      "evidence": [
+        {
+          "id": "ev-24",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-24",
+          "trusted": true,
+          "text": "العمر المسموح بين 18 و 60."
+        }
+      ],
+      "goldAnswer": "العمر المسموح بين 18 و 60.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.4638839999999789
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "العمر المسموح بين 18 و 60.",
+        "propositions": [
+          {
+            "propositionId": "prop_90b9c631902a01c5d14d",
+            "tenantId": "eval-tenant",
+            "type": "RANGE",
+            "subject": "العمر_المسموح_بين_18_و",
+            "relation": "range",
+            "value": [
+              "18",
+              "60"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": [
+              "18",
+              "60"
+            ],
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-24"
+            ],
+            "sourceDocumentIds": [
+              "doc-24"
+            ],
+            "renderableText": "العمر المسموح بين 18 و 60",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-24",
+              "documentId": "doc-24",
+              "exactText": "العمر المسموح بين 18 و 60."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_90b9c631902a01c5d14d",
+            "tenantId": "eval-tenant",
+            "type": "RANGE",
+            "subject": "العمر_المسموح_بين_18_و",
+            "relation": "range",
+            "value": [
+              "18",
+              "60"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": [
+              "18",
+              "60"
+            ],
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-24"
+            ],
+            "sourceDocumentIds": [
+              "doc-24"
+            ],
+            "renderableText": "العمر المسموح بين 18 و 60",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-24",
+              "documentId": "doc-24",
+              "exactText": "العمر المسموح بين 18 و 60."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.08606499999999073,
+          "selectionMs": 0.03889300000000162,
+          "renderingMs": 0.001326999999974987,
+          "totalMs": 0.12628499999996734
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، العمر المسموح بين 18 و 60.",
+        "propositions": [
+          {
+            "propositionId": "prop_90b9c631902a01c5d14d",
+            "tenantId": "eval-tenant",
+            "type": "RANGE",
+            "subject": "العمر_المسموح_بين_18_و",
+            "relation": "range",
+            "value": [
+              "18",
+              "60"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": [
+              "18",
+              "60"
+            ],
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-24"
+            ],
+            "sourceDocumentIds": [
+              "doc-24"
+            ],
+            "renderableText": "العمر المسموح بين 18 و 60",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-24",
+              "documentId": "doc-24",
+              "exactText": "العمر المسموح بين 18 و 60."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_90b9c631902a01c5d14d",
+            "tenantId": "eval-tenant",
+            "type": "RANGE",
+            "subject": "العمر_المسموح_بين_18_و",
+            "relation": "range",
+            "value": [
+              "18",
+              "60"
+            ],
+            "unit": [],
+            "comparator": null,
+            "range": [
+              "18",
+              "60"
+            ],
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-24"
+            ],
+            "sourceDocumentIds": [
+              "doc-24"
+            ],
+            "renderableText": "العمر المسموح بين 18 و 60",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-24",
+              "documentId": "doc-24",
+              "exactText": "العمر المسموح بين 18 و 60."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.048246000000006006,
+          "selectionMs": 0.02894399999999564,
+          "renderingMs": 0.0842190000000187,
+          "totalMs": 0.16140900000002034
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-025",
+      "tenantId": "eval-tenant",
+      "category": "clarify",
+      "expectedDecision": "CLARIFY",
+      "question": "هل هذا متاح؟",
+      "evidence": [
+        {
+          "id": "ev-25",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-25",
+          "trusted": true,
+          "text": "الخدمة متاحة للحجز."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "CLARIFY",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "الخدمة متاحة للحجز.",
+        "propositions": [
+          {
+            "propositionId": "prop_0b069bb8b80b4f5b21e4",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-25"
+            ],
+            "sourceDocumentIds": [
+              "doc-25"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-25",
+              "documentId": "doc-25",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_0b069bb8b80b4f5b21e4",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-25"
+            ],
+            "sourceDocumentIds": [
+              "doc-25"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-25",
+              "documentId": "doc-25",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.08151599999999348,
+          "selectionMs": 0.03024500000000785,
+          "renderingMs": 0.000941000000011627,
+          "totalMs": 0.11270200000001296
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، الخدمة متاحة للحجز.",
+        "propositions": [
+          {
+            "propositionId": "prop_0b069bb8b80b4f5b21e4",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-25"
+            ],
+            "sourceDocumentIds": [
+              "doc-25"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-25",
+              "documentId": "doc-25",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_0b069bb8b80b4f5b21e4",
+            "tenantId": "eval-tenant",
+            "type": "AVAILABILITY_STATIC",
+            "subject": "الخدمه_متاحه_للحجز.",
+            "relation": "availability_static",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-25"
+            ],
+            "sourceDocumentIds": [
+              "doc-25"
+            ],
+            "renderableText": "الخدمة متاحة للحجز",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-25",
+              "documentId": "doc-25",
+              "exactText": "الخدمة متاحة للحجز."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.04723400000000311,
+          "selectionMs": 0.02760700000001748,
+          "renderingMs": 0.09561699999997586,
+          "totalMs": 0.17045799999999645
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    },
+    {
+      "id": "gac-026",
+      "tenantId": "eval-tenant",
+      "category": "clarify",
+      "expectedDecision": "CLARIFY",
+      "question": "شو التفاصيل؟",
+      "evidence": [
+        {
+          "id": "ev-26",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-26",
+          "trusted": true,
+          "text": "مدة الخدمة 30 دقيقة."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "CLARIFY",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "CLARIFY",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_02159542f4cae9b4f089",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-26"
+            ],
+            "sourceDocumentIds": [
+              "doc-26"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-26",
+              "documentId": "doc-26",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "AMBIGUOUS_RELATION",
+        "timing": {
+          "extractionMs": 0.05414700000000039,
+          "selectionMs": 0.05689200000000483,
+          "renderingMs": 0,
+          "totalMs": 0.11103900000000522
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "CLARIFY",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_02159542f4cae9b4f089",
+            "tenantId": "eval-tenant",
+            "type": "DURATION",
+            "subject": "مده_الخدمه_30_دقيقه.",
+            "relation": "duration",
+            "value": "30",
+            "unit": "دقيقه",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-26"
+            ],
+            "sourceDocumentIds": [
+              "doc-26"
+            ],
+            "renderableText": "مدة الخدمة 30 دقيقة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-26",
+              "documentId": "doc-26",
+              "exactText": "مدة الخدمة 30 دقيقة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "AMBIGUOUS_RELATION",
+        "timing": {
+          "extractionMs": 0.050913000000008424,
+          "selectionMs": 0.03459900000001426,
+          "renderingMs": 0,
+          "totalMs": 0.08551200000002268
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-027",
+      "tenantId": "eval-tenant",
+      "category": "clarify",
+      "expectedDecision": "CLARIFY",
+      "question": "كيف الوضع؟",
+      "evidence": [
+        {
+          "id": "ev-27",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-27",
+          "trusted": true,
+          "text": "موقع الفرع في شارع الجامعة."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "CLARIFY",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_8d4955cbfd933572e6ef",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-27"
+            ],
+            "sourceDocumentIds": [
+              "doc-27"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-27",
+              "documentId": "doc-27",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.05343100000001755,
+          "selectionMs": 0.02370500000000675,
+          "renderingMs": 0,
+          "totalMs": 0.0771360000000243
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_8d4955cbfd933572e6ef",
+            "tenantId": "eval-tenant",
+            "type": "LOCATION",
+            "subject": "موقع_الفرع_في_شارع_الجامعه.",
+            "relation": "location",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-27"
+            ],
+            "sourceDocumentIds": [
+              "doc-27"
+            ],
+            "renderableText": "موقع الفرع في شارع الجامعة",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-27",
+              "documentId": "doc-27",
+              "exactText": "موقع الفرع في شارع الجامعة."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.09156699999999773,
+          "selectionMs": 0.022668999999979178,
+          "renderingMs": 0,
+          "totalMs": 0.11423599999997691
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-028",
+      "tenantId": "eval-tenant",
+      "category": "clarify",
+      "expectedDecision": "CLARIFY",
+      "question": "هل يمكن؟",
+      "evidence": [
+        {
+          "id": "ev-28",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-28",
+          "trusted": true,
+          "text": "الخدمة لا تشمل الشحن."
+        }
+      ],
+      "goldAnswer": "",
+      "current": {
+        "decision": "CLARIFY",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "CLARIFY",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_52077c1b3a05bc58b9ea",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-28"
+            ],
+            "sourceDocumentIds": [
+              "doc-28"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-28",
+              "documentId": "doc-28",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "AMBIGUOUS_RELATION",
+        "timing": {
+          "extractionMs": 0.052933999999993375,
+          "selectionMs": 0.00599100000002295,
+          "renderingMs": 0,
+          "totalMs": 0.058925000000016325
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "CLARIFY",
+        "answer": "",
+        "propositions": [
+          {
+            "propositionId": "prop_52077c1b3a05bc58b9ea",
+            "tenantId": "eval-tenant",
+            "type": "NEGATIVE_MEMBERSHIP",
+            "subject": "الخدمه_لا_تشمل_الشحن.",
+            "relation": "negative_membership",
+            "value": [],
+            "unit": [],
+            "comparator": null,
+            "range": null,
+            "polarity": "NEGATIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-28"
+            ],
+            "sourceDocumentIds": [
+              "doc-28"
+            ],
+            "renderableText": "الخدمة لا تشمل الشحن",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-28",
+              "documentId": "doc-28",
+              "exactText": "الخدمة لا تشمل الشحن."
+            }
+          }
+        ],
+        "selected": [],
+        "reasonCode": "AMBIGUOUS_RELATION",
+        "timing": {
+          "extractionMs": 0.04466000000002168,
+          "selectionMs": 0.005020999999999276,
+          "renderingMs": 0,
+          "totalMs": 0.04968100000002096
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-029",
+      "tenantId": "eval-tenant",
+      "category": "tenant-isolation",
+      "expectedDecision": "NO_ANSWER",
+      "question": "كم السعر؟",
+      "evidence": [
+        {
+          "id": "ev-29",
+          "tenantId": "other",
+          "documentId": "doc-29",
+          "trusted": true,
+          "text": "سعر الخدمة 80 شيكل."
+        }
+      ],
+      "goldAnswer": "",
+      "evidenceTenant": "other",
+      "current": {
+        "decision": "NO_ANSWER",
+        "correct": true,
+        "latencyMs": 0
+      },
+      "constructionA": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.014627999999987651,
+          "selectionMs": 0.024369999999976244,
+          "renderingMs": 0,
+          "totalMs": 0.038997999999963895
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      },
+      "constructionB": {
+        "decision": "NO_ANSWER",
+        "answer": "",
+        "propositions": [],
+        "selected": [],
+        "reasonCode": "NO_DIRECTLY_ANSWERING_PROPOSITION",
+        "timing": {
+          "extractionMs": 0.004370999999991909,
+          "selectionMs": 0.02209299999998393,
+          "renderingMs": 0,
+          "totalMs": 0.02646399999997584
+        },
+        "fallback": false,
+        "traceable": true,
+        "naturalness": null
+      }
+    },
+    {
+      "id": "gac-030",
+      "tenantId": "eval-tenant",
+      "category": "derived-arithmetic",
+      "expectedDecision": "ANSWER",
+      "question": "كم السعر؟",
+      "evidence": [
+        {
+          "id": "ev-30",
+          "tenantId": "eval-tenant",
+          "documentId": "doc-30",
+          "trusted": true,
+          "text": "سعر الخدمة 150 شيكل."
+        }
+      ],
+      "goldAnswer": "سعر الخدمة 150 شيكل.",
+      "current": {
+        "decision": "ANSWER",
+        "correct": true,
+        "latencyMs": 1.0423040000000015
+      },
+      "constructionA": {
+        "decision": "ANSWER",
+        "answer": "سعر الخدمة 150 شيكل.",
+        "propositions": [
+          {
+            "propositionId": "prop_2dad47fe34b18f574d1a",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-30"
+            ],
+            "sourceDocumentIds": [
+              "doc-30"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-30",
+              "documentId": "doc-30",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_2dad47fe34b18f574d1a",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-30"
+            ],
+            "sourceDocumentIds": [
+              "doc-30"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-30",
+              "documentId": "doc-30",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.048286999999987756,
+          "selectionMs": 0.032972999999998365,
+          "renderingMs": 0.001199000000013939,
+          "totalMs": 0.08245900000000006
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true
+        },
+        "traceable": true,
+        "naturalness": 2.6
+      },
+      "constructionB": {
+        "decision": "ANSWER",
+        "answer": "بحسب المعلومات المتاحة، سعر الخدمة 150 شيكل.",
+        "propositions": [
+          {
+            "propositionId": "prop_2dad47fe34b18f574d1a",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-30"
+            ],
+            "sourceDocumentIds": [
+              "doc-30"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-30",
+              "documentId": "doc-30",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "selected": [
+          {
+            "propositionId": "prop_2dad47fe34b18f574d1a",
+            "tenantId": "eval-tenant",
+            "type": "PRICE",
+            "subject": "سعر_الخدمه_150_شيكل.",
+            "relation": "price",
+            "value": "150",
+            "unit": "شيكل",
+            "comparator": null,
+            "range": null,
+            "polarity": "POSITIVE",
+            "temporalScope": "UNSPECIFIED",
+            "condition": null,
+            "evidenceIds": [
+              "ev-30"
+            ],
+            "sourceDocumentIds": [
+              "doc-30"
+            ],
+            "renderableText": "سعر الخدمة 150 شيكل",
+            "derived": false,
+            "derivedFromPropositionIds": [],
+            "provenance": {
+              "trusted": true,
+              "evidenceId": "ev-30",
+              "documentId": "doc-30",
+              "exactText": "سعر الخدمة 150 شيكل."
+            }
+          }
+        ],
+        "reasonCode": "DIRECT_RELATION_MATCH",
+        "timing": {
+          "extractionMs": 0.043583999999981415,
+          "selectionMs": 0.3272190000000137,
+          "renderingMs": 0.08356299999999806,
+          "totalMs": 0.45436599999999316
+        },
+        "fallback": false,
+        "preservation": {
+          "ok": true,
+          "reasonCode": "PRESERVED"
+        },
+        "traceable": true,
+        "naturalness": 3
+      }
+    }
+  ]
+}

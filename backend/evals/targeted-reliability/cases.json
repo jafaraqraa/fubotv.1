@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "frozenBeforeProductionEdits": true,
+  "original": [
+    {"id":"daily","question":"قديش إيجار الحفارة الصغيرة لليوم؟","expected":"420 ILS"},
+    {"id":"generator","question":"قديش إيجار مولد G8 لليوم؟","expected":"140 ILS"},
+    {"id":"cutter","question":"قديش قاطع TC120 بالأسبوع؟","expected":"540 ILS"},
+    {"id":"deposit","history":["قديش إيجار الحفارة الصغيرة لليوم؟"],"question":"والتأمين قديش عليها؟","expected":"1500 ILS"},
+    {"id":"weekly","history":["قديش إيجار الحفارة الصغيرة لليوم؟"],"question":"والأسبوع؟","expected":"2450 ILS"},
+    {"id":"inclusion","question":"يعني الـ420 شاملات التأمين؟","expected":"No, daily price excludes refundable deposit"},
+    {"id":"duration","question":"الرافعة المقصية بقدر آخذها ليوم واحد؟","expected":"No, minimum two days"},
+    {"id":"age","question":"عمري 22 سنة، بقدر أستأجر الحفارة وأشغلها أنا؟","expected":"Renter age >=21; personal operator age >=23, so cannot operate"},
+    {"id":"credit","question":"صاحبي استأجر منكم قبل، يعني أكيد إله حساب آجل صح؟","expected":"Not automatically; prior approval required"},
+    {"id":"cancellation","question":"أنا ألغيت قبل 47 ساعة، برجعلي المبلغ كامل، صح؟","expected":"No, 50% refund"}
+  ],
+  "ambiguity": [
+    {"id":"multiple","history":["قديش سعر MX20؟","وقديش سعر G8؟"],"question":"والتأمين عليها؟","expected":"CLARIFY"},
+    {"id":"missing","question":"قديش سعرها؟","expected":"CLARIFY"}
+  ],
+  "live": [
+    {"id":"now","question":"هسّا MX20 متوفرة؟","expected":"NO_ANSWER live-data fallback"},
+    {"id":"catalog","question":"طالما MX20 موجودة بالقائمة يعني متوفرة اليوم صح؟","expected":"No unsupported live availability"}
+  ],
+  "smoke": [
+    ["شو دوام نابلس السبت؟","09:00–14:00"],
+    ["شو دوام رام الله السبت؟","09:00–15:00"],
+    ["طولكرم فاتحين السبت حاليا؟","Closed"],
+    ["قديش التوصيل داخل مدينة الفرع؟","60 each direction"],
+    ["قديش التوصيل لمسافة 20 كم؟","100 each direction"],
+    ["قديش التوصيل لمسافة 21 كم؟","Quote required"],
+    ["تأخرت 60 دقيقة بالترجيع، شو الرسوم؟","Free"],
+    ["تأخرت 61 دقيقة بالترجيع، شو الرسوم؟","50% daily"],
+    ["تأخرت 4 ساعات بالترجيع، شو الرسوم؟","50% daily"],
+    ["تأخرت 4 ساعات ودقيقة بالترجيع، شو الرسوم؟","Additional day"],
+    ["إذا استأجرت 14 يوم إلي خصم؟","10% rental only"],
+    ["إذا استأجرت 13 يوم إلي خصم؟","No long-rental discount"],
+    ["خصم الإيجار الطويل بشمل التأمين؟","No"],
+    ["استأجرت قبل، الحساب الآجل تلقائي؟","No, prior approval"],
+    ["بتقبلوا الدفع بالعملات الرقمية؟","No"],
+    ["بتأجروا شاحنات؟","No"],
+    ["عندكم فرع بجنين؟","No"],
+    ["قرأت إن طولكرم بيفتح السبت للواحدة، لسه هيك؟","Historical ended March 31 2026; currently closed"],
+    ["قديش سعر لتر الوقود؟","NO_ANSWER fixed price unknown"],
+    ["شو اسم شركة تأمين المعدات؟","NO_ANSWER unknown"]
+  ]
+}

@@ -260,6 +260,13 @@ async function replaceDocumentAtomically(existing, originalName, mimeType, buffe
         if (!vectorDimension || vectors.some(vector => !Array.isArray(vector) || vector.length !== vectorDimension)) {
             throw new Error('أبعاد متجهات التضمين غير متطابقة.');
         }
+        // Replacement must satisfy the same retrieval filters as initial
+        // ingestion. Active vectors without these fields are invisible to both
+        // semantic search and independent lexical retrieval.
+        for (const item of chunks) {
+            item.embeddingModel=embeddingModel;
+            item.vectorDimension=vectorDimension;
+        }
         console.log(`[RAG Replace] Embeddings completed tenant=${tenantId} document=${logicalDocumentId} chunks=${chunks.length}`);
 
         currentStage = 'qdrant_upload';
@@ -814,6 +821,8 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
             is_active: 1,
             chunk_count: richChunks.length,
             vector_count: richChunks.length,
+            embedding_model: modelName,
+            vector_dimension: dimension,
             index_fingerprint: fingerprint,
             fencing_token: lease.fencingToken,
             operation_id: lease.operationId,
@@ -835,6 +844,13 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
         });
         lifecycle.transition('active');
         const activeDoc = assertActiveDocument(docRepo.getDocumentByKey(tenantId, doc.document_key));
+        if (!dependencies.skipRagV2Sync && process.env.RAG_IMPLEMENTATION === 'v2') {
+            await require('../../rag_v2/ingestion/productionSync').syncExtractedDocumentToV2({
+                document: activeDoc,
+                originalText: text,
+                signal
+            });
+        }
         console.log('[Index] Response ready', {
             tenantId, documentId: doc.document_key, versionId,
             stage: 'active', durationMs: 0

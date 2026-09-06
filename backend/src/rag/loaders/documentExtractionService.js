@@ -3,6 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
+const { htmlToStructuredText } = require('../processing/tableStructure');
 const { normalizeArabic } = require('../processing/arabicNormalizer');
 const { cleanText } = require('../processing/textCleaner');
 
@@ -180,15 +181,20 @@ async function extractTextFromBuffer(ext, buffer) {
         extractedText = buffer.toString('utf8');
     } else if (ext === 'pdf') {
         try {
-            const data = await pdfParse(buffer);
-            extractedText = data.text || '';
+            const parser = new pdfParse.PDFParse({ data: new Uint8Array(buffer) });
+            try {
+                const data = await parser.getText();
+                extractedText = data.text || '';
+            } finally {
+                await parser.destroy();
+            }
         } catch (err) {
             throw new Error(`فشل استخراج النصوص من ملف PDF: ${err.message}`);
         }
     } else if (ext === 'docx') {
         try {
-            const result = await mammoth.extractRawText({ buffer });
-            extractedText = result.value || '';
+            const result = await mammoth.convertToHtml({ buffer }, { includeEmbeddedStyleMap: false, externalFileAccess: false });
+            extractedText = htmlToStructuredText(result.value || '');
         } catch (err) {
             throw new Error(`فشل استخراج النصوص من ملف DOCX: ${err.message}`);
         }

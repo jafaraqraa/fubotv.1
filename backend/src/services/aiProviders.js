@@ -52,6 +52,11 @@ function completionTokenLimit(options = {}) {
     return Math.max(16, Math.min(8192, Math.trunc(configured)));
 }
 
+function openAIResponseFormat(options = {}) {
+    if (!options.jsonSchema) return undefined;
+    return { type: 'json_schema', json_schema: { name: 'rag_v2_response', strict: true, schema: options.jsonSchema } };
+}
+
 /**
  * Base AI Provider Abstraction
  */
@@ -114,8 +119,9 @@ Adapter Used: OpenRouterProvider`);
                 body: JSON.stringify({
                     model: model,
                     messages: finalMessages,
-                    temperature: temp,
-                    max_completion_tokens: maxCompletionTokens
+                    temperature: options.temperature ?? temp,
+                    max_completion_tokens: maxCompletionTokens,
+                    ...(openAIResponseFormat(options) ? { response_format: openAIResponseFormat(options) } : {})
                 })
             });
 
@@ -142,6 +148,31 @@ Adapter Used: OpenRouterProvider`);
             addLog("خطأ في الاتصال بـ OpenRouter");
             throw error;
         }
+    }
+
+    async rerank(query, documents, options = {}) {
+        lastResponseMetadata = null;
+        const apiBase = this.baseUrl || 'https://openrouter.ai/api/v1';
+        const response = await reliableFetch(`${apiBase}/rerank`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'http://localhost:3005',
+                'X-Title': 'Telegram RAG Memory Bot'
+            },
+            body: JSON.stringify({ model: this.model, query, documents,
+                top_n: Math.min(Number(options.topN) || documents.length, documents.length),
+                return_documents: false })
+        });
+        const data = await response.json();
+        if (data.error) {
+            const message = data.error.message || 'OpenRouter reranker error';
+            throw Object.assign(new Error(message), { code: data.error.code || 'OPENROUTER_RERANK_ERROR' });
+        }
+        lastResponseMetadata = { id: data.id || null, model: data.model || this.model,
+            usage: data.usage || null, cost: data.cost ?? null, rawResponse: data };
+        return data.results || data.data || [];
     }
 
     async transcribe(media) {
@@ -233,8 +264,9 @@ Adapter Used: OpenAIProvider`);
                 body: JSON.stringify({
                     model: model,
                     messages: finalMessages,
-                    temperature: temp,
-                    max_completion_tokens: maxCompletionTokens
+                    temperature: options.temperature ?? temp,
+                    max_completion_tokens: maxCompletionTokens,
+                    ...(openAIResponseFormat(options) ? { response_format: openAIResponseFormat(options) } : {})
                 })
             });
 
@@ -377,6 +409,10 @@ Adapter Used: GeminiProvider`);
                     parts: [{ text: systemMsg.content }]
                 };
             }
+            if (options.jsonSchema) {
+                body.generationConfig = { responseMimeType: 'application/json', responseJsonSchema: options.jsonSchema,
+                    temperature: options.temperature ?? 0 };
+            }
 
             const response = await reliableFetch(url, {
                 method: 'POST',
@@ -513,8 +549,9 @@ Adapter Used: OllamaProvider`);
                     model: model,
                     messages: finalMessages,
                     stream: false,
+                    ...(options.jsonSchema ? { format: options.jsonSchema } : {}),
                     options: {
-                        temperature: temp
+                        temperature: options.temperature ?? temp
                     }
                 })
             });

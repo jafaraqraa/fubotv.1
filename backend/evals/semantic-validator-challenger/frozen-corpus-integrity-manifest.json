@@ -1,0 +1,63 @@
+{
+  "generatedAt": "2026-09-04T21:37:55+03:00",
+  "corpusFile": "gold-corpus-v1.json",
+  "corpusSha256": "9e3b2694f1d2a87ce564471b642a7948361a94b10b9b77027648de48ddcb999b",
+  "unseenRowsCanonicalJsonSha256": "9077de77208a74e53eb4f9428390eb122f27d6926a0f8ded49e75220e4f1e701",
+  "counts": {
+    "rows": 169,
+    "uniqueRowIds": 149,
+    "supported": 78,
+    "contradicted": 46,
+    "notProven": 45,
+    "hardNegative": 91,
+    "supportedParaphraseFocused": 60,
+    "unseenRows": 54,
+    "unseenDocuments": 6
+  },
+  "unseenDistribution": {
+    "supported": 18,
+    "contradicted": 18,
+    "notProven": 18
+  },
+  "tenantIds": [
+    "astronomy", "barq", "ceramics", "clinic", "control-1", "control-2",
+    "control-3", "control-4", "control-5", "delivery", "history", "retail",
+    "services", "unseen-sourdough"
+  ],
+  "missingEvidenceIdRows": [],
+  "evidenceIdReferenceMismatchRows": [],
+  "duplicateRowIds": [
+    "hn-1-numeric", "hn-1-threshold", "hn-1-temporal", "hn-1-not-proven",
+    "hn-2-numeric", "hn-2-threshold", "hn-2-temporal", "hn-2-not-proven",
+    "hn-3-numeric", "hn-3-threshold", "hn-3-temporal", "hn-3-not-proven",
+    "hn-4-numeric", "hn-4-threshold", "hn-4-temporal", "hn-4-not-proven",
+    "hn-5-numeric", "hn-5-threshold", "hn-5-temporal", "hn-5-not-proven"
+  ],
+  "unmarkedExactDuplicateEvaluationRowGroups": [
+    ["unseen-3", "unseen-39"], ["unseen-4", "unseen-40"],
+    ["unseen-5", "unseen-41"], ["unseen-6", "unseen-42"],
+    ["unseen-7", "unseen-43"], ["unseen-8", "unseen-44"],
+    ["unseen-9", "unseen-45"], ["unseen-12", "unseen-48"],
+    ["unseen-13", "unseen-49"], ["unseen-14", "unseen-50"],
+    ["unseen-15", "unseen-51"], ["unseen-16", "unseen-52"],
+    ["unseen-17", "unseen-53"], ["unseen-18", "unseen-54"]
+  ],
+  "priorComparison": {
+    "countsMatchPreviousReport": true,
+    "labelsCryptographicallyVerifiedUnchanged": false,
+    "reason": "No prior corpus checksum was recorded in the previous report or artifacts."
+  },
+  "unseenIsolation": {
+    "sourceDataset": "unseen-sourdough-frozen-v1",
+    "distinctTenant": "unseen-sourdough",
+    "isolatedFromDevByExistingEvaluator": true
+  },
+  "integrityStatus": "FAILED",
+  "blockingReasons": [
+    "ROW_IDS_NOT_UNIQUE",
+    "UNMARKED_EXACT_DUPLICATE_EVALUATION_ROWS",
+    "NO_PRIOR_CHECKSUM_FOR_UNCHANGED_LABEL_VERIFICATION"
+  ],
+  "evaluationStarted": false,
+  "corpusModified": false
+}

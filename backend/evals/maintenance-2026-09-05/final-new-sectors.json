@@ -1,0 +1,3352 @@
+[
+  {
+    "phase": 1,
+    "tenant": "maintenance-education",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 3200,
+    "answer": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+    "requestId": "c9bf6da2-724b-408d-a675-4339391b9621",
+    "raw": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":0}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 4.092,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 6,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788627186229,
+          "stages": {
+            "planning": 3,
+            "decomposition": 5,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 79,
+            "rrf": 0,
+            "reranking": 2,
+            "optimization": 7
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 0
+            }
+          ],
+          "totalDuration": 94,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9145491200000001\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9145491200000001,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9145491200000001,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8421,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6116,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3377,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "شركة تعليم افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط.\nالخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.3377,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 6100,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 89.606,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 4.092,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 6,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 1,
+    "tenant": "maintenance-education",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 2880,
+    "answer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "requestId": "6859a0f9-755e-406e-98ae-639ac2c3f258",
+    "raw": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 3200,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "evidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "expectedResult": {
+                  "value": 2880,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 1.222,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 2,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788627192253,
+          "stages": {
+            "planning": 2,
+            "decomposition": 3,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 0,
+            "variation": 1,
+            "retrieval": 3797,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 7
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 3809,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9236941653333334\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9236941653333334,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9236941653333334,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8439,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.497,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "خصم 10% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 2880,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "expectedResult": {
+                "value": 2880,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 2880 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 39.503,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 1.222,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 2,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 1,
+    "tenant": "maintenance-furniture",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 7600,
+    "answer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "requestId": "31b3211b-71aa-4b04-911f-fd27c5257c84",
+    "raw": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":0}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.575,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 56,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788627197806,
+          "stages": {
+            "planning": 3,
+            "decomposition": 4,
+            "preprocessing": 1,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 12,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 0
+            }
+          ],
+          "totalDuration": 21,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9138784000000001\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9138784000000001,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9138784000000001,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8419,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6112,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.337,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "شركة أثاث افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط.\nالخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.337,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 4900,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 24.289,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.575,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 56,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 1,
+    "tenant": "maintenance-furniture",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 6080,
+    "answer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "requestId": "13edae94-5b93-4691-b0d7-09e5add46aa9",
+    "raw": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 7600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "evidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "expectedResult": {
+                  "value": 6080,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.187,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788627199669,
+          "stages": {
+            "planning": 2,
+            "decomposition": 2,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 7,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 10,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9271864533333333\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9271864533333333,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9271864533333333,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8443,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.4974,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "خصم 20% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 6080,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "expectedResult": {
+                "value": 6080,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 6080 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 23.046,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.187,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 2,
+    "tenant": "maintenance-education",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 3200,
+    "answer": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+    "requestId": "bae7641a-7b82-46ec-bc16-10fcf1f6bfd1",
+    "raw": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.318,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 73,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627201347,
+          "stages": {
+            "planning": 1,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 0,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 4,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9145491200000001\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9145491200000001,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9145491200000001,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8421,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6116,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3377,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "شركة تعليم افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط.\nالخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.3377,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 6100,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي 3200 شيكل مع خصم 10% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 16.059,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.318,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 73,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 2,
+    "tenant": "maintenance-education",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 2880,
+    "answer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "requestId": "0b697f52-2e0d-4097-ab5d-c811e502d7d4",
+    "raw": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 3200,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "evidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "expectedResult": {
+                  "value": 2880,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.295,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 94,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627203045,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 3,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9236941653333334\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9236941653333334,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9236941653333334,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8439,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.497,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "خصم 10% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 2880,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "expectedResult": {
+                "value": 2880,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 2880 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 19.23,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.295,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 94,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 2,
+    "tenant": "maintenance-furniture",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 7600,
+    "answer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "requestId": "966036bf-652c-4997-844c-89d49ca4d96d",
+    "raw": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.248,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 83,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627204653,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 3,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9138784000000001\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9138784000000001,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9138784000000001,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8419,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6112,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.337,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "شركة أثاث افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط.\nالخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.337,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 4900,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 14.227,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.248,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 83,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 2,
+    "tenant": "maintenance-furniture",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 6080,
+    "answer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "requestId": "eef3a787-1e94-4169-9a1f-cda56e0c79b9",
+    "raw": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 7600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "evidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "expectedResult": {
+                  "value": 6080,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.251,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 0,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627206283,
+          "stages": {
+            "planning": 0,
+            "decomposition": 0,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 3,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9271864533333333\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9271864533333333,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9271864533333333,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8443,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.4974,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "خصم 20% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 6080,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "expectedResult": {
+                "value": 6080,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 6080 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 13.17,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.251,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 0,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 3,
+    "tenant": "maintenance-education",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 3200,
+    "answer": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+    "requestId": "6dc3389a-657e-4908-aa17-e265dc76042c",
+    "raw": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.423,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 47,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627207966,
+          "stages": {
+            "planning": 1,
+            "decomposition": 2,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 5,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9145491200000001\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9145491200000001,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9145491200000001,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8414,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6094,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3328,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "شركة تعليم افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط.\nالخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.3328,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 6100,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي هو 3200 شيكل مع خصم 10% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 15.843,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.423,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 47,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 3,
+    "tenant": "maintenance-education",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 2880,
+    "answer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "requestId": "630279e1-2cee-492e-b925-2c82d39c3cd9",
+    "raw": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"textHash\":\"7d8689d2cbe7d5f4a89a8f956536c28ccb7c90c57b32b78f9221cdb44d6aecfc\",\"characters\":188}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 2880 شيكل.\",\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":3200,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":10,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"evidenceIds\":[\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\"],\"expectedResult\":{\"value\":2880,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-education",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-education",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-education"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 3200,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 10,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "evidenceIds": [
+                  "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+                ],
+                "expectedResult": {
+                  "value": 2880,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.241,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 42,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627209777,
+          "stages": {
+            "planning": 1,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 3,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\nDocument: Education_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-education\" document_id=\"staging_ver_063606ac52494b77830585406d968ae6\" document_version_id=\"ver_063606ac52494b77830585406d968ae6\" chunk_id=\"staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7\" source_type=\"uploaded_document\" source_name=\"Education_Catalog.txt\" retrieval_score=\"0.9236941653333334\" index_version_id=\"ver_063606ac52494b77830585406d968ae6\">\nDOCUMENT_TEXT_START\nشركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تعليم افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 3200 شيكل.\nKit 2C: السعر الأساسي 6100 شيكل.\nخصم 10% على سعر Kit 9B فقط. الخصم لا يشمل الشحن.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-education",
+              "documentId": "staging_ver_063606ac52494b77830585406d968ae6",
+              "documentVersionId": "ver_063606ac52494b77830585406d968ae6",
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "sourceType": "uploaded_document",
+              "sourceName": "Education_Catalog.txt",
+              "retrievalScore": 0.9236941653333334,
+              "indexVersionId": "ver_063606ac52494b77830585406d968ae6"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+              "score": 0.9236941653333334,
+              "source": "Education_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8439,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 2880 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.497,
+            "evidenceChunkIds": [
+              "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+            "matchedSentence": "خصم 10% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 2880,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 3200,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 10,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "evidenceIds": [
+                "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+              ],
+              "expectedResult": {
+                "value": 2880,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 2880 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_063606ac52494b77830585406d968ae6_chunk_0_7d8689d2cbe7"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 17.791,
+        "groundingSafety": {
+          "tenantId": "maintenance-education",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.241,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 42,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 3,
+    "tenant": "maintenance-furniture",
+    "question": "كم سعر Kit 9B؟",
+    "expected": 7600,
+    "answer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "requestId": "1bb6819e-e499-4bb6-9fab-f5f6033dc7ea",
+    "raw": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"resolvedQueryHash\":\"99932274895558bf31309f499b47e3a221f2304c59e4eab635d571c4c59495f0\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.434,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 6,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627211404,
+          "stages": {
+            "planning": 1,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 4,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Kit 9B؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9138784000000001\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9138784000000001,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9138784000000001,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8419,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "sourceText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "originalCompoundClaim": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionText": "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.6112,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.337,
+            "keywordOverlap": 0.9091,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "شركة أثاث افتراضية.\nالعملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط.\nالخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+            "semanticScore": 0.337,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 4900,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B الأساسي 7600 شيكل مع خصم 20% على السعر فقط."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 21.762,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.434,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 6,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "phase": 3,
+    "tenant": "maintenance-furniture",
+    "question": "احسب سعر Kit 9B بعد الخصم.",
+    "expected": 6080,
+    "answer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "requestId": "a5a0d830-9ba5-46ab-ae59-24e05ead2e78",
+    "raw": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+    "gate": "ANSWER",
+    "gateReason": "evidence_available",
+    "boundary": "ALLOW",
+    "boundaryReasons": "[]",
+    "claims": "[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+    "reliability": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"resolvedQueryHash\":\"271590a0064e0488b29c491c1482eccdcc730ccc203c6812aa7a1e2e91dbb8cf\",\"preBudgetChunkIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"textHash\":\"5c0e75490034ea190d2000884ec24f9310da1d241f7c15a9ffc1d90b077fe715\",\"characters\":189}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Kit 9B بعد الخصم هو 6080 شيكل.\",\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":7600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":20,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"evidenceIds\":[\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\"],\"expectedResult\":{\"value\":6080,\"unit\":\"ILS\"}},\"policyReason\":null}]}}",
+    "fallback": null,
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "maintenance-furniture",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "maintenance-furniture",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "maintenance-furniture"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 7600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 20,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "evidenceIds": [
+                  "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+                ],
+                "expectedResult": {
+                  "value": 6080,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.19,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 29,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788627213216,
+          "stages": {
+            "planning": 1,
+            "decomposition": 2,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 2
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 5,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Kit 9B بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\nDocument: Furniture_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"maintenance-furniture\" document_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e\" document_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\" chunk_id=\"staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034\" source_type=\"uploaded_document\" source_name=\"Furniture_Catalog.txt\" retrieval_score=\"0.9271864533333333\" index_version_id=\"ver_bfa0c75d54cd40b1a18ad2832e0f602e\">\nDOCUMENT_TEXT_START\nشركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة أثاث افتراضية. العملة شيكل.\nKit 9B: السعر الأساسي 7600 شيكل.\nKit 2C: السعر الأساسي 4900 شيكل.\nخصم 20% على سعر Kit 9B فقط. الخصم لا يشمل التركيب.\nهذه قائمة أسعار ولا تثبت توفر مخزون حي.",
+              "tenantId": "maintenance-furniture",
+              "documentId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "documentVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e",
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "sourceType": "uploaded_document",
+              "sourceName": "Furniture_Catalog.txt",
+              "retrievalScore": 0.9271864533333333,
+              "indexVersionId": "ver_bfa0c75d54cd40b1a18ad2832e0f602e"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+              "score": 0.9271864533333333,
+              "source": "Furniture_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8443,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "sourceText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "originalCompoundClaim": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionText": "سعر Kit 9B بعد الخصم هو 6080 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.4974,
+            "evidenceChunkIds": [
+              "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+            ],
+            "similarity": 0.3437,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+            "matchedSentence": "خصم 20% على سعر Kit 9B فقط.",
+            "semanticScore": 0.3437,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 6080,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 7600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 20,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "evidenceIds": [
+                "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+              ],
+              "expectedResult": {
+                "value": 6080,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Kit 9B بعد الخصم هو 6080 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_bfa0c75d54cd40b1a18ad2832e0f602e_chunk_0_5c0e75490034"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 10.262,
+        "groundingSafety": {
+          "tenantId": "maintenance-furniture",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.19,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 29,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  }
+]

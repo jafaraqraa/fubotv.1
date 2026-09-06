@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { prioritize } = require('../rag/intelligence/retrievalRelevance');
 const path = require('path');
 
 const promptPath = path.join(__dirname, '..', '..', 'system_prompt.txt');
@@ -9,7 +10,7 @@ const { getPointsByIds } = require('../rag/vector/qdrantVectorStore');
 const { performance } = require('perf_hooks');
 const { requireTenantId } = require('../rag/security/tenantContext');
 const {
-    filterRetrievedChunks
+    filterRetrievedChunks, parseSerializedChunks
 } = require('../rag/security/promptInjectionGuard');
 
 // Import new Phase 11 retrieval intelligence sub-modules
@@ -66,27 +67,16 @@ function getLastRetrievalMetadata() {
 function buildBudgetedEvidenceContext(evidenceIndex, budget) {
     const limit = Math.max(500, Number(budget) || 3000);
     const selected = [];
-    for (const reference of evidenceIndex.getActive()) {
+    for (let reference of evidenceIndex.getActive()) {
+        // Lossless compaction of repeated identical statements, never truncate
+        // a rule or table just to fill the budget.
+        const sentences = reference.text.split(/(?<=[.!؟])\s+/u).map(s => s.trim()).filter(Boolean);
+        if (sentences.length > 1 && new Set(sentences).size === 1) {
+            reference = new (reference.constructor)(reference.metadata, sentences[0]);
+            evidenceIndex.registerActive(reference.metadata, reference.text);
+        }
         const candidate = EvidenceBuilder.buildGroundingContext([...selected, reference]);
         if (candidate.length <= limit) selected.push(reference);
-    }
-    if (!selected.length && evidenceIndex.getActive().length) {
-        const source = evidenceIndex.getActive()[0];
-        let low = 1;
-        let high = source.text.length;
-        let best = null;
-        while (low <= high) {
-            const length = Math.floor((low + high) / 2);
-            const shortened = new (source.constructor)(source.metadata, source.text.slice(0, length));
-            const candidate = EvidenceBuilder.buildGroundingContext([shortened]);
-            if (candidate.length <= limit) {
-                best = shortened;
-                low = length + 1;
-            } else {
-                high = length - 1;
-            }
-        }
-        if (best) selected.push(best);
     }
     evidenceIndex.retainActive(selected.map(ref => ref.metadata.chunkId));
     return EvidenceBuilder.buildGroundingContext(selected);
@@ -208,6 +198,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
             const listsOfResults = await Promise.all(retrievalPromises);
             const listsOfCandidates = listsOfResults.map(r => r.candidates || []);
+            profiling.retrievalSources = listsOfResults.map(r => ({ lexicalMode: r.metadata?.lexicalMode || 'UNKNOWN', vectorCount: r.metadata?.vectorCount, lexicalCount: r.metadata?.lexicalCount }));
             profiling.stages.retrieval = Date.now() - t0;
 
             if (profiler) {
@@ -253,7 +244,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             const similarityThreshold = configuredThreshold;
 
             // Filter below similarity threshold
-            const filteredCandidates = reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold);
+            const filteredCandidates = prioritize(query, reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold || (c.lexicalMatch && c.keywordScore >= 0.25)));
 
             // Take Top-K
             const topChunks = filteredCandidates.slice(0, dynamicTopK);
@@ -277,27 +268,15 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
                 if (adjacentIds.length > 0) {
                     const neighbors = await getPointsByIds(tenantId, adjacentIds);
-                    const neighborMap = new Map();
-                    neighbors.forEach(n => {
-                        if (n.payload && n.payload.chunkId) {
-                            neighborMap.set(n.payload.chunkId, n.payload.text);
-                        }
-                    });
-
-                    expandedChunks = topChunks.map(item => {
-                        let expandedText = item.text;
-                        const prevId = item.payload?.previousChunkId;
-                        const nextId = item.payload?.nextChunkId;
-
-                        if (prevId && neighborMap.has(prevId)) {
-                            expandedText = neighborMap.get(prevId) + '\n' + expandedText;
-                        }
-                        if (nextId && neighborMap.has(nextId)) {
-                            expandedText = expandedText + '\n' + neighborMap.get(nextId);
-                        }
-
-                        return { ...item, text: expandedText };
-                    });
+                    const selected = new Set(topChunks.map(c => c.chunkId || c.id));
+                    expandedChunks = [...topChunks];
+                    for (const neighbor of neighbors) {
+                        const payload = neighbor.payload || {};
+                        const id = payload.chunkId || neighbor.id;
+                        if (!id || selected.has(id) || payload.tenantId !== tenantId) continue;
+                        selected.add(id);
+                        expandedChunks.push({ ...neighbor, chunkId: id, text: payload.text || '', payload });
+                    }
                 }
             }
 
@@ -334,7 +313,8 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             profiling.selectedTopK = dynamicTopK;
             profiling.similarityThreshold = similarityThreshold;
             profiling.optimizedContext = optimizedContext;
-            profiling.topChunks = expandedChunks;
+            profiling.preBudgetChunkIds = expandedChunks.map(c => c.chunkId || c.id);
+            profiling.topChunks = parseSerializedChunks(optimizedContext) || [];
             profiling.selectedContextChunkIds = evidenceIndex.getActive()
                 .map(reference => reference.metadata.chunkId);
             profiling.retrievedChunks = reranked.map(item => ({
@@ -369,7 +349,8 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
 
             // 1. Independent Intent-Aware retrieval with adaptive allocation, deduplication, and context diversifier
             const tRetAwareStart = performance.now();
-            const { diversified } = await retrieveIntentAwareContext(decomposedQueries, similarityThreshold, tenantContext);
+            const { diversified, retrievalSources } = await retrieveIntentAwareContext(decomposedQueries, similarityThreshold, {...tenantContext,originalQuery:query});
+            profiling.retrievalSources=retrievalSources || [];
             const durationRetAware = performance.now() - tRetAwareStart;
 
             if (profiler) {
@@ -397,7 +378,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             const dynamicTopK = determineSmarterTopK(query, tokens, "General", reranked);
 
             // Limit to dynamicTopK
-            const selectedChunks = reranked.slice(0, dynamicTopK);
+            const selectedChunks = prioritize(query, reranked).slice(0, dynamicTopK);
             const selectedIds = new Set(selectedChunks.map(item =>
                 item.chunkId || item.id || item.payload?.chunkId));
             const discardedChunks = reranked.filter(item =>
@@ -435,7 +416,8 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
             profiling.selectedTopK = dynamicTopK;
             profiling.similarityThreshold = similarityThreshold;
             profiling.optimizedContext = optimizedContext;
-            profiling.topChunks = topChunks;
+            profiling.preBudgetChunkIds = topChunks.map(c => c.chunkId || c.id);
+            profiling.topChunks = parseSerializedChunks(optimizedContext) || [];
             profiling.selectedContextChunkIds = evidenceIndex.getActive()
                 .map(reference => reference.metadata.chunkId);
             profiling.retrievedChunks = reranked.map(item => ({

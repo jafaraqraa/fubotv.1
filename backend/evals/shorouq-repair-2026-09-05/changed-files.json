@@ -1,0 +1,87 @@
+[
+  {
+    "file": "backend/src/rag/intelligence/answerValidator.js",
+    "before": "e4350e866595ae32a2db8a02b6b7680fda315c2057aa4a9fd69986cfa07355d4",
+    "after": "b474b80095dd7e620dda7c1a4bcb252354f177f77531685590eef47412187035"
+  },
+  {
+    "file": "backend/src/rag/intelligence/conversationReferent.js",
+    "before": "455f136a8d10bfa4a7cef854b0d6faa4cf008d14f2c8a6965bcc595210886d52",
+    "after": "5731960dfaf89a1a66d2af13dd37a10a32c0e6eff04ab11292291267de2a0703"
+  },
+  {
+    "file": "backend/src/rag/intelligence/derivedClaimValidator.js",
+    "before": "f29954457b5eacef7fdc20059796887343f704bf574ed15c920f798d9cfd8d74",
+    "after": "caa9b61039e7a3903559cc3ee37f0197d74cafab9add7e32d33f5929aa9cae95"
+  },
+  {
+    "file": "backend/src/rag/intelligence/evidenceDecisionGate.js",
+    "before": "4fa55e64540fe1f1ed62ca0c7cabc9806019a4a26ea3e59ee37b62beb365f2e8",
+    "after": "0d79d94deb092792ad0023378fe502bc301c9c24196507d356f105ca11a7ae02"
+  },
+  {
+    "file": "backend/src/rag/intelligence/evidenceExcerptRecovery.js",
+    "before": "d7d60e10901c83dfdb060ae840cd635f15a34685a8b599ed314abcc1d99eb812",
+    "after": "cf43de202647b3596b2b511df0f54a6062673d8199fc5db3f43dd94f7235727b"
+  },
+  {
+    "file": "backend/src/rag/intelligence/intentRetriever.js",
+    "before": "a5dee26c07ee67439939b4c70c23e76b42cbd3490e047fdd0248c6ab46122a6e",
+    "after": "7d0dda324dd8d976a3b68bfda5262fddebe0436d2d70f47e5def485e3c5a3914"
+  },
+  {
+    "file": "backend/src/rag/intelligence/numericIdentity.js",
+    "before": null,
+    "after": "ff67838d2ca62b2fa3d264d3c7983cabe009392c0c9c59d2dda1cd0c387952e0"
+  },
+  {
+    "file": "backend/src/rag/intelligence/retrievalRelevance.js",
+    "before": "7451b9f908bb98f33e117e8efc9706f9af488b916d2392d1ec73a575858d5647",
+    "after": "275cd14df94d64757ad274850bf9dde6f64fa58e124ca38841285f88a4709feb"
+  },
+  {
+    "file": "backend/src/rag/processing/documentChunker.js",
+    "before": "00a7a6af4854d22d689d55fb0516bed23a4e828effc2d60255050e380f12fb8f",
+    "after": "c4e79c77e0a80493b0268cce61ec7b9e93926ce96e8ce610a764dfaf559d7768"
+  },
+  {
+    "file": "backend/src/rag/security/conditionalPolicyGuard.js",
+    "before": "23520ebeaeb9873ffe763fc0c6631607ecd4c460db73aeae8ba6bbf2c71a8941",
+    "after": "406d5145081d4a706b24168b8678c185739ad751c3aa540f3a9784b2da40452a"
+  },
+  {
+    "file": "backend/src/rag/security/groundingSafetyBoundary.js",
+    "before": "3a7d8bb421c26829c0900dfccb08030d81478822a5d00a9eac5bdd015638bfe7",
+    "after": "2e9dc96e51bf21617b321be81ea375854629e01ca3162d1ef71ce9d7e843a2f8"
+  },
+  {
+    "file": "backend/src/rag/services/knowledgeDocumentService.js",
+    "before": "b4a8b2a551aaf3ade2ca1842d1f2dc9871a84d9aa06c95c0362c0f7a2e7b97e1",
+    "after": "c53c19e4d789f6886371926719d35085518c647b88241925560e6aa60763e7a8"
+  },
+  {
+    "file": "backend/src/services/PromptBuilder.js",
+    "before": "9ccf74a4caba02493233ee0a78894368dc2e7ddfb86d5dd292015515ff82cc4e",
+    "after": "bf7dca6777753953b7af91e4c8068b60cebf64e6675e6a750b19aa5e5b981ee2"
+  },
+  {
+    "file": "backend/src/services/ai.js",
+    "before": "4707be91589c435b0350a3c07c56249b03c2e9ebc70341189c130698c499cf9e",
+    "after": "447bbe6516de38eb6b065f260993593473281b2c7db4d684f61cee361acb75ed"
+  },
+  {
+    "file": "backend/src/services/knowledge.js",
+    "before": "4a805674c70a1e3aae3cefc8aef312aa3c7ecacd8332e333df6a064e7467246d",
+    "after": "bcf223945a50d53a001b86508717d2f9008b13eea5c384315b0e8db4f1369635"
+  },
+  {
+    "file": "backend/test/rag_atomic_replacement.test.js",
+    "before": "b1abb7874ef9a675ced4f2afeb2be120283fe47c448e9c835f0e99e73afa3c90",
+    "after": "2dfe3720dc01917f9fceb6fefd2baa61db8a40d618d3748d40f2d9d653f364e2"
+  },
+  {
+    "file": "backend/test/reliability_shorouq.test.js",
+    "before": null,
+    "after": "f33772c30d4f8a061b61613edd1ed3421f1c3aec1351de6125ce6e2c5b4e0185"
+  }
+]

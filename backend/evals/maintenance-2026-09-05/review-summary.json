@@ -1,0 +1,99 @@
+{
+  "batches": [
+    {
+      "batch": "signoff-shorouq",
+      "requests": 100,
+      "counts": {
+        "rawcorrect": 56,
+        "verifiedexcerptcorrect": 26,
+        "properclarify": 15,
+        "properabstain": 3,
+        "overabstain": 0,
+        "wrongnonresponsive": 0,
+        "providerfailure": 0
+      },
+      "providerOutputsInTrace": 83,
+      "directlyCapturedProviderCalls": 83
+    },
+    {
+      "batch": "signoff-boundaries",
+      "requests": 54,
+      "counts": {
+        "rawcorrect": 45,
+        "verifiedexcerptcorrect": 0,
+        "properclarify": 6,
+        "properabstain": 3,
+        "overabstain": 0,
+        "wrongnonresponsive": 0,
+        "providerfailure": 0
+      },
+      "providerOutputsInTrace": 48,
+      "directlyCapturedProviderCalls": 48
+    },
+    {
+      "batch": "signoff-heldout",
+      "requests": 12,
+      "counts": {
+        "rawcorrect": 12,
+        "verifiedexcerptcorrect": 0,
+        "properclarify": 0,
+        "properabstain": 0,
+        "overabstain": 0,
+        "wrongnonresponsive": 0,
+        "providerfailure": 0
+      },
+      "providerOutputsInTrace": 12,
+      "directlyCapturedProviderCalls": 0
+    },
+    {
+      "batch": "signoff-new-sectors",
+      "requests": 12,
+      "counts": {
+        "rawcorrect": 12,
+        "verifiedexcerptcorrect": 0,
+        "properclarify": 0,
+        "properabstain": 0,
+        "overabstain": 0,
+        "wrongnonresponsive": 0,
+        "providerfailure": 0
+      },
+      "providerOutputsInTrace": 12,
+      "directlyCapturedProviderCalls": 0
+    },
+    {
+      "batch": "signoff-madar",
+      "requests": 54,
+      "counts": {
+        "rawcorrect": 39,
+        "verifiedexcerptcorrect": 10,
+        "properclarify": 0,
+        "properabstain": 5,
+        "overabstain": 0,
+        "wrongnonresponsive": 0,
+        "providerfailure": 0
+      },
+      "providerOutputsInTrace": 54,
+      "directlyCapturedProviderCalls": 0
+    }
+  ],
+  "requests": 232,
+  "counts": {
+    "rawcorrect": 164,
+    "verifiedexcerptcorrect": 36,
+    "properclarify": 21,
+    "properabstain": 11,
+    "overabstain": 0,
+    "wrongnonresponsive": 0,
+    "providerfailure": 0
+  },
+  "inputHashes": {
+    "shorouq": "ac5092857d754538be46cb84851b0935e915e856751d77a0192fb10ede58fcf5",
+    "boundaries": "980d33d02f119b1f1c12c971ece74607e737cdd5d7b3369528e1fafe1e4b8c52",
+    "heldout": "1f4f8f00af9209e375941efcc4127ff2b7ff7c61a8b357140bffc62c41af4b7c",
+    "new-sectors": "a8634cb7b404a5da4376c453bcde02dba4398a7592a9430b121fc137af7d5472",
+    "madar": "ab353efcec7b60c9f7fb570d33e708495b874d28a8a22891878951b202476548"
+  },
+  "notAUniversalAccuracyScore": true,
+  "providerOutputsInTrace": 209,
+  "directlyCapturedProviderCalls": 131
+}

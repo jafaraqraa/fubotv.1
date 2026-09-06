@@ -1,0 +1,153 @@
+{
+  "at": "2026-09-05T16:08:22.032Z",
+  "root": "/home/jafar-aqraa/سطح المكتب/FUThing تقدم مشاريع/fubotv.1",
+  "settings": {
+    "AI_PROVIDER": "openrouter",
+    "AI_MODEL": "openai/gpt-5-mini",
+    "RAG_CHUNK_SIZE": "700",
+    "RAG_CHUNK_OVERLAP": "120",
+    "RAG_EMBEDDING_MODEL": "nomic-embed-text",
+    "QDRANT_COLLECTION": "futhing_knowledge",
+    "RAG_MIN_TOP_K": "3",
+    "RAG_DEFAULT_TOP_K": "8",
+    "RAG_MAX_TOP_K": "8",
+    "RAG_SEMANTIC_WEIGHT": "0.8",
+    "RAG_KEYWORD_WEIGHT": "0.2",
+    "RAG_SIMILARITY_THRESHOLD": "0.4",
+    "RAG_NEIGHBOR_EXPANSION": "false",
+    "RAG_CONTEXT_BUDGET": "3000"
+  },
+  "task": {
+    "task": "text_generation",
+    "provider": "openrouter",
+    "model": "openai/gpt-4.1-mini",
+    "enabled": 1
+  },
+  "traceColumn": true,
+  "integrity": [
+    {
+      "quick_check": "ok"
+    }
+  ],
+  "documents": [
+    {
+      "documentId": "doc_bbdfce59a3cf4776937f484e07796152",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_bbdfce59a3cf4776937f484e07796152:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:11.525Z",
+      "sourceHash": "0f62789efc4a64cbf478f44bd2bfd9ca52a0420e2ad77dd13a2439e6f616af55",
+      "actualHash": "0f62789efc4a64cbf478f44bd2bfd9ca52a0420e2ad77dd13a2439e6f616af55",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_9797d987069a4619a031d178eac0cb24",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_9797d987069a4619a031d178eac0cb24:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:12.317Z",
+      "sourceHash": "1fe86679abb5860237fa36d8743942e437a9b49361253d5d8540f32cad506b8c",
+      "actualHash": "1fe86679abb5860237fa36d8743942e437a9b49361253d5d8540f32cad506b8c",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_bfdba9bceef3487885b25f093ae79849",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_bfdba9bceef3487885b25f093ae79849:v1",
+      "chunkCount": 2,
+      "indexedAt": "2026-09-05T12:42:19.664Z",
+      "sourceHash": "6287357567df883f6509742c9479fd03e2511bac19c92675b03e9e49585090f5",
+      "actualHash": "6287357567df883f6509742c9479fd03e2511bac19c92675b03e9e49585090f5",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_f101f1f3decc4299b40a9ce15ddb9315",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_f101f1f3decc4299b40a9ce15ddb9315:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:14.742Z",
+      "sourceHash": "0642287859dd59afde104aff8ed4b02a7f44e574bb10c9f477e1ebf315110a27",
+      "actualHash": "0642287859dd59afde104aff8ed4b02a7f44e574bb10c9f477e1ebf315110a27",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_806c9f2361d74b70b03e26f54f178ebd",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_806c9f2361d74b70b03e26f54f178ebd:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:15.674Z",
+      "sourceHash": "5973c669ece6d87d69436e70d56f56b245e50d1247bdabe5b63ede1195f8cfed",
+      "actualHash": "5973c669ece6d87d69436e70d56f56b245e50d1247bdabe5b63ede1195f8cfed",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_7585aa3da3e44ea896f30f23f832d86c",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_7585aa3da3e44ea896f30f23f832d86c:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:16.796Z",
+      "sourceHash": "1863fbd42723046ba7579ca58e139ffa4b55108983674e4b6361dfd59c8039d5",
+      "actualHash": "1863fbd42723046ba7579ca58e139ffa4b55108983674e4b6361dfd59c8039d5",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_93db40d0fdc847aebfbd72c3cf9e6997",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_93db40d0fdc847aebfbd72c3cf9e6997:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:17.600Z",
+      "sourceHash": "bfd8270abf5691c197ca3a200a4b84f8a9f2b334b7a54f55bf9fb2177182612a",
+      "actualHash": "bfd8270abf5691c197ca3a200a4b84f8a9f2b334b7a54f55bf9fb2177182612a",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_d519f9dbfe594ca18b26873d797b2b35",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_d519f9dbfe594ca18b26873d797b2b35:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:18.568Z",
+      "sourceHash": "83917037687753b31a355ecd4c1baf13cb0157ac6afaba448aa75db8f832b4f9",
+      "actualHash": "83917037687753b31a355ecd4c1baf13cb0157ac6afaba448aa75db8f832b4f9",
+      "embeddingModel": null,
+      "dimension": null
+    },
+    {
+      "documentId": "doc_4c56531aba50445b89a466c69829a151",
+      "tenantId": "accept_conflict_ceramics_20260904",
+      "status": "active",
+      "active": 1,
+      "version": "doc_4c56531aba50445b89a466c69829a151:v1",
+      "chunkCount": 1,
+      "indexedAt": "2026-09-04T17:00:33.217Z",
+      "sourceHash": "f979131e3aead264da8cf70710059b62dd3c1914a0202038ef13a02fc137f27a",
+      "actualHash": "f979131e3aead264da8cf70710059b62dd3c1914a0202038ef13a02fc137f27a",
+      "embeddingModel": null,
+      "dimension": null
+    }
+  ],
+  "livePointCount": 27,
+  "sourceManifestHash": "38ead6743581e992b967ac0ef57ad7943307ad6fde0351f6cd63052c3194a8f1"
+}

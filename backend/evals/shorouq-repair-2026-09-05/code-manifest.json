@@ -1,0 +1,715 @@
+{
+  "pid": 331356,
+  "cwd": "/home/jafar-aqraa/سطح المكتب/FUThing تقدم مشاريع/fubotv.1",
+  "loadedAt": "2026-09-05T15:04:25.470Z",
+  "codeManifest": [
+    {
+      "file": "backend/src/analytics/analytics.controller.js",
+      "sha256": "f7064197b96a2cb6d42e057eef7853a3d3d369aff3c151e31e5cb1b874ba9e7e"
+    },
+    {
+      "file": "backend/src/analytics/analytics.repository.js",
+      "sha256": "f31106da56ba5cfc0eca3a1c5bb5b05cfade8eddba632c7a5cb5da387a57fbe4"
+    },
+    {
+      "file": "backend/src/analytics/analytics.routes.js",
+      "sha256": "188d0c4b3d04af320a93676dfb70b71e7b32586e9d3478826918c8997b7b4668"
+    },
+    {
+      "file": "backend/src/analytics/analytics.service.js",
+      "sha256": "ace26c4f48edff5a2b0e9c1ef3e71e80ecf011a609f5fcf6775353c6ea6437f4"
+    },
+    {
+      "file": "backend/src/analytics/analytics.websocket.js",
+      "sha256": "6e050aa4915a91e6a791e06346270861067650d29558dd103c0f1b1728032519"
+    },
+    {
+      "file": "backend/src/app.js",
+      "sha256": "bd53defe7cd4012f719e6e14a9714acd06b59bd7e406ce09ee1ed11cda529b29"
+    },
+    {
+      "file": "backend/src/channels/meta.js",
+      "sha256": "6f3725c9e4321001ca5db543ebe1b717351a763ccffa3bf988f6cbfa61330704"
+    },
+    {
+      "file": "backend/src/channels/telegram.js",
+      "sha256": "ca3623b64f0d7dea5393045c56884ae238fb6a2fbd014ceee24a157a3cf0c115"
+    },
+    {
+      "file": "backend/src/channels/telegramPollingLease.js",
+      "sha256": "48591554c7614df4b03ed1c0d56391699970d8dce6e3a30fe01cb6a4d0a8a7cc"
+    },
+    {
+      "file": "backend/src/channels/whatsapp-providers/WhatsAppBusinessCloudProvider.js",
+      "sha256": "f80c15df1425a0f3384686379357b66accbe912679c3790e537a26706ca9aeba"
+    },
+    {
+      "file": "backend/src/channels/whatsapp-providers/WhatsAppProvider.js",
+      "sha256": "7715aac2df49e6ae4ab1d2c85a9cd4865f0c907592c83c79a2e7909757a562b6"
+    },
+    {
+      "file": "backend/src/channels/whatsapp-providers/WhatsAppProviderManager.js",
+      "sha256": "0e158e07ffbafc2fd330502c3e825b5a062dd2b594f311ace3f3458ce67d7308"
+    },
+    {
+      "file": "backend/src/channels/whatsapp-providers/WhatsAppWebProvider.js",
+      "sha256": "815910d0253ce4268f0273526ade12ef01f9f1400bbb197c1111fd0e8b542703"
+    },
+    {
+      "file": "backend/src/channels/whatsapp.js",
+      "sha256": "6d3d193673243ae88d2c037d1f4847ece9a647677bad40b7f830c78594432ff0"
+    },
+    {
+      "file": "backend/src/config/processOutputSafety.js",
+      "sha256": "5495ef8d4da480bc53eb0a111d325622c95e4d737f12dd4358774230b4729cfc"
+    },
+    {
+      "file": "backend/src/config/securityConfig.js",
+      "sha256": "242b12b3759c80c717e3fc64799fbc1b804f8ef4134d4bc5a586f98ecadc220d"
+    },
+    {
+      "file": "backend/src/config/sessionCookieConfig.js",
+      "sha256": "cacc8ce18c62147388abb4e00cd899fed57d3d2d4aed3d55f6c1f37cb533a279"
+    },
+    {
+      "file": "backend/src/controllers/providerBalanceController.js",
+      "sha256": "c269d798263e4d5122d370570e37f5f98739241488369b16df9341a49bec35a2"
+    },
+    {
+      "file": "backend/src/database/connection.js",
+      "sha256": "4950c6ab4df9519855f003e5f42d19d9c0c89a7ccc25d9c53855624126071a9c"
+    },
+    {
+      "file": "backend/src/database/databaseIntegrityService.js",
+      "sha256": "584b36e59f2313265397403c91070498626352641a5751f50bd92a63dec61a2c"
+    },
+    {
+      "file": "backend/src/database/initialize.js",
+      "sha256": "e8d804306b37548ab52aea22e81da5b428b3a4a2d076a7dbc1c175575ea3e65a"
+    },
+    {
+      "file": "backend/src/database/migrations/001_initial_schema.sql",
+      "sha256": "79a7696256ac5aa9a4cb05a443543ca0ddca508f4e12c013cd705fc62867dd0a"
+    },
+    {
+      "file": "backend/src/database/migrations/002_admin_authentication.sql",
+      "sha256": "9f0cb42eca284a7b212c376d7d68215aabe01fb9530c892dacb4b6afe0fdce42"
+    },
+    {
+      "file": "backend/src/database/migrations/003_security_hardening.sql",
+      "sha256": "82b5f68f6ec56eeea077c9a9a10dcc61433b9288f608672062c0ac5da34ab257"
+    },
+    {
+      "file": "backend/src/database/migrations/004_rag_foundation.sql",
+      "sha256": "8c1821f976347c50a90c13440a2fb6cc93f8c46926766f1f3e35d0200b83d92a"
+    },
+    {
+      "file": "backend/src/database/migrations/005_rag_fingerprint.sql",
+      "sha256": "ee0f4e7d283f5ed4e902874fb0136b057bec2f2d17b4d0c77092d623e79ad819"
+    },
+    {
+      "file": "backend/src/database/migrations/006_knowledge_library.sql",
+      "sha256": "4d1125e84f752da95f593a4228e4d1e10bb6f0e4294492040e544236e767bbd7"
+    },
+    {
+      "file": "backend/src/database/migrations/007_document_versioning.sql",
+      "sha256": "d82b9e31b97f125814d9370361358718d4b85fe6fc49e430d0dc2219ac837a86"
+    },
+    {
+      "file": "backend/src/database/migrations/008_retrieval_intelligence.sql",
+      "sha256": "d241e4d057bcb08fd2facd397c475117cbf41cf8e5fae5c97eddf2795b08d1c4"
+    },
+    {
+      "file": "backend/src/database/migrations/009_task_based_ai_models.sql",
+      "sha256": "dee9559efc4829ccdde3925f685bbeb647bcf57136d48a878d45cb4c243f8994"
+    },
+    {
+      "file": "backend/src/database/migrations/010_whatsapp_multi_provider.sql",
+      "sha256": "b2a5aa058a81a003f5f4385df1d13c403dcb878151304f09feab79c4451c7a77"
+    },
+    {
+      "file": "backend/src/database/migrations/011_ai_usage_and_billing.sql",
+      "sha256": "36c9c2674a653d762b2b12d947ad958debaf76ead56ca0e990568d4da897182c"
+    },
+    {
+      "file": "backend/src/database/migrations/012_redesigned_budget_and_limits.sql",
+      "sha256": "fad046cad1e6d950bc68310e5b72015a6c1e1b9564cb4ced3ecf77668a65ebbc"
+    },
+    {
+      "file": "backend/src/database/migrations/013_multiple_api_keys_management.sql",
+      "sha256": "d7e29479ee0b93e42615c18a43df1890697cc1f55d4549091f863dcd195a2311"
+    },
+    {
+      "file": "backend/src/database/migrations/014_message_tenant_isolation.sql",
+      "sha256": "76de792de5ea4656b9907cc4d326d508c4e4b95d10b7e2a81997abdc6b4a1a83"
+    },
+    {
+      "file": "backend/src/database/migrations/015_rag_cache_versions.sql",
+      "sha256": "29c9d35c0bd6d376d6122e84baf35f5bc4e6916f8845034b4b166a282c8b8569"
+    },
+    {
+      "file": "backend/src/database/migrations/016_atomic_rag_document_versions.sql",
+      "sha256": "848959f6347dfe7b6115d55e0bcbbaa931fa0b9a6f0ef38d27ca2ca0f9d786fe"
+    },
+    {
+      "file": "backend/src/database/migrations/017_atomic_knowledge_txt_versions.sql",
+      "sha256": "7a48d19f2b05e71dcc145f07efc3489afd3b58f592381198654806e7a281c418"
+    },
+    {
+      "file": "backend/src/database/migrations/018_strict_rag_tenant_isolation.sql",
+      "sha256": "3b83de88de9e9fc6b16a2ac6628f268e65b275b8cab84a52da3949e63d8d2983"
+    },
+    {
+      "file": "backend/src/database/migrations/019_rag_reconciliation.sql",
+      "sha256": "ee6f44fda4f705b23bd80dd8e4966cb012982e6f2ca7227080410b9e25db81d0"
+    },
+    {
+      "file": "backend/src/database/migrations/020_rag_prompt_injection_guard.sql",
+      "sha256": "f964292165408f517d3faf104186ac1553e23c79556f71c6ed4088a093282d47"
+    },
+    {
+      "file": "backend/src/database/migrations/021_distributed_rag_operation_leases.sql",
+      "sha256": "082425f2ffe5a7099e2de7702adf6402fb66c85a0440b1f2704245b7eaac8e3f"
+    },
+    {
+      "file": "backend/src/database/migrations/022_webhook_replay_guard.sql",
+      "sha256": "0c963eb05b758722deefc298f0612bf25869ef7a3fc4b3fac9a56f54645928d4"
+    },
+    {
+      "file": "backend/src/database/migrations/023_data_integrity_hardening.sql",
+      "sha256": "64d2b940c6c21d52f488f04008ee62cad02666caa1c7cc5077f623149a93e2f5"
+    },
+    {
+      "file": "backend/src/database/migrations/024_tenant_auth_rbac.sql",
+      "sha256": "498de9246bbe4d839d0850296e6bd85157996e35e71d2a3c32f90c5acee82626"
+    },
+    {
+      "file": "backend/src/database/migrations/025_meta_media_attachments.sql",
+      "sha256": "e992958861b3081ef298bfa444aafd5f2469c3a2dcd92378c453c4aebe3a1cf1"
+    },
+    {
+      "file": "backend/src/database/migrations/026_unified_media_attachments.sql",
+      "sha256": "9dbc0e0e23957522573daeaf6140042ca43d8db19a8a845e8d3bdeed75cb9094"
+    },
+    {
+      "file": "backend/src/database/migrations/027_rag_image_documents.sql",
+      "sha256": "66affbd0d3a1cfc9994f5ffe2a2d23e515b8c9eb4fdb49b2f4e7d8bebf23b169"
+    },
+    {
+      "file": "backend/src/database/migrations/028_rag_audio_documents.sql",
+      "sha256": "dfd237991c50c1a65549debd10b485f35240dd43bd9daa3071731bae620a0c3d"
+    },
+    {
+      "file": "backend/src/database/migrations/029_rag_audio_transcription.sql",
+      "sha256": "670442ef305a1f5204e17404918a506d06cdc396285061eda1dbcac226d4403b"
+    },
+    {
+      "file": "backend/src/database/migrations/030_customer_contact_export.sql",
+      "sha256": "993c373fb0cede12fe9999545c6135dc5da1ddd5cfe3448d8297ed23ada5ed4c"
+    },
+    {
+      "file": "backend/src/database/migrations/031_remove_invalid_whatsapp_lid_phones.sql",
+      "sha256": "d2314ad601196023e28e311e4e5abadbeaf132c6f610cf96cf78210628668b69"
+    },
+    {
+      "file": "backend/src/database/migrations/032_rag_request_traces.sql",
+      "sha256": "cd1258250fee0546b4ee2c6dd59dcb51f5eead96ac4e07d676a2bb5867c101cd"
+    },
+    {
+      "file": "backend/src/database/migrations/033_rag_reliability_trace.sql",
+      "sha256": "c238877eb7f0ad04b6c7a38e730c49569bea1717be1f0f4ae1d51c162bc580bd"
+    },
+    {
+      "file": "backend/src/database/repositories/adminRepository.js",
+      "sha256": "375f07b189049b63ea97bdf15804b24d0566ffd37b4dad678484b8378de26448"
+    },
+    {
+      "file": "backend/src/database/repositories/aiTaskRepository.js",
+      "sha256": "8f2405a287b13a63a81b7a072c9f1fb6de4ac95a0d77b2f5786d6c46c802ac39"
+    },
+    {
+      "file": "backend/src/database/repositories/customerRepository.js",
+      "sha256": "d3dfb421bc943c5de4ff84172a00213adc12b0163e76a4405598dddfe72dcb25"
+    },
+    {
+      "file": "backend/src/database/repositories/knowledgeDocumentRepository.js",
+      "sha256": "396e9846764c34ca9ded910e9b6bce2178c01fe48a36a0111070932c38b7f647"
+    },
+    {
+      "file": "backend/src/database/repositories/logRepository.js",
+      "sha256": "a81b675bdbe948506244086e7c1692a38a39eeb1f802b7cc8175b4fec7cf8c37"
+    },
+    {
+      "file": "backend/src/database/repositories/mediaAttachmentRepository.js",
+      "sha256": "ce681e06f3ca388ece39ad6edfc923375036fdde13a928d05d945e1296865fb9"
+    },
+    {
+      "file": "backend/src/database/repositories/messageRepository.js",
+      "sha256": "ff85bf422daec2808a6abc5000b12c53ea15f951685ee79316551b4b69e92b9b"
+    },
+    {
+      "file": "backend/src/database/repositories/providerBalanceCacheRepository.js",
+      "sha256": "f28754278b135b059b08a5a12b7b18f3c0b29ae457919548d3b28ea4701ffb53"
+    },
+    {
+      "file": "backend/src/database/repositories/ragRequestTraceRepository.js",
+      "sha256": "5e69b7858c5962a0f361f7e94e0db8d5a905a1312ea125ca5bc5d6f082cf7101"
+    },
+    {
+      "file": "backend/src/database/repositories/settingsRepository.js",
+      "sha256": "d9ce8bbdd8122266cb44c866be1d51e734de841fb7f2f4ce2f17b5be0ef7bc0c"
+    },
+    {
+      "file": "backend/src/database/sessionStore.js",
+      "sha256": "62055ee22ffbe063e1821358217263cf6a826ccd334af9944f6c4a4a92f136de"
+    },
+    {
+      "file": "backend/src/messaging/customerResponseRenderer.js",
+      "sha256": "22f82b29673d2339658ac57449ea4fa6628f7010f09218c42a2c9827509d01d3"
+    },
+    {
+      "file": "backend/src/messaging/inboundMessageBatcher.js",
+      "sha256": "b1e641523653ba8bcb941bdad79ac631676212a2d353079fef07dad0a2643391"
+    },
+    {
+      "file": "backend/src/messaging/mediaCapabilities.js",
+      "sha256": "214a630f94beb9fe071f991c8ceb8f8562ef27d6584ee163bc355e4ed74cf546"
+    },
+    {
+      "file": "backend/src/messaging/messageProcessor.js",
+      "sha256": "4467c962ccc75c455bfdf4c6db089325bfb14a24f06a39d859bad55232ffe542"
+    },
+    {
+      "file": "backend/src/messaging/normalizers/metaNormalizer.js",
+      "sha256": "1c5359dc47e9ef3da5d2fffe5a41af982c59b5a5ca30f08afd4db8c74a839321"
+    },
+    {
+      "file": "backend/src/messaging/normalizers/telegramNormalizer.js",
+      "sha256": "6e7f383b205e0d17dd473ac326502967630feb90c890a5c8919a476a203a735d"
+    },
+    {
+      "file": "backend/src/messaging/normalizers/whatsappNormalizer.js",
+      "sha256": "1d34dd2db32bff442a87a7c83bfc3c15da6225e91111953ea6bc396d27d5b341"
+    },
+    {
+      "file": "backend/src/messaging/outgoingMessageService.js",
+      "sha256": "2d52deeea8f6e64296d09bce1bcaa3c35eadbcc45dd4b39702355fb107693036"
+    },
+    {
+      "file": "backend/src/messaging/validateImage.js",
+      "sha256": "92859f2c877415304ab165a77cff3d094faf0c6151b41116c33c19fafa3708f2"
+    },
+    {
+      "file": "backend/src/messaging/validateMessage.js",
+      "sha256": "67b27b2e566bb2f5ecc475281cc367f6c5d4dab7c4517aea08202cde10c1803e"
+    },
+    {
+      "file": "backend/src/middleware/csrf.js",
+      "sha256": "40a9bac1f43f3803b1ace58c6e41ef70c042aef737b38b18264b0d52194aa808"
+    },
+    {
+      "file": "backend/src/middleware/rateLimits.js",
+      "sha256": "dac5b7db87e8d7437900938fb8ffe64efb62b73ed1344dcb38c7ecf77c39302d"
+    },
+    {
+      "file": "backend/src/middleware/requireAuth.js",
+      "sha256": "5b52c273e7c3562794ac746219cdbf867d04ceb078fb2bcfb49c265bf6c94570"
+    },
+    {
+      "file": "backend/src/middleware/validation.js",
+      "sha256": "9ec2be2180fa6321ee955d69220cc81bf536a12d1ed02ea6b088d9b2390ce482"
+    },
+    {
+      "file": "backend/src/observability/httpObservability.js",
+      "sha256": "3001e6a57bf6d288f4796b039359b56bb6bbc4c878e3a1cd12e54d267e61bb3a"
+    },
+    {
+      "file": "backend/src/observability/runtimeMetrics.js",
+      "sha256": "2b1e5fdbbae84080dd5e45040984ef5534c95306dfc7ba7362c2d511d7439ae2"
+    },
+    {
+      "file": "backend/src/rag/cache/retrievalCache.js",
+      "sha256": "148527933b9c8ab08536c145b30acbfad4d4e677534fec7e4627a84eccc52c58"
+    },
+    {
+      "file": "backend/src/rag/config/ragConfig.js",
+      "sha256": "e3fd639c1e66dbbb2025f7e70dfe0d701b7ebbb89fd55c90c0bdfc30a61f43ed"
+    },
+    {
+      "file": "backend/src/rag/embeddings/ollamaEmbeddingProvider.js",
+      "sha256": "85505067aaae109b15c8d768f7274cc1b90d466e1cbc1ddcb99f0613b5307a20"
+    },
+    {
+      "file": "backend/src/rag/index.js",
+      "sha256": "8bf773fc6ee31e62b9e182257714b3b749d3278de77b7609787893d3fd2fc7da"
+    },
+    {
+      "file": "backend/src/rag/indexing/contentHasher.js",
+      "sha256": "d652c42b5ced61974d1f223ee21784c7dd582e8d2568b179c740e5a3275d40ff"
+    },
+    {
+      "file": "backend/src/rag/indexing/indexingErrors.js",
+      "sha256": "ba23dbc19a863eed4552d4c7c3556f8d60128848aa0c816524100037d3013bf0"
+    },
+    {
+      "file": "backend/src/rag/indexing/indexingLifecycle.js",
+      "sha256": "a2da5e7f54b5f5e6360189cdd686dc14e1f218018c95794d33d6d8d99326b7c9"
+    },
+    {
+      "file": "backend/src/rag/indexing/knowledgeIndexingService.js",
+      "sha256": "981062dce944a407db7b77dba4950258a427b2afe370cd5bd316a37e85b88f31"
+    },
+    {
+      "file": "backend/src/rag/intelligence/answerValidator.js",
+      "sha256": "b474b80095dd7e620dda7c1a4bcb252354f177f77531685590eef47412187035"
+    },
+    {
+      "file": "backend/src/rag/intelligence/citationGrounding.js",
+      "sha256": "64919e0ed4ae9ecc85d7f8d87ff0185da28de1e6d61d9952fd0d3f1c074a2696"
+    },
+    {
+      "file": "backend/src/rag/intelligence/contextOptimizer.js",
+      "sha256": "f9e139b8883a0680b146c2944f5c86e7d301813a7d0f2fd9776490ea264eaef0"
+    },
+    {
+      "file": "backend/src/rag/intelligence/conversationReferent.js",
+      "sha256": "5731960dfaf89a1a66d2af13dd37a10a32c0e6eff04ab11292291267de2a0703"
+    },
+    {
+      "file": "backend/src/rag/intelligence/crossEncoderReranker.js",
+      "sha256": "52230149bc4021f76fa93645b81ab420a2ebaffce5eda16f422db4f8588a2f62"
+    },
+    {
+      "file": "backend/src/rag/intelligence/derivedClaimValidator.js",
+      "sha256": "caa9b61039e7a3903559cc3ee37f0197d74cafab9add7e32d33f5929aa9cae95"
+    },
+    {
+      "file": "backend/src/rag/intelligence/dynamicTopK.js",
+      "sha256": "336feb623317a288f21964a44bc2d9c2678e46c52c39d2563f5e01a8b3ca09a8"
+    },
+    {
+      "file": "backend/src/rag/intelligence/evidenceDecisionGate.js",
+      "sha256": "0d79d94deb092792ad0023378fe502bc301c9c24196507d356f105ca11a7ae02"
+    },
+    {
+      "file": "backend/src/rag/intelligence/evidenceExcerptRecovery.js",
+      "sha256": "cf43de202647b3596b2b511df0f54a6062673d8199fc5db3f43dd94f7235727b"
+    },
+    {
+      "file": "backend/src/rag/intelligence/hydeRetriever.js",
+      "sha256": "0dd6ce025d1ae7f6ae5ece417b957e7fb7f549cfac319e9668aebe20d737618e"
+    },
+    {
+      "file": "backend/src/rag/intelligence/intentDetector.js",
+      "sha256": "ae4c9255af44a5f79cdaa934ae3079bd8ae519c5f59a6ef398890af5cc177fe2"
+    },
+    {
+      "file": "backend/src/rag/intelligence/intentRetriever.js",
+      "sha256": "7d0dda324dd8d976a3b68bfda5262fddebe0436d2d70f47e5def485e3c5a3914"
+    },
+    {
+      "file": "backend/src/rag/intelligence/mediaRequestDetector.js",
+      "sha256": "c5c96d1aef11369f217879f59129810929b7b6a6697c118ebb6443605968b3c7"
+    },
+    {
+      "file": "backend/src/rag/intelligence/multiQueryGenerator.js",
+      "sha256": "eb37e3775b45cd93a806cc6fa15aa19e96a49b46b0f4d63bc95b4e3a8c31cf0e"
+    },
+    {
+      "file": "backend/src/rag/intelligence/numericIdentity.js",
+      "sha256": "ff67838d2ca62b2fa3d264d3c7983cabe009392c0c9c59d2dda1cd0c387952e0"
+    },
+    {
+      "file": "backend/src/rag/intelligence/queryDecomposer.js",
+      "sha256": "4e8b76efec78867fc64193f71d084a29ef538bb0f5ddbdff2a5b89fc22b106df"
+    },
+    {
+      "file": "backend/src/rag/intelligence/queryRewriter.js",
+      "sha256": "bf37a7556fb7b1724b32a6dda7022aa8f0c3975cb71a0cb43f552b236509c649"
+    },
+    {
+      "file": "backend/src/rag/intelligence/retrievalPlanner.js",
+      "sha256": "15126d7baf155f30d9a9001023413de2e6435ca1846c4c071e164c9272e18ed3"
+    },
+    {
+      "file": "backend/src/rag/intelligence/retrievalRelevance.js",
+      "sha256": "275cd14df94d64757ad274850bf9dde6f64fa58e124ca38841285f88a4709feb"
+    },
+    {
+      "file": "backend/src/rag/intelligence/rrfScorer.js",
+      "sha256": "734a78524c6ffa9b61453347debce64c35b0e43e27c3fa5fa59432dc8a940a09"
+    },
+    {
+      "file": "backend/src/rag/intelligence/synonymEngine.js",
+      "sha256": "110f9c0872d2354c428e4b8013fcf24990a8715defb59f2f1bcab559c2b3b0d3"
+    },
+    {
+      "file": "backend/src/rag/loaders/documentExtractionService.js",
+      "sha256": "81fcf8925520176920b691e3d232f5037bcfe7101f291f0df5b65e79fdcb7b10"
+    },
+    {
+      "file": "backend/src/rag/loaders/textDocumentLoader.js",
+      "sha256": "78461ba6bb13e037ee28cf8c1069814792a9c7801e27b3035abdeb6a5a3b710e"
+    },
+    {
+      "file": "backend/src/rag/processing/arabicNormalizer.js",
+      "sha256": "3730577e565125ca57e2005b4c40d16cd7e04b0efba5ccbc2b137c3c8486e6e9"
+    },
+    {
+      "file": "backend/src/rag/processing/documentChunker.js",
+      "sha256": "c4e79c77e0a80493b0268cce61ec7b9e93926ce96e8ce610a764dfaf559d7768"
+    },
+    {
+      "file": "backend/src/rag/processing/tableStructure.js",
+      "sha256": "3555385dbaddcdf9ae3891caee79622b28125f47bdef311fbc7eed84a487bd0b"
+    },
+    {
+      "file": "backend/src/rag/processing/textCleaner.js",
+      "sha256": "1127ee615ff3cdf02c4f8fd51dbc4fcec554ffa0f0680482ff49bd9cb360269f"
+    },
+    {
+      "file": "backend/src/rag/runtime/asyncControl.js",
+      "sha256": "73b220bd61f49d737486066d3591a23a45c31cb7a669b7b7b6b207d6e1155ae5"
+    },
+    {
+      "file": "backend/src/rag/runtime/distributedLockService.js",
+      "sha256": "800f7c04d28de8fc8650495ee84fc9063ca0caca359fb7675d39c4384ec15a74"
+    },
+    {
+      "file": "backend/src/rag/runtime/embeddingSemaphore.js",
+      "sha256": "f344968648dd8cb9aaf987dee04c71724ae2130781632ec39430951bfe3fb663"
+    },
+    {
+      "file": "backend/src/rag/runtime/fallbackPolicy.js",
+      "sha256": "0f015e392a7dcdcf8d4d15ac288248501916989c56049ae627f83c324ee10c9b"
+    },
+    {
+      "file": "backend/src/rag/runtime/operationRegistry.js",
+      "sha256": "c62c476e4134dfd1f10ea40e060245c07ce1630e8dc7d90d289c8293a4c69793"
+    },
+    {
+      "file": "backend/src/rag/runtime/ragMetrics.js",
+      "sha256": "a65d33356090924e9b0061a20605322fdcc465f949bc29322a107b4c896e9dc4"
+    },
+    {
+      "file": "backend/src/rag/runtime/requestCancellation.js",
+      "sha256": "a401066a128bcb661196914b45a0055cea11a094ed9e692b9f3c2e5bc444cec2"
+    },
+    {
+      "file": "backend/src/rag/security/conditionalPolicyGuard.js",
+      "sha256": "406d5145081d4a706b24168b8678c185739ad751c3aa540f3a9784b2da40452a"
+    },
+    {
+      "file": "backend/src/rag/security/groundingSafetyBoundary.js",
+      "sha256": "2e9dc96e51bf21617b321be81ea375854629e01ca3162d1ef71ce9d7e843a2f8"
+    },
+    {
+      "file": "backend/src/rag/security/legacyTenantMigration.js",
+      "sha256": "056e27666ec33de7fe84ac1c66a9330b3f72b18e772b69402bae43dee9cdfbaf"
+    },
+    {
+      "file": "backend/src/rag/security/promptInjectionGuard.js",
+      "sha256": "f0e667f3635ba945f7c54612ab402c063f441e53d8a23affb734a869cbe63a66"
+    },
+    {
+      "file": "backend/src/rag/security/ragAccessPolicy.js",
+      "sha256": "63846ccf03dc7a7732631fcb28519970b04a156627805daa03b2d25980581ee6"
+    },
+    {
+      "file": "backend/src/rag/security/tenantContext.js",
+      "sha256": "80cb4cd95c46b6ff9e914f4235fcfef6ce1620bb48a097c1f3b40cb82e25400c"
+    },
+    {
+      "file": "backend/src/rag/security/tenantRagSafety.js",
+      "sha256": "b7da10f10de28ad7bde28afbe8b80d63bc764f87bdb2187e01df1ccfe6e84430"
+    },
+    {
+      "file": "backend/src/rag/services/hybridRetrievalService.js",
+      "sha256": "8270fa8263ec90b6128b0edb90ba6ae4c72f67174b2354afa039df3dd60b6581"
+    },
+    {
+      "file": "backend/src/rag/services/knowledgeDocumentService.js",
+      "sha256": "c53c19e4d789f6886371926719d35085518c647b88241925560e6aa60763e7a8"
+    },
+    {
+      "file": "backend/src/rag/services/ragHealthService.js",
+      "sha256": "a6bbe3185dd1b30932731059f84964231e9636e305ad8c97412b8acacadf62f0"
+    },
+    {
+      "file": "backend/src/rag/services/ragObservabilityService.js",
+      "sha256": "35054a08533f3ab4aa150d377b268d793d3b53814bc6de0fe3388a99edffd92f"
+    },
+    {
+      "file": "backend/src/rag/services/ragReconciliationScheduler.js",
+      "sha256": "d36de7fa357caca27c43326b1b3b57e2a12cde8940a0c5cf0aaea3bf8577721c"
+    },
+    {
+      "file": "backend/src/rag/services/ragReconciliationService.js",
+      "sha256": "21c802bc37ba5aeac6f576bbc9d2e46c92cb9c6eb27ee0bde38bec7e350c231a"
+    },
+    {
+      "file": "backend/src/rag/services/rerankingService.js",
+      "sha256": "4b9e58c2141e1a43ccc1f0fc288b1ab57b09eb5320efed9b860ab0c3f1766848"
+    },
+    {
+      "file": "backend/src/rag/storage/tenantKnowledgeStorage.js",
+      "sha256": "225ca3f2f20cdb0c77acb38a7d9ac2463f85d2468cc91f4adac85c996ff8d4c3"
+    },
+    {
+      "file": "backend/src/rag/vector/qdrantVectorStore.js",
+      "sha256": "b7fc9c89397ae73dab418d0875c82fa81457d5881e0835c04f296bb610922c0e"
+    },
+    {
+      "file": "backend/src/realtime/eventPublisher.js",
+      "sha256": "8005e84722dfb49f5c80a9aac0bc2040987e6a45b4d78d03cdeece4addbe7f5d"
+    },
+    {
+      "file": "backend/src/realtime/events.js",
+      "sha256": "ed7039d1be5f47bd6b71a188db8259ec059f64656b9adf575ffa8a4da9e574dc"
+    },
+    {
+      "file": "backend/src/realtime/socketAuth.js",
+      "sha256": "3863f0a60da558a15094d2ebde1ebbf2cc0c5f1858790083faaf25cff52e2fb3"
+    },
+    {
+      "file": "backend/src/realtime/socketServer.js",
+      "sha256": "f65f8d52d81582392c0d7c0e3bd1a58cc88434e38608155b05ea838fcf0c00a2"
+    },
+    {
+      "file": "backend/src/routes/api.js",
+      "sha256": "2c65f87fb1f25c7b548d72ff460f3cd08cc58076e4414f509f0ba79e08a05838"
+    },
+    {
+      "file": "backend/src/routes/auth.js",
+      "sha256": "e3845e6bbae4519cbfd460325c2da8e244c9c12cf33415926124a7e2560f253d"
+    },
+    {
+      "file": "backend/src/routes/webhooks.js",
+      "sha256": "19f56d5eaa5a3ea1f3789bcdaafd99d8dd1f9e7428e58f659e75c07ef7f796a1"
+    },
+    {
+      "file": "backend/src/runtime/runtimeState.js",
+      "sha256": "9155191e67c307c198d0809b69a8e884980a4fc493ae10a1c18cccb273c573e8"
+    },
+    {
+      "file": "backend/src/security/accessControl.js",
+      "sha256": "ef0515d9147368d92616de5e78cd7dd16fc385ac58964168b7747ec4052168ae"
+    },
+    {
+      "file": "backend/src/security/credentialCrypto.js",
+      "sha256": "1e9c3983a51f64200af0a54cfc17fa63ff4c8b63b046fa19819ee4888efbcd08"
+    },
+    {
+      "file": "backend/src/security/originPolicy.js",
+      "sha256": "bb00f3124164097154ebdb8b0029735e69a1749e179bc4e8bbefec4ffcb4e2d6"
+    },
+    {
+      "file": "backend/src/services/OpenRouterService.js",
+      "sha256": "cadd5f7f85eea32bfebd1f18cc09b3942f51eabf9ecf0abb27ba3ace613b2e08"
+    },
+    {
+      "file": "backend/src/services/PromptBuilder.js",
+      "sha256": "bf7dca6777753953b7af91e4c8068b60cebf64e6675e6a750b19aa5e5b981ee2"
+    },
+    {
+      "file": "backend/src/services/adapters/AnthropicAdapter.js",
+      "sha256": "0efdff372706b88b28c58b9810f8e88465165c4220850d2cda03be091a860e28"
+    },
+    {
+      "file": "backend/src/services/adapters/GeminiAdapter.js",
+      "sha256": "e4a659d85b35b29c5934951d45c219715d97797eba39067c7fe2d0e7e267af71"
+    },
+    {
+      "file": "backend/src/services/adapters/OpenAIAdapter.js",
+      "sha256": "41e757ee868810a8270ba915e2aaf99b20836731b6d65d72a0e2c54a68e702d3"
+    },
+    {
+      "file": "backend/src/services/adapters/OpenRouterAdapter.js",
+      "sha256": "d52f01352601a3fb3d47a1970f33325f3a8d162ca42b6fabc2439a875783b23b"
+    },
+    {
+      "file": "backend/src/services/adapters/ProviderAdapter.js",
+      "sha256": "644fb697891382971165d315eea9c67f43fe553978c37d118c96a4233043da43"
+    },
+    {
+      "file": "backend/src/services/adapters/ProviderAdapterFactory.js",
+      "sha256": "2df4fbe97108984e9abd0809424680c127a8b8c091c26a876c45ac2315e33d60"
+    },
+    {
+      "file": "backend/src/services/adminBootstrap.js",
+      "sha256": "8138af5c3c2638ef73538b637ab98f7835ada14cbfc0a3d8785df5e3602e0878"
+    },
+    {
+      "file": "backend/src/services/ai.js",
+      "sha256": "447bbe6516de38eb6b065f260993593473281b2c7db4d684f61cee361acb75ed"
+    },
+    {
+      "file": "backend/src/services/aiModelHealthService.js",
+      "sha256": "0ae22bb0a422fa0081b44186ae3d75adb12f1bb740f4b757bfe0bef3c2b6097a"
+    },
+    {
+      "file": "backend/src/services/aiProviders.js",
+      "sha256": "d5c5dbff2d922f0bed00638651dd30b4fa63f1d26b412e5af883c3d909f3e52c"
+    },
+    {
+      "file": "backend/src/services/authService.js",
+      "sha256": "169d62912639afe60a9c5c62f980a1437cd82a88d1fa052517091393a3f485bb"
+    },
+    {
+      "file": "backend/src/services/budgetService.js",
+      "sha256": "950c26b5fa3b8057413a97cfb4d8a7159dd0dcb1d18f8053ddc10bbc60b0f689"
+    },
+    {
+      "file": "backend/src/services/conversationModeRouter.js",
+      "sha256": "a1fc0ffd3b54709e26065f4564ac5d4804c5a951707f19250d03ba8091a736a4"
+    },
+    {
+      "file": "backend/src/services/customModelValidation.js",
+      "sha256": "11f88a1232b37978ce7c6bde2c3c5ec701a9c5f91d689d9edbb5b646051c84d6"
+    },
+    {
+      "file": "backend/src/services/knowledge.js",
+      "sha256": "bcf223945a50d53a001b86508717d2f9008b13eea5c384315b0e8db4f1369635"
+    },
+    {
+      "file": "backend/src/services/logger.js",
+      "sha256": "361de8a691b7f30525264d1668dd9bd47d30a52f42b06c498df8ea4932ace4b0"
+    },
+    {
+      "file": "backend/src/services/outgoingMediaStorage.js",
+      "sha256": "b7c10c362849b1d405f6b750543391d91e9f76f88725317839e0d7bf92f28fda"
+    },
+    {
+      "file": "backend/src/services/pendingRestoreService.js",
+      "sha256": "a0b16006649686f96fba2f0e8e8182d0365040adb35ed4abb0de7905e5e7730d"
+    },
+    {
+      "file": "backend/src/services/profileImageService.js",
+      "sha256": "cf1684cc8ca7fcf36ffdae223e128fbb691a9f0b05aa45a7d2a2e0004469f7bc"
+    },
+    {
+      "file": "backend/src/services/settingsService.js",
+      "sha256": "3d2258041176920172b04c5fdd6998dd77999df0bd40a51c14502ca8267270a4"
+    },
+    {
+      "file": "backend/src/services/userService.js",
+      "sha256": "98df6d6a98fa25706bef44a86d7ae671a6057f0de046a1de275aca3257bcc727"
+    },
+    {
+      "file": "backend/src/state/botData.js",
+      "sha256": "90c54d2cab54d7579e77adb1e24b97037d1dec3a3497436821013d6fdc84dd04"
+    },
+    {
+      "file": "backend/src/utils/helpers.js",
+      "sha256": "51b24a78679f96771fb394914f162360315449d35b32a207cb06131674c67f3e"
+    },
+    {
+      "file": "backend/src/utils/imageHelper.js",
+      "sha256": "c3ba17543c2e83358c572ddfda29cc543713bf83e7b1e9fcafadef20c75766c1"
+    },
+    {
+      "file": "backend/src/utils/reliableFetch.js",
+      "sha256": "b2be009973d6f5ff0d1f90257770a49d8d2e57aa707879f6b40e6112f0adb9e4"
+    }
+  ]
+}

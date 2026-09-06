@@ -1,0 +1,1532 @@
+{
+  "cases": 69,
+  "sourceExcerptRecoveries": 12,
+  "rows": [
+    {
+      "run": 1,
+      "id": "daily",
+      "question": "قديش إيجار الحفارة الصغيرة لليوم؟",
+      "answer": "إيجار الحفارة الصغيرة لليوم هو 420 شيكل.",
+      "error": null,
+      "latencyMs": 2942,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "weekly",
+      "question": "قديش إيجار الحفارة الصغيرة بالأسبوع؟",
+      "answer": "إيجار الحفارة الصغيرة بالأسبوع هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1784,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "deposit",
+      "question": "قديش مبلغ التأمين المسترد للحفارة الصغيرة؟",
+      "answer": "مبلغ التأمين المسترد للحفارة الصغيرة هو 1500 شيكل.",
+      "error": null,
+      "latencyMs": 2288,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "included",
+      "question": "هل سعر 420 شيكل اليومي للحفارة الصغيرة يشمل التأمين؟",
+      "answer": "السعر اليومي لا يشمل التأمين.",
+      "error": null,
+      "latencyMs": 2133,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalBoundaryReasons": [
+          "NEGATION_OR_EXCLUSIVITY_NOT_EXPLICIT"
+        ],
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "follow-deposit",
+      "question": "والتأمين عليها؟",
+      "answer": "التأمين على الحفارة الصغيرة MX20 هو 1500 شيكل مسترد.",
+      "error": null,
+      "latencyMs": 2356,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "follow-week",
+      "question": "والأسبوع؟",
+      "answer": "سعر إيجار الحفارة الصغيرة للأسبوع (7 أيام) هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1720,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "missing-ref",
+      "question": "قديش سعرها؟",
+      "answer": "ممكن توضّح المقصود أكثر؟",
+      "error": null,
+      "latencyMs": 2,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 1,
+      "id": "multi-ref",
+      "question": "والتأمين عليها؟",
+      "answer": "أي خدمة تقصد؟",
+      "error": null,
+      "latencyMs": 1,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 1,
+      "id": "minimum",
+      "question": "الرافعة المقصية SL10 بقدر آخذها ليوم واحد؟",
+      "answer": "المعدة: رافعة مقصية SL10 | الحد الأدنى: يومان.",
+      "error": null,
+      "latencyMs": 2063,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "CONTRADICTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "age",
+      "question": "عمري 22 سنة، بقدر أستأجر الحفارة MX20 وأشغلها أنا؟",
+      "answer": "مشغل MX20 أو SL10 يجب أن يكون 23 سنة أو أكثر.\nشرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.\nالمستأجر الأساسي يجب أن يكون 21 سنة أو أكثر مع هوية سارية ورقم هاتف فعال.",
+      "error": null,
+      "latencyMs": 2434,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "CONTRADICTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "credit",
+      "question": "صاحبي استأجر منكم قبل، يعني أكيد إله حساب آجل صح؟",
+      "answer": "يمكن لبعض الشركات المعتمدة الحصول على حساب ائتماني بموافقة مسبقة.\nلا توجد مدة ائتمان عامة موحدة، وسجل الإيجار السابق لا يمنح الائتمان تلقائيًا.",
+      "error": null,
+      "latencyMs": 2334,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "UNSUPPORTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "cancel-24",
+      "question": "إذا ألغيت قبل 24 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 24 ساعة بالضبط أو أكثر وحتى 48 ساعة، بسترد 50%.",
+      "error": null,
+      "latencyMs": 2082,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "cancel-47",
+      "question": "إذا ألغيت قبل 47 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 47 ساعة، بتسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 1746,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "cancel-48",
+      "question": "إذا ألغيت قبل 48 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 48 ساعة بالضبط أو بين 24 و48 ساعة، بسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 1883,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "late-60",
+      "question": "تأخرت بإرجاع المعدة 60 دقيقة، شو الرسوم؟",
+      "answer": "لغاية 60 دقيقة شاملة، ما في رسوم تأخير.",
+      "error": null,
+      "latencyMs": 1637,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "late-61",
+      "question": "تأخرت بإرجاع المعدة 61 دقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 1696,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "late-4h",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات بالضبط، شو الرسوم؟",
+      "answer": "تأخير 4 ساعات بالضبط يندرج ضمن \"أكثر من 60 دقيقة وحتى 4 ساعات شاملة\"، والرسوم هي 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 2040,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "late-4h01",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات ودقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي يوم إيجار إضافي كامل.",
+      "error": null,
+      "latencyMs": 1742,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "live-now",
+      "question": "هل MX20 متوفرة حالياً؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 2001,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "PARTIALLY_SUPPORTED",
+      "boundary": "BLOCK",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "catalog-live",
+      "question": "وجود MX20 بالكتالوج يعني إنها متوفرة اليوم، صح؟",
+      "answer": "وجود MX20 بالكتالوج لا يثبت أنها متوفرة الآن أو في تاريخ معين.",
+      "error": null,
+      "latencyMs": 1721,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "unknown-fuel",
+      "question": "قديش سعر لتر الوقود؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1726,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "CONTRADICTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "unknown-insurer",
+      "question": "شو اسم شركة تأمين المعدات؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 2028,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "id": "isolation",
+      "question": "حسب معلومات عيادة نبع الطبية، قديش إيجار MX20؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 2553,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "daily",
+      "question": "قديش إيجار الحفارة الصغيرة لليوم؟",
+      "answer": "إيجار الحفارة الصغيرة لليوم هو 420 شيكل.",
+      "error": null,
+      "latencyMs": 1645,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "weekly",
+      "question": "قديش إيجار الحفارة الصغيرة بالأسبوع؟",
+      "answer": "إيجار الحفارة الصغيرة MX20 بالأسبوع (7 أيام) هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1991,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "deposit",
+      "question": "قديش مبلغ التأمين المسترد للحفارة الصغيرة؟",
+      "answer": "مبلغ التأمين المسترد للحفارة الصغيرة هو 1500 شيكل.",
+      "error": null,
+      "latencyMs": 2594,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "included",
+      "question": "هل سعر 420 شيكل اليومي للحفارة الصغيرة يشمل التأمين؟",
+      "answer": "السعر اليومي لا يشمل التأمين.",
+      "error": null,
+      "latencyMs": 1738,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalBoundaryReasons": [
+          "NEGATION_OR_EXCLUSIVITY_NOT_EXPLICIT"
+        ],
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "follow-deposit",
+      "question": "والتأمين عليها؟",
+      "answer": "التأمين المسترد على الحفارة الصغيرة MX20 هو 1500 شيكل.",
+      "error": null,
+      "latencyMs": 1713,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "follow-week",
+      "question": "والأسبوع؟",
+      "answer": "سعر إيجار الحفارة الصغيرة MX20 للأسبوع (7 أيام) هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1665,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "missing-ref",
+      "question": "قديش سعرها؟",
+      "answer": "ممكن توضّح المقصود أكثر؟",
+      "error": null,
+      "latencyMs": 4,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 2,
+      "id": "multi-ref",
+      "question": "والتأمين عليها؟",
+      "answer": "أي خدمة تقصد؟",
+      "error": null,
+      "latencyMs": 1,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 2,
+      "id": "minimum",
+      "question": "الرافعة المقصية SL10 بقدر آخذها ليوم واحد؟",
+      "answer": "المعدة: رافعة مقصية SL10 | الحد الأدنى: يومان.",
+      "error": null,
+      "latencyMs": 2889,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "CONTRADICTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "age",
+      "question": "عمري 22 سنة، بقدر أستأجر الحفارة MX20 وأشغلها أنا؟",
+      "answer": "مشغل MX20 أو SL10 يجب أن يكون 23 سنة أو أكثر.\nشرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.\nالمستأجر الأساسي يجب أن يكون 21 سنة أو أكثر مع هوية سارية ورقم هاتف فعال.",
+      "error": null,
+      "latencyMs": 1984,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalBoundaryReasons": [
+          "NEGATION_OR_EXCLUSIVITY_NOT_EXPLICIT"
+        ],
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "credit",
+      "question": "صاحبي استأجر منكم قبل، يعني أكيد إله حساب آجل صح؟",
+      "answer": "يمكن لبعض الشركات المعتمدة الحصول على حساب ائتماني بموافقة مسبقة.\nلا توجد مدة ائتمان عامة موحدة، وسجل الإيجار السابق لا يمنح الائتمان تلقائيًا.",
+      "error": null,
+      "latencyMs": 1918,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "UNSUPPORTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "cancel-24",
+      "question": "إذا ألغيت قبل 24 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 24 ساعة أو أكثر وحتى 48 ساعة شاملة، بسترد 50%.",
+      "error": null,
+      "latencyMs": 2383,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "cancel-47",
+      "question": "إذا ألغيت قبل 47 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 47 ساعة، بتسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 2261,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "cancel-48",
+      "question": "إذا ألغيت قبل 48 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 48 ساعة بالضبط أو بين 24 و48 ساعة، بسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 1713,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "late-60",
+      "question": "تأخرت بإرجاع المعدة 60 دقيقة، شو الرسوم؟",
+      "answer": "إذا تأخرت بإرجاع المعدة 60 دقيقة أو أقل، ما في رسوم تأخير.",
+      "error": null,
+      "latencyMs": 1479,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "late-61",
+      "question": "تأخرت بإرجاع المعدة 61 دقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 1900,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "late-4h",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات بالضبط، شو الرسوم؟",
+      "answer": "التأخير 4 ساعات بالضبط يشمل ضمن \"أكثر من 60 دقيقة وحتى 4 ساعات شاملة\"، والرسوم هي 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 1742,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "late-4h01",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات ودقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي يوم إيجار إضافي كامل.",
+      "error": null,
+      "latencyMs": 1608,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "live-now",
+      "question": "هل MX20 متوفرة حالياً؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1828,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "catalog-live",
+      "question": "وجود MX20 بالكتالوج يعني إنها متوفرة اليوم، صح؟",
+      "answer": "وجود MX20 بالكتالوج لا يثبت أنها متوفرة الآن أو في تاريخ معين.",
+      "error": null,
+      "latencyMs": 1639,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "unknown-fuel",
+      "question": "قديش سعر لتر الوقود؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1596,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "unknown-insurer",
+      "question": "شو اسم شركة تأمين المعدات؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1561,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "id": "isolation",
+      "question": "حسب معلومات عيادة نبع الطبية، قديش إيجار MX20؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1931,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "daily",
+      "question": "قديش إيجار الحفارة الصغيرة لليوم؟",
+      "answer": "إيجار الحفارة الصغيرة لليوم هو 420 شيكل.",
+      "error": null,
+      "latencyMs": 1835,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "weekly",
+      "question": "قديش إيجار الحفارة الصغيرة بالأسبوع؟",
+      "answer": "إيجار الحفارة الصغيرة MX20 بالأسبوع (7 أيام) هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1828,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "deposit",
+      "question": "قديش مبلغ التأمين المسترد للحفارة الصغيرة؟",
+      "answer": "مبلغ التأمين المسترد للحفارة الصغيرة هو 1500 شيكل.",
+      "error": null,
+      "latencyMs": 1864,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "included",
+      "question": "هل سعر 420 شيكل اليومي للحفارة الصغيرة يشمل التأمين؟",
+      "answer": "السعر اليومي لا يشمل التأمين.",
+      "error": null,
+      "latencyMs": 2125,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalBoundaryReasons": [
+          "NEGATION_OR_EXCLUSIVITY_NOT_EXPLICIT"
+        ],
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "follow-deposit",
+      "question": "والتأمين عليها؟",
+      "answer": "التأمين المسترد على الحفارة الصغيرة MX20 هو 1500 شيكل.",
+      "error": null,
+      "latencyMs": 1508,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "follow-week",
+      "question": "والأسبوع؟",
+      "answer": "سعر الأسبوع للحفارة الصغيرة MX20 هو 2450 شيكل.",
+      "error": null,
+      "latencyMs": 1571,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "missing-ref",
+      "question": "قديش سعرها؟",
+      "answer": "ممكن توضّح المقصود أكثر؟",
+      "error": null,
+      "latencyMs": 1,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 3,
+      "id": "multi-ref",
+      "question": "والتأمين عليها؟",
+      "answer": "أي خدمة تقصد؟",
+      "error": null,
+      "latencyMs": 1,
+      "gate": "CLARIFY",
+      "recovery": null
+    },
+    {
+      "run": 3,
+      "id": "minimum",
+      "question": "الرافعة المقصية SL10 بقدر آخذها ليوم واحد؟",
+      "answer": "المعدة: رافعة مقصية SL10 | الحد الأدنى: يومان.",
+      "error": null,
+      "latencyMs": 1843,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "CONTRADICTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "age",
+      "question": "عمري 22 سنة، بقدر أستأجر الحفارة MX20 وأشغلها أنا؟",
+      "answer": "مشغل MX20 أو SL10 يجب أن يكون 23 سنة أو أكثر.\nشرط 23 سنة شرط إضافي للمشغل ولا يغيّر الحد الأدنى العام للمستأجر.\nالمستأجر الأساسي يجب أن يكون 21 سنة أو أكثر مع هوية سارية ورقم هاتف فعال.",
+      "error": null,
+      "latencyMs": 2251,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "CONTRADICTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "credit",
+      "question": "صاحبي استأجر منكم قبل، يعني أكيد إله حساب آجل صح؟",
+      "answer": "يمكن لبعض الشركات المعتمدة الحصول على حساب ائتماني بموافقة مسبقة.\nلا توجد مدة ائتمان عامة موحدة، وسجل الإيجار السابق لا يمنح الائتمان تلقائيًا.",
+      "error": null,
+      "latencyMs": 2352,
+      "gate": "ANSWER",
+      "recovery": {
+        "mode": "VERIFIED_SOURCE_EXCERPT",
+        "originalStatus": "UNSUPPORTED",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a"
+        ]
+      },
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "cancel-24",
+      "question": "إذا ألغيت قبل 24 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 24 ساعة أو أكثر وحتى 48 ساعة شاملة، بسترد 50%.",
+      "error": null,
+      "latencyMs": 1942,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "cancel-47",
+      "question": "إذا ألغيت قبل 47 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 47 ساعة، بتسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 1794,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "cancel-48",
+      "question": "إذا ألغيت قبل 48 ساعة، كم بسترد؟",
+      "answer": "إذا ألغيت قبل 48 ساعة بالضبط، بتسترد 50% من مبلغ الحجز.",
+      "error": null,
+      "latencyMs": 1677,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "late-60",
+      "question": "تأخرت بإرجاع المعدة 60 دقيقة، شو الرسوم؟",
+      "answer": "لغاية 60 دقيقة شاملة، ما في رسوم تأخير.",
+      "error": null,
+      "latencyMs": 1632,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "late-61",
+      "question": "تأخرت بإرجاع المعدة 61 دقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 1583,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "late-4h",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات بالضبط، شو الرسوم؟",
+      "answer": "التأخير 4 ساعات بالضبط يترتب عليه رسوم 50% من السعر اليومي.",
+      "error": null,
+      "latencyMs": 1591,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_9_a4b7138142a1",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "late-4h01",
+      "question": "تأخرت بإرجاع المعدة 4 ساعات ودقيقة، شو الرسوم؟",
+      "answer": "الرسوم هي يوم إيجار إضافي كامل.",
+      "error": null,
+      "latencyMs": 1534,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_39e0452e25fd",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_0_2e30dfecc8e6",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "live-now",
+      "question": "هل MX20 متوفرة حالياً؟",
+      "answer": "وجود المعدة MX20 في الكتالوج لا يثبت أنها متوفرة الآن أو في تاريخ معين.",
+      "error": null,
+      "latencyMs": 2127,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_1_43af9d18ac96",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "catalog-live",
+      "question": "وجود MX20 بالكتالوج يعني إنها متوفرة اليوم، صح؟",
+      "answer": "وجود المعدة في الكتالوج لا يثبت أنها متوفرة الآن أو في تاريخ معين.",
+      "error": null,
+      "latencyMs": 1610,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "SUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_2_e0b9ec483047",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "unknown-fuel",
+      "question": "قديش سعر لتر الوقود؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1668,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "CONTRADICTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_6_e480b002860a",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "unknown-insurer",
+      "question": "شو اسم شركة تأمين المعدات؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1826,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_5_74ea6f60ec1e",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "id": "isolation",
+      "question": "حسب معلومات عيادة نبع الطبية، قديش إيجار MX20؟",
+      "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+      "error": null,
+      "latencyMs": 1719,
+      "gate": "ANSWER",
+      "recovery": null,
+      "validation": "UNSUPPORTED",
+      "boundary": "ALLOW",
+      "selectedEvidence": [
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_b339308fbe49",
+          "tenantId": "default"
+        },
+        {
+          "id": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_8_0948e0195a9f",
+          "tenantId": "default"
+        }
+      ]
+    }
+  ]
+}

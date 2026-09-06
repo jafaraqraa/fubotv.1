@@ -1,3 +1,6 @@
+const { createHash: reliabilityHash } = require('crypto');
+const { resolveReferent } = require('../rag/intelligence/conversationReferent');
+const { recoverEvidenceExcerpt } = require('../rag/intelligence/evidenceExcerptRecovery');
 const { addLog, reportError } = require('./logger');
 const {
     retrieveContextAsync,
@@ -39,7 +42,7 @@ function traceClaims(validation) {
         text: claim.propositionText || claim.text || null,
         evidenceIds: claim.evidenceChunkIds || claim.evidenceIds || [],
         verdict: claim.classification || claim.finalClassification || null,
-        reason: claim.reason || claim.classificationReason
+        reason: claim.numericSafetyVeto || claim.reason || claim.classificationReason
             || claim.numericResult?.reason
             || (claim.missingEvidence ? 'missing_evidence' : null)
             || (claim.classification ? `validator_${String(claim.classification).toLowerCase()}` : null),
@@ -47,7 +50,10 @@ function traceClaims(validation) {
             || claim.evidenceChunkIds?.[0] || claim.evidenceIds?.[0] || null,
         numericVerdict: claim.numericResult?.relation || null,
         temporalVerdict: claim.temporalResult?.relation || claim.temporalVerdict || null,
-        negationVerdict: claim.negationResult?.relation || claim.negationVerdict || null
+        negationVerdict: claim.negationResult?.relation || claim.negationVerdict || null,
+        numericSafetyVeto: claim.numericSafetyVeto || null,
+        derivedProvenance: claim.derivedProvenance || null,
+        policyReason: claim.policyGuard?.reason || null
     }));
 }
 
@@ -307,7 +313,39 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     pipelineTelemetry.selectedRoute = routingDecision.mode;
     pipelineTelemetry.generationMode = useCompanyKnowledge
         ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
+    if (!isImage && useCompanyKnowledge && process.env.RAG_IMPLEMENTATION === 'v2') {
+        const { answerWithRagV2 } = require('../rag_v2/runtime/productionRuntime');
+        const v2 = await answerWithRagV2({ question: userText, history: conversationHistory, tenantId });
+        Object.assign(pipelineTelemetry, {
+            ragInvoked: true,
+            retrievalTenantId: tenantId,
+            retrievedEvidenceCount: v2.context?.selected?.length || 0,
+            evidenceTenantIds: [...new Set((v2.context?.selected || []).map(item => item.tenantId).filter(Boolean))],
+            gateDecision: v2.decision,
+            generationMode: 'RAG_V2_EVIDENCE_EXCLUSIVE'
+        });
+        ragTraceRepo.updateTrace(requestId, {
+            evidence_gate_decision: v2.decision,
+            evidence_gate_reason: v2.gate?.reason || v2.route?.decision || null,
+            selected_context_chunk_ids_json: (v2.context?.selected || []).map(item => item.chunkId),
+            retrieved_chunks_json: (v2.retrieval?.reranked || []).map(item => ({
+                id: item.chunkId, score: item.rerankerScore, source: 'rag_v2'
+            })),
+            claims_json: v2.claims || [],
+            final_response_type: String(v2.decision || 'answer').toUpperCase()
+        });
+        return String(v2.answer || '').trim();
+    }
+    const referentHistory = isImage ? [] : getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });
+    const resolvedReference = resolveReferent(userText, referentHistory);
+    const effectiveQuestion = resolvedReference.query;
+    if (!isImage && useCompanyKnowledge && ['AMBIGUOUS', 'UNRESOLVED'].includes(resolvedReference.status)) {
+        pipelineTelemetry.gateDecision = DECISION.CLARIFY;
+        ragTraceRepo.updateTrace(requestId, { evidence_gate_decision: DECISION.CLARIFY, evidence_gate_reason: 'unresolved_or_ambiguous_referent', reliability_json: { version: 1, referentStatus: resolvedReference.status } });
+        return clarificationForQuery(userText);
+    }
     let upstreamClarificationNeeded = !isImage
+        && resolvedReference.status !== 'RESOLVED'
         && needsClarification(userText, conversationHistory);
     if (!isImage && enabled('RAG_EVIDENCE_GATE_ENABLED', false)
         && upstreamClarificationNeeded) {
@@ -328,7 +366,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
 
     // 2. Retrieve Context (RAG)
     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
-    const retrievalText = isImage ? (mediaObj.caption || '') : userText;
+    const retrievalText = isImage ? (mediaObj.caption || '') : effectiveQuestion;
     const shouldRetrieveKnowledge = useCompanyKnowledge
         && (!isImage || Boolean(String(retrievalText || '').trim()));
     const retrievalTelemetry = routing.retrievalTelemetry
@@ -342,8 +380,19 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         })
         : '';
     const retrievedChunks = retrievalTelemetry.profiling?.topChunks || [];
+    ragTraceRepo.updateTrace(requestId, { retrieval_query: retrievalText, reliability_json: {
+        version: 1,
+        referentStatus: resolvedReference.status,
+        originalQueryHash: reliabilityHash('sha256').update(String(userText)).digest('hex'),
+        resolvedQueryHash: reliabilityHash('sha256').update(String(retrievalText)).digest('hex'),
+        preBudgetChunkIds: retrievalTelemetry.profiling?.preBudgetChunkIds || [],
+        stages: retrievalTelemetry.profiling?.retrievalSources || [],
+        selectedEvidence: retrievedChunks.map(chunk => ({ id: chunk.chunkId || chunk.id,
+            textHash: reliabilityHash('sha256').update(chunk.text || '').digest('hex'),
+            characters: (chunk.text || '').length }))
+    } });
     upstreamClarificationNeeded = upstreamClarificationNeeded || (!isImage
-        && needsClarification(userText, conversationHistory, retrievedChunks));
+        && resolvedReference.status !== 'RESOLVED' && needsClarification(userText, conversationHistory, retrievedChunks));
     const tenantIntegrity = inspectEvidenceTenantIntegrity(retrievedChunks, tenantId);
     Object.assign(pipelineTelemetry, {
         ragInvoked: shouldRetrieveKnowledge,
@@ -367,7 +416,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         && typeof routing.decisionTelemetry === 'object' ? routing.decisionTelemetry : {};
     if (!isImage && useCompanyKnowledge && enabled('RAG_EVIDENCE_GATE_ENABLED', false)) {
         const gate = decideEvidence({
-            query: userText,
+            query: effectiveQuestion,
             chunks: retrievalTelemetry.profiling?.topChunks || [],
             history: conversationHistory,
             tenantId
@@ -412,10 +461,10 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     profiler.startStage('Prompt Builder');
     // If it's an image, PromptBuilder builds the same array, and we then enrich the last user message inside Providers.
     const messagesPayload = buildPrompt(
-        conversationHistory,
+        resolvedReference.status === 'RESOLVED' ? [] : conversationHistory,
         systemPrompt,
         context,
-        isImage ? (mediaObj.caption || 'صورة مرفقة') : userText,
+        isImage ? (mediaObj.caption || 'صورة مرفقة') : effectiveQuestion,
         {
             responseMode: routingDecision.mode,
             tenantId,
@@ -443,12 +492,14 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     let rawResponse = null;
     let trackSuccess = 1;
     let trackErrorMessage = null;
+    let providerFailureDetails = null;
 
     try {
         rawResponse = await callOpenRouter(messagesPayload, activeTask, { media: isImage ? mediaObj : null });
     } catch (apiErr) {
         trackSuccess = 0;
-        trackErrorMessage = apiErr.message;
+        providerFailureDetails = require('./providerFailure').providerFailure(apiErr);
+        trackErrorMessage = providerFailureDetails.message;
     }
 
     const apiEnd = Date.now();
@@ -484,8 +535,26 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             context,
             validator: validateAnswer,
             tenantId,
-            validationOptions: { question: userText, tenantId }
+            validationOptions: { question: effectiveQuestion, tenantId }
         });
+        const originalValidation = getLastValidationMetadata() || {};
+        pipelineTelemetry.rawValidation={status:originalValidation.overallStatus,claims:traceClaims(originalValidation)};
+        const traceReliability=JSON.parse(ragTraceRepo.getTrace(requestId)?.reliability_json || '{}');
+        ragTraceRepo.updateTrace(requestId,{reliability_json:{...traceReliability,version:2,
+            rawValidation:pipelineTelemetry.rawValidation}});
+        if (originalValidation.overallStatus && originalValidation.overallStatus !== 'SUPPORTED') {
+            const recovery = recoverEvidenceExcerpt(effectiveQuestion, context, tenantId);
+            if (recovery) {
+                validatedResponse = validateWithPolicy({answer:recovery.answer,context,validator:validateAnswer,
+                    tenantId,validationOptions:{question:effectiveQuestion,tenantId}});
+                pipelineTelemetry.evidenceExcerptRecovery = {
+                    mode:'VERIFIED_SOURCE_EXCERPT', originalStatus:originalValidation.overallStatus,
+                    evidenceIds:recovery.evidenceIds
+                };
+                // Preserve the original model output in its existing trace field.
+                ragTraceRepo.updateTrace(requestId, {fallback_source:'verified_source_excerpt'});
+            }
+        }
         if (routing.validationTelemetry && typeof routing.validationTelemetry === 'object') {
             Object.assign(routing.validationTelemetry, getLastValidationMetadata() || {});
         }
@@ -503,10 +572,10 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
                 percent: getConfig('RAG_GROUNDING_SAFETY_ENFORCEMENT_PERCENT'),
                 shadowMode
             });
-            const boundaryResult = applyGroundingSafetyBoundary({
+            let boundaryResult = applyGroundingSafetyBoundary({
                 answer: validatedResponse,
                 validatedAnswer: validatedResponse,
-                question: userText,
+                question: effectiveQuestion,
                 tenantId,
                 route: routingDecision.mode,
                 serverEvidence: retrievedChunks,
@@ -515,6 +584,26 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
                 shadowMode,
                 enforcementActive: rollout.enforced
             });
+            if (boundaryResult.decision === 'BLOCK' && !pipelineTelemetry.evidenceExcerptRecovery) {
+                const recovery = recoverEvidenceExcerpt(effectiveQuestion, context, tenantId);
+                if (recovery) {
+                    const recoveredBoundary = applyGroundingSafetyBoundary({
+                        answer:recovery.answer,validatedAnswer:recovery.answer,question:effectiveQuestion,
+                        tenantId,route:routingDecision.mode,serverEvidence:retrievedChunks,
+                        validation:recovery.validation,upstreamDecision:upstreamClarificationNeeded ? DECISION.CLARIFY : null,
+                        shadowMode,enforcementActive:rollout.enforced
+                    });
+                    if (recoveredBoundary.decision === 'ALLOW') {
+                        pipelineTelemetry.evidenceExcerptRecovery = {
+                            mode:'VERIFIED_SOURCE_EXCERPT',originalBoundaryReasons:boundaryResult.reasons,
+                            evidenceIds:recovery.evidenceIds
+                        };
+                        validateAnswer(recovery.answer,context,{question:effectiveQuestion,tenantId});
+                        if (routing.validationTelemetry) Object.assign(routing.validationTelemetry,getLastValidationMetadata() || {});
+                        boundaryResult = recoveredBoundary;
+                    }
+                }
+            }
             validatedResponse = boundaryResult.outputAnswer;
             pipelineTelemetry.groundingSafety = boundaryResult.telemetry;
             if (routing.validationTelemetry && typeof routing.validationTelemetry === 'object') {
@@ -543,7 +632,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
                 boundary_reasons_json: boundaryResult.telemetry.boundaryReasons || [],
                 enforcement_active: boundaryResult.telemetry.enforcementActive,
                 fallback_source: boundaryResult.telemetry.fallbackType
-                    ? `grounding_boundary_${boundaryResult.telemetry.fallbackType}` : null,
+                    ? `grounding_boundary_${boundaryResult.telemetry.fallbackType}`
+                    : pipelineTelemetry.evidenceExcerptRecovery ? 'verified_source_excerpt' : null,
                 final_response_type: boundaryResult.telemetry.fallbackType || 'ANSWER_CANDIDATE'
             });
             const boundaryClaims = boundaryResult.claimResults || [];
@@ -698,8 +788,13 @@ Provider Success: ${trackSuccess ? 'true' : 'false'}`);
     }
 
     if (!rawResponse) {
+        const failure=providerFailureDetails || require('./providerFailure').providerFailure(trackErrorMessage);
+        const reliability=JSON.parse(ragTraceRepo.getTrace(requestId)?.reliability_json || '{}');
+        ragTraceRepo.updateTrace(requestId,{reliability_json:{...reliability,providerFailure:{...failure,provider:activeProviderName,model:activeModel}},final_response_type:'PROVIDER_ERROR'});
         const error = new Error(trackErrorMessage || 'AI provider returned an empty response');
         error.code = 'AI_PROVIDER_FAILED';
+        error.failureKind = failure.kind;
+        error.retryable = failure.retryable;
         throw error;
     }
 

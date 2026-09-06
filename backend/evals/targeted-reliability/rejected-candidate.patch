@@ -1,0 +1,267 @@
+diff --git a/backend/src/database/repositories/ragRequestTraceRepository.js b/backend/src/database/repositories/ragRequestTraceRepository.js
+index 450e1d6..5fbe320 100644
+--- a/backend/src/database/repositories/ragRequestTraceRepository.js
++++ b/backend/src/database/repositories/ragRequestTraceRepository.js
+@@ -2,7 +2,7 @@ const db = require('../connection');
+ 
+ const JSON_FIELDS = new Set([
+     'retrieved_chunks_json', 'selected_context_chunk_ids_json',
+-    'claims_json', 'boundary_reasons_json'
++    'claims_json', 'boundary_reasons_json', 'reliability_json'
+ ]);
+ 
+ const ALLOWED_FIELDS = new Set([
+@@ -20,7 +20,7 @@ function safeRawOutput(value) {
+ }
+ 
+ function normalizeValue(key, value) {
+-    if (JSON_FIELDS.has(key)) return JSON.stringify(value ?? []);
++    if (JSON_FIELDS.has(key)) return safeRawOutput(JSON.stringify(value ?? []));
+     if (key === 'raw_model_output') return safeRawOutput(value);
+     if (key === 'enforcement_active') return value == null ? null : (value ? 1 : 0);
+     return value == null ? null : String(value);
+diff --git a/backend/src/rag/intelligence/evidenceDecisionGate.js b/backend/src/rag/intelligence/evidenceDecisionGate.js
+index 0c12faa..2f1217d 100644
+--- a/backend/src/rag/intelligence/evidenceDecisionGate.js
++++ b/backend/src/rag/intelligence/evidenceDecisionGate.js
+@@ -3,6 +3,7 @@ const DECISION = Object.freeze({
+     NO_ANSWER: 'NO_ANSWER',
+     CLARIFY: 'CLARIFY'
+ });
++const { relationCoverage } = require('./relationCoverage');
+ 
+ const ARABIC_CLARIFY_MESSAGE = 'ممكن توضّح المقصود أكثر؟';
+ 
+@@ -404,6 +405,7 @@ function decideEvidence({ query, chunks = [], history = [], tenantId, now = new
+     const unmetEvidenceRule = REQUIRED_EVIDENCE.find(rule =>
+         rule.query.test(normalizedQuery) && !requiredEvidenceSatisfied(rule, normalizedQuery, evidence)
+     );
++    const coverage = relationCoverage(query, scopedChunks);
+ 
+     let decision = DECISION.ANSWER;
+     let reason = 'evidence_available';
+@@ -425,6 +427,9 @@ function decideEvidence({ query, chunks = [], history = [], tenantId, now = new
+     } else if (currentIntent && !temporalEvidenceChunks.length) {
+         decision = DECISION.NO_ANSWER;
+         reason = 'current_state_not_proven';
++    } else if (!coverage.sufficient) {
++        decision = DECISION.NO_ANSWER;
++        reason = 'requested_relation_missing_from_selected_evidence';
+     } else if (unmetEvidenceRule) {
+         decision = DECISION.NO_ANSWER;
+         reason = 'required_business_fact_not_in_evidence';
+@@ -436,6 +441,7 @@ function decideEvidence({ query, chunks = [], history = [], tenantId, now = new
+     return {
+         decision,
+         reason,
++        relationCoverage: coverage,
+         ambiguity,
+         consideredChunkIds: scopedChunks.map(chunk => chunk.chunkId || chunk.id).filter(Boolean),
+         excludedTenantChunks: chunks.length - scopedChunks.length,
+diff --git a/backend/src/rag/services/hybridRetrievalService.js b/backend/src/rag/services/hybridRetrievalService.js
+index 5c32f7f..497277c 100644
+--- a/backend/src/rag/services/hybridRetrievalService.js
++++ b/backend/src/rag/services/hybridRetrievalService.js
+@@ -266,6 +266,13 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
+ 
+     const result = {
+         candidates,
++        candidateStages: {
++            vector: candidates.map(c => ({ id: c.chunkId, score: c.semanticScore })),
++            // This is lexical scoring over vector candidates, not a separate index.
++            keywordScope: 'VECTOR_CANDIDATES_ONLY',
++            keyword: candidates.map(c => ({ id: c.chunkId, score: c.keywordScore })),
++            fused: candidates.map(c => ({ id: c.chunkId, score: c.finalScore }))
++        },
+         dynamicTopK,
+         similarityThreshold,
+         timings: {
+diff --git a/backend/src/rag/services/rerankingService.js b/backend/src/rag/services/rerankingService.js
+index d0e028f..fd0d861 100644
+--- a/backend/src/rag/services/rerankingService.js
++++ b/backend/src/rag/services/rerankingService.js
+@@ -1,5 +1,6 @@
+ const { normalizeArabic } = require('../processing/arabicNormalizer');
+ const { RISK, scanText } = require('../security/promptInjectionGuard');
++const { evidenceAffinity } = require('../intelligence/relationCoverage');
+ 
+ /**
+  * Deterministically re-ranks candidate chunks based on final score, exact phrase matching, and token coverage.
+@@ -45,7 +46,10 @@ function rerankCandidates(candidates, query, dynamicTopK, similarityThreshold) {
+     });
+ 
+     // 2. Filter candidates by semantic similarity threshold
+-    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold);
++    // A direct entity/field match is an independent lexical retrieval signal.
++    // It does not bypass the injection guard or validate any generated fact.
++    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold
++        || evidenceAffinity(query, c).exactRelationEntity && c.injectionPenalty === 0);
+ 
+     // 3. Deterministic sort: descending by rerankScore, resolving ties by chunkId
+     filtered.sort((a, b) => {
+diff --git a/backend/src/services/ai.js b/backend/src/services/ai.js
+index 46b1e5d..1808d3a 100644
+--- a/backend/src/services/ai.js
++++ b/backend/src/services/ai.js
+@@ -293,6 +293,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+     // 1. Fetch system prompt personality, rules, safety
+     const systemPrompt = getSystemPrompt();
+     const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
++    const { resolveReferent } = require('../rag/intelligence/relationCoverage');
++    const referent = resolveReferent(userText, conversationHistory);
+     const routingDecision = isImage
+         ? { mode: MODE.COMPANY_KNOWLEDGE, intent: 'Vision', reason: 'media_requires_grounding' }
+         : classifyConversationMode(userText, {
+@@ -308,7 +310,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+     pipelineTelemetry.generationMode = useCompanyKnowledge
+         ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
+     let upstreamClarificationNeeded = !isImage
+-        && needsClarification(userText, conversationHistory);
++        && (['AMBIGUOUS', 'UNRESOLVED'].includes(referent.status)
++            || needsClarification(referent.query, conversationHistory));
+     if (!isImage && enabled('RAG_EVIDENCE_GATE_ENABLED', false)
+         && upstreamClarificationNeeded) {
+         pipelineTelemetry.gateDecision = DECISION.CLARIFY;
+@@ -328,7 +331,7 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+ 
+     // 2. Retrieve Context (RAG)
+     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
+-    const retrievalText = isImage ? (mediaObj.caption || '') : userText;
++    const retrievalText = isImage ? (mediaObj.caption || '') : referent.query;
+     const shouldRetrieveKnowledge = useCompanyKnowledge
+         && (!isImage || Boolean(String(retrievalText || '').trim()));
+     const retrievalTelemetry = routing.retrievalTelemetry
+@@ -338,12 +341,33 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+     const context = shouldRetrieveKnowledge
+         ? await retrieveContext(retrievalText, profiler, {
+             tenantId,
++            originalQuery: userText,
+             telemetry: retrievalTelemetry
+         })
+         : '';
+-    const retrievedChunks = retrievalTelemetry.profiling?.topChunks || [];
++    const retrievedChunks = retrievalTelemetry.profiling?.selectedChunks
++        || retrievalTelemetry.profiling?.topChunks || [];
++    retrievalTelemetry.referent = referent;
++    const reliabilityTrace = {
++        referent: { status: referent.status, entity: referent.entity },
++        originalQuery: userText,
++        retrievalQuery: retrievalText,
++        normalizedQuery: retrievalTelemetry.profiling?.normalizedQuery,
++        expandedQueries: retrievalTelemetry.profiling?.expandedQueries || [],
++        requestedRelations: retrievalTelemetry.profiling?.requestedRelations || [],
++        candidateStages: retrievalTelemetry.profiling?.candidateStages || [],
++        fusedCandidates: retrievalTelemetry.profiling?.fusedCandidates || [],
++        rerankedCandidates: retrievalTelemetry.profiling?.retrievedChunks || [],
++        generationEvidenceIds: retrievedChunks.map(c => c.chunkId || c.id).filter(Boolean)
++    };
++    ragTraceRepo.updateTrace(requestId, {
++        retrieval_query: retrievalText,
++        reliability_json: reliabilityTrace,
++        retrieved_chunks_json: retrievalTelemetry.profiling?.retrievedChunks || [],
++        selected_context_chunk_ids_json: reliabilityTrace.generationEvidenceIds
++    });
+     upstreamClarificationNeeded = upstreamClarificationNeeded || (!isImage
+-        && needsClarification(userText, conversationHistory, retrievedChunks));
++        && needsClarification(referent.query, conversationHistory, retrievedChunks));
+     const tenantIntegrity = inspectEvidenceTenantIntegrity(retrievedChunks, tenantId);
+     Object.assign(pipelineTelemetry, {
+         ragInvoked: shouldRetrieveKnowledge,
+@@ -367,8 +391,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+         && typeof routing.decisionTelemetry === 'object' ? routing.decisionTelemetry : {};
+     if (!isImage && useCompanyKnowledge && enabled('RAG_EVIDENCE_GATE_ENABLED', false)) {
+         const gate = decideEvidence({
+-            query: userText,
+-            chunks: retrievalTelemetry.profiling?.topChunks || [],
++            query: referent.query,
++            chunks: retrievedChunks,
+             history: conversationHistory,
+             tenantId
+         });
+@@ -490,6 +514,9 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj =
+             Object.assign(routing.validationTelemetry, getLastValidationMetadata() || {});
+         }
+         const validationMetadata = getLastValidationMetadata() || {};
++        reliabilityTrace.validatorClaims = traceClaims(validationMetadata);
++        reliabilityTrace.validatorStatus = validationMetadata.overallStatus;
++        ragTraceRepo.updateTrace(requestId, { reliability_json: reliabilityTrace });
+         ragTraceRepo.updateTrace(requestId, { claims_json: traceClaims(validationMetadata) });
+         profiler.endStage('Answer Validation');
+ 
+diff --git a/backend/src/services/knowledge.js b/backend/src/services/knowledge.js
+index 50adc72..7eb8a24 100644
+--- a/backend/src/services/knowledge.js
++++ b/backend/src/services/knowledge.js
+@@ -30,6 +30,8 @@ const { retrieveIntentAwareContext } = require('../rag/intelligence/intentRetrie
+ const { getRetrievalPlan } = require('../rag/intelligence/retrievalPlanner');
+ const { requestedKnowledgeMediaType } = require('../rag/intelligence/mediaRequestDetector');
+ const { EvidenceMetadata, EvidenceIndex, EvidenceBuilder, GroundingValidator } = require('../rag/intelligence/citationGrounding');
++const { prioritizeEvidence, evidenceAffinity, requestedRelations } = require('../rag/intelligence/relationCoverage');
++const { parseSerializedChunks } = require('../rag/security/promptInjectionGuard');
+ const {
+     RETRIEVAL_MODE,
+     RagFallbackError,
+@@ -123,6 +125,10 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+     assertPromptGuardAvailable();
+     const profiling = {
+         startTime: Date.now(),
++        originalQuery: retrievalContext.originalQuery || query,
++        retrievalQuery: query,
++        normalizedQuery: normalizeArabic(query),
++        requestedRelations: requestedRelations(query),
+         stages: {}
+     };
+ 
+@@ -208,6 +214,8 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+ 
+             const listsOfResults = await Promise.all(retrievalPromises);
+             const listsOfCandidates = listsOfResults.map(r => r.candidates || []);
++            profiling.expandedQueries = queryVariations.map(q => hydeDoc ? `${q} ${hydeDoc}` : q);
++            profiling.candidateStages = listsOfResults.map(r => r.candidateStages || {});
+             profiling.stages.retrieval = Date.now() - t0;
+ 
+             if (profiler) {
+@@ -230,6 +238,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+             if (profiler) profiler.startStage('RRF Fusion');
+             t0 = Date.now();
+             const fusedCandidates = reciprocalRankFusion(listsOfCandidates, 60);
++            profiling.fusedCandidates = fusedCandidates.map(c => ({ id: c.chunkId, score: c.rrfScore }));
+             profiling.stages.rrf = Date.now() - t0;
+             if (profiler) profiler.endStage('RRF Fusion');
+ 
+@@ -253,7 +262,9 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+             const similarityThreshold = configuredThreshold;
+ 
+             // Filter below similarity threshold
+-            const filteredCandidates = reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold);
++            const filteredCandidates = prioritizeEvidence(query, reranked.filter(c =>
++                (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold
++                || evidenceAffinity(query, c).exactRelationEntity && c.injectionPenalty === 0));
+ 
+             // Take Top-K
+             const topChunks = filteredCandidates.slice(0, dynamicTopK);
+@@ -335,6 +346,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+             profiling.similarityThreshold = similarityThreshold;
+             profiling.optimizedContext = optimizedContext;
+             profiling.topChunks = expandedChunks;
++            profiling.selectedChunks = parseSerializedChunks(optimizedContext);
+             profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                 .map(reference => reference.metadata.chunkId);
+             profiling.retrievedChunks = reranked.map(item => ({
+@@ -397,7 +409,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+             const dynamicTopK = determineSmarterTopK(query, tokens, "General", reranked);
+ 
+             // Limit to dynamicTopK
+-            const selectedChunks = reranked.slice(0, dynamicTopK);
++            const selectedChunks = prioritizeEvidence(query, reranked).slice(0, dynamicTopK);
+             const selectedIds = new Set(selectedChunks.map(item =>
+                 item.chunkId || item.id || item.payload?.chunkId));
+             const discardedChunks = reranked.filter(item =>
+@@ -436,6 +448,7 @@ async function retrieveContextAsync(query, profiler = null, retrievalContext = {
+             profiling.similarityThreshold = similarityThreshold;
+             profiling.optimizedContext = optimizedContext;
+             profiling.topChunks = topChunks;
++            profiling.selectedChunks = parseSerializedChunks(optimizedContext);
+             profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                 .map(reference => reference.metadata.chunkId);
+             profiling.retrievedChunks = reranked.map(item => ({

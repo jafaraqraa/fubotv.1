@@ -1,3 +1,4 @@
+const { missingAmountEvidence } = require('./retrievalRelevance');
 const DECISION = Object.freeze({
     ANSWER: 'ANSWER',
     NO_ANSWER: 'NO_ANSWER',
@@ -262,7 +263,8 @@ function requiredEvidenceSatisfied(rule, query, evidence) {
     // A schedule can be stated as an entity "works/operates" followed by a
     // clock range without repeating the query noun "hours".
     const asksForHours = /(?:دوام|فاتح|مفتوح|اغلاق|سكر)/u.test(query);
-    const provesHours = /(?:يعمل|تعمل|نعمل|العمل).{0,100}\d{1,2}\s+\d{2}.{0,12}\d{1,2}\s+\d{2}/u.test(evidence);
+    const provesHours = /(?:يعمل|تعمل|نعمل|العمل).{0,100}\d{1,2}\s+\d{2}.{0,12}\d{1,2}\s+\d{2}/u.test(evidence)
+        || /(?:مكتب|فرع).{0,60}(?:يغلق|يفتح|ساعات).{0,40}\d{1,2}\s+\d{2}/u.test(evidence);
     return asksForHours && provesHours;
 }
 
@@ -276,6 +278,7 @@ function historyHasReference(history) {
 
 function needsClarification(query, history = [], chunks = []) {
     const normalizedQuery = normalize(query);
+    if (/بطاري/u.test(normalizedQuery) && /\d+\s+كيلو(?=\s|$)/u.test(normalizedQuery)) return true;
     const ambiguity = analyzeAmbiguity(query, history);
     const candidateStatus = multipleCandidateReferentStatus(normalizedQuery, history, chunks);
     const legacyFollowUpStatus = followUpReferentStatus(normalizedQuery, history);
@@ -370,6 +373,7 @@ function hasCurrentEvidence(query, chunk, nowMs) {
 
 function clarificationForQuery(query) {
     const normalized = normalize(query);
+    if (/بطاري/u.test(normalized) && /\d+\s+كيلو(?=\s|$)/u.test(normalized)) return 'تقصد سعة البطارية بالكيلوواط ساعة (kWh)، أم القدرة بالكيلوواط (kW)؟';
     const referent = normalized.match(/(?:اغير|اعدل|الغي|احذف|انقل|اجل|اقدم|ارجع|استبدل)\s+(?:ال)?(\p{L}+)/u)?.[1];
     if (referent) return `أي ${referent} تقصد؟`;
     if (/(?:الدكتور|الطبيب)\s+(?:متوفر|متاح|موجود)/u.test(normalized)) return 'أي دكتور تقصد؟';
@@ -425,6 +429,9 @@ function decideEvidence({ query, chunks = [], history = [], tenantId, now = new 
     } else if (currentIntent && !temporalEvidenceChunks.length) {
         decision = DECISION.NO_ANSWER;
         reason = 'current_state_not_proven';
+    } else if (missingAmountEvidence(query, scopedChunks)) {
+        decision = DECISION.NO_ANSWER;
+        reason = 'requested_amount_not_in_selected_evidence';
     } else if (unmetEvidenceRule) {
         decision = DECISION.NO_ANSWER;
         reason = 'required_business_fact_not_in_evidence';

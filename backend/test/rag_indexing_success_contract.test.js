@@ -87,6 +87,8 @@ test('RAG synchronous indexing success contract', async t => {
         assertActiveDocument(doc);
         assert.strictEqual(doc.status, 'active');
         assert.strictEqual(doc.chunk_count, doc.vector_count);
+        assert.strictEqual(doc.vector_dimension, 3);
+        assert.ok(doc.embedding_model);
     });
 
     await t.test('2 extraction failure is typed and persisted failed', async () => {

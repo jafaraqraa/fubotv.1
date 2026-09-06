@@ -1,0 +1,29 @@
+[
+  {
+    "name": "initial-empty-db",
+    "exitCode": 1,
+    "counts": {
+      "tests": 151,
+      "pass": 150,
+      "fail": 1
+    }
+  },
+  {
+    "name": "final-complete",
+    "exitCode": 0,
+    "counts": {
+      "tests": 643,
+      "pass": 643,
+      "fail": 0
+    }
+  },
+  {
+    "name": "reliability",
+    "exitCode": 0,
+    "counts": {
+      "tests": 107,
+      "pass": 107,
+      "fail": 0
+    }
+  }
+]

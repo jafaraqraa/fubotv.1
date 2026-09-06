@@ -1,3 +1,4 @@
+const { normalizeNumbers, productCodes, identityRows } = require('./numericIdentity');
 const DERIVED_STATUS = Object.freeze({
     SUPPORTED: 'SUPPORTED_DERIVED',
     NOT_PROVEN: 'NOT_PROVEN'
@@ -15,7 +16,7 @@ const DIVIDE = /(?:قسم|تقسيم|÷|\/|divide)/iu;
 const SCOPE_LINK = /(?:على|لـ|ل|بنسبه|نسبه|يطبق|ينطبق|يشمل|خاص\s+ب|appl(?:y|ies)|for)/iu;
 
 function normalize(text) {
-    return String(text || '').normalize('NFKC').toLowerCase()
+    return normalizeNumbers(text).normalize('NFKC').toLowerCase()
         .replace(/[\u064B-\u065F\u0670\u0640]/g, '').replace(/[إأآٱ]/g, 'ا')
         .replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
         .replace(/[^\p{L}\p{N}%+*/.-]+/gu, ' ').replace(/\s+/g, ' ').trim();
@@ -91,6 +92,78 @@ function detectOperation(text) {
 
 function close(left, right) { return Math.abs(left - right) <= 0.01; }
 
+function userCount(text) {
+    const explicit=quantities(text).find(value=>value.unit==='UNSPECIFIED' && value.value>0);
+    if(explicit)return {...explicit,source:'USER_INPUT',evidenceId:null};
+    const value=normalize(text);
+    // Arabic count words are user inputs, never business evidence.
+    if(/(?:^|\s)(?:اثنتين|اثنين|اتنين|ثنتين|وحدتين|قطعتين)(?:\s|$)/u.test(value))return {value:2,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null};
+    if(/(?:^|\s)(?:واحده|واحد)(?:\s|$)/u.test(value))return {value:1,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null};
+    return null;
+}
+
+const UNIT_PRICE=/(?:سعر|ثمن|تكلف).*(?:وحد|قطع|عنصر|جهاز)|(?:للوحد|للقطع|للقطعه|لكل\s+(?:وحد|قطع|عنصر|جهاز))/u;
+const FEE_RELATION=/(?:تركيب|تهيئ|اعداد|توصيل|زيار|setup|install|delivery)/u;
+const ONE_TIME=/(?:اجمالي|كامل|مره\s+واحد|لا\s+تتكرر|لا\s+يتكرر|نفس\s+الزيار|فقط\s+للزيار|one.time|same.visit|not.repeat)/u;
+function monetaryStatements(chunk){
+    const lines=String(chunk.text||'').split(/\n+|(?<=[.!؟])\s+/u).map(x=>x.replace(/[*_`]/g,'').trim()).filter(Boolean);
+    let heading='';const result=[];
+    for(let i=0;i<lines.length;i++){
+        if(/^#+\s*/u.test(lines[i]))heading=lines[i].replace(/^#+\s*/u,'');
+        const money=quantities(lines[i]).filter(x=>['ILS','USD'].includes(x.unit));
+        if(!money.length)continue;
+        const previous=lines[i-1]||'',current=lines[i],next=lines[i+1]||'';
+        const text=[heading,previous,current,next].filter(Boolean).join(' ');
+        result.push(...money.map(value=>({...value,text,normalized:normalize(text),current:normalize(current),previous:normalize(previous),next:normalize(next),evidenceId:chunkId(chunk),chunk})));
+    }
+    return result;
+}
+
+function validateQuantityWithOneTimeFee({claim,question,chunks}){
+    const output=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit)).at(-1),count=userCount(question);
+    if(!output||!count||count.value<=0)return null;
+    const target=new Set(scopeTokens(`${question} ${claim}`));
+    const scoped=text=>{const tokens=new Set(scopeTokens(text));return [...target].some(x=>tokens.has(x));};
+    const statements=chunks.flatMap(monetaryStatements);
+    const unitPrices=statements.filter(x=>UNIT_PRICE.test(x.normalized)&&scoped(x.text));
+    const fees=statements.filter(x=>FEE_RELATION.test(x.normalized)&&scoped(x.text));
+    for(const price of unitPrices)for(const fee of fees){
+        if(price.unit!==output.unit||fee.unit!==output.unit)continue;
+        // The one-time marker must be adjacent to this fee proposition. Its
+        // presence elsewhere in the same chunk/document proves nothing.
+        const nextContinuesFee=/(?:لا\s+تتكرر|لا\s+يتكرر|تبقي).*(?:اجر|رسم|fee)/u.test(fee.next);
+        if(!ONE_TIME.test(`${fee.previous} ${fee.current}`)&&!nextContinuesFee)continue;
+        if(!FEE_RELATION.test(normalize(question)))continue;
+        const expected=count.value*price.value+fee.value;
+        if(!close(expected,output.value))continue;
+        // If the model exposes operands, they must agree with the proven inputs.
+        const claimedMoney=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit));
+        const subtotal=count.value*price.value;
+        if(claimedMoney.some(x=>![price.value,fee.value,subtotal,output.value].some(v=>close(v,x.value))))continue;
+        const evidenceIds=[...new Set([price.evidenceId,fee.evidenceId])];
+        const relationLines=chunks.filter(c=>chunkId(c)===fee.evidenceId).flatMap(c=>String(c.text).split(/\n+/u))
+            .filter(line=>FEE_RELATION.test(normalize(line))||ONE_TIME.test(normalize(line))||quantities(line).some(x=>x.unit===fee.unit&&close(x.value,fee.value)));
+        return {operation:'ADD_MULTIPLY',relation:'TOTAL_PRICE',evidenceText:[price.text,...relationLines].join('\n'),inputs:[
+            {value:count.value,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null,semanticRole:'QUANTITY'},
+            {value:price.value,unit:price.unit,source:'EVIDENCE',evidenceId:price.evidenceId,semanticRole:'UNIT_PRICE'},
+            {value:fee.value,unit:fee.unit,source:'EVIDENCE',evidenceId:fee.evidenceId,semanticRole:'ONE_TIME_FEE'}
+        ],scopeEvidenceIds:evidenceIds,evidenceIds,expectedResult:{value:Number(expected.toFixed(2)),unit:output.unit}};
+    }
+    return null;
+}
+function validateHistoricalPrice({claim,question,chunks}){
+    const date=normalize(question).match(/(?:شهر|month)\s+(\d{1,2})\s+(?:سنه|عام|year)\s+(\d{4})/u),codes=productCodes(question);
+    const output=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit)).at(-1);
+    if(!date||codes.length!==1||!output)return null;
+    const instant=new Date(Date.UTC(Number(date[2]),Number(date[1])-1,15)),code=codes[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s*');
+    for(const chunk of chunks){const source=normalizeNumbers(chunk.text).replace(/[*_`]/g,' ').replace(/\s+/g,' ');
+        const ranges=[...source.matchAll(new RegExp(`(?:حتى|الي)\\s+(?:تاريخ\\s*)?[:：]?\\s*(\\d{4}-\\d{2}-\\d{2})[^.]{0,100}?كان\\s+(?:سعر|ثمن|تكلفه)\\s+${code}[^.]{0,50}?(\\d+(?:\\.\\d+)?)\\s*(شيكل|شيقل|ILS|USD|دولار)`,'giu'))];
+        for(const match of ranges){const end=new Date(match[1]+'T23:59:59Z'),value=Number(match[2]),currency=/USD|دولار/i.test(match[3])?'USD':'ILS';
+            if(instant<=end&&currency===output.unit&&close(value,output.value))return {operation:'HISTORICAL_RANGE_LOOKUP',relation:'HISTORICAL_PRICE',evidenceText:match[0],inputs:[{value:date[1],unit:'MONTH',source:'USER_INPUT',evidenceId:null,semanticRole:'QUERY_MONTH'},{value:date[2],unit:'YEAR',source:'USER_INPUT',evidenceId:null,semanticRole:'QUERY_YEAR'},{value,unit:currency,source:'EVIDENCE',evidenceId:chunkId(chunk),semanticRole:'HISTORICAL_PRICE'}],scopeEvidenceIds:[chunkId(chunk)],evidenceIds:[chunkId(chunk)],expectedResult:{value,unit:currency}};}
+    }
+    return null;
+}
+
 function validatePercent({ operation, claim, question, chunks }) {
     // A percentage may be mentioned after the resulting amount. Select the
     // last monetary result, not simply the last numeric token in the sentence.
@@ -98,10 +171,12 @@ function validatePercent({ operation, claim, question, chunks }) {
     if (!output) return null;
     const userValues = quantities(question).filter(item => item.unit === output.unit);
     const bases = [];
-    for (const chunk of chunks) for (const value of quantities(chunk.text)) {
+    const targetCodes = productCodes(question).length ? productCodes(question) : productCodes(claim);
+    for (const chunk of chunks) for (const value of quantities(targetCodes.length ? identityRows(chunk.text,targetCodes).join('\n') : chunk.text)) {
         if (value.unit === output.unit) bases.push({ ...value, source: 'EVIDENCE', evidenceId: chunkId(chunk), chunk });
     }
-    for (const value of userValues) bases.push({ ...value, source: 'USER_INPUT', evidenceId: null });
+    // A customer's quoted catalog price is not authoritative product evidence.
+    if (!targetCodes.length) for (const value of userValues) bases.push({ ...value, source: 'USER_INPUT', evidenceId: null });
     const targetTokens = new Set(scopeTokens(`${question} ${claim}`));
     const discounts = [];
     for (const chunk of chunks) {
@@ -110,11 +185,18 @@ function validatePercent({ operation, claim, question, chunks }) {
         const evidenceTokens = new Set(scopeTokens(chunk.text));
         const scopeOverlap = [...targetTokens].some(token => evidenceTokens.has(token));
         if (!scopeOverlap) continue;
-        for (const value of quantities(chunk.text).filter(item => item.unit === 'PERCENT')) {
+        const rateText=String(chunk.text).split(/\n+|(?<=[.!?؟])\s+/u)
+            .filter(line=>(operation === 'PERCENT_DISCOUNT' ? DISCOUNT : INCREASE).test(line)).join('\n');
+        for (const value of quantities(rateText).filter(item => item.unit === 'PERCENT')) {
             discounts.push({ ...value, evidenceId: chunkId(chunk), chunk });
         }
     }
     for (const base of bases) for (const percent of discounts) {
+        if (quantities(claim).some(value=>value.unit==='PERCENT' && !close(value.value,percent.value))) continue;
+        if (quantities(claim).some(value=>value.unit===output.unit && !close(value.value,output.value) && !close(value.value,base.value))) continue;
+        const rule=normalizeNumbers(percent.chunk.text).replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[إأآٱ]/g,'ا');
+        const threshold=rule.match(/(\d+(?:\.\d+)?)\s*(?:شيكل|شيقل|ILS|USD|دولار)\s+او اكثر/iu);
+        if (threshold && base.value < Number(threshold[1])) continue;
         if (base.source === 'EVIDENCE') {
             const baseTokens = new Set(scopeTokens(base.chunk.text));
             if (![...targetTokens].some(token => baseTokens.has(token))) continue;
@@ -179,10 +261,19 @@ function validateBinary({ operation, claim, question, chunks }) {
 }
 
 function validateDerivedClaim({ claim, question = '', chunks = [], tenantId = '', now = new Date() }) {
-    const operation = detectOperation(`${question} ${claim}`);
-    if (!operation) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'not_derived' };
     const trusted = trustedChunks(chunks, tenantId, question, now);
     if (!trusted.length) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'untrusted_or_missing_provenance' };
+    const historical=validateHistoricalPrice({claim,question,chunks:trusted});
+    if(historical)return {status:DERIVED_STATUS.SUPPORTED,provenance:historical};
+    // ISO dates and clock punctuation are facts, not arithmetic operators.
+    // Never derive a historical clock/date from unrelated numbers in a chunk.
+    if (/\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}/u.test(normalizeNumbers(claim))) {
+        return {status:DERIVED_STATUS.NOT_PROVEN,reason:'temporal_fact_requires_direct_evidence'};
+    }
+    const compound=validateQuantityWithOneTimeFee({claim,question,chunks:trusted});
+    if(compound)return {status:DERIVED_STATUS.SUPPORTED,provenance:compound};
+    const operation = detectOperation(`${question} ${claim}`);
+    if (!operation) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'not_derived' };
     const provenance = operation.startsWith('PERCENT_')
         ? validatePercent({ operation, claim, question, chunks: trusted })
         : validateBinary({ operation, claim, question, chunks: trusted });

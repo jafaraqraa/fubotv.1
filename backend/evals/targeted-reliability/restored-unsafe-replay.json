@@ -1,0 +1,163 @@
+{
+  "contextIdentical": true,
+  "question": "أنا ألغيت قبل 47 ساعة، برجعلي المبلغ كامل، صح؟",
+  "answer": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+  "validation": {
+    "finalAnswer": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+    "overallStatus": "SUPPORTED",
+    "validationState": "SUPPORTED",
+    "confidenceScore": 0.7797,
+    "confidenceLabel": "Medium",
+    "evidenceCoverage": 1,
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+        "sourceText": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+        "originalCompoundClaim": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+        "propositionText": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+        "propositionType": "SINGLE",
+        "relationshipType": "SINGLE",
+        "compoundId": "compound-1",
+        "factual": true,
+        "classification": "SUPPORTED",
+        "confidence": 0.2613,
+        "evidenceChunkIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5"
+        ],
+        "similarity": 0.133,
+        "keywordOverlap": 0.25,
+        "citationCoverage": 1,
+        "missingEvidence": false,
+        "contradictionScore": 0,
+        "numericExact": true,
+        "matchedEvidenceId": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5",
+        "matchedSentence": "أكثر من 4 ساعات: **يوم إيجار إضافي كامل**.",
+        "semanticScore": 0.133,
+        "numericResult": {
+          "relation": "ENTAILED",
+          "derived": true,
+          "claimQuantities": [
+            {
+              "value": 47,
+              "unit": "HOUR",
+              "operator": "="
+            }
+          ],
+          "evidenceQuantities": [
+            {
+              "value": 4,
+              "unit": "HOUR",
+              "operator": ">"
+            }
+          ]
+        },
+        "derivedStatus": "SUPPORTED_DERIVED",
+        "derivedProvenance": {
+          "operation": "THRESHOLD_APPLICATION",
+          "inputs": [
+            {
+              "value": 47,
+              "unit": "HOUR",
+              "operator": "=",
+              "source": "USER_INPUT",
+              "evidenceId": null
+            },
+            {
+              "value": 4,
+              "unit": "HOUR",
+              "operator": ">",
+              "source": "EVIDENCE",
+              "evidenceId": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5"
+            }
+          ],
+          "evidenceIds": [
+            "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5"
+          ]
+        },
+        "completeListEntailed": false,
+        "negationResult": {
+          "claimNegated": false,
+          "evidenceNegated": false,
+          "relation": "ALIGNED"
+        },
+        "finalClassification": "SUPPORTED",
+        "policyGuard": {
+          "relation": "NOT_APPLICABLE",
+          "branches": [
+            {
+              "conditions": [
+                {
+                  "value": 60,
+                  "unit": "MINUTE",
+                  "operator": ">"
+                }
+              ],
+              "outcome": "**50% من السعر اليومي**. - أكثر من 4 ساعات: **يوم إيجار إضافي كامل**.  رسوم التأخير لا تعني تمديدًا رسميًا للعقد.  ## 9. الأعطال والأضرار إذا حدث عطل فني غير ناتج عن سوء استخدام، يوقف العميل المعدة ويتواصل مع الشركة ولا يجري إصلاحًا جوهريًا دون موافقة.",
+              "evidenceId": "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_3595704a5330",
+              "tenantId": "default"
+            }
+          ]
+        }
+      }
+    ],
+    "supportedClaims": [
+      "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل."
+    ],
+    "partiallySupportedClaims": [],
+    "unsupportedClaims": [],
+    "contradictedClaims": [],
+    "ignoredPromptInjectionChunks": [
+      "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5",
+      "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_4_3595704a5330"
+    ],
+    "uniqueEvidenceChunks": 2,
+    "durationMs": 109.124
+  },
+  "boundary": {
+    "decision": "ALLOW",
+    "reasons": [],
+    "claimResults": [
+      {
+        "claimText": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.",
+        "evidenceIds": [
+          "doc_d6208ab5450b46aba15e3d8a7b52499e_chunk_3_71753f17b5c5"
+        ],
+        "tenantIntegrity": "PASS",
+        "validatorSupport": "SUPPORTED",
+        "numericSafety": "PASS",
+        "temporalSafety": "NOT_APPLICABLE",
+        "negationSafety": "PASS",
+        "relevanceSafety": "PASS",
+        "reasons": [],
+        "finalDecision": "ALLOW"
+      }
+    ],
+    "removedClaims": [],
+    "telemetry": {
+      "tenantId": "default",
+      "route": "COMPANY_KNOWLEDGE",
+      "boundaryEnabled": true,
+      "shadowMode": false,
+      "boundaryDecision": "ALLOW",
+      "boundaryReasons": [],
+      "claimCount": 1,
+      "allowedClaimCount": 1,
+      "blockedClaimCount": 0,
+      "unknownEvidenceIdCount": 0,
+      "missingTenantEvidenceCount": 0,
+      "tenantMismatchCount": 0,
+      "numericBlockCount": 0,
+      "temporalBlockCount": 0,
+      "negationBlockCount": 0,
+      "nonresponsiveBlockCount": 0,
+      "processingErrorCount": 0,
+      "durationMs": 4.455,
+      "enforcementActive": true,
+      "wouldHaveDeliveredInShadow": true,
+      "actualDeliveredDecision": "CANDIDATE",
+      "fallbackType": null
+    },
+    "outputAnswer": "إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل."
+  }
+}

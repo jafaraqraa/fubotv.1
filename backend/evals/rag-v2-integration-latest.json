@@ -1,0 +1,132 @@
+{
+  "startedAt": "2026-09-05T23:03:39.436Z",
+  "resources": {
+    "collection": "futhing_rag_v2_integration_mtozokvg_8c1836e4",
+    "alias": "futhing_rag_v2_integration_mtozokvg_8c1836e4_alias",
+    "sqlitePath": "/tmp/futhing-rag-v2-qEW77A/integration.sqlite"
+  },
+  "checks": {
+    "embedding": {
+      "model": "nomic-embed-text:latest",
+      "dimensions": 768,
+      "valid": true
+    },
+    "sqliteMigration": true,
+    "collection": {
+      "status": "green",
+      "vectors": {
+        "dense": {
+          "size": 768,
+          "distance": "Cosine",
+          "on_disk": false
+        }
+      },
+      "sparseVectors": {
+        "sparse": {
+          "index": {
+            "on_disk": false
+          }
+        }
+      }
+    },
+    "search": {
+      "denseIds": [
+        "c761de4bb674d58a2222f5a4c4659d29ab98674e61e3479eedc4f5d82b5d4046"
+      ],
+      "sparseIds": [
+        "c761de4bb674d58a2222f5a4c4659d29ab98674e61e3479eedc4f5d82b5d4046"
+      ],
+      "tenantIsolation": true
+    },
+    "alias": {
+      "resolved": true
+    },
+    "payloadIndexesRequested": [
+      "tenant_id",
+      "knowledge_base_id",
+      "document_id",
+      "document_version_id",
+      "status",
+      "is_current",
+      "language",
+      "permissions",
+      "valid_from",
+      "valid_to"
+    ],
+    "endToEnd": {
+      "ingested": {
+        "status": "indexed",
+        "jobId": "5aeff010-26ea-4ab2-9d4b-5310654573aa",
+        "documentVersionId": "f1c1140e-9725-4454-bbed-60bb7e49798b",
+        "chunks": 1,
+        "sourceChecksum": "7c13fa0cda16f7ba73f112583b6a5f9737f7c64e329775bb14b64e495913de0f"
+      },
+      "decision": "answer",
+      "answer": "القيمة المؤكدة للرمز E2E-88 هي 314 وحدة.",
+      "verified": true,
+      "citations": [
+        {
+          "source_id": "S1"
+        }
+      ],
+      "rerankerMode": "configured remote task provider"
+    }
+  },
+  "cleanup": {
+    "collectionDeleted": true,
+    "tempDatabaseDeleted": true
+  },
+  "versions": {
+    "qdrant": "1.18.2",
+    "ollama": "0.32.14",
+    "sqlite": "3.53.2",
+    "betterSqlite3": "12.11.1"
+  },
+  "capabilities": {
+    "ollamaModels": [
+      {
+        "name": "kimi-k2.7-code:cloud",
+        "capabilities": [
+          "vision",
+          "thinking",
+          "completion",
+          "tools"
+        ],
+        "embeddingLength": 2048
+      },
+      {
+        "name": "nomic-embed-text:latest",
+        "capabilities": [
+          "embedding"
+        ],
+        "embeddingLength": 768
+      },
+      {
+        "name": "llama3:latest",
+        "capabilities": [
+          "completion"
+        ],
+        "embeddingLength": 4096
+      },
+      {
+        "name": "glm4:9b",
+        "capabilities": [
+          "completion"
+        ],
+        "embeddingLength": 4096
+      },
+      {
+        "name": "glm-5.2:cloud",
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ],
+        "embeddingLength": null
+      }
+    ],
+    "rerankerService": false
+  },
+  "stage": "complete",
+  "finishedAt": "2026-09-05T23:03:44.080Z"
+}

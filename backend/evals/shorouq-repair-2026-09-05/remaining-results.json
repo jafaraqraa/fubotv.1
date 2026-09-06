@@ -1,0 +1,128 @@
+[
+  {
+    "command": "node test/conversation_mode_routing.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 5,
+    "fail": 0
+  },
+  {
+    "command": "node test/intent_detector.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 7,
+    "fail": 0
+  },
+  {
+    "command": "node test/query_decomposer.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 5,
+    "fail": 0
+  },
+  {
+    "command": "node test/intent_retriever.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 5,
+    "fail": 0
+  },
+  {
+    "command": "node test/retrieval_planner.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 6,
+    "fail": 0
+  },
+  {
+    "command": "node test/citation_grounding.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 4,
+    "fail": 0
+  },
+  {
+    "command": "node test/answer_validator.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 17,
+    "fail": 0
+  },
+  {
+    "command": "node test/answer_validator_policy.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 5,
+    "fail": 0
+  },
+  {
+    "command": "node test/contradiction_policy.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 4,
+    "fail": 0
+  },
+  {
+    "command": "node test/ai_task_routing.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 7,
+    "fail": 0
+  },
+  {
+    "command": "node test/ai_model_health.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 0,
+    "fail": 0
+  },
+  {
+    "command": "node test/vision_pipeline.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 9,
+    "fail": 0
+  },
+  {
+    "command": "node test/stt_pipeline.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 6,
+    "fail": 0
+  },
+  {
+    "command": "node test/whatsapp_multi_provider.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 11,
+    "fail": 0
+  },
+  {
+    "command": "node test/analytics_rebuild.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 9,
+    "fail": 0
+  },
+  {
+    "command": "node test/budget_service.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 9,
+    "fail": 0
+  },
+  {
+    "command": "node --test test/fake_functionality_regression.test.js test/process_output_safety.test.js",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 7,
+    "fail": 0
+  },
+  {
+    "command": "npm test --prefix ../frontend",
+    "exitCode": 0,
+    "signal": null,
+    "tests": 21,
+    "fail": 0
+  }
+]

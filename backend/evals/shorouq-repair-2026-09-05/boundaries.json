@@ -1,0 +1,20 @@
+[
+ {"retrieval_query":"قديش تنظيف وفحص 10 ألواح؟","expected":"180 ILS"},
+ {"retrieval_query":"قديش تنظيف وفحص 11 لوح؟","expected":"300 ILS"},
+ {"retrieval_query":"قديش تنظيف وفحص 20 لوح؟","expected":"300 ILS"},
+ {"retrieval_query":"قديش تنظيف وفحص 21 لوح؟","expected":"UNKNOWN; no extrapolated price"},
+ {"retrieval_query":"نفذنا إصلاح مدفوع في نفس الزيارة وأجرة الإصلاح 249 شيكل بدون قطع، بتنخصم رسوم الكشف؟","expected":"NO"},
+ {"retrieval_query":"نفذنا إصلاح مدفوع في نفس الزيارة وأجرة الإصلاح 250 شيكل بدون قطع، بتنخصم رسوم الكشف؟","expected":"80 ILS deducted"},
+ {"retrieval_query":"نفذنا إصلاح مدفوع في نفس الزيارة وأجرة الإصلاح 251 شيكل بدون قطع، بتنخصم رسوم الكشف؟","expected":"80 ILS deducted"},
+ {"retrieval_query":"إذا ألغيت تركيب النظام قبل يومين بعد دفع الحجز، كم بسترد؟","expected":"NO_REFUND"},
+ {"retrieval_query":"إذا ألغيت تركيب النظام قبل 3 أيام بعد دفع الحجز، كم بسترد؟","expected":"50%"},
+ {"retrieval_query":"إذا ألغيت تركيب النظام قبل 6 أيام بعد دفع الحجز، كم بسترد؟","expected":"50%"},
+ {"retrieval_query":"إذا ألغيت تركيب النظام قبل 7 أيام بعد دفع الحجز، كم بسترد؟","expected":"50%"},
+ {"retrieval_query":"إذا ألغيت تركيب النظام قبل 8 أيام بعد دفع الحجز، كم بسترد؟","expected":"FULL_REFUND"},
+ {"retrieval_query":"قديش سعر بطارية 5kWh؟","expected":"6400 ILS"},
+ {"retrieval_query":"احسبلي Home 3K بعد الخصم.","expected":"12900 ILS; not eligible"},
+ {"retrieval_query":"قديش تكلفة تقوية السطح؟","expected":"Requires inspection and quote; no fixed price"},
+ {"retrieval_query":"عملت مشروع معكم قبل، الحساب الآجل مضمون؟","expected":"NO automatic approval; prior financial approval"},
+ {"retrieval_query":"قديش سعرها؟","expected":"CLARIFY"},
+ {"retrieval_query":"والأسبوع؟","expected":"CLARIFY"}
+]

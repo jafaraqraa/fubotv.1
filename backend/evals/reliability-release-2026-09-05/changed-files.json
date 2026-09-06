@@ -1,0 +1,50 @@
+[
+  {
+    "file": "backend/src/rag/intelligence/answerValidator.js",
+    "sha256": "e4350e866595ae32a2db8a02b6b7680fda315c2057aa4a9fd69986cfa07355d4"
+  },
+  {
+    "file": "backend/src/rag/intelligence/conversationReferent.js",
+    "sha256": "455f136a8d10bfa4a7cef854b0d6faa4cf008d14f2c8a6965bcc595210886d52"
+  },
+  {
+    "file": "backend/src/rag/intelligence/retrievalRelevance.js",
+    "sha256": "7451b9f908bb98f33e117e8efc9706f9af488b916d2392d1ec73a575858d5647"
+  },
+  {
+    "file": "backend/src/rag/intelligence/queryDecomposer.js",
+    "sha256": "4e8b76efec78867fc64193f71d084a29ef538bb0f5ddbdff2a5b89fc22b106df"
+  },
+  {
+    "file": "backend/src/rag/intelligence/intentRetriever.js",
+    "sha256": "a5dee26c07ee67439939b4c70c23e76b42cbd3490e047fdd0248c6ab46122a6e"
+  },
+  {
+    "file": "backend/src/rag/intelligence/evidenceExcerptRecovery.js",
+    "sha256": "d7d60e10901c83dfdb060ae840cd635f15a34685a8b599ed314abcc1d99eb812"
+  },
+  {
+    "file": "backend/src/rag/processing/tableStructure.js",
+    "sha256": "3555385dbaddcdf9ae3891caee79622b28125f47bdef311fbc7eed84a487bd0b"
+  },
+  {
+    "file": "backend/src/rag/security/conditionalPolicyGuard.js",
+    "sha256": "23520ebeaeb9873ffe763fc0c6631607ecd4c460db73aeae8ba6bbf2c71a8941"
+  },
+  {
+    "file": "backend/src/services/ai.js",
+    "sha256": "4707be91589c435b0350a3c07c56249b03c2e9ebc70341189c130698c499cf9e"
+  },
+  {
+    "file": "backend/src/services/knowledge.js",
+    "sha256": "4a805674c70a1e3aae3cefc8aef312aa3c7ecacd8332e333df6a064e7467246d"
+  },
+  {
+    "file": "backend/src/services/PromptBuilder.js",
+    "sha256": "9ccf74a4caba02493233ee0a78894368dc2e7ddfb86d5dd292015515ff82cc4e"
+  },
+  {
+    "file": "backend/test/reliability_live_regressions.test.js",
+    "sha256": "c82cdf50109556b7bd5a7cdd5fb01c75a7fad6be74b99dd2dc83a9d7f71b5b20"
+  }
+]

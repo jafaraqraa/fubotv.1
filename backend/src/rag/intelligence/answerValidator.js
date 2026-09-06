@@ -1,3 +1,7 @@
+const { tableFacts } = require('../processing/tableStructure');
+const { normalizeProposition } = require('./propositionNormalization');
+const { proveDiscountEligibility } = require('./discountEligibilityProof');
+const { requestedFields, missingAmountEvidence, asksAmount } = require('./retrievalRelevance');
 const { performance } = require('perf_hooks');
 const {
     RISK,
@@ -6,7 +10,8 @@ const {
     redactSecrets
 } = require('../security/promptInjectionGuard');
 const { DERIVED_STATUS, validateDerivedClaim } = require('./derivedClaimValidator');
-const { RELATION: POLICY_RELATION, evaluateConditionalPolicy } = require('../security/conditionalPolicyGuard');
+const { normalizeNumbers, productCodes, identityRows, contradictoryComparison, conditionalLaborVeto } = require('./numericIdentity');
+const { RELATION: POLICY_RELATION, evaluateConditionalPolicy, samePolicy } = require('../security/conditionalPolicyGuard');
 
 const STATUS = Object.freeze({
     SUPPORTED: 'SUPPORTED',
@@ -79,7 +84,7 @@ function clamp(value, min = 0, max = 1) {
 }
 
 function normalizeText(text) {
-    return String(text || '')
+    return normalizeNumbers(text)
         .normalize('NFKC')
         .toLowerCase()
         .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
@@ -100,7 +105,7 @@ function tokenize(text) {
 }
 
 function canonicalTokens(text) {
-    return tokenize(text).map(token => {
+    return tokenize(normalizeProposition(text)).map(token => {
         if (ARABIC_TOKEN_ALIASES.has(token)) return ARABIC_TOKEN_ALIASES.get(token);
         if (/^[\u0600-\u06FF]+$/u.test(token)) {
             const withoutArticle = token.startsWith('ال') && token.length > 4 ? token.slice(2) : token;
@@ -176,7 +181,7 @@ function sanitizeEvidence(text) {
             const risk = scanText(segment).riskLevel;
             return risk === RISK.SAFE;
         })
-        .join(' ')
+        .join('\n')
         .trim();
 }
 
@@ -248,6 +253,7 @@ function normalizeChunks(retrievedContext) {
 function splitIntoSentences(text) {
     if (!text) return [];
     return String(text).replace(/(^|\s)د\.(?=\s|$)/gu, '$1د․')
+        .replace(/(^|\n|(?<=[.!؟])\s+)(لا|نعم|آه)\.\s+(?=\S)/gu, '$1$2، ')
         .replace(/```[\s\S]*?```/g, ' ')
         .split(/(?<=[.!?؟؛])\s+|\n+|(?<=\S)[؛;]+|(?=\s*(?:وصف صور[ةه]|نوع المصدر|صور[ةه] معتمد قابل للارسال):)/i)
         .map(value => value.replace(/․/g, '.').replace(/^\s*(?:[-*+]|\d+[.)])\s*/, '').trim())
@@ -266,7 +272,7 @@ function isNonFactual(claim) {
 
 const CAUSAL_CONNECTOR = /(?:^|[\s،,؛;])(?:لذلك|لذا|وبالتالي|بالتالي|ومن\s+ثم|therefore|thus)(?=$|\s)/iu;
 const SCOPE_CONNECTOR = /(?:\s*[،,؛;]?\s*)(حتى\s+لو|ولو|ولكن|لكنه|لكنها|لكن|بس|مع\s+ذلك|ومع\s+ذلك|مع\s+الاخذ\s+في\s+الاعتبار\s+(?:ان|أن)|مع\s+الأخذ\s+في\s+الاعتبار\s+(?:ان|أن)|مع\s+العلم\s+(?:ان|أن)(?:ه|ها)?|مع\s+ملاحظه\s+(?:ان|أن)|مع\s+ملاحظة\s+(?:ان|أن)|علم[\u064B-\u065F]*ا\s+ب(?:ان|أن)|إلا|الا|ما\s+عدا)(?=\s)/giu;
-const INDEPENDENT_CONNECTOR = /\s+\band\b\s+|\s+و\s+|\s+(و(?=(?:بتقدر|تقدر|يمكنك|يمكنكم|يمكن|ستحصل|تحصل|تتبع|الشحن|التوصيل|الطلب|العرض|الخصم|عندنا|لدينا)(?=\s|$)))/giu;
+const INDEPENDENT_CONNECTOR = /\s+\band\b\s+|\s+و\s+|\s+(و(?=(?:بتقدر|تقدر|يمكنك|يمكنكم|يمكن|ستحصل|تحصل|تتبع|الشحن|التوصيل|الطلب|العرض|الخصم|عندنا|لدينا|الحد\s+الأدنى|الحد\s+الادنى|التأمين|التامين|الحضور|لازم)(?=\s|$)))/giu;
 
 function cleanPropositionText(text) {
     return String(text || '').replace(/^[\s،,؛;]+|[\s،,؛;]+$/g, '').trim();
@@ -316,7 +322,10 @@ function extractClaims(answer) {
         const compoundId = `compound-${sentenceIndex + 1}`;
         let parts;
         let relationshipType;
-        if (CAUSAL_CONNECTOR.test(sentence)) {
+        if (/(?:لا|لن|ما).+(?:إلا|الا)\s+بعد|بس\s+على/iu.test(sentence)) {
+            parts = [{ sourceText: sentence, text: sentence, connector: null }];
+            relationshipType = PROPOSITION_RELATION.SINGLE;
+        } else if (CAUSAL_CONNECTOR.test(sentence)) {
             parts = [{ sourceText: sentence, text: sentence, connector: null }];
             relationshipType = PROPOSITION_RELATION.CAUSAL;
         } else {
@@ -354,10 +363,11 @@ function hasNegation(text) {
     // A leading "لا،" may answer a negative yes/no question (for example
     // "عليها رسوم؟") while the factual proposition that follows is positive.
     const withoutDiscourseNo = String(text || '').replace(/^\s*لا\s*[,،]\s*/, '');
-    const normalized = normalizeText(withoutDiscourseNo);
+    const normalized = normalizeText(withoutDiscourseNo).replace(/ما\s+بيرجع/gu,'غير مسترد');
+    if (/(?:^|\s)(?:ما\s+(?:بيعطي|بيعطى|بعطي|يمنح|بيمنح|في|بتقدر|بقدر|ب?ت[ن]?خصم|بينزلش|يعنيش|عنا|عندنا|بيصير)|مش\s|مو\s)/u.test(normalized)) return true;
     if (/\b(?:not|never|no|cannot|can't|doesn't|isn't|without)\b/i.test(normalized)) return true;
     const tokens = new Set(normalized.split(/\s+/));
-    return ['لا', 'ولا', 'ليس', 'وليست', 'ليست', 'غير', 'لن', 'لم', 'بدون']
+    return ['لا', 'فلا', 'ولا', 'ليس', 'وليست', 'ليست', 'غير', 'لن', 'لم', 'بدون']
         .some(token => tokens.has(token));
 }
 
@@ -378,10 +388,15 @@ function normalizeQuantityText(text) {
         ['الثامنه', 8], ['التاسعه', 9], ['العاشره', 10],
         ['الحاديه عشر', 11], ['الثانيه عشر', 12]
     ]);
-    let normalized = normalizeText(text);
+    let normalized = normalizeText(String(text || '').replace(/٫/g, '.'))
+        .replace(/(?:^|\s)ب(?=\d+\s*(?:ايام|يوم|ساعه|ساعات|دقيقه|دقائق))/gu,' ')
+        .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+        .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)));
+    normalized=normalized.replace(/(?:^|\s)عال(?=واحده|ثالثه|ثلاثه|ثانيه)/gu,' الساعه ال').replace(/الثلاثه/g,'الثالثه');
     for (const [word, hour] of clockWords) {
         const escaped = word.replace(/ /g, '\\s+');
         normalized = normalized
+            .replace(new RegExp(`الساعه\\s+${escaped}(?=\\s|[.!؟،]|$)`, 'gu'), `${hour} clock`)
             .replace(new RegExp(`(?:الساعه\\s+)?${escaped}\\s+والنصف(?=\\s|$)`, 'gu'), `${hour + 0.5} clock`)
             .replace(new RegExp(`(?:الساعه\\s+)?${escaped}(?=\\s+(?:صباحا|مساء|مساءا|ظهرا)|\\s*$)`, 'gu'), `${hour} clock`);
     }
@@ -415,6 +430,7 @@ function canonicalUnit(rawUnit) {
 function comparatorBefore(text, numberIndex, unit) {
     const prefix = text.slice(Math.max(0, numberIndex - 65), numberIndex);
     if (/(?:بعد\s+(?:ال)?(?:خصم|زياده))\s*$/iu.test(prefix)) return '=';
+    if (unit !== 'CLOCK' && /(?:و?حتي|و?حتى|up to)\s*$/iu.test(prefix)) return '<=';
     if (/(?:على الاقل|لا يقل|at least)\s*$/i.test(prefix)) return '>=';
     if (/(?:اكثر من|اكبر من|فوق|تجاوز|يتجاوز|تتجاوز|greater than|more than|above|>)\s*[^\d]*$/i.test(prefix)) return '>';
     if (['HOUR', 'DAY', 'CLOCK'].includes(unit) && /(?:بعد)\s*(?:الساعه\s*)?$/iu.test(prefix)) return '>';
@@ -464,6 +480,7 @@ function approximatelyEqual(left, right) {
 
 function arithmeticResultSupported(quantity, claim, evidence, question) {
     if (quantity.operator !== '=' || !['ILS', 'USD'].includes(quantity.unit)) return false;
+    if (productCodes(question || claim).length) return false; // requires the provenance-aware cross-chunk proof
     const evidenceQuantities = extractQuantities(evidence);
     const userQuantities = extractQuantities(question || '');
     const bases = [...evidenceQuantities, ...userQuantities]
@@ -484,13 +501,18 @@ function arithmeticResultSupported(quantity, claim, evidence, question) {
 }
 
 function numericEntailment(claim, evidence, options = {}) {
-    const claimQuantities = extractQuantities(claim);
-    const evidenceQuantities = extractQuantities(evidence);
+    const numericScope=text=>String(text||'').replace(/\b(?:[A-Za-z]{1,24}[-_]?\d{1,8}[A-Za-z]{0,8}|[A-Za-z]{1,24}\s+\d{1,8}[A-Za-z]{1,8})\b/g,' ')
+        .replace(/\b\d{4}-\d{2}-\d{2}\b/g,' ').replace(/(?:شهر|month)\s+\d+\s+(?:سنه|عام|year)\s+\d{4}/giu,' ');
+    const claimQuantities = extractQuantities(numericScope(claim));
+    if (!samePolicy(options.question || claim, evidence) || !samePolicy(claim, evidence)) {
+        return { relation: 'UNKNOWN', reason: 'policy_relation_mismatch', claimQuantities, evidenceQuantities: [] };
+    }
+    const evidenceQuantities = extractQuantities(numericScope(evidence));
     if (!claimQuantities.length) return { relation: 'NONE', claimQuantities, evidenceQuantities };
     if (!evidenceQuantities.length) return { relation: 'UNKNOWN', claimQuantities, evidenceQuantities };
 
     let derived = false;
-    const questionQuantities = extractQuantities(options.question || '');
+    const questionQuantities = extractQuantities(numericScope(options.question || ''));
     for (const cq of claimQuantities) {
         const suppliedByUser = cq.operator === '=' && questionQuantities
             .some(item => item.unit === cq.unit && item.operator === '=' && item.value === cq.value);
@@ -648,6 +670,18 @@ function completeListEntailment(claim, evidence, options = {}) {
         && !structural.has(token) && !evidenceTokens.has(token)).length === 0;
 }
 
+function explicitNegativeEnumerationStatus(claim,evidence,options={}){
+    if(!hasNegation(claim))return null;
+    const lines=String(evidence||'').split(/\n+/u).map(x=>x.trim()).filter(Boolean);
+    const assertion=new Set(canonicalTokens(`${claim} ${options.question||''}`).flatMap(looseArabicStemVariants));
+    for(let i=0;i<lines.length;i++){
+        if(!/(?:لا يوجد|لا توجد|ليس لدينا|ليست لدينا).*[:：]\s*$/u.test(normalizeText(lines[i])))continue;
+        const members=[];for(let j=i+1;j<lines.length&&j<=i+12;j++){if(/^[-*•]\s*/u.test(lines[j]))members.push(lines[j].replace(/^[-*•]\s*/u,''));else if(members.length)break;}
+        return members.some(member=>canonicalTokens(member).every(t=>looseArabicStemVariants(t).some(s=>assertion.has(s))));
+    }
+    return null;
+}
+
 function completeListAcrossAdjacentChunks(claim, chunks, options = {}) {
     for (const left of chunks) for (const right of chunks) {
         if (left === right || !left.documentId || left.documentId !== right.documentId) continue;
@@ -663,11 +697,29 @@ function completeListAcrossAdjacentChunks(claim, chunks, options = {}) {
 function scoreEvidence(claim, chunk, options = {}) {
     // Completeness is a document-level assertion whose members are commonly
     // formatted as separate list lines. Segmenting first discards that scope.
-    const segments = splitIntoSentences(chunk.text).flatMap(segment =>
-        segment.split(/[،,]\s*(?=(?:و)?لا\s+)/u).map(part => part.trim()).filter(Boolean));
-    const candidates = completeListEntailment(claim, chunk.text, options)
+    const projectedText = tableFacts(chunk.text);
+    const tableProjected = projectedText !== chunk.text;
+    let segments = splitIntoSentences(projectedText).flatMap(segment =>
+        segment.split(/[،,]\s*(?=(?:و)?لا\s+)/u).map(part => part.trim()).filter(Boolean))
+        .flatMap(segment => {
+            if (CAUSAL_CONNECTOR.test(segment) || new RegExp(SCOPE_CONNECTOR.source, 'iu').test(segment)) return [segment];
+            return splitAtConnectors(segment, INDEPENDENT_CONNECTOR)?.map(part => part.text) || [segment];
+        });
+    if (tableProjected) {
+        const codes = String(options.question || claim).toLowerCase().match(/\b[a-z]+[-_]?\d+\b/g) || [];
+        const claimFields = requestedFields(claim);
+        const requested = claimFields.length ? claimFields : requestedFields(options.question || claim);
+        const scoped = segments.filter(segment => !segment.includes('|') || ((!codes.length || codes.every(code => segment.toLowerCase().includes(code)))
+            && (!requested.length || requested.some(field => requestedFields(segment).includes(field)))));
+        // No matching table cell is evidence; do not fall back to another row.
+        segments = scoped.length ? scoped : [''];
+    }
+    const targetCodes=productCodes(options.question||claim);
+    const productSections=targetCodes.length?identityRows(chunk.text,targetCodes).filter(x=>/سعر|ثمن|تكلف|price|cost/iu.test(x)):[];
+    const explicitAbsence=explicitNegativeEnumerationStatus(claim,chunk.text,options)===true;
+    const candidates = completeListEntailment(claim, chunk.text, options)||explicitAbsence
         ? [chunk.text]
-        : segments.length ? segments : [chunk.text];
+        : productSections.length?productSections:segments.length ? segments : [chunk.text];
     const candidateRelevance = evidence => {
         const numeric = numericEntailment(claim, evidence, options).relation;
         const negation = negationResult(claim, evidence).relation;
@@ -686,7 +738,7 @@ function scoreEvidence(claim, chunk, options = {}) {
     // documented in separate sentences of the same trusted chunk (for example
     // an order-value threshold and a TV-size exception). Use the whole chunk
     // only when it proves every quantity; never use it to rescue a mismatch.
-    if (extractQuantities(claim).length > 1 && numericResult.relation !== 'ENTAILED') {
+    if (!tableProjected && extractQuantities(claim).length > 1 && numericResult.relation !== 'ENTAILED') {
         const combinedNumericResult = numericEntailment(claim, chunk.text, options);
         if (combinedNumericResult.relation === 'ENTAILED') {
             numericResult = combinedNumericResult;
@@ -696,7 +748,7 @@ function scoreEvidence(claim, chunk, options = {}) {
     const keyword = keywordCoverage(claim, numericEvidenceText);
     const reverseKeyword = bidirectionalCoverage(claim, numericEvidenceText);
     const semantic = semanticSimilarity(claim, numericEvidenceText);
-    const completeList = completeListEntailment(claim, chunk.text, options);
+    const completeList = completeListEntailment(claim, chunk.text, options)||explicitAbsence;
     const negation = completeList
         ? { claimNegated: hasNegation(claim), evidenceNegated: false, relation: 'ALIGNED' }
         : negationResult(claim, bestText);
@@ -793,9 +845,51 @@ function classifyClaim(claim, chunks, options = {}) {
     if (derivedResult?.status === DERIVED_STATUS.SUPPORTED) {
         classification = STATUS.SUPPORTED;
     }
+    const enumerationStatuses=chunks.map(c=>explicitNegativeEnumerationStatus(claim.text,c.text,options)).filter(x=>x!==null);
+    if(enumerationStatuses.length&&!enumerationStatuses.includes(true))classification=STATUS.CONTRADICTED;
     if (adjacentListSupport) classification = STATUS.SUPPORTED;
     if (policyGuard.relation === POLICY_RELATION.SUPPORTED) classification = STATUS.SUPPORTED;
     if (policyGuard.relation === POLICY_RELATION.BLOCK) classification = STATUS.CONTRADICTED;
+    const eligibilityProof=proveDiscountEligibility(claim.text,options.question || '',chunks,options.tenantId);
+    if(eligibilityProof && policyGuard.relation!==POLICY_RELATION.BLOCK)classification=STATUS.SUPPORTED;
+    // These are vetoes, never overrides that make an unproven claim supported.
+    // Run after every recovery/proof path so a lexical match cannot rescue them.
+    if (contradictoryComparison(claim.text)) classification = STATUS.CONTRADICTED;
+    const laborVeto=conditionalLaborVeto(claim.text,options.question || '',chunks);
+    if(laborVeto) classification=STATUS.CONTRADICTED;
+    const targetCodes = productCodes(options.question || claim.text);
+    // A verbatim shared rule may name the requested product alongside another
+    // product. This only removes the identity veto, never proves the claim.
+    const exactSharedRule=targetCodes.length===1 && productCodes(claim.text).includes(targetCodes[0])
+        && chunks.some(c=>String(c.tenantId)===String(options.tenantId)
+            && splitIntoSentences(c.text).some(line=>normalizeText(line)===normalizeText(claim.text)));
+    const wrongExplicitProduct=targetCodes.length===1&&productCodes(claim.text).some(code=>!targetCodes.includes(code))&&!exactSharedRule;
+    if(wrongExplicitProduct)classification=STATUS.CONTRADICTED;
+    if(targetCodes.length===1 && /مؤهل/u.test(claim.text)){
+        const eligibilityLines=chunks.flatMap(c=>c.text.split(/[\n؛]+/u)).filter(line=>
+            productCodes(line).includes(targetCodes[0])&&/مؤهل/u.test(line));
+        if(eligibilityLines.some(line=>/غير مؤهل/u.test(line)!==/غير مؤهل/u.test(claim.text)))classification=STATUS.CONTRADICTED;
+    }
+    const proposition=normalizeText(normalizeProposition(claim.text));
+    const positiveCatalogInference=/كتالوج|قائمه/u.test(proposition)&&/يثبت|يعني|يساوي/u.test(proposition)
+        && /توفر|مخزون/u.test(proposition)&&!hasNegation(claim.text);
+    const catalogDenial=chunks.some(c=>c.text.split(/\n+|(?<=[.!؟])\s+/u).some(line=>
+        /كتالوج|قائمه/u.test(normalizeText(line))&&/لا يثبت|لا يعني|لا يساوي|لا يجوز استنتاج/u.test(normalizeText(line))));
+    if(positiveCatalogInference&&catalogDenial)classification=STATUS.CONTRADICTED;
+    if(targetCodes.length && /تركيب.*مجاني/u.test(proposition)
+        && !chunks.some(c=>identityRows(c.text,targetCodes).some(row=>/تركيب.*مجاني/u.test(normalizeText(row)))))classification=STATUS.UNSUPPORTED;
+    const monetaryClaim = extractQuantities(claim.text).filter(q=>['ILS','USD'].includes(q.unit) && q.operator==='=');
+    if (targetCodes.length && monetaryClaim.length && /سعر|ثمن|price|cost|خصم|احسب/iu.test(`${options.question || ''} ${claim.text}`)) {
+        const rows=chunks.flatMap(chunk=>identityRows(tableFacts(chunk.text),targetCodes));
+        const namedValues=rows.flatMap(extractQuantities);
+        const calculatedResult=/بعد\s+(?:الخصم|التخفيض|الزيادة)|after\s+(?:discount|increase)/iu.test(claim.text);
+        const wrongEntity=targetCodes.length===1 && productCodes(claim.text).some(code=>!targetCodes.includes(code));
+        if(wrongEntity)classification=STATUS.CONTRADICTED;
+        if (!eligibilityProof && derivedResult?.status !== DERIVED_STATUS.SUPPORTED && (calculatedResult || monetaryClaim.some(q=>
+            !namedValues.some(v=>v.unit===q.unit && v.value===q.value && v.operator==='=')))) {
+            classification=STATUS.CONTRADICTED;
+        }
+    }
 
     // numericEntailment can prove an instance of a business rule using a value
     // supplied in the user's question.  Preserve the exact server evidence
@@ -819,8 +913,16 @@ function classifyClaim(claim, chunks, options = {}) {
             ],
             evidenceIds: [best.chunk.id]
         } : null;
-    const effectiveDerivedProvenance = derivedResult?.status === DERIVED_STATUS.SUPPORTED
-        ? derivedResult.provenance : numericDerivedProvenance;
+    const policyProvenance = policyGuard.relation === POLICY_RELATION.SUPPORTED ? {
+        operation: 'CONDITIONAL_POLICY_APPLICATION',
+        inputs: [
+            ...extractQuantities(options.question || '').map(quantity => ({ ...quantity, source: 'USER_INPUT', evidenceId: null })),
+            ...policyGuard.active.conditions.map(quantity => ({ ...quantity, source: 'EVIDENCE', evidenceId: policyGuard.active.evidenceId }))
+        ],
+        evidenceIds: policyGuard.evidenceIds
+    } : null;
+    const effectiveDerivedProvenance = eligibilityProof || policyProvenance || (derivedResult?.status === DERIVED_STATUS.SUPPORTED
+        ? derivedResult.provenance : numericDerivedProvenance);
 
     const supporting = matches
         .filter(match => match.contradiction < 0.72
@@ -850,9 +952,9 @@ function classifyClaim(claim, chunks, options = {}) {
         contradictionScore: Number(best.contradiction.toFixed(4)),
         numericExact: best.numericExact,
         matchedEvidenceId: evidenceChunkIds[0] || best.chunk.id,
-        matchedSentence: adjacentListSupport?.text || best.matchedEvidence,
+        matchedSentence: eligibilityProof?.evidenceText || effectiveDerivedProvenance?.evidenceText || adjacentListSupport?.text || best.matchedEvidence,
         semanticScore: Number(best.semantic.toFixed(4)),
-        numericResult: derivedResult?.status === DERIVED_STATUS.SUPPORTED
+        numericResult: eligibilityProof || policyProvenance || derivedResult?.status === DERIVED_STATUS.SUPPORTED
             ? { relation: 'ENTAILED', derived: true,
                 claimQuantities: extractQuantities(claim.text), evidenceQuantities: [] }
             : best.numericResult,
@@ -862,6 +964,7 @@ function classifyClaim(claim, chunks, options = {}) {
         completeListEntailed: Boolean(best.completeList || adjacentListSupport),
         negationResult: best.negationResult,
         finalClassification: classification,
+        numericSafetyVeto: contradictoryComparison(claim.text) ? 'SELF_CONTRADICTORY_COMPARISON' : laborVeto,
         policyGuard
     };
 }
@@ -958,9 +1061,44 @@ function validateDetailed(answer, retrievedContext, options = {}) {
             durationMs: performance.now() - startedAt
         };
     }
-    const chunks = normalizeChunks(retrievedContext);
+    const normalizedChunks = normalizeChunks(retrievedContext);
+    const chunks = normalizedChunks.filter(chunk=>!options.tenantId || !chunk.tenantId || String(chunk.tenantId)===String(options.tenantId));
+    chunks.ignoredPromptInjectionChunks=normalizedChunks.ignoredPromptInjectionChunks;
     const extracted = extractClaims(answer);
     const claims = extracted.map(claim => classifyClaim(claim, chunks, options));
+    const amountQuestion = asksAmount(options.question || '')
+        && requestedFields(options.question || '').some(field => ['deposit', 'daily', 'weekly'].includes(field));
+    const nakedAmount = /^\s*[0-9٠-٩]+(?:[.,][0-9٠-٩]+)?\s*(?:شيكل|شيقل|دولار|ILS|USD)?[.!؟]?\s*$/iu.test(answer);
+    const nonresponsiveAmount = amountQuestion && !nakedAmount
+        && (requestedFields(answer).length > 0 || !extractQuantities(answer).some(q => ['ILS', 'USD', 'UNSPECIFIED'].includes(q.unit)))
+        && missingAmountEvidence(options.question, [{ text: answer }]);
+    const genericPriceQuestion=asksAmount(options.question || '') && /سعر|ثمن|price|cost/iu.test(options.question || '');
+    const explicitQuoteOnly=/لا يوجد سعر ثابت|ما في سعر ثابت/u.test(normalizeText(answer))
+        && chunks.some(c=>/لا يوجد سعر ثابت/u.test(normalizeText(c.text)));
+    const missingPrice=genericPriceQuestion && !extractQuantities(answer).some(q=>['ILS','USD'].includes(q.unit)) && !nakedAmount && !explicitQuoteOnly;
+    const questionText=normalizeText(options.question || ''),answerText=normalizeText(answer);
+    const renterThresholds=chunks.flatMap(c=>splitIntoSentences(c.text)).filter(line=>/مستاجر/u.test(normalizeText(line))&&!/مشغل/u.test(normalizeText(line))&&/سنه|عام|year/u.test(normalizeText(line)))
+        .flatMap(line=>extractQuantities(line));
+    const missingRole=/(?:استاجر|تستاجر)/u.test(questionText) && /اشغل|تشغل/u.test(questionText)
+        && chunks.some(c=>/مستاجر/u.test(normalizeText(c.text)) && /مشغل/u.test(normalizeText(c.text)))
+        && (!/مستاجر|استاجر|تستاجر/u.test(answerText) || !/مشغل|اشغل|تشغل/u.test(answerText)
+            || renterThresholds.some(t=>!extractQuantities(answer).some(q=>q.value===t.value&&q.unit===t.unit)));
+    const missingHistorical=/كان\s+(?:مكتب|فرع)/u.test(questionText)
+        && chunks.some(c=>/كان\s+(?:مكتب|فرع)/u.test(normalizeText(c.text)))
+        && !/كان\s+(?:مكتب|فرع)|حتي\s+\d{4}|تاريخي|سابق/u.test(answerText);
+    const asksLiveSlot=/(?:موعد|فني)/u.test(questionText)&&/(?:اليوم|لليوم|بكرا|غدا|الصبح|هسا)/u.test(questionText);
+    const knownNoLiveSchedule=chunks.some(c=>/لا تحتوي.*جدول|لا توجد.*(?:بيانات|معلومات).*(?:موعد|جدول)/u.test(normalizeText(c.text)));
+    const statesUnknown=/(?:لا|ما|مش).*(?:معلوم|بيانات|جدول|اعرف|نعرف|اقدر اؤكد)|لا (?:يثبت|يجوز استنتاج).*توفر/u.test(answerText);
+    const missingLiveAnswer=asksLiveSlot&&knownNoLiveSchedule&&!statesUnknown;
+    if (nonresponsiveAmount || missingPrice || missingRole || missingHistorical || missingLiveAnswer) {
+        for (const claim of claims.filter(item => item.factual)) {
+            claim.classification = STATUS.UNSUPPORTED;
+            claim.finalClassification = STATUS.UNSUPPORTED;
+            claim.missingEvidence = true;
+            claim.evidenceChunkIds = [];
+            claim.responsivenessReason = missingLiveAnswer ? 'live_availability_not_answered' : missingHistorical ? 'requested_history_missing_from_answer' : missingRole ? 'requested_role_missing_from_answer' : 'requested_amount_missing_from_answer';
+        }
+    }
     const status = overallStatus(claims, chunks.length > 0);
     const confidenceScore = calculateConfidence(claims, chunks, status);
     const factual = claims.filter(claim => claim.factual);

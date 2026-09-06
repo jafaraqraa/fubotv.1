@@ -5,10 +5,11 @@ const { performance } = require('perf_hooks');
 const versionedCache = require('../cache/retrievalCache');
 const db = require('../../database/connection');
 const { requireTenantId } = require('../security/tenantContext');
-const { searchPoints } = require('../vector/qdrantVectorStore');
+const { searchPoints, searchLexicalPoints } = require('../vector/qdrantVectorStore');
 const { registerOperation } = require('../runtime/operationRegistry');
 const { RETRIEVAL_MODE, createMetadata } = require('../runtime/fallbackPolicy');
 const crypto = require('crypto');
+const { contentTokens } = require('../intelligence/retrievalRelevance');
 
 // In-Memory caches to optimize latency and eliminate redundant HTTP requests (Task: Optimizations)
 const embeddingsCache = new Map();
@@ -136,11 +137,11 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
         console.log(`[RAG Retrieval] tenant=${tenantId} operation=hybrid results=${cachedResult.candidates?.length || 0} cache=hit durationMs=${(performance.now() - retrievalStartedAt).toFixed(1)}`);
         return {
             ...cachedResult,
-            metadata: createMetadata({
+            metadata: {...createMetadata({
                 ...(cachedResult.metadata || {}),
                 retrievalMode: RETRIEVAL_MODE.CACHE_ONLY,
                 cacheHit: true
-            })
+            }),embeddingCacheHit:null,embeddingCacheChecked:false}
         };
     }
 
@@ -148,7 +149,8 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
     let queryVector;
     const tEmbedStart = performance.now();
     const embeddingCacheKey = `${embeddingModel}:${versionedCache.normalizeQuery(query)}`;
-    if (embeddingsCache.has(embeddingCacheKey)) {
+    const embeddingCacheHit = embeddingsCache.has(embeddingCacheKey);
+    if (embeddingCacheHit) {
         queryVector = embeddingsCache.get(embeddingCacheKey);
     } else {
         queryVector = await generateEmbeddings(query, profiler, {
@@ -217,7 +219,14 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
 
     // Sub-stage 2: HTTP Send
     const tSendStart = performance.now();
-    const searchResults = await searchPoints(qdrantBody, { signal: cacheContext.signal });
+    const lexicalTerms = [...contentTokens(query), ...String(query).split(/[^\p{L}\p{N}]+/u).filter(t => t.length > 3)];
+    const [vectorResults, lexicalResults] = await Promise.all([
+        searchPoints(qdrantBody, { signal: cacheContext.signal }),
+        searchLexicalPoints(tenantId, qdrantBody.filter, lexicalTerms, { signal: cacheContext.signal, limit: 100 })
+    ]);
+    const vectorIds = new Set(vectorResults.map(point => String(point.id)));
+    const lexicalIds = new Set(lexicalResults.map(point => String(point.id)));
+    const searchResults = [...vectorResults, ...lexicalResults.filter(point => !vectorIds.has(String(point.id)))];
     const durationQdrantSearch = performance.now() - tSendStart;
 
     // Sub-stage 3: Qdrant Search & Parse
@@ -240,10 +249,11 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
             continue;
         }
 
-        const semanticScore = res.score;
+        const semanticScore = Number.isFinite(res.score) ? res.score : 0;
         const keywordScore = computeKeywordScore(chunkText, queryTokens);
 
-        const finalScore = (semanticScore * semanticWeight) + (keywordScore * keywordWeight);
+        const lexicalMatch = lexicalIds.has(String(res.id));
+        const finalScore = Math.max((semanticScore * semanticWeight) + (keywordScore * keywordWeight), lexicalMatch ? keywordScore : 0);
 
         candidates.push({
             text: chunkText,
@@ -251,6 +261,7 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
             chunkId: res.payload?.chunkId || res.id,
             semanticScore,
             keywordScore,
+            lexicalMatch,
             finalScore,
             payload: res.payload
         });
@@ -264,6 +275,7 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
         profiler.recordSubDuration('Vector Search (Qdrant)', 'Result Parsing', durationResultParsing);
     }
 
+    candidates.sort((a, b) => b.finalScore - a.finalScore || String(a.chunkId).localeCompare(String(b.chunkId)));
     const result = {
         candidates,
         dynamicTopK,
@@ -273,7 +285,7 @@ async function retrieveHybridContextInternal(query, profiler = null, cacheContex
             vectorSearch: durationQdrantSearch + durationBuild + durationResultParsing,
             keywordSearch: performance.now() - tKeywordStart
         },
-        metadata: createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL })
+        metadata: { ...createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL }), embeddingCacheHit, embeddingCacheChecked:true, lexicalMode: 'INDEPENDENT_FILTERED_TEXT', vectorCount: vectorResults.length, lexicalCount: lexicalResults.length }
     };
 
     versionedCache.set(cacheKey, result, {

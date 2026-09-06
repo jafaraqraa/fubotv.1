@@ -1,0 +1,209 @@
+[
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-attempt-1.log",
+    "tests": 165,
+    "pass": 164,
+    "fail": 1,
+    "exitCode": 1,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-attempt-2.log",
+    "tests": 653,
+    "pass": 653,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-attempt-3.log",
+    "tests": 665,
+    "pass": 665,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-attempt-4.log",
+    "tests": 528,
+    "pass": 526,
+    "fail": 2,
+    "exitCode": 1,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-attempt-5.log",
+    "tests": 665,
+    "pass": 665,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-final-2.log",
+    "tests": 666,
+    "pass": 666,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-final-3.log",
+    "tests": 667,
+    "pass": 667,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-final-4.log",
+    "tests": 668,
+    "pass": 668,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-final-5.log",
+    "tests": 669,
+    "pass": 669,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm test --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/full-final.log",
+    "tests": 665,
+    "pass": 665,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-1.log",
+    "tests": 117,
+    "pass": 112,
+    "fail": 5,
+    "exitCode": 1,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-2.log",
+    "tests": 117,
+    "pass": 117,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-3.log",
+    "tests": 117,
+    "pass": 117,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-4.log",
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-5.log",
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-attempt-6.log",
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-2.log",
+    "tests": 130,
+    "pass": 129,
+    "fail": 1,
+    "exitCode": 1,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-3.log",
+    "tests": 130,
+    "pass": 130,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-4.log",
+    "tests": 131,
+    "pass": 131,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-5.log",
+    "tests": 131,
+    "pass": 131,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-6.log",
+    "tests": 132,
+    "pass": 132,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final-7.log",
+    "tests": 133,
+    "pass": 133,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  },
+  {
+    "command": "npm run test:reliability --prefix backend",
+    "log": "/tmp/fubot-shorouq-5BvsSk/reliability-final.log",
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "exitCode": 0,
+    "note": "Exit codes confirmed against tool completion; counts sum root TAP summaries, including parent failure counts."
+  }
+]

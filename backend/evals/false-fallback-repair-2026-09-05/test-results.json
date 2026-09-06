@@ -1,0 +1,51 @@
+[
+  {
+    "log": "false-fallback-targeted-1.log",
+    "tests": 115,
+    "pass": 114,
+    "fail": 1,
+    "exit": 1
+  },
+  {
+    "log": "false-fallback-targeted-2.log",
+    "tests": 115,
+    "pass": 114,
+    "fail": 1,
+    "exit": 1
+  },
+  {
+    "log": "false-fallback-targeted-3.log",
+    "tests": 115,
+    "pass": 115,
+    "fail": 0,
+    "exit": 0
+  },
+  {
+    "log": "false-fallback-adversarial-final.log",
+    "tests": 48,
+    "pass": 48,
+    "fail": 0,
+    "exit": 0
+  },
+  {
+    "log": "false-fallback-safety-final.log",
+    "tests": 106,
+    "pass": 106,
+    "fail": 0,
+    "exit": 0
+  },
+  {
+    "log": "final-rel.log",
+    "tests": 151,
+    "pass": 151,
+    "fail": 0,
+    "exit": 0
+  },
+  {
+    "log": "final-full.log",
+    "tests": 696,
+    "pass": 696,
+    "fail": 0,
+    "exit": 0
+  }
+]

@@ -5,6 +5,7 @@ const { reciprocalRankFusion } = require('./rrfScorer');
 const { influenceRetrieval } = require('./intentDetector');
 const { normalizeQueryTokens } = require('../processing/arabicNormalizer');
 const { determineSmarterTopK } = require('./dynamicTopK');
+const { prioritize } = require('./retrievalRelevance');
 
 /**
  * Handles adaptive context allocation based on intent confidence.
@@ -97,7 +98,8 @@ class ChunkDeduplicator {
 
                 // 3. Near-duplicate text (70% Jaccard word overlap is perfect for short chunk deduplication)
                 const sim = ChunkDeduplicator.getSimilarity(candidate.text, existing.text);
-                if (sim >= 0.70) {
+                const quantities = text => (String(text || '').match(/[0-9٠-٩]+(?:[.,][0-9٠-٩]+)?/gu) || []).join('|');
+                if (sim >= 0.70 && quantities(candidate.text) === quantities(existing.text)) {
                     isDuplicate = true;
                     break;
                 }
@@ -187,11 +189,12 @@ class IntentRetriever {
         const startTime = Date.now();
         const allocated = RetrievalAllocator.allocate(decomposedQueries);
         const rawChunks = [];
+        const retrievalSources=[];
 
         console.log(`\n🚦 [IntentRetriever] Starting adaptive query retrieval...`);
 
         for (const item of allocated) {
-            const query = item.query;
+            const query = retrievalContext.originalQuery || item.originalQuery || item.query;
             const intent = item.intent;
             const limit = item.allocatedLimit;
 
@@ -205,6 +208,9 @@ class IntentRetriever {
             const retrievalPromises = variations.map(async (vQuery) => {
                 try {
                     const res = await retrieveHybridContext(vQuery, null, retrievalContext);
+                    retrievalSources.push({query:vQuery,metadata:res.metadata,
+                        candidates:(res.candidates || []).map(c=>({id:c.chunkId||c.id,semanticScore:c.semanticScore,
+                            keywordScore:c.keywordScore,lexicalMatch:c.lexicalMatch}))});
                     return res.candidates || [];
                 } catch (e) {
                     if (['RAG_QDRANT_TIMEOUT', 'RAG_OLLAMA_TIMEOUT',
@@ -224,14 +230,15 @@ class IntentRetriever {
 
             // 6. Filter by similarity threshold & tag chunk labels
             const filtered = boosted
-                .filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold)
+                .filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold
+                    || (c.lexicalMatch && c.keywordScore >= 0.25))
                 .map(c => ({
                     ...c,
                     intentLabel: intent
                 }));
 
             // 7. Limit to allocated chunks
-            const topAllocated = filtered.slice(0, limit);
+            const topAllocated = prioritize(query, filtered).slice(0, limit);
             console.log(`  • Sub-Query: "${query}" (Intent: ${intent}) | Limit: ${limit} | Retrieved Chunks: ${topAllocated.length}`);
 
             rawChunks.push(...topAllocated);
@@ -265,6 +272,7 @@ class IntentRetriever {
             rawChunks,
             deduplicated,
             diversified,
+            retrievalSources,
             executionTimeMs
         };
     }

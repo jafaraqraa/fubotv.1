@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-09-05T15:08:32.835Z",
+  "document": {
+    "document_key": "doc_b1bbceecf84e417aa20015f12379707f",
+    "version_id": "doc_b1bbceecf84e417aa20015f12379707f:v1",
+    "content_hash": "9bb2b5cc903e996456c2ae2dcb558995ba51bc55b6dbd288aadc35e5d46c1bd5",
+    "indexed_at": "2026-09-05T13:20:44.520Z",
+    "chunk_count": 8,
+    "status": "active",
+    "is_active": 1
+  },
+  "originalHashMatches": true,
+  "liveIndexUnchanged": true,
+  "livePoints": 8,
+  "traceMetadataColumn": true,
+  "systemPromptHash": "83f1587f555343e78ed5de8bf8b17fec927388353a44141e5580f93da0429f37",
+  "runtimePid": 200339,
+  "runtimeCwd": "/home/jafar-aqraa/سطح المكتب/FUThing تقدم مشاريع/fubotv.1",
+  "deployment": "NOT_RESTARTED_NOT_REINDEXED",
+  "newSourceLoadedInProduction": "NO; service process predates modified cached modules"
+}

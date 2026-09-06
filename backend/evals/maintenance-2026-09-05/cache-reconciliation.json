@@ -1,0 +1,338 @@
+{
+  "cold": {
+    "retrievalMode": "NORMAL",
+    "degraded": false,
+    "degradedReasons": [],
+    "confidencePenalty": 0,
+    "cacheHit": false,
+    "confidence": null,
+    "embeddingCacheHit": false,
+    "embeddingCacheChecked": true,
+    "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+    "vectorCount": 14,
+    "lexicalCount": 2
+  },
+  "warm": {
+    "retrievalMode": "CACHE_ONLY",
+    "degraded": false,
+    "degradedReasons": [],
+    "confidencePenalty": 0,
+    "cacheHit": true,
+    "confidence": 0,
+    "embeddingCacheHit": null,
+    "embeddingCacheChecked": false
+  },
+  "embeddingWarm": {
+    "retrievalMode": "NORMAL",
+    "degraded": false,
+    "degradedReasons": [],
+    "confidencePenalty": 0,
+    "cacheHit": false,
+    "confidence": null,
+    "embeddingCacheHit": true,
+    "embeddingCacheChecked": true,
+    "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+    "vectorCount": 14,
+    "lexicalCount": 2
+  },
+  "metrics": {
+    "hit": 1,
+    "miss": 4,
+    "invalidation": 2,
+    "eviction": 0,
+    "lookups": 5,
+    "hitRate": 0.2,
+    "missRate": 0.8,
+    "exactness": "process_local",
+    "collectedAt": "2026-09-05T16:37:35.117Z",
+    "size": 2,
+    "scope": "process",
+    "warning": "Process-local cache metrics are not cluster-wide."
+  },
+  "otherTenantCandidates": 0,
+  "plan": [
+    {
+      "id": "039abfbd-b3c3-4d74-9fba-96a049310fe5",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "1113c697-b6c4-43a4-810a-efdf1545f425",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "12b48bb4-8095-4a6f-9d6b-c86dcbfb060c",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "18300869-2c26-454c-b1cf-d43fa479dda9",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "275a3892-474e-49f1-90f2-aa8ad6930cf8",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_70b1e4b7b3354f62bc9034444169fcbf",
+      "version": "kb_default_70b1e4b7b3354f62bc9034444169fcbf",
+      "action": "LEAVE_UNMATCHED_REVIEW",
+      "proof": null
+    },
+    {
+      "id": "52f7b740-f5da-46b0-8d36-404fc5045e92",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "590e858c-6d49-4da0-922f-3cbd972c19fc",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "6e5b9fd8-efd4-4d33-802f-3fd57febf679",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "7f1904b4-eeb1-40a5-b8c9-2ac820c03547",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "7f807945-e229-496b-83af-62557fc5c40f",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_93db40d0fdc847aebfbd72c3cf9e6997",
+      "version": "doc_93db40d0fdc847aebfbd72c3cf9e6997:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "84286102-4a26-4e36-82bd-6d8ea5cdc2ab",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_9797d987069a4619a031d178eac0cb24",
+      "version": "doc_9797d987069a4619a031d178eac0cb24:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "863545b6-bb39-4cc3-9718-0bc5f86185e5",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_bfdba9bceef3487885b25f093ae79849",
+      "version": "doc_bfdba9bceef3487885b25f093ae79849:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "8eff6090-dcd4-4cee-ae9f-4c21a4adb571",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "9c096ce0-62a4-4945-a01d-d91ca80fda17",
+      "documentId": "doc_827dfd76d1f54544b6386f20656570e7",
+      "action": "LEAVE_UNOWNED_EXCLUDED",
+      "proof": null
+    },
+    {
+      "id": "9c15a883-5ea7-4c50-bb7d-bcb9f0ee9f0a",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_7585aa3da3e44ea896f30f23f832d86c",
+      "version": "doc_7585aa3da3e44ea896f30f23f832d86c:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "a1d1a856-00bc-41cb-923c-e2edd913a3af",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "aa709602-e26a-4cf3-8735-992f0fd4727f",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_d519f9dbfe594ca18b26873d797b2b35",
+      "version": "doc_d519f9dbfe594ca18b26873d797b2b35:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "b2215f7b-ff24-431d-917d-0d6e3d29ed95",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "b7a7e5ff-283e-401c-836f-0badc4fd12a4",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_f101f1f3decc4299b40a9ce15ddb9315",
+      "version": "doc_f101f1f3decc4299b40a9ce15ddb9315:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "be6eea95-6e81-4458-9c0f-619278823f4a",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "c673761c-31c5-4ba6-b903-999607e6e65f",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_bbdfce59a3cf4776937f484e07796152",
+      "version": "doc_bbdfce59a3cf4776937f484e07796152:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "cd8dc5fc-df4b-414a-b199-d01caad2b254",
+      "tenantId": "accept_conflict_ceramics_20260904",
+      "documentId": "doc_4c56531aba50445b89a466c69829a151",
+      "version": "doc_4c56531aba50445b89a466c69829a151:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "d3dc9d03-7b82-41b6-9af0-4c6e696bbd09",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "d8240018-d8eb-459a-808f-4f6d4640b8db",
+      "tenantId": "default",
+      "documentId": "knowledge.txt:kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "version": "kb_default_37bed3144c174e4cb17bd6d53343c859",
+      "action": "ACTIVE_MANUAL_NO_CHANGE",
+      "proof": null
+    },
+    {
+      "id": "db1a232e-76a4-4fab-ba8d-09dbf44d5c0a",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_bfdba9bceef3487885b25f093ae79849",
+      "version": "doc_bfdba9bceef3487885b25f093ae79849:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    },
+    {
+      "id": "f1950cfe-d1e1-482e-933f-eeee2013590f",
+      "documentId": "knowledge.txt",
+      "action": "LEAVE_UNOWNED_EXCLUDED",
+      "proof": null
+    },
+    {
+      "id": "f40997d5-2d40-4312-9fab-3d952a436150",
+      "tenantId": "accept_cedar_ceramics_20260904",
+      "documentId": "doc_806c9f2361d74b70b03e26f54f178ebd",
+      "version": "doc_806c9f2361d74b70b03e26f54f178ebd:v1",
+      "action": "ISOLATED_SET_ACTIVE",
+      "proof": "SQLite active tenant/document/version + source SHA256"
+    }
+  ],
+  "metadataUpdates": [
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_bbdfce59a3cf4776937f484e07796152",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_9797d987069a4619a031d178eac0cb24",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_bfdba9bceef3487885b25f093ae79849",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_f101f1f3decc4299b40a9ce15ddb9315",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_806c9f2361d74b70b03e26f54f178ebd",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_7585aa3da3e44ea896f30f23f832d86c",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_93db40d0fdc847aebfbd72c3cf9e6997",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_cedar_ceramics_20260904",
+      "document": "doc_d519f9dbfe594ca18b26873d797b2b35",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    },
+    {
+      "tenant": "accept_conflict_ceramics_20260904",
+      "document": "doc_4c56531aba50445b89a466c69829a151",
+      "model": "nomic-embed-text",
+      "dimension": 768,
+      "proof": "matching source hash, tenant/version, all point model/dimensions and exact count"
+    }
+  ],
+  "strictActiveImpact": {
+    "uploaded": 10,
+    "before": 0,
+    "after": 10
+  },
+  "retrievalPreserved": true
+}

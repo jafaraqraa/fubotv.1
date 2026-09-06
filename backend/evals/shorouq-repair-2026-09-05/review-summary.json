@@ -1,0 +1,14 @@
+{
+  "batch": "final-audit-v4",
+  "requests": 88,
+  "actualProviderCalls": 71,
+  "counts": {
+    "rawcorrect": 54,
+    "properclarify": 15,
+    "verifiedexcerptcorrect": 11,
+    "properabstain": 3,
+    "overabstain": 4,
+    "wrongnonresponsive": 1
+  },
+  "notAUniversalAccuracyScore": true
+}

@@ -1,0 +1,940 @@
+{
+  "v1Sha256": "9e3b2694f1d2a87ce564471b642a7948361a94b10b9b77027648de48ddcb999b",
+  "v1Rows": 169,
+  "duplicateIds": [
+    {
+      "id": "hn-1-numeric",
+      "count": 2,
+      "fingerprints": [
+        "e0dd35ead63c4436dafe9dd8dbacc650e71557d4b617a48fdb222ad114a4965c",
+        "ab51f9b3a4785f1e1f4ab9edaedc52f09cf95688b9380f9dd4a8cfbd8250f4df"
+      ]
+    },
+    {
+      "id": "hn-1-threshold",
+      "count": 2,
+      "fingerprints": [
+        "cd3a7c5dd5ecd69bc4f6cde4931d7d1ceeb25a2b79964fd0f289de2909555745",
+        "6d916074d1d150cb9f4d232fded659a42e359634d03f8b277190c4536736fb92"
+      ]
+    },
+    {
+      "id": "hn-1-temporal",
+      "count": 2,
+      "fingerprints": [
+        "8b9e9d6e2e17618a2b416b672280e3bfcc7b4e6cd803ddf817fae0237a6e5113",
+        "62b7ff1d97312f13332d9f89fee9297def9fec5db7b972d5830dbe45e1aa0721"
+      ]
+    },
+    {
+      "id": "hn-1-not-proven",
+      "count": 2,
+      "fingerprints": [
+        "644ad6eb4d5c924c3b0b0209c158ea1c4ff59294f44fb80f8685a27be0b0ccf3",
+        "e69234950607363a8ef2cfedc0b9c3004bfdb24d1e0d29e0ebbba81e35d2f351"
+      ]
+    },
+    {
+      "id": "hn-2-numeric",
+      "count": 2,
+      "fingerprints": [
+        "499c030f578ff73f2d75de65f14fa7c5a164cdb091927ddbebeab8f3c3e5234e",
+        "152d4d5dfd69f85ac2f7bceccfebbd435ce1c35a562fa59f8f821d6b57ebb8b0"
+      ]
+    },
+    {
+      "id": "hn-2-threshold",
+      "count": 2,
+      "fingerprints": [
+        "f5261e48be0c96f61d0891505e2190d3fd1f025b9f92146c897969e30058932a",
+        "d48f82c161daa08e9c644af63d5009d6f69d4e2a0da4ab56004cd15560bbb88d"
+      ]
+    },
+    {
+      "id": "hn-2-temporal",
+      "count": 2,
+      "fingerprints": [
+        "b3a5a74adfba2d95d371b2dc22b4c18d479a4d3a99e9838045fec1e9a849da52",
+        "a3a588d563b66ca38b1ce45eac47218692c559558c97e5129d87b7d4c04b4496"
+      ]
+    },
+    {
+      "id": "hn-2-not-proven",
+      "count": 2,
+      "fingerprints": [
+        "16e5024a79d9ff162a214a2016b393e1fe319cfba45d646b5428943fa1995ddd",
+        "ffe02464d20a4ae8298947578f0fd9329f7b361a38040453a6773df27d153dfc"
+      ]
+    },
+    {
+      "id": "hn-3-numeric",
+      "count": 2,
+      "fingerprints": [
+        "8f78659bb9d2f733bd71ba306902c71b28df1c0f6b8a326f616acf24bf76e1fb",
+        "52a8ba4fa5f9b7ff6132468b5261e53054e136b8c63cd382cf4b64d232957b35"
+      ]
+    },
+    {
+      "id": "hn-3-threshold",
+      "count": 2,
+      "fingerprints": [
+        "5e88630135aa6a74dacf38cf54252de73e08e633596df5b3166c78d211ba93d5",
+        "034213b9c8f715371dbcab729b2799cd746c127d49e3e04f9fc3e9c4e7bf5fd8"
+      ]
+    },
+    {
+      "id": "hn-3-temporal",
+      "count": 2,
+      "fingerprints": [
+        "3f29f88c0c4febeeda44c60f08b3a182e3d19a7aa65a3814bae5d9bdc37d1734",
+        "573a14449a38a286f0c4893ab8000942a2e07a9b41e9a6f17b34a77efe97db34"
+      ]
+    },
+    {
+      "id": "hn-3-not-proven",
+      "count": 2,
+      "fingerprints": [
+        "fd0d32bbbb3b4aec7962b28629867c427835bcdc3918035ebb644388d9a46a06",
+        "63e57a94696870846efabbaf36b997c1bf93f36db158ac97659c94f643909a8a"
+      ]
+    },
+    {
+      "id": "hn-4-numeric",
+      "count": 2,
+      "fingerprints": [
+        "a1d7c9fd78321af8cd41cfed2a46b6402dcad1f2f5f945dc79c2bd708a6f636d",
+        "2675cf705dffa4d18eca7ba188d995fdd99c7e80ced44ba30be25d350e5cd63d"
+      ]
+    },
+    {
+      "id": "hn-4-threshold",
+      "count": 2,
+      "fingerprints": [
+        "484c6f7dec642b6c20194ef52d8d42c321cd8004027419d6f74cbad1138803e1",
+        "14f6a5ce8cab200869827ad12f60b30fc5f783875c7770a81ffefe538a04dc37"
+      ]
+    },
+    {
+      "id": "hn-4-temporal",
+      "count": 2,
+      "fingerprints": [
+        "f170b4b2d0f93c99cf774c0389a9d6f384a45a8e0fc56160d756023fc7d5a879",
+        "5b44d51517fee9b297a8a5d24dec006580b1d0f85a379d7d86cf29383a1ad87a"
+      ]
+    },
+    {
+      "id": "hn-4-not-proven",
+      "count": 2,
+      "fingerprints": [
+        "a3516d4db8fdaf0cbac7cbfcdf249c39d316db4a09ad33e92c26785e0ec9ae91",
+        "b83133302c03b3e4ae8673d8388a3db802e7181892b475b88065e2b45f9996f8"
+      ]
+    },
+    {
+      "id": "hn-5-numeric",
+      "count": 2,
+      "fingerprints": [
+        "ce477cf501d65b72d9b56c341be21f1f74e57f6c99ec18abf07db17d05658de7",
+        "a3b9a9a36b5bc2d76d8802c268c6da672847cb0526062c2ce11a5c3b9a11c0d0"
+      ]
+    },
+    {
+      "id": "hn-5-threshold",
+      "count": 2,
+      "fingerprints": [
+        "54f722c39df15a65d0e595b0c1049827dade3a094e63c30c35d50449b209098e",
+        "bcb81d40358b9e8d619bd38350a6dac126490d82a5a318b072753882cf9452cc"
+      ]
+    },
+    {
+      "id": "hn-5-temporal",
+      "count": 2,
+      "fingerprints": [
+        "34fac9a2024f3444179415fc631449accdddcf1dfa8c1aa3eb624bd577dc6cac",
+        "0513730ac767292af35bc56934f2c89fbca8a2925d30e9f09ab24abe38d51ab5"
+      ]
+    },
+    {
+      "id": "hn-5-not-proven",
+      "count": 2,
+      "fingerprints": [
+        "9df8a7f86c77aed8c3e34798949ce93bdc4f86a90cfb7965e3d5e96294ff63e8",
+        "c99e2147adb92dc613503d9ebf90ce9e63efb300ecb54fdb659329e4582fa663"
+      ]
+    }
+  ],
+  "exactDuplicateGroups": [
+    {
+      "contentFingerprint": "c90ff2ab728fc73630bcb31467d62ceb0e89d30607a6acbd73fa3121fd17ba22",
+      "legacyIds": [
+        "sp-1",
+        "sp-4"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "e028380a4998d47cc841b6f5f5d0fcf95c44c4e5643d2f121acecabad78f39c6",
+      "legacyIds": [
+        "sp-5",
+        "sp-6",
+        "sp-8"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "66099cc00d660cec81360553d9bf2d7c3ae2f37f73f9ef787c04e961572212c1",
+      "legacyIds": [
+        "sp-9",
+        "sp-10",
+        "sp-12"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "510c319c197f14002b03d48b1fa20302639c72d4885549c949f006d2ff003748",
+      "legacyIds": [
+        "sp-13",
+        "sp-16"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "43c06a3d840bcf6892acd933708ebb4de7ba5f90071f21932877b92c077beeb3",
+      "legacyIds": [
+        "sp-17",
+        "sp-18"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "00c9c5108faeda51c60247bd63a061be293612ebd63a4a7950082ca490cdfb06",
+      "legacyIds": [
+        "sp-21",
+        "sp-22",
+        "sp-24"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "812c6350b35fa311e09731856c4cb0c37145799af7daaa9e0689f4f16506f8d0",
+      "legacyIds": [
+        "sp-25",
+        "sp-26",
+        "sp-28"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "b23f61df68b023d0fe23a1444280ebb4dc4298a5303a957836691608c3f950d0",
+      "legacyIds": [
+        "sp-33",
+        "sp-34",
+        "sp-36"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "7f1fb512a7d4f557bbb4914b2e31a9607994e3a2825ee1719bb4be6862bb7cf5",
+      "legacyIds": [
+        "sp-37",
+        "sp-38"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "3ff120de3ee0cef3ea22945c2fed11194056a818f654b7edd47377a9a78eb7b5",
+      "legacyIds": [
+        "sp-41",
+        "sp-44"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "d93a6c0c4bc9897cf401de90723ff80cf8e756822a362838cd7a6cb8f73ec3e7",
+      "legacyIds": [
+        "sp-45",
+        "sp-46",
+        "sp-48"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "08b5922bb30db0d2e3735c08278dd9d519ed02ee3f713c18d8c566de5d14a3b4",
+      "legacyIds": [
+        "sp-49",
+        "sp-50",
+        "sp-52"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "77552ddfc6da9548453916c53969602cc546d08f58bcbd24b1983332076b67c8",
+      "legacyIds": [
+        "sp-53",
+        "sp-54",
+        "sp-56"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "d22730e5d8abc8ec242ae963ba955e6120ed0750a1fb6e7b53d2be824918a433",
+      "legacyIds": [
+        "sp-57",
+        "sp-58",
+        "sp-60"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "bc4dec7472c74352e463362c8251a6a3d966da550bdfa5f1314db88b1c80d7d1",
+      "legacyIds": [
+        "unseen-3",
+        "unseen-39"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "28a4c455698605f0f78fa977b1d87c11a54fde1d541527fd95984e56d77c3e5a",
+      "legacyIds": [
+        "unseen-4",
+        "unseen-40"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "c2edefafd64799eb93e325baadd85aa0455a64a1ee181a051b912a1bd7d71f69",
+      "legacyIds": [
+        "unseen-5",
+        "unseen-41"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "3077b13a6cec7373013fb794af76daed90d1ff0accd352800bab6d3ce4580909",
+      "legacyIds": [
+        "unseen-6",
+        "unseen-42"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "8124aa33bb807ad4037cc8afedad55a9798ea6403f18eecb0f4b3dfbdf9aa118",
+      "legacyIds": [
+        "unseen-7",
+        "unseen-43"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "424aae22abcd221619a9b7c5e74e8a3bb8ece2bbb4002e621b90af9f658c27c6",
+      "legacyIds": [
+        "unseen-8",
+        "unseen-44"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "1b09b89aac6dc59cbb9a8b119b04565ea4c15fdd3c7693b262a4be332f3e0c6b",
+      "legacyIds": [
+        "unseen-9",
+        "unseen-45"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "d6d38497492b656cf978616404d21de74145f642a2aff931bc37d3997cc7da07",
+      "legacyIds": [
+        "unseen-12",
+        "unseen-48"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "e541234fd712a8c943c6edcbf9ecd5147bacdaa935a01c7c1a03745c7e66a8d8",
+      "legacyIds": [
+        "unseen-13",
+        "unseen-49"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "42154b35c7c1e9d11cef2caeb14b8fec1c569f0cd73cc655246b85d0aacf365e",
+      "legacyIds": [
+        "unseen-14",
+        "unseen-50"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "5b3580d39f04e2ea2e0bd61cd2f2edc676146bca15b69d810c499d4bc2c70de4",
+      "legacyIds": [
+        "unseen-15",
+        "unseen-51"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "5d8b098782b1ccd23124d82d0292658186b671918a3d816b98b967ce46a7c61f",
+      "legacyIds": [
+        "unseen-16",
+        "unseen-52"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "5416fc823d97d69ac4abe56fcd58d3ba1ef18be75eb5196e9cf111bb82dae5ec",
+      "legacyIds": [
+        "unseen-17",
+        "unseen-53"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    },
+    {
+      "contentFingerprint": "b74357a7124b65e129b2ad8cddcc1df44df1cac884efaab20a332384dfd4df9d",
+      "legacyIds": [
+        "unseen-18",
+        "unseen-54"
+      ],
+      "classification": "ACCIDENTAL_DUPLICATE",
+      "reason": "Same tenant, question, claim, evidence text, verdict, and evaluation purpose; no documented repeated-weighting rationale."
+    }
+  ],
+  "nearDuplicateGroups": [
+    {
+      "comparisonFingerprint": "d5c601452b52479292fda3988572b6eb6ef3686a87739c2b0f6b05d480adf3db",
+      "legacyIds": [
+        "sp-1",
+        "sp-2",
+        "sp-3",
+        "sp-4"
+      ],
+      "contentFingerprints": [
+        "c90ff2ab728fc73630bcb31467d62ceb0e89d30607a6acbd73fa3121fd17ba22",
+        "7850ccd241176af21006d6697e58d69a6ce2bbac015865109bb9be5cbb40e7a2",
+        "6497c2969e53610f18d133c10dd2f111973116afee0ac78d7236d4cf61b9ae5f"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "9d035278ea6fdd5cca9ef9819bd0923442d96b6cbec7ef30c946d31591f4cf81",
+      "legacyIds": [
+        "sp-5",
+        "sp-6",
+        "sp-7",
+        "sp-8"
+      ],
+      "contentFingerprints": [
+        "e028380a4998d47cc841b6f5f5d0fcf95c44c4e5643d2f121acecabad78f39c6",
+        "b9ad89105d29e30b2fbc910df7437f4c9e4328169efb764f6fa33b098761024a"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "8e70d2f929791410764781e2a44db6a612d8e247aaa686f223feba9945ffae43",
+      "legacyIds": [
+        "sp-9",
+        "sp-10",
+        "sp-11",
+        "sp-12"
+      ],
+      "contentFingerprints": [
+        "66099cc00d660cec81360553d9bf2d7c3ae2f37f73f9ef787c04e961572212c1",
+        "0d0827226413b8d7d7e126b47eae6211a1d0cf9c4914d5e24b8e9fdc887fb1c2"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "0ce7f424911b6b20206a99a805cf261cad68940e7542366d54fd9ddf753e3730",
+      "legacyIds": [
+        "sp-13",
+        "sp-14",
+        "sp-15",
+        "sp-16"
+      ],
+      "contentFingerprints": [
+        "510c319c197f14002b03d48b1fa20302639c72d4885549c949f006d2ff003748",
+        "1a9577b2a3f8024b523d04f6d742925c3284de8b17a180d4144409fbeeffa55d",
+        "27d7cf25cd3fb5cb183e7290050eac8ba30a79201221f73d86b55182cd5300cc"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "9bdc1db6ae21de48b84fe1df459e970c8921cc4f9f4bcad0a03adb8ca4379dc9",
+      "legacyIds": [
+        "sp-17",
+        "sp-18",
+        "sp-19",
+        "sp-20"
+      ],
+      "contentFingerprints": [
+        "43c06a3d840bcf6892acd933708ebb4de7ba5f90071f21932877b92c077beeb3",
+        "0d92dd1ecb73d7490a862fdae5fe1450e824582a5c8f4387a6ef36b61b21e8e1",
+        "78781d15e6dd343484bd8688307463df6288f730ac2ee28e93cd3c224d78a73f"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "af7aec1ede15cb42560f31b960dc7e9b24fa52999375caa9398fd759782b5be1",
+      "legacyIds": [
+        "sp-21",
+        "sp-22",
+        "sp-23",
+        "sp-24"
+      ],
+      "contentFingerprints": [
+        "00c9c5108faeda51c60247bd63a061be293612ebd63a4a7950082ca490cdfb06",
+        "827e4ba016d4acd77ee83201596c727630b7c2c97f6d998fd3a86f7e8f892a72"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "ffe5baaf35af2f3e7c6d5002fc9073a8824619e16840a12d754a582d2e7d0cd3",
+      "legacyIds": [
+        "sp-25",
+        "sp-26",
+        "sp-27",
+        "sp-28"
+      ],
+      "contentFingerprints": [
+        "812c6350b35fa311e09731856c4cb0c37145799af7daaa9e0689f4f16506f8d0",
+        "6b37b6dadcbe4b236f2ceb0c3ce25f8724aad10a15d50e2947a0f9a97ead3c84"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "7bdc25426fc2e5eb0eb824bf69dc1cc434882e8a643bed5c532bd063a8bdecdf",
+      "legacyIds": [
+        "sp-29",
+        "sp-30",
+        "sp-31",
+        "sp-32"
+      ],
+      "contentFingerprints": [
+        "99abc523b570d02aa03bea247dd1923c54de83fb31401563f0bbe819d9b05b81",
+        "880f9baec80580d91e9951e774b114109b8b913273b42b1095140ce058a445e8",
+        "d4d05bb8333d948a9f24c1bd112515f04fbc09a346431761dfe4db42e4efa431",
+        "df36af9e1f15888c16fdaedc142f5e5e7870e09b65d154808f9d0f3b98ba4691"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "c625c175cf282b356af920ff5dd2b58095ced97e0cfb813387f62c5cb1fdc5df",
+      "legacyIds": [
+        "sp-33",
+        "sp-34",
+        "sp-35",
+        "sp-36"
+      ],
+      "contentFingerprints": [
+        "b23f61df68b023d0fe23a1444280ebb4dc4298a5303a957836691608c3f950d0",
+        "a0d51d7de205cc19d3440c81d066d1d3999a87c7c7f1d09c269053caaf146e31"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "2bfec9a27928adf84a7728f236cb07af72d503a3ceccc4a5c9e2e069f5223f1f",
+      "legacyIds": [
+        "sp-37",
+        "sp-38",
+        "sp-39",
+        "sp-40"
+      ],
+      "contentFingerprints": [
+        "7f1fb512a7d4f557bbb4914b2e31a9607994e3a2825ee1719bb4be6862bb7cf5",
+        "44466ed64da270798364d94b7a7b309b257ab959c346649163f48f1ecd07fae8",
+        "01847400098b31bccc698d1128d714fda3138291a3bc5857453642acbc10819c"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "ff68875b971303ae30ddd3c93374232ce12de26da23fe94feb90d51616273b89",
+      "legacyIds": [
+        "sp-41",
+        "sp-42",
+        "sp-43",
+        "sp-44"
+      ],
+      "contentFingerprints": [
+        "3ff120de3ee0cef3ea22945c2fed11194056a818f654b7edd47377a9a78eb7b5",
+        "08a215e626cc4828ae0ee5c1a9930540c3f0ee85d0ce368f654a1666c137cf0b",
+        "93e49b26244544241b63eab71086e50799930153236928128c575082d9754621"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "147511dde9c4554e2234571c6f23dc63b964c9c46ec8f7f5565bb10672ed98f9",
+      "legacyIds": [
+        "sp-45",
+        "sp-46",
+        "sp-47",
+        "sp-48"
+      ],
+      "contentFingerprints": [
+        "d93a6c0c4bc9897cf401de90723ff80cf8e756822a362838cd7a6cb8f73ec3e7",
+        "9cd3dfd807cd6d6b0141c72c74de1a922d542bbc1937a9890c98e4eb0562bef5"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "c4dee9cdf2604d418fcf57ed1db37a17933ec2e2b665ded5d73da23030beb049",
+      "legacyIds": [
+        "sp-49",
+        "sp-50",
+        "sp-51",
+        "sp-52"
+      ],
+      "contentFingerprints": [
+        "08b5922bb30db0d2e3735c08278dd9d519ed02ee3f713c18d8c566de5d14a3b4",
+        "77be0e67e054980ab2d5f29deb61e56e316a993a9551320085afdf6e87b8841d"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "3788f0ce8551204068d76ff3c8ac918bd32997176d43c25656eca2fec5f6b8b3",
+      "legacyIds": [
+        "sp-53",
+        "sp-54",
+        "sp-55",
+        "sp-56"
+      ],
+      "contentFingerprints": [
+        "77552ddfc6da9548453916c53969602cc546d08f58bcbd24b1983332076b67c8",
+        "7427b7f4615c2032cc766b3a659d80930a850e1e8f6ea86d8371bec0534bfb3f"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "d485a4d578a7e86f0a72576f7f2dce05ea8d2570e9f2be6f2622e89112a25639",
+      "legacyIds": [
+        "sp-57",
+        "sp-58",
+        "sp-59",
+        "sp-60"
+      ],
+      "contentFingerprints": [
+        "d22730e5d8abc8ec242ae963ba955e6120ed0750a1fb6e7b53d2be824918a433",
+        "b45d5b460368236b2c7b42cd7033ee3961828efd3d5c9e000290035184f1a99b"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "9dd7cc6dddddb3c0bf8a01b97b1b0065f74474c12737772acbd6a752d16d9719",
+      "legacyIds": [
+        "hn-5-numeric",
+        "hn-5-numeric"
+      ],
+      "contentFingerprints": [
+        "ce477cf501d65b72d9b56c341be21f1f74e57f6c99ec18abf07db17d05658de7",
+        "a3b9a9a36b5bc2d76d8802c268c6da672847cb0526062c2ce11a5c3b9a11c0d0"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "acced9dab2ac28b2c12c7b11dcd201769b8057c82a579a6e9e11f1c55de7cf47",
+      "legacyIds": [
+        "unseen-1",
+        "unseen-19",
+        "unseen-37"
+      ],
+      "contentFingerprints": [
+        "f4dc847f10f9a88e1bff11a22ed3f68b87b2d24d3b9dc9f0823e0d2894cfc9a8",
+        "e292c356ca842c2e7f34787cf048c9e37139b719a76e45ae1e5d56b978b58164",
+        "c7464fe4b6abefd36ec9dc5e1b3e2a427435a96116312cfa65d0f9ac4ed57101"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "93a52d6d2dad9fe7819c24131fb7c6bdac18c1f36705f133ac45d821c189d218",
+      "legacyIds": [
+        "unseen-2",
+        "unseen-20",
+        "unseen-38"
+      ],
+      "contentFingerprints": [
+        "b760af8ee30800058425f424100a6ca297a9c4d9daf6f909806f15566f0dee3b",
+        "f83cfa8c118f70c54b48c36a855565ff61e12d6b4409e2589b070f15c1446b91",
+        "840653b9ec5fafb7625073b5fca206a5d0bfb1d69f58ac95ebd2c3cfaea15bd4"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "3db645de8ecfe96ee3cad18e7504ad823d9c2ac80fdebc595a9252cdeaa65fb5",
+      "legacyIds": [
+        "unseen-3",
+        "unseen-21",
+        "unseen-39"
+      ],
+      "contentFingerprints": [
+        "bc4dec7472c74352e463362c8251a6a3d966da550bdfa5f1314db88b1c80d7d1",
+        "eedf0c3ceaf3beedfaedd5ea92be30dde15ff571c71d97f526c1b3507ffb715d"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "241cd048de722ce8e7e9d2699d31704d45722ed9a20c094409a4e6815d8655ab",
+      "legacyIds": [
+        "unseen-4",
+        "unseen-22",
+        "unseen-40"
+      ],
+      "contentFingerprints": [
+        "28a4c455698605f0f78fa977b1d87c11a54fde1d541527fd95984e56d77c3e5a",
+        "be3ebd9ca26331e0cfa96029d8f0a31849af050f0653cd06d84206ed23230bd0"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "3537ec799440986e7e78ddc4ffce6f3538bc47497a51097e1b5284fed2980ea1",
+      "legacyIds": [
+        "unseen-5",
+        "unseen-23",
+        "unseen-41"
+      ],
+      "contentFingerprints": [
+        "c2edefafd64799eb93e325baadd85aa0455a64a1ee181a051b912a1bd7d71f69",
+        "4188a98cc15764b0e8a6ceac22dab2b33741c7c96c617af04e402495e54cd9b5"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "29390b33d4df53471d19fb456726e6cb36a50db3e3d64a2d06a996ef6f78b3a9",
+      "legacyIds": [
+        "unseen-6",
+        "unseen-24",
+        "unseen-42"
+      ],
+      "contentFingerprints": [
+        "3077b13a6cec7373013fb794af76daed90d1ff0accd352800bab6d3ce4580909",
+        "256dc3a68402fcfbf19d47a770781f19d870a0e1810b1bf4f34a2f3650e1b452"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "a73dbcb52ab04beee0a759d2f7bcdc99f691c97cef72ccab62e46346e84d78f6",
+      "legacyIds": [
+        "unseen-7",
+        "unseen-25",
+        "unseen-43"
+      ],
+      "contentFingerprints": [
+        "8124aa33bb807ad4037cc8afedad55a9798ea6403f18eecb0f4b3dfbdf9aa118",
+        "fc9972e6858ed0ca851e6cd72bdba6efab1463973ea47e9b38e204ff6e3d5f0d"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "679b23321c96cd7ce27fe50330b2d116560c878756380483fb12f6cd4761de69",
+      "legacyIds": [
+        "unseen-8",
+        "unseen-26",
+        "unseen-44"
+      ],
+      "contentFingerprints": [
+        "424aae22abcd221619a9b7c5e74e8a3bb8ece2bbb4002e621b90af9f658c27c6",
+        "0d00c3a42a0943855de865499799a0f055ef581924f3db97c07fd5b58a678c4c"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "2d612738e8e4f81ed489236ad0c67d6f9e603f3b201d6026993245035de58bdd",
+      "legacyIds": [
+        "unseen-9",
+        "unseen-27",
+        "unseen-45"
+      ],
+      "contentFingerprints": [
+        "1b09b89aac6dc59cbb9a8b119b04565ea4c15fdd3c7693b262a4be332f3e0c6b",
+        "ec54c51425e80dd5807bcc516f3119e1fdac2a2b3e8dadcea0944e534e06206b"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "5d4bf492772840c03d14f171d1072662a519ba22bf8f93600c872fbaeb0e5b5e",
+      "legacyIds": [
+        "unseen-10",
+        "unseen-28",
+        "unseen-46"
+      ],
+      "contentFingerprints": [
+        "5daed8a80b46835ce686d784cde54708a4eaaf4ca4b119e92d68fbc84f4f8767",
+        "908ac20905e1343872ed154b1f576ce43901f66c3f81a75d8ad521e0765a36aa",
+        "0330dd3a81f849e7ab2dcbfae12a22cfbc3c3a2146292dd9d1730fc9be91a702"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "b5afb74f079956dfd301b3d1733f9ccee8efa575c2f12250d0b0733fb66c6448",
+      "legacyIds": [
+        "unseen-11",
+        "unseen-29",
+        "unseen-47"
+      ],
+      "contentFingerprints": [
+        "493c537fd9f43aeb5dbf1e343327c1e73a8e5954249a4f61e973d5c0a1f2b31a",
+        "92b8c2aeb1c367669ba83099adf245a6b1eba4f82abaae8e9d6783345afe6d05",
+        "997958ddb8fe851330aa99db0c635774a5228b5cf4588e2d9aa704521115dc46"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "9b9c30c523724d47c2e6f069085d9291b99a84b5a960af0874d138da2a344417",
+      "legacyIds": [
+        "unseen-12",
+        "unseen-30",
+        "unseen-48"
+      ],
+      "contentFingerprints": [
+        "d6d38497492b656cf978616404d21de74145f642a2aff931bc37d3997cc7da07",
+        "a2e656464c8365c45b96525cf360e8aa427e535f4cd0c7574f90116d6570ddfc"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "f4e5865bd00dd419fdaf989e0fc9dde57874849288d4dcb5a8b9d005940716b9",
+      "legacyIds": [
+        "unseen-13",
+        "unseen-31",
+        "unseen-49"
+      ],
+      "contentFingerprints": [
+        "e541234fd712a8c943c6edcbf9ecd5147bacdaa935a01c7c1a03745c7e66a8d8",
+        "d8de158115c6daad87dda8dc4be2300ac8bfe04ef6751bf70ababe79dc83f919"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "456ea3cfa2b183e2212abc7e8fd5da1c6ca4b7a5d0b0b51b34282e4e899095aa",
+      "legacyIds": [
+        "unseen-14",
+        "unseen-32",
+        "unseen-50"
+      ],
+      "contentFingerprints": [
+        "42154b35c7c1e9d11cef2caeb14b8fec1c569f0cd73cc655246b85d0aacf365e",
+        "36f51a5a938d052955d71dbc153cccd2617b49902cd07859f1c6d660c5d8b86e"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "edb573c1f0634e630d92a861d693853ed27bdc7a7b2b5b33a6c251df06c1587a",
+      "legacyIds": [
+        "unseen-15",
+        "unseen-33",
+        "unseen-51"
+      ],
+      "contentFingerprints": [
+        "5b3580d39f04e2ea2e0bd61cd2f2edc676146bca15b69d810c499d4bc2c70de4",
+        "9d7baa201bfd220bcac793f64cf5398a3f1c95aa3e8954b102bc68d8dcbedba5"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "3ee1e16a964b8b68d40b8126c3e2da32437a21e826ed92384b98e376eb54163d",
+      "legacyIds": [
+        "unseen-16",
+        "unseen-34",
+        "unseen-52"
+      ],
+      "contentFingerprints": [
+        "5d8b098782b1ccd23124d82d0292658186b671918a3d816b98b967ce46a7c61f",
+        "9951ea31d60e61af2c0b8a14a52ba57b2e1473517f0a4e5fc94e39df58bc060b"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "d09b85a727968faf49e7d4abf06f1659a49e35814733eb7dea173da1438d00ca",
+      "legacyIds": [
+        "unseen-17",
+        "unseen-35",
+        "unseen-53"
+      ],
+      "contentFingerprints": [
+        "5416fc823d97d69ac4abe56fcd58d3ba1ef18be75eb5196e9cf111bb82dae5ec",
+        "8035d0eeec415003396ffc2d0ece3bfafdd1f28aef636b6fe6e09271ac008303"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    },
+    {
+      "comparisonFingerprint": "b9c1ed290149d5ffe5b6efa91d5670954946dc5895c69e4ecb355aadd9a7604c",
+      "legacyIds": [
+        "unseen-18",
+        "unseen-36",
+        "unseen-54"
+      ],
+      "contentFingerprints": [
+        "b74357a7124b65e129b2ad8cddcc1df44df1cac884efaab20a332384dfd4df9d",
+        "42d064f3955ebdfca5ae2d5251db4952f69b5340211537d2f95c380767cdc82e"
+      ],
+      "classification": "SEMANTIC_VARIANTS_PRESERVED",
+      "reason": "Same question/evidence/verdict but non-identical claim text; preserved as explicit paraphrase variation."
+    }
+  ],
+  "accidentalDuplicateGroupsRemoved": 28,
+  "accidentalRowsRemoved": 37,
+  "intentionalDuplicateGroupsRetained": 0,
+  "labelConflicts": [],
+  "evidenceFailures": [],
+  "crossSplitFingerprints": [],
+  "devRows": 92,
+  "unseenRows": 40
+}

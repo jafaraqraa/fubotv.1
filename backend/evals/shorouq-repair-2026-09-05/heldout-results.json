@@ -1,0 +1,3500 @@
+[
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 1,
+    "question": "كم سعر Print 7X؟",
+    "expected": 2300,
+    "answer": "سعر Print 7X الأساسي 2300 شيكل.",
+    "trace": {
+      "request_id": "bf494e82-4a80-4b65-a7ce-73d4edfbeef5",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619091299-1",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.89819992,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 2300 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:11",
+      "updated_at": "2026-09-05 14:38:13",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 2300 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 3.491,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 81,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788619091317,
+          "stages": {
+            "planning": 4,
+            "decomposition": 5,
+            "preprocessing": 1,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 77,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 6
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 91,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.89819992\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.89819992,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.89819992,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 2300 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.9248,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 2300 شيكل.",
+            "sourceText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.8948,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.9,
+            "keywordOverlap": 1,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "Print 7X: السعر الأساسي 2300 شيكل.",
+            "semanticScore": 0.9,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 2300 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 89.539,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 3.491,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 81,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 1,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 2024,
+    "answer": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+    "trace": {
+      "request_id": "38ea4948-5876-4385-9f74-f8cbf76b112f",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619093787-1",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.9170507733333334,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد الخصم هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:13",
+      "updated_at": "2026-09-05 14:38:16",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد الخصم هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 2300,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 12,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "evidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "expectedResult": {
+                  "value": 2024,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.717,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 71,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788619093798,
+          "stages": {
+            "planning": 2,
+            "decomposition": 2,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 72,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 77,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.9170507733333334\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.9170507733333334,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.9170507733333334,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.849,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+            "sourceText": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+            "propositionText": "سعر Print 7X بعد الخصم هو 2024 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5137,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.3822,
+            "keywordOverlap": 0.5714,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "خصم 12% على سعر Print 7X.",
+            "semanticScore": 0.3822,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 2024,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 12,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "expectedResult": {
+                "value": 2024,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد الخصم هو 2024 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 43.326,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.717,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 71,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 1,
+    "question": "كم سعر Print 7X؟",
+    "expected": 5600,
+    "answer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+    "trace": {
+      "request_id": "4a647f69-d6bf-4146-a0dd-0a399e15d0fd",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619096843-1",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9004645600000001,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:16",
+      "updated_at": "2026-09-05 14:38:18",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.289,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 54,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788619096850,
+          "stages": {
+            "planning": 1,
+            "decomposition": 3,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 9,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 14,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9004645600000001\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9004645600000001,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9004645600000001,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.835,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "sourceText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5898,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.2994,
+            "keywordOverlap": 0.9,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "شركة تجهيز مناخ افتراضية للاختبار.\nالعملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X.\nالخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+            "semanticScore": 0.2994,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 7800,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 18.652,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.289,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 54,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 1,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 4760,
+    "answer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+    "trace": {
+      "request_id": "f7a0c1eb-28ad-44af-b5b5-16fa6005bb2a",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619098558-1",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9123397333333333,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:18",
+      "updated_at": "2026-09-05 14:38:19",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"INDEPENDENT_FILTERED_TEXT\",\"vectorCount\":1,\"lexicalCount\":1}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 5600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 15,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "evidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "expectedResult": {
+                  "value": 4760,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.135,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 98,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "NORMAL",
+        "profiling": {
+          "startTime": 1788619098560,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 6,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "INDEPENDENT_FILTERED_TEXT",
+              "vectorCount": 1,
+              "lexicalCount": 1
+            }
+          ],
+          "totalDuration": 9,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9123397333333333\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9123397333333333,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9123397333333333,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "NORMAL",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": false,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8649,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "sourceText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5811,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.4913,
+            "keywordOverlap": 0.625,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "خصم 15% على سعر Print 7X.",
+            "semanticScore": 0.4913,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 4760,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "expectedResult": {
+                "value": 4760,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد خصم 15% هو 4760 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 13.074,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.135,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 98,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 2,
+    "question": "كم سعر Print 7X؟",
+    "expected": 2300,
+    "answer": "سعر Print 7X الأساسي 2300 شيكل.",
+    "trace": {
+      "request_id": "152c09bc-7bd9-4197-a956-a71f029199cc",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619100147-2",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.89819992,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 2300 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:20",
+      "updated_at": "2026-09-05 14:38:21",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 2300 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.238,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 81,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619100152,
+          "stages": {
+            "planning": 3,
+            "decomposition": 5,
+            "preprocessing": 1,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 2,
+            "variation": 0,
+            "retrieval": 3,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 3
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 15,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.89819992\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.89819992,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.89819992,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 2300 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.9248,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 2300 شيكل.",
+            "sourceText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.8948,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.9,
+            "keywordOverlap": 1,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "Print 7X: السعر الأساسي 2300 شيكل.",
+            "semanticScore": 0.9,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 2300 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 14.259,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.238,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 81,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 2,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 2024,
+    "answer": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+    "trace": {
+      "request_id": "c9e5b58d-15bc-4b51-9f92-b1dd2013438d",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619101747-2",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.9170507733333334,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد خصم 12% هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:21",
+      "updated_at": "2026-09-05 14:38:23",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد خصم 12% هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 2300,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 12,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "evidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "expectedResult": {
+                  "value": 2024,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.158,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619101750,
+          "stages": {
+            "planning": 2,
+            "decomposition": 3,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 7,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.9170507733333334\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.9170507733333334,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.9170507733333334,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8654,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "sourceText": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "propositionText": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5816,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.4913,
+            "keywordOverlap": 0.625,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "خصم 12% على سعر Print 7X.",
+            "semanticScore": 0.4913,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 12,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 2024,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 12,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "expectedResult": {
+                "value": 2024,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد خصم 12% هو 2024 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 15.587,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.158,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 2,
+    "question": "كم سعر Print 7X؟",
+    "expected": 5600,
+    "answer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+    "trace": {
+      "request_id": "ce25ea44-a2fa-468d-ab8a-2f273845a238",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619103460-2",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9004645600000001,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:23",
+      "updated_at": "2026-09-05 14:38:24",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.326,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 74,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619103461,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 0,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 3,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9004645600000001\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9004645600000001,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9004645600000001,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.835,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "sourceText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5898,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.2994,
+            "keywordOverlap": 0.9,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "شركة تجهيز مناخ افتراضية للاختبار.\nالعملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X.\nالخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+            "semanticScore": 0.2994,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 7800,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 41.352,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.326,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 74,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 2,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 4760,
+    "answer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+    "trace": {
+      "request_id": "40535f9a-fd0d-4869-9cf0-eb350b7e7212",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619105232-2",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9123397333333333,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:25",
+      "updated_at": "2026-09-05 14:38:26",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 5600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 15,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "evidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "expectedResult": {
+                  "value": 4760,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.184,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619105236,
+          "stages": {
+            "planning": 2,
+            "decomposition": 4,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 1,
+            "retrieval": 2,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 2
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 11,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9123397333333333\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9123397333333333,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9123397333333333,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8649,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "sourceText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5811,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.4913,
+            "keywordOverlap": 0.625,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "خصم 15% على سعر Print 7X.",
+            "semanticScore": 0.4913,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 4760,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "expectedResult": {
+                "value": 4760,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد خصم 15% هو 4760 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 11.34,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.184,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 57,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 3,
+    "question": "كم سعر Print 7X؟",
+    "expected": 2300,
+    "answer": "سعر Print 7X الأساسي 2300 شيكل.",
+    "trace": {
+      "request_id": "f26fa3c4-9c53-4937-8f89-28ba103a2bd1",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619106941-3",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.89819992,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 2300 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:26",
+      "updated_at": "2026-09-05 14:38:28",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 2300 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 2300 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.475,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 98,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619106942,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 1,
+            "retrieval": 0,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 4,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.89819992\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.89819992,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.89819992,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 2300 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.9248,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 2300 شيكل.",
+            "sourceText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionText": "سعر Print 7X الأساسي 2300 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.8948,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.9,
+            "keywordOverlap": 1,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "Print 7X: السعر الأساسي 2300 شيكل.",
+            "semanticScore": 0.9,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 2300 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 33.912,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.475,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 98,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-printing",
+    "repeat": 3,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 2024,
+    "answer": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+    "trace": {
+      "request_id": "fc446ac0-42ba-4d04-a3b8-5315f7d40ec1",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-printing",
+      "conversation_id": "heldout-1788619108973-3",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"score\":0.9170507733333334,\"source\":\"Printing_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد خصم 12% هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:28",
+      "updated_at": "2026-09-05 14:38:30",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"textHash\":\"2ad4f25a6a0503e0df7d691b86acf4ba7090478d734eacb38fc3300951fcbf34\",\"characters\":195}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد خصم 12% هو 2024 شيكل.\",\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":2300,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":12,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"evidenceIds\":[\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\"],\"expectedResult\":{\"value\":2024,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-printing",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-printing",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-printing"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 2300,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 12,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "evidenceIds": [
+                  "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+                ],
+                "expectedResult": {
+                  "value": 2024,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.239,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 50,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619108975,
+          "stages": {
+            "planning": 0,
+            "decomposition": 1,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 0,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 5,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\nDocument: Printing_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-printing\" document_id=\"staging_ver_42ba277fb9884246896db924103c50d3\" document_version_id=\"ver_42ba277fb9884246896db924103c50d3\" chunk_id=\"staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05\" source_type=\"uploaded_document\" source_name=\"Printing_Catalog.txt\" retrieval_score=\"0.9170507733333334\" index_version_id=\"ver_42ba277fb9884246896db924103c50d3\">\nDOCUMENT_TEXT_START\nمطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "topChunks": [
+            {
+              "text": "مطبعة افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 2300 شيكل.\nOther 6Z: السعر الأساسي 4500 شيكل.\n\nخصم 12% على سعر Print 7X. الخصم لا يشمل التوصيل.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-printing",
+              "documentId": "staging_ver_42ba277fb9884246896db924103c50d3",
+              "documentVersionId": "ver_42ba277fb9884246896db924103c50d3",
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "sourceType": "uploaded_document",
+              "sourceName": "Printing_Catalog.txt",
+              "retrievalScore": 0.9170507733333334,
+              "indexVersionId": "ver_42ba277fb9884246896db924103c50d3"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+              "score": 0.9170507733333334,
+              "source": "Printing_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8654,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "sourceText": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "propositionText": "سعر Print 7X بعد خصم 12% هو 2024 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5816,
+            "evidenceChunkIds": [
+              "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+            ],
+            "similarity": 0.4913,
+            "keywordOverlap": 0.625,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+            "matchedSentence": "خصم 12% على سعر Print 7X.",
+            "semanticScore": 0.4913,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 12,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 2024,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 2300,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 12,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "evidenceIds": [
+                "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+              ],
+              "expectedResult": {
+                "value": 2024,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد خصم 12% هو 2024 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_42ba277fb9884246896db924103c50d3_chunk_0_2ad4f25a6a05"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 14.069,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-printing",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.239,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 50,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 3,
+    "question": "كم سعر Print 7X؟",
+    "expected": 5600,
+    "answer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+    "trace": {
+      "request_id": "9785dd09-bcf0-4a83-8399-b2ddbc3d81b5",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619110709-3",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "كم سعر Print 7X؟",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9004645600000001,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+      "claims_json": "[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:30",
+      "updated_at": "2026-09-05 14:38:32",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"resolvedQueryHash\":\"0f96a6bce37b12bbdfe221e024adbbd0efc61756eadd05a2a6f9049becd3dc0c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":null,\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": null,
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.165,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 56,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619110713,
+          "stages": {
+            "planning": 2,
+            "decomposition": 3,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 0,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 1,
+            "optimization": 1
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 7,
+          "intent": "Pricing",
+          "variations": [
+            "كم سعر Print 7X؟"
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9004645600000001\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9004645600000001,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9004645600000001,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.835,
+        "confidenceLabel": "Medium",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "sourceText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "originalCompoundClaim": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionText": "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5898,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.2994,
+            "keywordOverlap": 0.9,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": true,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "شركة تجهيز مناخ افتراضية للاختبار.\nالعملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X.\nالخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+            "semanticScore": 0.2994,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": false,
+              "claimQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 7800,
+                  "unit": "ILS",
+                  "operator": "="
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                }
+              ]
+            },
+            "derivedStatus": "NOT_PROVEN",
+            "derivedProvenance": null,
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X الأساسي 5600 شيكل مع خصم 15% على السعر."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 12.534,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.165,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 56,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  },
+  {
+    "tenant": "shorouq-heldout-climate",
+    "repeat": 3,
+    "question": "احسب سعر Print 7X بعد الخصم.",
+    "expected": 4760,
+    "answer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+    "trace": {
+      "request_id": "67d4da6a-2ba4-46e0-bb76-8f0713966e89",
+      "message_id": null,
+      "tenant_id": "shorouq-heldout-climate",
+      "conversation_id": "heldout-1788619112326-3",
+      "route": "COMPANY_KNOWLEDGE",
+      "intent": "Pricing",
+      "retrieval_query": "احسب سعر Print 7X بعد الخصم.",
+      "retrieved_chunks_json": "[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"score\":0.9123397333333333,\"source\":\"Climate_Catalog.txt\"}]",
+      "selected_context_chunk_ids_json": "[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"]",
+      "evidence_gate_decision": "ANSWER",
+      "evidence_gate_reason": "evidence_available",
+      "raw_model_output": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+      "claims_json": "[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"PASS\",\"temporalVerdict\":\"NOT_APPLICABLE\",\"negationVerdict\":\"PASS\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null,\"boundaryReasons\":[]}]",
+      "boundary_decision": "ALLOW",
+      "boundary_reasons_json": "[]",
+      "enforcement_active": 1,
+      "fallback_source": null,
+      "final_response_type": "ANSWER_CANDIDATE",
+      "created_at": "2026-09-05 14:38:32",
+      "updated_at": "2026-09-05 14:38:33",
+      "reliability_json": "{\"version\":2,\"referentStatus\":\"NOT_REQUIRED\",\"originalQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"resolvedQueryHash\":\"b439c663330763f665fa8d5fab23ec66fd281043e045a3fab274cf11bde0bb9c\",\"preBudgetChunkIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"stages\":[{\"lexicalMode\":\"UNKNOWN\"}],\"selectedEvidence\":[{\"id\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"textHash\":\"5caef8fa91bd758a2476c289e4a775564f6c786d612a1bd8a35ebddbbd0d004f\",\"characters\":205}],\"rawValidation\":{\"status\":\"SUPPORTED\",\"claims\":[{\"text\":\"سعر Print 7X بعد خصم 15% هو 4760 شيكل.\",\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"verdict\":\"SUPPORTED\",\"reason\":\"validator_supported\",\"matchedEvidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"numericVerdict\":\"ENTAILED\",\"temporalVerdict\":null,\"negationVerdict\":\"ALIGNED\",\"numericSafetyVeto\":null,\"derivedProvenance\":{\"operation\":\"PERCENT_DISCOUNT\",\"inputs\":[{\"value\":5600,\"unit\":\"ILS\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"BASE_VALUE\"},{\"value\":15,\"unit\":\"PERCENT\",\"evidenceId\":\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\",\"source\":\"EVIDENCE\",\"semanticRole\":\"DISCOUNT\"}],\"scopeEvidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"evidenceIds\":[\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\"],\"expectedResult\":{\"value\":4760,\"unit\":\"ILS\"}},\"policyReason\":null}]}}"
+    },
+    "telemetry": {
+      "pipelineTelemetry": {
+        "resolvedTenantId": "shorouq-heldout-climate",
+        "selectedRoute": "COMPANY_KNOWLEDGE",
+        "ragInvoked": true,
+        "retrievalTenantId": "shorouq-heldout-climate",
+        "retrievedEvidenceCount": 1,
+        "evidenceTenantIds": [
+          "shorouq-heldout-climate"
+        ],
+        "gateDecision": "ANSWER",
+        "generationMode": "EVIDENCE_EXCLUSIVE",
+        "rawValidation": {
+          "status": "SUPPORTED",
+          "claims": [
+            {
+              "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "verdict": "SUPPORTED",
+              "reason": "validator_supported",
+              "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "numericVerdict": "ENTAILED",
+              "temporalVerdict": null,
+              "negationVerdict": "ALIGNED",
+              "numericSafetyVeto": null,
+              "derivedProvenance": {
+                "operation": "PERCENT_DISCOUNT",
+                "inputs": [
+                  {
+                    "value": 5600,
+                    "unit": "ILS",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "BASE_VALUE"
+                  },
+                  {
+                    "value": 15,
+                    "unit": "PERCENT",
+                    "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                    "source": "EVIDENCE",
+                    "semanticRole": "DISCOUNT"
+                  }
+                ],
+                "scopeEvidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "evidenceIds": [
+                  "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+                ],
+                "expectedResult": {
+                  "value": 4760,
+                  "unit": "ILS"
+                }
+              },
+              "policyReason": null
+            }
+          ]
+        },
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.225,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 38,
+          "rolloutPercent": 100
+        }
+      },
+      "retrievalTelemetry": {
+        "mode": "CACHE_ONLY",
+        "profiling": {
+          "startTime": 1788619112330,
+          "stages": {
+            "planning": 2,
+            "decomposition": 3,
+            "preprocessing": 0,
+            "rewriting": 0,
+            "synonyms": 1,
+            "intent": 1,
+            "variation": 0,
+            "retrieval": 1,
+            "rrf": 0,
+            "reranking": 2,
+            "optimization": 2
+          },
+          "retrievalSources": [
+            {
+              "lexicalMode": "UNKNOWN"
+            }
+          ],
+          "totalDuration": 10,
+          "intent": "Pricing",
+          "variations": [
+            "احسب سعر Print 7X بعد الخصم."
+          ],
+          "selectedTopK": 6,
+          "similarityThreshold": 0.4,
+          "optimizedContext": "Chunk #staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\nDocument: Climate_Catalog\nSection: General Content\nIntent: Pricing\n<untrusted_document tenant_id=\"shorouq-heldout-climate\" document_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2\" document_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\" chunk_id=\"staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd\" source_type=\"uploaded_document\" source_name=\"Climate_Catalog.txt\" retrieval_score=\"0.9123397333333333\" index_version_id=\"ver_fcd1716e7e544bf58d5da985fdf12cc2\">\nDOCUMENT_TEXT_START\nشركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.\nDOCUMENT_TEXT_END\n</untrusted_document>",
+          "preBudgetChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "topChunks": [
+            {
+              "text": "شركة تجهيز مناخ افتراضية للاختبار. العملة شيكل.\n\nPrint 7X: السعر الأساسي 5600 شيكل.\nOther 6Z: السعر الأساسي 7800 شيكل.\n\nخصم 15% على سعر Print 7X. الخصم لا يشمل التركيب.\n\nهذا كتالوج أسعار وليس مخزونًا حيًا.",
+              "tenantId": "shorouq-heldout-climate",
+              "documentId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "documentVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2",
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "sourceType": "uploaded_document",
+              "sourceName": "Climate_Catalog.txt",
+              "retrievalScore": 0.9123397333333333,
+              "indexVersionId": "ver_fcd1716e7e544bf58d5da985fdf12cc2"
+            }
+          ],
+          "selectedContextChunkIds": [
+            "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+          ],
+          "retrievedChunks": [
+            {
+              "chunkId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+              "score": 0.9123397333333333,
+              "source": "Climate_Catalog.txt"
+            }
+          ]
+        },
+        "metadata": {
+          "retrievalMode": "CACHE_ONLY",
+          "degraded": false,
+          "degradedReasons": [],
+          "confidencePenalty": 0,
+          "cacheHit": true,
+          "confidence": null
+        }
+      },
+      "validationTelemetry": {
+        "finalAnswer": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+        "overallStatus": "SUPPORTED",
+        "validationState": "SUPPORTED",
+        "confidenceScore": 0.8649,
+        "confidenceLabel": "High",
+        "evidenceCoverage": 1,
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "sourceText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "originalCompoundClaim": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionText": "سعر Print 7X بعد خصم 15% هو 4760 شيكل.",
+            "propositionType": "SINGLE",
+            "relationshipType": "SINGLE",
+            "compoundId": "compound-1",
+            "factual": true,
+            "classification": "SUPPORTED",
+            "confidence": 0.5811,
+            "evidenceChunkIds": [
+              "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+            ],
+            "similarity": 0.4913,
+            "keywordOverlap": 0.625,
+            "citationCoverage": 1,
+            "missingEvidence": false,
+            "contradictionScore": 0,
+            "numericExact": false,
+            "matchedEvidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+            "matchedSentence": "خصم 15% على سعر Print 7X.",
+            "semanticScore": 0.4913,
+            "numericResult": {
+              "relation": "ENTAILED",
+              "derived": true,
+              "claimQuantities": [
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "operator": "="
+                },
+                {
+                  "value": 4760,
+                  "unit": "ILS",
+                  "operator": "="
+                }
+              ],
+              "evidenceQuantities": []
+            },
+            "derivedStatus": "SUPPORTED_DERIVED",
+            "derivedProvenance": {
+              "operation": "PERCENT_DISCOUNT",
+              "inputs": [
+                {
+                  "value": 5600,
+                  "unit": "ILS",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "BASE_VALUE"
+                },
+                {
+                  "value": 15,
+                  "unit": "PERCENT",
+                  "evidenceId": "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd",
+                  "source": "EVIDENCE",
+                  "semanticRole": "DISCOUNT"
+                }
+              ],
+              "scopeEvidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "evidenceIds": [
+                "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+              ],
+              "expectedResult": {
+                "value": 4760,
+                "unit": "ILS"
+              }
+            },
+            "completeListEntailed": false,
+            "negationResult": {
+              "claimNegated": false,
+              "evidenceNegated": false,
+              "relation": "ALIGNED"
+            },
+            "finalClassification": "SUPPORTED",
+            "numericSafetyVeto": null,
+            "policyGuard": {
+              "relation": "NOT_APPLICABLE",
+              "branches": []
+            }
+          }
+        ],
+        "supportedClaims": [
+          "سعر Print 7X بعد خصم 15% هو 4760 شيكل."
+        ],
+        "partiallySupportedClaims": [],
+        "unsupportedClaims": [],
+        "contradictedClaims": [],
+        "ignoredPromptInjectionChunks": [
+          "staging_ver_fcd1716e7e544bf58d5da985fdf12cc2_chunk_0_5caef8fa91bd"
+        ],
+        "uniqueEvidenceChunks": 1,
+        "durationMs": 20.126,
+        "groundingSafety": {
+          "tenantId": "shorouq-heldout-climate",
+          "route": "COMPANY_KNOWLEDGE",
+          "boundaryEnabled": true,
+          "shadowMode": false,
+          "boundaryDecision": "ALLOW",
+          "boundaryReasons": [],
+          "claimCount": 1,
+          "allowedClaimCount": 1,
+          "blockedClaimCount": 0,
+          "unknownEvidenceIdCount": 0,
+          "missingTenantEvidenceCount": 0,
+          "tenantMismatchCount": 0,
+          "numericBlockCount": 0,
+          "temporalBlockCount": 0,
+          "negationBlockCount": 0,
+          "nonresponsiveBlockCount": 0,
+          "processingErrorCount": 0,
+          "durationMs": 0.225,
+          "enforcementActive": true,
+          "wouldHaveDeliveredInShadow": true,
+          "actualDeliveredDecision": "CANDIDATE",
+          "fallbackType": null,
+          "rolloutBucket": 38,
+          "rolloutPercent": 100
+        }
+      }
+    }
+  }
+]

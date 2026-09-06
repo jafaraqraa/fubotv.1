@@ -1,0 +1,47 @@
+{
+  "version": "v2",
+  "createdAt": "2026-09-04T21:50:00+03:00",
+  "split": "DEV",
+  "corpusFile": "semantic-validator-gold-v2.json",
+  "corpusFileSha256": "3aa1fbe23ae66d52676795a17e2790b2c766840e0854924b110d3e8d777c6ae2",
+  "canonicalRowContentSha256": "9e62e2d2e6c6103b6a26630aef560f7abeafaa737705beeb18f581c83245a6d6",
+  "rowCount": 92,
+  "uniqueIdCount": 92,
+  "uniqueFingerprintCount": 92,
+  "verdictCounts": {
+    "SUPPORTED": 37,
+    "CONTRADICTED": 28,
+    "NOT_PROVEN": 27
+  },
+  "tenantCount": 13,
+  "sourceDatasetCounts": {
+    "frozen-artifact-derived": 15,
+    "hard-negative-v1": 55,
+    "supported-paraphrase-v1": 22
+  },
+  "hardNegativeCount": 55,
+  "supportedParaphraseCount": 37,
+  "categoryCounts": {
+    "complete-list": 15,
+    "conditional-policy": 6,
+    "cross-tenant-controls": 11,
+    "duration": 9,
+    "hard-negative": 55,
+    "history-resolved-referent": 2,
+    "multi-value": 4,
+    "negative": 9,
+    "negative-membership": 2,
+    "not-proven": 8,
+    "numeric": 50,
+    "supported-paraphrase": 37,
+    "temporal": 23,
+    "threshold": 11
+  },
+  "duplicateGroupsRemoved": 14,
+  "duplicateRowsRemoved": 23,
+  "intentionalDuplicateGroupsRetained": 0,
+  "labelConflictGroupsExcluded": 0,
+  "evidenceIntegrityFailures": [],
+  "crossSplitDuplicateCount": 0,
+  "historicalInputSha256": "9e3b2694f1d2a87ce564471b642a7948361a94b10b9b77027648de48ddcb999b"
+}

@@ -1614,6 +1614,33 @@ window.Dashboard.rag = {
         return failures;
     },
 
+    reindexAllDocuments: async function() {
+        // Snapshot the entire tenant-scoped library before any mutation. The
+        // legacy /rag/reindex endpoint indexes only manual knowledge.txt.
+        const ids = new Set();
+        for (let page = 1; ; page++) {
+            const response = await window.Dashboard.api.request(`/api/rag/documents?page=${page}&limit=100`);
+            const data = await response.json();
+            if (!response.ok || data.success !== true || !Array.isArray(data.documents)) {
+                throw new Error(data.error || 'تعذر تحميل قائمة المستندات.');
+            }
+            const before = ids.size;
+            for (const doc of data.documents) {
+                if (!doc.documentId) throw new Error('معرّف مستند مفقود؛ أُوقفت العملية.');
+                ids.add(doc.documentId);
+            }
+            const total = data.pagination?.total;
+            if (!Number.isInteger(total) || total < 0) throw new Error('بيانات صفحات المستندات غير صالحة.');
+            if (ids.size >= total) break;
+            if (ids.size === before) throw new Error('تعذر تحميل بقية المستندات؛ أُوقفت العملية.');
+        }
+        if (!ids.size) throw new Error('لا توجد مستندات لإعادة فهرستها.');
+        const failures = await this.runBulkRequests([...ids],
+            id => `/api/rag/documents/${encodeURIComponent(id)}/reindex`, 'POST',
+            data => ['active', 'indexed'].includes(data.document?.status));
+        return { total: ids.size, failures };
+    },
+
     triggerReindexAll: function() {
         const modal = document.getElementById('rag-reindex-confirm-modal');
         const confirmBtn = document.getElementById('rag-reindex-confirm-btn');
@@ -1623,28 +1650,26 @@ window.Dashboard.rag = {
             modal.style.opacity = '100';
 
             confirmBtn.onclick = async function() {
+                if (confirmBtn.disabled) return;
+                confirmBtn.disabled = true;
                 modal.classList.add('hidden');
                 window.Dashboard.settings.showToast('جاري تهيئة عملية إعادة الفهرسة الشاملة...');
                 window.Dashboard.rag.showIndexingProgress('إعادة الفهرسة الشاملة', 'كافة مستندات المعرفة');
 
                 try {
-                    const response = await window.Dashboard.api.request('/api/rag/reindex', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ force: true })
-                    });
-                    const data = await response.json();
+                    const data = await window.Dashboard.rag.reindexAllDocuments();
 
-                    if (response.ok && data.success && data.status === 'active') {
+                    if (!data.failures.length) {
                         window.Dashboard.settings.showToast('اكتملت عملية إعادة الفهرسة وتوليد الـ Embeddings بنجاح!');
                         window.Dashboard.rag.addTimelineLog('إعادة فهرسة شاملة', 'تمت إعادة الفهرسة الشاملة لكافة المستندات.');
-                        await window.Dashboard.rag.fetchOverviewAndDocuments();
                     } else {
-                        window.Dashboard.settings.showToast('فشلت الفهرسة الشاملة: ' + (data.message || data.error), 'error');
+                        window.Dashboard.settings.showToast(`نجحت فهرسة ${data.total - data.failures.length} من ${data.total} مستند. فشل ${data.failures.length}: ${data.failures[0].error}`, 'error');
                     }
+                    await window.Dashboard.rag.fetchOverviewAndDocuments();
                 } catch (err) {
-                    window.Dashboard.settings.showToast('حدث خطأ بالشبكة للعملية.', 'error');
+                    window.Dashboard.settings.showToast(err.message || 'تعذرت إعادة الفهرسة.', 'error');
                 } finally {
+                    confirmBtn.disabled = false;
                     window.Dashboard.rag.hideIndexingProgress();
                 }
             };

@@ -1,0 +1,346 @@
+[
+  {
+    "i": 0,
+    "question": "مرحبا، قديش سعر نظام Home 5K؟",
+    "answer": "18,700 شيكل.",
+    "error": null,
+    "requestId": "a25b4762-a4a1-4269-80f3-43e50232fcd1",
+    "raw": "18,700 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 1,
+    "question": "طيب الـHome 3K قديش؟",
+    "answer": "12,900 شيكل.",
+    "error": null,
+    "requestId": "44de211a-b356-4472-a087-9e9bd81bbadc",
+    "raw": "12,900 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 2,
+    "question": "قديش سعر بطارية 5 كيلو؟",
+    "answer": "تقصد سعة البطارية بالكيلوواط ساعة (kWh)، أم القدرة بالكيلوواط (kW)؟",
+    "error": null,
+    "requestId": "c8b58fd6-83bf-40f7-b549-7a2ff6726528",
+    "raw": null,
+    "gate": null,
+    "fallback": null
+  },
+  {
+    "i": 3,
+    "question": "إذا بدي أضيف بطارية 10kWh على نظام موجود عندي، قديش سعر البطارية وأجرة التركيب؟",
+    "answer": "بطارية LFP 10kWh: 11,800 شيكل. إضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.",
+    "error": null,
+    "requestId": "346e8305-73ea-4f9c-b1bd-698b847615b5",
+    "raw": "بطارية LFP 10kWh: 11,800 شيكل. إضافة بطارية إلى نظام قائم: أجرة تركيب وفحص 350 شيكل، إضافة إلى سعر البطارية.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 4,
+    "question": "قديش بتاخذوا ع زيارة الكشف؟",
+    "answer": "80 شيكل داخل نطاق الخدمة القياسي.",
+    "error": null,
+    "requestId": "2e242d97-6153-4848-81b2-0af017aea9bc",
+    "raw": "80 شيكل داخل نطاق الخدمة القياسي.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 5,
+    "question": "عندي 8 ألواح وبدي تنظيف وفحص، قديش؟",
+    "answer": "180 شيكل — لتنظيف وفحص حتى 10 ألواح.",
+    "error": null,
+    "requestId": "adaf0101-b99b-46b0-9aef-034a477c3265",
+    "raw": "180 شيكل — لتنظيف وفحص حتى 10 ألواح.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 6,
+    "question": "طيب لو كانوا 15 لوح؟",
+    "answer": "300 شيكل.",
+    "error": null,
+    "requestId": "a4259317-9e83-4422-a052-4b072ecc0aac",
+    "raw": "300 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 7,
+    "question": "طيب لو كانوا 15 لوح؟",
+    "answer": "300 شيكل.",
+    "error": null,
+    "requestId": "58206580-07e2-4071-80fe-956b8431258a",
+    "raw": "300 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 8,
+    "question": "طيب لو كانوا 15 لوح؟",
+    "answer": "300 شيكل",
+    "error": null,
+    "requestId": "2cdf6cdc-38f8-43f7-a5fc-98c7f476577c",
+    "raw": "300 شيكل",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 9,
+    "question": "فحص الإنفرتر بدون قطع قديش؟",
+    "answer": "120 شيكل.",
+    "error": null,
+    "requestId": "d6edbc91-581f-4e68-81cf-13cc63082dd2",
+    "raw": "120 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 10,
+    "question": "الـHome 5K عليه خصم؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "dbfb7526-d10f-42c1-a406-b9b44d3320e9",
+    "raw": "آه، عليها خصم 5% على سعر الباقة الأساسية لأن السعر الأساسي 18,700 شيكل (≥ 18,000).",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 11,
+    "question": "طيب Home 3K عليه نفس الخصم؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "47683c35-93b5-40b9-86bb-519fb21bdf46",
+    "raw": "لا. Home 3K غير مؤهلة لخصم 5%.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 12,
+    "question": "احسبلي Home 5K بعد الخصم.",
+    "answer": "17,765 شيكل.",
+    "error": null,
+    "requestId": "cf3e930f-ae30-470a-b94e-7819bce63309",
+    "raw": "17,765 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 13,
+    "question": "احسبلي Home 8K بعد الخصم.",
+    "answer": "26,505 شيكل.",
+    "error": null,
+    "requestId": "7e635a8f-cd6e-49dc-80b0-5495b2890a83",
+    "raw": "26,505 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 14,
+    "question": "إذا ضفت بطارية 5kWh على Home 5K، الخصم بنزل من سعر البطارية كمان؟",
+    "answer": "الخصم لا يطبق على البطاريات أو الأعمال الإضافية أو رسوم الزيارة أو الصيانة.",
+    "error": null,
+    "requestId": "63e4e82a-2371-4da2-a036-3d0b1a4e0f71",
+    "raw": "لا، الخصم ما بينزل على سعر البطارية.",
+    "gate": "evidence_available",
+    "fallback": "verified_source_excerpt"
+  },
+  {
+    "i": 15,
+    "question": "إذا التصليح طلع 250 شيكل، بتنخصم الـ80 تبعت الكشف؟",
+    "answer": "إذا تم تنفيذ إصلاح مدفوع في نفس الزيارة وكانت أجرة الإصلاح 250 شيكل أو أكثر، تُخصم رسوم الكشف 80 شيكل من أجرة الإصلاح.\nإذا كانت أجرة الإصلاح أقل من 250 شيكل فلا تُخصم رسوم الكشف.",
+    "error": null,
+    "requestId": "3057b9e7-bff5-45b0-80aa-320666966037",
+    "raw": "آه، بتنخصم 80 شيكل من أجرة الإصلاح لأن أجرة الإصلاح 250 شيكل أو أكثر.",
+    "gate": "evidence_available",
+    "fallback": "verified_source_excerpt"
+  },
+  {
+    "i": 16,
+    "question": "طيب إذا التصليح 249 شيكل؟",
+    "answer": "لا، ما بتنخصم رسوم الكشف لأن أجرة التصليح أقل من 250 شيكل.",
+    "error": null,
+    "requestId": "54035f24-8ec9-4dae-8dbe-e62394906ed1",
+    "raw": "لا، ما بتنخصم رسوم الكشف لأن أجرة التصليح أقل من 250 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 17,
+    "question": "إذا التصليح 300 بس منهم 100 ثمن قطعة و200 أجرة إصلاح، بتنخصم رسوم الكشف؟",
+    "answer": "لا — لأن أجرة الإصلاح 200 شيكل أقل من 250 شيكل، ورسوم القطع لا تدخل في حد 250 شيكل.",
+    "error": null,
+    "requestId": "e153a550-0131-4ca4-935e-4c3656f580f4",
+    "raw": "لا — لأن أجرة الإصلاح 200 شيكل أقل من 250 شيكل، ورسوم القطع لا تدخل في حد 250 شيكل.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 18,
+    "question": "عندكم مكتب بجنين؟",
+    "answer": "لا، ما في مكتب حالي بجنين.",
+    "error": null,
+    "requestId": "e0258412-a0ec-4ef9-8d44-d19de82fba13",
+    "raw": "لا، ما في مكتب حالي بجنين.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 19,
+    "question": "شو كل مكاتبكم الحالية؟",
+    "answer": "مكتب نابلس — رفيديا: الأحد–الخميس 08:00–17:00، السبت 09:00–14:00، الجمعة مغلق.\nمكتب رام الله — البيرة: الأحد–الخميس 08:30–17:30، السبت 09:00–15:00، الجمعة مغلق.\nهذه قائمة المكاتب الحالية الكاملة.\nلا يوجد مكتب حالي في جنين أو طولكرم أو الخليل.",
+    "error": null,
+    "requestId": "8fe22502-e6a7-46e4-9491-8e30fcc35b6a",
+    "raw": "عنا مكتب نابلس — رفيديا ومكتب رام الله — البيرة. هاي القائمة الكاملة.",
+    "gate": "evidence_available",
+    "fallback": "verified_source_excerpt"
+  },
+  {
+    "i": 20,
+    "question": "مكتب نابلس بفتح الجمعة؟",
+    "answer": "لا، الجمعة مغلق.",
+    "error": null,
+    "requestId": "b7b9d90f-9413-4a6e-bfc1-f0d1230e4205",
+    "raw": "لا، الجمعة مغلق.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 21,
+    "question": "رام الله السبت لأي ساعة؟",
+    "answer": "السبت 09:00–15:00.",
+    "error": null,
+    "requestId": "b17b0618-823f-46b5-b576-f25ced5faab9",
+    "raw": "السبت 09:00–15:00.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 22,
+    "question": "مش كان مكتب رام الله يسكر السبت عالواحدة؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "7cc39521-b6df-48d9-93e5-ee4ed0e3e48b",
+    "raw": null,
+    "gate": "required_business_fact_not_in_evidence",
+    "fallback": null
+  },
+  {
+    "i": 23,
+    "question": "طيب هسّا عالواحدة ولا عالثلاثة؟",
+    "answer": "عالثلاثة. السبت 09:00–15:00.",
+    "error": null,
+    "requestId": "6d44f508-dd35-4196-878f-ee06476dced8",
+    "raw": "عالثلاثة. السبت 09:00–15:00.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 24,
+    "question": "عندكم بطارية 10kWh متوفرة هسّا؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "1601a1bf-d245-443b-8067-c4d411bb74f2",
+    "raw": null,
+    "gate": "membership_not_proven",
+    "fallback": null
+  },
+  {
+    "i": 25,
+    "question": "بس هي موجودة عندكم بالقائمة، يعني أكيد موجودة بالمخزن صح؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "e6b99d70-8d67-4346-80d5-6b0ae96d7f71",
+    "raw": "لا. الكتالوج مش مخزون حي.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 26,
+    "question": "بقدر أحجز فني لليوم؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "e3d284be-39ca-461c-bd52-846315245290",
+    "raw": "لا — فيك تطلب موعد كشف أو صيانة، بس الموعد ما بصير مؤكد إلا بعد تأكيد الشركة، وقاعدة المعرفة ما بتحتوي جدول الفنيين الحي.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 27,
+    "question": "طيب شوفلي إذا في موعد بكرا الصبح.",
+    "answer": "لا. هاي المعلومة مش متوفرة عندي حاليًا.",
+    "error": null,
+    "requestId": "139a1731-a70a-4d55-a120-9fa12b35827f",
+    "raw": "لا. هاي المعلومة مش متوفرة عندي حاليًا.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 28,
+    "question": "بما إنكم بتخدموا نابلس، أكيد في فني متوفر اليوم بنابلس صح؟",
+    "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+    "error": null,
+    "requestId": "178546bb-77f2-45c8-9b03-7cf05b2295be",
+    "raw": "لا — وجودنا بنابلس ما بيثبت إنه في فني متوفر اليوم.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 29,
+    "question": "دفعت الحجز وبدي ألغي قبل التركيب بـ8 أيام، قديش برجعلي؟",
+    "answer": "برجعلك كامل مبلغ الحجز.",
+    "error": null,
+    "requestId": "0b84cb8e-8be9-4231-9d7b-fa78ec7109fa",
+    "raw": "برجعلك كامل مبلغ الحجز.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 30,
+    "question": "طيب قبل 7 أيام بالزبط؟",
+    "answer": "50% من مبلغ الحجز.",
+    "error": null,
+    "requestId": "b768bcd7-6a6e-4130-9e3c-5fd033127902",
+    "raw": "50% من مبلغ الحجز.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 31,
+    "question": "قبل 3 أيام بالزبط؟",
+    "answer": "آه، لو ألغيت قبل الموعد بـ3 أيام بالضبط يُرد 50% من مبلغ الحجز.",
+    "error": null,
+    "requestId": "3985069d-cac6-40da-b29a-782544a42ecc",
+    "raw": "آه، لو ألغيت قبل الموعد بـ3 أيام بالضبط يُرد 50% من مبلغ الحجز.",
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 32,
+    "question": "قبل يومين؟",
+    "error": {
+      "code": "AI_PROVIDER_FAILED",
+      "reason": "provider key total limit exceeded"
+    },
+    "requestId": "a32f61e9-935d-4707-bf3d-33d5be83c701",
+    "raw": null,
+    "gate": "evidence_available",
+    "fallback": null
+  },
+  {
+    "i": 33,
+    "question": "أنا ملغي قبل 6 أيام، يعني برجعلي كامل المبلغ صح؟",
+    "error": {
+      "code": "AI_PROVIDER_FAILED",
+      "reason": "provider key total limit exceeded"
+    },
+    "requestId": "a498730b-71c0-49ec-90d0-2411deb473c7",
+    "raw": null,
+    "gate": "evidence_available",
+    "fallback": null
+  }
+]

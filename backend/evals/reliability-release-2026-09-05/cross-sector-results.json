@@ -1,0 +1,401 @@
+[
+  {
+    "run": 1,
+    "summary": {
+      "cases": 12,
+      "answerAccuracy": 0.9,
+      "noAnswerAccuracy": 1,
+      "clarifyAccuracy": null,
+      "unsupportedOutputRate": 0,
+      "meanLatencyMs": 1570.5,
+      "p50LatencyMs": 1715.4,
+      "p95LatencyMs": 3081.5,
+      "tenantLeaks": 0,
+      "errors": 0
+    },
+    "rows": [
+      {
+        "id": "c1",
+        "question": "قديش سعر فحص النظر؟",
+        "answer": "سعر فحص النظر 90 شيكل.",
+        "expectedFacts": [
+          "90 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c2",
+        "question": "قديش مدة تنظيف الأسنان؟",
+        "answer": "مدة تنظيف الأسنان هي 45 دقيقة.",
+        "expectedFacts": [
+          "45 دقيقة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c3",
+        "question": "شو سعر هاتف Z7؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b1",
+        "question": "قديش سعر كعكة التمر؟",
+        "answer": "سعر قطعة كعكة التمر 12 شيكل والحد الأدنى للطلب 6 قطع.",
+        "expectedFacts": [
+          "12 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b2",
+        "question": "شو الحد الأدنى لكعكة التمر؟",
+        "answer": "الحد الأدنى لكعكة التمر هو 6 قطع.",
+        "expectedFacts": [
+          "6 قطع"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b3",
+        "question": "كعكة التمر متوفرة هسا؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e1",
+        "question": "قديش سعر هاتف Z7؟",
+        "answer": "سعر هاتف Z7 هو 1300 شيكل.",
+        "expectedFacts": [
+          "1300 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e2",
+        "question": "قديش ضمان شاشة Q4؟",
+        "answer": "ضمان شاشة Q4 هو 24 شهر.",
+        "expectedFacts": [
+          "24 شهراً"
+        ],
+        "correct": false,
+        "error": null
+      },
+      {
+        "id": "e3",
+        "question": "بتقبلوا عملات رقمية؟",
+        "answer": "العملات الرقمية غير مقبولة.",
+        "expectedFacts": [
+          "غير مقبولة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t1",
+        "question": "قديش دورة أساس البرمجة بالأسبوع؟",
+        "answer": "دورة أساس البرمجة سعرها الأسبوعي 240 شيكل.",
+        "expectedFacts": [
+          "240 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t2",
+        "question": "عمري 15، بقدر أسجل أساس البرمجة؟",
+        "answer": "الدورة: أساس البرمجة | العمر الأدنى: 16 سنة.",
+        "expectedFacts": [
+          "16 سنة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t3",
+        "question": "حضرت قبل، يعني الحساب الآجل تلقائي؟",
+        "answer": "الحساب الآجل يحتاج موافقة مسبقة، والحضور السابق لا يمنحه تلقائياً.",
+        "expectedFacts": [
+          "موافقة مسبقة"
+        ],
+        "correct": true,
+        "error": null
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "summary": {
+      "cases": 12,
+      "answerAccuracy": 0.9,
+      "noAnswerAccuracy": 1,
+      "clarifyAccuracy": null,
+      "unsupportedOutputRate": 0,
+      "meanLatencyMs": 1510.1,
+      "p50LatencyMs": 1759.7,
+      "p95LatencyMs": 1944.1,
+      "tenantLeaks": 0,
+      "errors": 0
+    },
+    "rows": [
+      {
+        "id": "c1",
+        "question": "قديش سعر فحص النظر؟",
+        "answer": "سعر فحص النظر هو 90 شيكل.",
+        "expectedFacts": [
+          "90 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c2",
+        "question": "قديش مدة تنظيف الأسنان؟",
+        "answer": "مدة تنظيف الأسنان هي 45 دقيقة.",
+        "expectedFacts": [
+          "45 دقيقة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c3",
+        "question": "شو سعر هاتف Z7؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b1",
+        "question": "قديش سعر كعكة التمر؟",
+        "answer": "سعر قطعة كعكة التمر 12 شيكل والحد الأدنى للطلب 6 قطع.",
+        "expectedFacts": [
+          "12 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b2",
+        "question": "شو الحد الأدنى لكعكة التمر؟",
+        "answer": "الحد الأدنى لكعكة التمر هو 6 قطع.",
+        "expectedFacts": [
+          "6 قطع"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b3",
+        "question": "كعكة التمر متوفرة هسا؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e1",
+        "question": "قديش سعر هاتف Z7؟",
+        "answer": "سعر هاتف Z7 هو 1300 شيكل.",
+        "expectedFacts": [
+          "1300 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e2",
+        "question": "قديش ضمان شاشة Q4؟",
+        "answer": "ضمان شاشة Q4 هو 24 شهر.",
+        "expectedFacts": [
+          "24 شهراً"
+        ],
+        "correct": false,
+        "error": null
+      },
+      {
+        "id": "e3",
+        "question": "بتقبلوا عملات رقمية؟",
+        "answer": "العملات الرقمية غير مقبولة.",
+        "expectedFacts": [
+          "غير مقبولة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t1",
+        "question": "قديش دورة أساس البرمجة بالأسبوع؟",
+        "answer": "دورة أساس البرمجة سعرها 240 شيكل بالأسبوع.",
+        "expectedFacts": [
+          "240 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t2",
+        "question": "عمري 15، بقدر أسجل أساس البرمجة؟",
+        "answer": "الدورة: أساس البرمجة | العمر الأدنى: 16 سنة.",
+        "expectedFacts": [
+          "16 سنة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t3",
+        "question": "حضرت قبل، يعني الحساب الآجل تلقائي؟",
+        "answer": "الحساب الآجل يحتاج موافقة مسبقة، والحضور السابق لا يمنحه تلقائياً.",
+        "expectedFacts": [
+          "موافقة مسبقة"
+        ],
+        "correct": true,
+        "error": null
+      }
+    ]
+  },
+  {
+    "run": 3,
+    "summary": {
+      "cases": 12,
+      "answerAccuracy": 0.9,
+      "noAnswerAccuracy": 1,
+      "clarifyAccuracy": null,
+      "unsupportedOutputRate": 0,
+      "meanLatencyMs": 1445,
+      "p50LatencyMs": 1653.6,
+      "p95LatencyMs": 2120.8,
+      "tenantLeaks": 0,
+      "errors": 0
+    },
+    "rows": [
+      {
+        "id": "c1",
+        "question": "قديش سعر فحص النظر؟",
+        "answer": "سعر فحص النظر 90 شيكل.",
+        "expectedFacts": [
+          "90 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c2",
+        "question": "قديش مدة تنظيف الأسنان؟",
+        "answer": "مدة تنظيف الأسنان هي 45 دقيقة.",
+        "expectedFacts": [
+          "45 دقيقة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "c3",
+        "question": "شو سعر هاتف Z7؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b1",
+        "question": "قديش سعر كعكة التمر؟",
+        "answer": "سعر قطعة كعكة التمر 12 شيكل والحد الأدنى للطلب 6 قطع.",
+        "expectedFacts": [
+          "12 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b2",
+        "question": "شو الحد الأدنى لكعكة التمر؟",
+        "answer": "الحد الأدنى لكعكة التمر هو 6 قطع.",
+        "expectedFacts": [
+          "6 قطع"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "b3",
+        "question": "كعكة التمر متوفرة هسا؟",
+        "answer": "لا تتوفر لدي معلومات مؤكدة حول هذا الموضوع حالياً. يمكنك التواصل مع فريق الدعم للحصول على التفاصيل.",
+        "expectedFacts": [],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e1",
+        "question": "قديش سعر هاتف Z7؟",
+        "answer": "سعر هاتف Z7 هو 1300 شيكل.",
+        "expectedFacts": [
+          "1300 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "e2",
+        "question": "قديش ضمان شاشة Q4؟",
+        "answer": "ضمان شاشة Q4 هو 24 شهر.",
+        "expectedFacts": [
+          "24 شهراً"
+        ],
+        "correct": false,
+        "error": null
+      },
+      {
+        "id": "e3",
+        "question": "بتقبلوا عملات رقمية؟",
+        "answer": "العملات الرقمية غير مقبولة.",
+        "expectedFacts": [
+          "غير مقبولة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t1",
+        "question": "قديش دورة أساس البرمجة بالأسبوع؟",
+        "answer": "دورة أساس البرمجة سعرها 240 شيكل بالأسبوع.",
+        "expectedFacts": [
+          "240 شيكل"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t2",
+        "question": "عمري 15، بقدر أسجل أساس البرمجة؟",
+        "answer": "الدورة: أساس البرمجة | العمر الأدنى: 16 سنة.",
+        "expectedFacts": [
+          "16 سنة"
+        ],
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "t3",
+        "question": "حضرت قبل، يعني الحساب الآجل تلقائي؟",
+        "answer": "الحساب الآجل يحتاج موافقة مسبقة، والحضور السابق لا يمنحه تلقائياً.",
+        "expectedFacts": [
+          "موافقة مسبقة"
+        ],
+        "correct": true,
+        "error": null
+      }
+    ]
+  }
+]

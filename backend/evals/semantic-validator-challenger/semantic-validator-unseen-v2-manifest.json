@@ -1,0 +1,41 @@
+{
+  "version": "v2",
+  "createdAt": "2026-09-04T21:50:00+03:00",
+  "split": "UNSEEN",
+  "corpusFile": "semantic-validator-unseen-v2.json",
+  "corpusFileSha256": "8fad6143b3fe018587b70965acd29a058ccac0a46f7fc7d21d1de6b54f58db59",
+  "canonicalRowContentSha256": "732e046570061da4bb9ddd557e2fc94a3e04cfa1a74e97c6596cda1de824b247",
+  "rowCount": 40,
+  "uniqueIdCount": 40,
+  "uniqueFingerprintCount": 40,
+  "verdictCounts": {
+    "SUPPORTED": 14,
+    "CONTRADICTED": 14,
+    "NOT_PROVEN": 12
+  },
+  "tenantCount": 1,
+  "sourceDatasetCounts": {
+    "unseen-sourdough-frozen-v1": 40
+  },
+  "hardNegativeCount": 26,
+  "supportedParaphraseCount": 0,
+  "categoryCounts": {
+    "complete-list": 5,
+    "duration": 3,
+    "hard-negative": 26,
+    "multi-value": 3,
+    "negative": 6,
+    "negative-membership": 2,
+    "not-proven": 8,
+    "numeric": 20,
+    "temporal": 6,
+    "threshold": 4
+  },
+  "duplicateGroupsRemoved": 14,
+  "duplicateRowsRemoved": 14,
+  "intentionalDuplicateGroupsRetained": 0,
+  "labelConflictGroupsExcluded": 0,
+  "evidenceIntegrityFailures": [],
+  "crossSplitDuplicateCount": 0,
+  "historicalInputSha256": "9e3b2694f1d2a87ce564471b642a7948361a94b10b9b77027648de48ddcb999b"
+}

@@ -1,0 +1,259 @@
+[
+  {
+    "log": "full-1.log",
+    "tests": 688,
+    "pass": 688,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-2.log",
+    "tests": 688,
+    "pass": 688,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-2.log",
+    "tests": 692,
+    "pass": 692,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-3.log",
+    "tests": 692,
+    "pass": 692,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-4.log",
+    "tests": 693,
+    "pass": 693,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-5.log",
+    "tests": 695,
+    "pass": 695,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-6.log",
+    "tests": 696,
+    "pass": 696,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final-7.log",
+    "tests": 696,
+    "pass": 696,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "full-final.log",
+    "tests": 692,
+    "pass": 692,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-1.log",
+    "tests": 143,
+    "pass": 142,
+    "fail": 1,
+    "exit": 1,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-2.log",
+    "tests": 143,
+    "pass": 143,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-3.log",
+    "tests": 147,
+    "pass": 147,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-2.log",
+    "tests": 147,
+    "pass": 147,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-3.log",
+    "tests": 147,
+    "pass": 147,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-4.log",
+    "tests": 148,
+    "pass": 148,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-5.log",
+    "tests": 148,
+    "pass": 148,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-6.log",
+    "tests": 150,
+    "pass": 149,
+    "fail": 1,
+    "exit": 1,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-7.log",
+    "tests": 150,
+    "pass": 150,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-8.log",
+    "tests": 151,
+    "pass": 151,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final-9.log",
+    "tests": 151,
+    "pass": 151,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "reliability-final.log",
+    "tests": 147,
+    "pass": 147,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-1.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-2.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-3.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-4.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-5.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-6.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final-7.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "resilience-final.log",
+    "tests": 98,
+    "pass": 98,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "targeted-1.log",
+    "tests": 10,
+    "pass": 8,
+    "fail": 2,
+    "exit": 1,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "targeted-2.log",
+    "tests": 10,
+    "pass": 9,
+    "fail": 1,
+    "exit": 1,
+    "shellExit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  },
+  {
+    "log": "targeted-3.log",
+    "tests": 12,
+    "pass": 12,
+    "fail": 0,
+    "exit": 0,
+    "note": "Node test exit agrees with TAP result; latest required command exits independently verified in tool completion. targeted-2 shell returned 0 because a following diagnostic succeeded; its test failed. Counts are not a live-quality score."
+  }
+]

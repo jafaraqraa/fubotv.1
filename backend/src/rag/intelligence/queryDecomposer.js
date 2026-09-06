@@ -102,6 +102,7 @@ class IntentMapper {
 
         return {
             query: queryLabel,
+            originalQuery: clause,
             intent: intent,
             confidence: confidence
         };

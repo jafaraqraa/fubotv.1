@@ -74,6 +74,14 @@ window.Dashboard.api = {
 
         const response = await fetch(targetUrl, options);
         if (response.status === 401) {
+            // The running backend also uses 401 for the secondary RAG password.
+            // Only that exact endpoint/error may stay in the unlock dialog.
+            const pathname = new URL(targetUrl, window.location.href).pathname;
+            if (method === 'POST' && /\/rag\/access\/unlock$/.test(pathname)) {
+                const body = await response.clone().json().catch(() => null);
+                if (body?.code === 'RAG_PASSWORD_INVALID'
+                    || body?.error === 'كلمة المرور غير صحيحة.') return response;
+            }
             window.location.href = '/login';
             throw new Error('Unauthorized session. Redirecting to login.');
         }

@@ -1,0 +1,20 @@
+{
+  "suite": "fubot-grounding-safety-regression-ar-v1",
+  "mode": "CONTROLLED_ENFORCEMENT",
+  "replaySource": "grounded-generation/bakeoff-results/google_gemini-2.5-flash-dev-run-1.json",
+  "casesSelected": 88,
+  "casesScored": 88,
+  "dependencyFailuresExcluded": 0,
+  "wouldAllow": 70,
+  "wouldBlock": 18,
+  "wouldPartial": 0,
+  "candidateFalseBlocks": 3,
+  "missedUnsafeResponses": 0,
+  "unsupportedBusinessFactsThatWouldStillBeDelivered": 0,
+  "tenantLeakage": 0,
+  "numericMisses": 0,
+  "temporalMisses": 0,
+  "negationExclusivityMisses": 0,
+  "averageBoundaryLatencyMs": 0.572,
+  "p95BoundaryLatencyMs": 2.087
+}

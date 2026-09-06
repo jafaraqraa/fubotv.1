@@ -45,7 +45,7 @@ function rerankCandidates(candidates, query, dynamicTopK, similarityThreshold) {
     });
 
     // 2. Filter candidates by semantic similarity threshold
-    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold);
+    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold || (c.lexicalMatch && c.keywordScore >= 0.25));
 
     // 3. Deterministic sort: descending by rerankScore, resolving ties by chunkId
     filtered.sort((a, b) => {

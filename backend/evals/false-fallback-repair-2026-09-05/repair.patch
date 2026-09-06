@@ -1,0 +1,308 @@
+--- a/backend/src/rag/intelligence/derivedClaimValidator.js
++++ b/backend/src/rag/intelligence/derivedClaimValidator.js
+@@ -92,6 +92,78 @@
+ 
+ function close(left, right) { return Math.abs(left - right) <= 0.01; }
+ 
++function userCount(text) {
++    const explicit=quantities(text).find(value=>value.unit==='UNSPECIFIED' && value.value>0);
++    if(explicit)return {...explicit,source:'USER_INPUT',evidenceId:null};
++    const value=normalize(text);
++    // Arabic count words are user inputs, never business evidence.
++    if(/(?:^|\s)(?:اثنتين|اثنين|اتنين|ثنتين|وحدتين|قطعتين)(?:\s|$)/u.test(value))return {value:2,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null};
++    if(/(?:^|\s)(?:واحده|واحد)(?:\s|$)/u.test(value))return {value:1,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null};
++    return null;
++}
++
++const UNIT_PRICE=/(?:سعر|ثمن|تكلف).*(?:وحد|قطع|عنصر|جهاز)|(?:للوحد|للقطع|للقطعه|لكل\s+(?:وحد|قطع|عنصر|جهاز))/u;
++const FEE_RELATION=/(?:تركيب|تهيئ|اعداد|توصيل|زيار|setup|install|delivery)/u;
++const ONE_TIME=/(?:اجمالي|كامل|مره\s+واحد|لا\s+تتكرر|لا\s+يتكرر|نفس\s+الزيار|فقط\s+للزيار|one.time|same.visit|not.repeat)/u;
++function monetaryStatements(chunk){
++    const lines=String(chunk.text||'').split(/\n+|(?<=[.!؟])\s+/u).map(x=>x.replace(/[*_`]/g,'').trim()).filter(Boolean);
++    let heading='';const result=[];
++    for(let i=0;i<lines.length;i++){
++        if(/^#+\s*/u.test(lines[i]))heading=lines[i].replace(/^#+\s*/u,'');
++        const money=quantities(lines[i]).filter(x=>['ILS','USD'].includes(x.unit));
++        if(!money.length)continue;
++        const previous=lines[i-1]||'',current=lines[i],next=lines[i+1]||'';
++        const text=[heading,previous,current,next].filter(Boolean).join(' ');
++        result.push(...money.map(value=>({...value,text,normalized:normalize(text),current:normalize(current),previous:normalize(previous),next:normalize(next),evidenceId:chunkId(chunk),chunk})));
++    }
++    return result;
++}
++
++function validateQuantityWithOneTimeFee({claim,question,chunks}){
++    const output=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit)).at(-1),count=userCount(question);
++    if(!output||!count||count.value<=0)return null;
++    const target=new Set(scopeTokens(`${question} ${claim}`));
++    const scoped=text=>{const tokens=new Set(scopeTokens(text));return [...target].some(x=>tokens.has(x));};
++    const statements=chunks.flatMap(monetaryStatements);
++    const unitPrices=statements.filter(x=>UNIT_PRICE.test(x.normalized)&&scoped(x.text));
++    const fees=statements.filter(x=>FEE_RELATION.test(x.normalized)&&scoped(x.text));
++    for(const price of unitPrices)for(const fee of fees){
++        if(price.unit!==output.unit||fee.unit!==output.unit)continue;
++        // The one-time marker must be adjacent to this fee proposition. Its
++        // presence elsewhere in the same chunk/document proves nothing.
++        const nextContinuesFee=/(?:لا\s+تتكرر|لا\s+يتكرر|تبقي).*(?:اجر|رسم|fee)/u.test(fee.next);
++        if(!ONE_TIME.test(`${fee.previous} ${fee.current}`)&&!nextContinuesFee)continue;
++        if(!FEE_RELATION.test(normalize(question)))continue;
++        const expected=count.value*price.value+fee.value;
++        if(!close(expected,output.value))continue;
++        // If the model exposes operands, they must agree with the proven inputs.
++        const claimedMoney=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit));
++        const subtotal=count.value*price.value;
++        if(claimedMoney.some(x=>![price.value,fee.value,subtotal,output.value].some(v=>close(v,x.value))))continue;
++        const evidenceIds=[...new Set([price.evidenceId,fee.evidenceId])];
++        const relationLines=chunks.filter(c=>chunkId(c)===fee.evidenceId).flatMap(c=>String(c.text).split(/\n+/u))
++            .filter(line=>FEE_RELATION.test(normalize(line))||ONE_TIME.test(normalize(line))||quantities(line).some(x=>x.unit===fee.unit&&close(x.value,fee.value)));
++        return {operation:'ADD_MULTIPLY',relation:'TOTAL_PRICE',evidenceText:[price.text,...relationLines].join('\n'),inputs:[
++            {value:count.value,unit:'UNSPECIFIED',source:'USER_INPUT',evidenceId:null,semanticRole:'QUANTITY'},
++            {value:price.value,unit:price.unit,source:'EVIDENCE',evidenceId:price.evidenceId,semanticRole:'UNIT_PRICE'},
++            {value:fee.value,unit:fee.unit,source:'EVIDENCE',evidenceId:fee.evidenceId,semanticRole:'ONE_TIME_FEE'}
++        ],scopeEvidenceIds:evidenceIds,evidenceIds,expectedResult:{value:Number(expected.toFixed(2)),unit:output.unit}};
++    }
++    return null;
++}
++function validateHistoricalPrice({claim,question,chunks}){
++    const date=normalize(question).match(/(?:شهر|month)\s+(\d{1,2})\s+(?:سنه|عام|year)\s+(\d{4})/u),codes=productCodes(question);
++    const output=quantities(claim).filter(x=>['ILS','USD'].includes(x.unit)).at(-1);
++    if(!date||codes.length!==1||!output)return null;
++    const instant=new Date(Date.UTC(Number(date[2]),Number(date[1])-1,15)),code=codes[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'\\s*');
++    for(const chunk of chunks){const source=normalizeNumbers(chunk.text).replace(/[*_`]/g,' ').replace(/\s+/g,' ');
++        const ranges=[...source.matchAll(new RegExp(`(?:حتى|الي)\\s+(?:تاريخ\\s*)?[:：]?\\s*(\\d{4}-\\d{2}-\\d{2})[^.]{0,100}?كان\\s+(?:سعر|ثمن|تكلفه)\\s+${code}[^.]{0,50}?(\\d+(?:\\.\\d+)?)\\s*(شيكل|شيقل|ILS|USD|دولار)`,'giu'))];
++        for(const match of ranges){const end=new Date(match[1]+'T23:59:59Z'),value=Number(match[2]),currency=/USD|دولار/i.test(match[3])?'USD':'ILS';
++            if(instant<=end&&currency===output.unit&&close(value,output.value))return {operation:'HISTORICAL_RANGE_LOOKUP',relation:'HISTORICAL_PRICE',evidenceText:match[0],inputs:[{value:date[1],unit:'MONTH',source:'USER_INPUT',evidenceId:null,semanticRole:'QUERY_MONTH'},{value:date[2],unit:'YEAR',source:'USER_INPUT',evidenceId:null,semanticRole:'QUERY_YEAR'},{value,unit:currency,source:'EVIDENCE',evidenceId:chunkId(chunk),semanticRole:'HISTORICAL_PRICE'}],scopeEvidenceIds:[chunkId(chunk)],evidenceIds:[chunkId(chunk)],expectedResult:{value,unit:currency}};}
++    }
++    return null;
++}
++
+ function validatePercent({ operation, claim, question, chunks }) {
+     // A percentage may be mentioned after the resulting amount. Select the
+     // last monetary result, not simply the last numeric token in the sentence.
+@@ -189,15 +261,19 @@
+ }
+ 
+ function validateDerivedClaim({ claim, question = '', chunks = [], tenantId = '', now = new Date() }) {
++    const trusted = trustedChunks(chunks, tenantId, question, now);
++    if (!trusted.length) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'untrusted_or_missing_provenance' };
++    const historical=validateHistoricalPrice({claim,question,chunks:trusted});
++    if(historical)return {status:DERIVED_STATUS.SUPPORTED,provenance:historical};
+     // ISO dates and clock punctuation are facts, not arithmetic operators.
+     // Never derive a historical clock/date from unrelated numbers in a chunk.
+     if (/\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}/u.test(normalizeNumbers(claim))) {
+         return {status:DERIVED_STATUS.NOT_PROVEN,reason:'temporal_fact_requires_direct_evidence'};
+     }
++    const compound=validateQuantityWithOneTimeFee({claim,question,chunks:trusted});
++    if(compound)return {status:DERIVED_STATUS.SUPPORTED,provenance:compound};
+     const operation = detectOperation(`${question} ${claim}`);
+     if (!operation) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'not_derived' };
+-    const trusted = trustedChunks(chunks, tenantId, question, now);
+-    if (!trusted.length) return { status: DERIVED_STATUS.NOT_PROVEN, reason: 'untrusted_or_missing_provenance' };
+     const provenance = operation.startsWith('PERCENT_')
+         ? validatePercent({ operation, claim, question, chunks: trusted })
+         : validateBinary({ operation, claim, question, chunks: trusted });
+--- a/backend/src/rag/intelligence/answerValidator.js
++++ b/backend/src/rag/intelligence/answerValidator.js
+@@ -501,16 +501,18 @@
+ }
+ 
+ function numericEntailment(claim, evidence, options = {}) {
+-    const claimQuantities = extractQuantities(claim);
++    const numericScope=text=>String(text||'').replace(/\b(?:[A-Za-z]{1,24}[-_]?\d{1,8}[A-Za-z]{0,8}|[A-Za-z]{1,24}\s+\d{1,8}[A-Za-z]{1,8})\b/g,' ')
++        .replace(/\b\d{4}-\d{2}-\d{2}\b/g,' ').replace(/(?:شهر|month)\s+\d+\s+(?:سنه|عام|year)\s+\d{4}/giu,' ');
++    const claimQuantities = extractQuantities(numericScope(claim));
+     if (!samePolicy(options.question || claim, evidence) || !samePolicy(claim, evidence)) {
+         return { relation: 'UNKNOWN', reason: 'policy_relation_mismatch', claimQuantities, evidenceQuantities: [] };
+     }
+-    const evidenceQuantities = extractQuantities(evidence);
++    const evidenceQuantities = extractQuantities(numericScope(evidence));
+     if (!claimQuantities.length) return { relation: 'NONE', claimQuantities, evidenceQuantities };
+     if (!evidenceQuantities.length) return { relation: 'UNKNOWN', claimQuantities, evidenceQuantities };
+ 
+     let derived = false;
+-    const questionQuantities = extractQuantities(options.question || '');
++    const questionQuantities = extractQuantities(numericScope(options.question || ''));
+     for (const cq of claimQuantities) {
+         const suppliedByUser = cq.operator === '=' && questionQuantities
+             .some(item => item.unit === cq.unit && item.operator === '=' && item.value === cq.value);
+@@ -668,6 +670,18 @@
+         && !structural.has(token) && !evidenceTokens.has(token)).length === 0;
+ }
+ 
++function explicitNegativeEnumerationStatus(claim,evidence,options={}){
++    if(!hasNegation(claim))return null;
++    const lines=String(evidence||'').split(/\n+/u).map(x=>x.trim()).filter(Boolean);
++    const assertion=new Set(canonicalTokens(`${claim} ${options.question||''}`).flatMap(looseArabicStemVariants));
++    for(let i=0;i<lines.length;i++){
++        if(!/(?:لا يوجد|لا توجد|ليس لدينا|ليست لدينا).*[:：]\s*$/u.test(normalizeText(lines[i])))continue;
++        const members=[];for(let j=i+1;j<lines.length&&j<=i+12;j++){if(/^[-*•]\s*/u.test(lines[j]))members.push(lines[j].replace(/^[-*•]\s*/u,''));else if(members.length)break;}
++        return members.some(member=>canonicalTokens(member).every(t=>looseArabicStemVariants(t).some(s=>assertion.has(s))));
++    }
++    return null;
++}
++
+ function completeListAcrossAdjacentChunks(claim, chunks, options = {}) {
+     for (const left of chunks) for (const right of chunks) {
+         if (left === right || !left.documentId || left.documentId !== right.documentId) continue;
+@@ -700,9 +714,12 @@
+         // No matching table cell is evidence; do not fall back to another row.
+         segments = scoped.length ? scoped : [''];
+     }
+-    const candidates = completeListEntailment(claim, chunk.text, options)
++    const targetCodes=productCodes(options.question||claim);
++    const productSections=targetCodes.length?identityRows(chunk.text,targetCodes).filter(x=>/سعر|ثمن|تكلف|price|cost/iu.test(x)):[];
++    const explicitAbsence=explicitNegativeEnumerationStatus(claim,chunk.text,options)===true;
++    const candidates = completeListEntailment(claim, chunk.text, options)||explicitAbsence
+         ? [chunk.text]
+-        : segments.length ? segments : [chunk.text];
++        : productSections.length?productSections:segments.length ? segments : [chunk.text];
+     const candidateRelevance = evidence => {
+         const numeric = numericEntailment(claim, evidence, options).relation;
+         const negation = negationResult(claim, evidence).relation;
+@@ -731,7 +748,7 @@
+     const keyword = keywordCoverage(claim, numericEvidenceText);
+     const reverseKeyword = bidirectionalCoverage(claim, numericEvidenceText);
+     const semantic = semanticSimilarity(claim, numericEvidenceText);
+-    const completeList = completeListEntailment(claim, chunk.text, options);
++    const completeList = completeListEntailment(claim, chunk.text, options)||explicitAbsence;
+     const negation = completeList
+         ? { claimNegated: hasNegation(claim), evidenceNegated: false, relation: 'ALIGNED' }
+         : negationResult(claim, bestText);
+@@ -828,6 +845,8 @@
+     if (derivedResult?.status === DERIVED_STATUS.SUPPORTED) {
+         classification = STATUS.SUPPORTED;
+     }
++    const enumerationStatuses=chunks.map(c=>explicitNegativeEnumerationStatus(claim.text,c.text,options)).filter(x=>x!==null);
++    if(enumerationStatuses.length&&!enumerationStatuses.includes(true))classification=STATUS.CONTRADICTED;
+     if (adjacentListSupport) classification = STATUS.SUPPORTED;
+     if (policyGuard.relation === POLICY_RELATION.SUPPORTED) classification = STATUS.SUPPORTED;
+     if (policyGuard.relation === POLICY_RELATION.BLOCK) classification = STATUS.CONTRADICTED;
+@@ -933,7 +952,7 @@
+         contradictionScore: Number(best.contradiction.toFixed(4)),
+         numericExact: best.numericExact,
+         matchedEvidenceId: evidenceChunkIds[0] || best.chunk.id,
+-        matchedSentence: eligibilityProof?.evidenceText || adjacentListSupport?.text || best.matchedEvidence,
++        matchedSentence: eligibilityProof?.evidenceText || effectiveDerivedProvenance?.evidenceText || adjacentListSupport?.text || best.matchedEvidence,
+         semanticScore: Number(best.semantic.toFixed(4)),
+         numericResult: eligibilityProof || policyProvenance || derivedResult?.status === DERIVED_STATUS.SUPPORTED
+             ? { relation: 'ENTAILED', derived: true,
+--- a/backend/src/rag/intelligence/numericIdentity.js
++++ b/backend/src/rag/intelligence/numericIdentity.js
+@@ -8,12 +8,29 @@
+ function productCodes(value) {
+  // Preserve suffixes and spaces in catalog identifiers; don't interpret bare
+  // electrical units as a product. Identity comparisons use canonical spacing.
+- return [...new Set((String(value || '').match(/\b[A-Za-z]{1,24}(?:[-_]|\s)?\d{1,8}[A-Za-z]{0,8}\b/g)||[])
++ // A separated bare number is ordinary prose ("opens at 8", "costs 15"),
++ // not a catalog identity.  Separated identifiers therefore require a unit/
++ // model suffix (Home 5K); compact and hyphenated identifiers remain valid.
++ return [...new Set((String(value || '').match(/\b(?:[A-Za-z]{1,24}[-_]?\d{1,8}[A-Za-z]{0,8}|[A-Za-z]{1,24}\s+\d{1,8}[A-Za-z]{1,8})\b/g)||[])
+   .map(code=>code.replace(/\s+/g,' ').toUpperCase()))];
+ }
+ function identityRows(text, codes) {
+- return String(text || '').split(/\n+|(?<=[.!?؟])\s+/u).filter(row=>
+-  codes.every(code=>productCodes(row).includes(code)));
++ const rows=String(text || '').split(/\n+|(?<=[.!?؟])\s+/u).filter(Boolean),matches=[];
++ for(let i=0;i<rows.length;i++)if(codes.every(code=>productCodes(rows[i]).includes(code))){
++  matches.push(rows[i]);
++  // Markdown/catalog headings bind following attribute lines until the next
++  // distinct product heading. This preserves name/value identity without
++  // borrowing a price from a sibling product.
++  if(!/\b(?:سعر|ثمن|تكلف|price|cost)\b/iu.test(rows[i])){
++   const block=[rows[i]];
++   for(let j=i+1;j<rows.length&&j<=i+8;j++){
++    const other=productCodes(rows[j]);if(other.length&&!codes.every(code=>other.includes(code)))break;
++    block.push(rows[j]);
++   }
++   if(block.length>1)matches.push(block.join('\n'));
++  }
++ }
++ return [...new Set(matches)];
+ }
+ function contradictoryComparison(claim) {
+  const text=normalizeNumbers(claim).normalize('NFKC').replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[إأآٱ]/g,'ا');
+--- a/backend/test/false_fallback_derived_total.test.js
++++ b/backend/test/false_fallback_derived_total.test.js
+@@ -0,0 +1,63 @@
++const test=require('node:test'),assert=require('node:assert/strict');
++const {validateDerivedClaim,DERIVED_STATUS}=require('../src/rag/intelligence/derivedClaimValidator');
++const {validateDetailed,STATUS}=require('../src/rag/intelligence/answerValidator');
++const {evaluateGroundingSafety,DECISION}=require('../src/rag/security/groundingSafetyBoundary');
++const {evaluateConditionalPolicy}=require('../src/rag/security/conditionalPolicyGuard');
++const {extractQuantities}=require('../src/rag/intelligence/answerValidator');
++const tenantId='derived-total-owner',chunk=(id,text,owner=tenantId)=>({id,chunkId:id,tenantId:owner,text});
++const question='بدي وحدتين من الجهاز، قديش سعر الوحدتين مع التركيب بنفس الزيارة؟';
++const evidence=[chunk('price-and-fee','# الجهاز اللاسلكي\nسعر الوحدة الإضافية:\n220 شيكل للقطعة.\nتركيب وتهيئة أول وحدة خلال الزيارة:\n60 شيكل.\nإذا تم تركيب وحدتين أو أكثر في نفس الزيارة، تبقى أجرة التهيئة الإجمالية 60 شيكل فقط للزيارة.\nلا تتكرر أجرة 60 شيكل لكل وحدة.')];
++test('quantity times proven unit price plus a proven one-time fee',()=>{
++ const answer='سعر وحدتين مع التركيب بنفس الزيارة هو 220 × 2 + 60 = 500 شيكل.';
++ const derived=validateDerivedClaim({claim:answer,question,chunks:evidence,tenantId});
++ assert.equal(derived.status,DERIVED_STATUS.SUPPORTED);assert.equal(derived.provenance.operation,'ADD_MULTIPLY');
++ assert.equal(derived.provenance.expectedResult.value,500);assert.deepEqual(derived.provenance.evidenceIds,['price-and-fee']);
++ assert.equal(derived.provenance.inputs.find(x=>x.semanticRole==='QUANTITY').source,'USER_INPUT');
++ const validation=validateDetailed(answer,evidence,{question,tenantId});assert.equal(validation.overallStatus,STATUS.SUPPORTED);
++ assert.equal(validation.claims[0].derivedStatus,DERIVED_STATUS.SUPPORTED);
++ assert.equal(evaluateGroundingSafety({tenantId,route:'COMPANY_KNOWLEDGE',question,answer,validatedAnswer:answer,serverEvidence:evidence,validation}).decision,DECISION.ALLOW);
++});
++test('an explicitly stated derived subtotal remains bound to quantity and unit price',()=>{
++ const answer='سعر الوحدتين هو 440 شيكل، والتركيب بنفس الزيارة 60 شيكل فقط، يعني المجموع 500 شيكل.';
++ const validation=validateDetailed(answer,evidence,{question,tenantId});
++ assert.equal(validation.overallStatus,STATUS.SUPPORTED);assert.equal(validation.claims[0].derivedProvenance.expectedResult.value,500);
++ assert.match(validation.claims[0].matchedSentence,/لا تتكرر/u);
++ assert.equal(evaluateGroundingSafety({tenantId,route:'COMPANY_KNOWLEDGE',question,answer,validatedAnswer:answer,serverEvidence:evidence,validation}).decision,DECISION.ALLOW);
++});
++test('compound totals fail closed without every relation-bound premise',()=>{
++ const answer='المجموع 500 شيكل.';
++ for(const chunks of [
++  [chunk('price','سعر الوحدة 220 شيكل للقطعة.')],
++  [chunk('mixed','سعر الوحدة 220 شيكل للقطعة. سياسة التأخير: بعد 60 دقيقة توجد رسوم.')],
++  [chunk('distant','سعر الوحدة 220 شيكل للقطعة. رسوم التركيب 60 شيكل لكل وحدة. سياسة أخرى: رسمها الإجمالي مرة واحدة.')],
++  [chunk('repeat','سعر الوحدة 220 شيكل للقطعة. تركيب كل وحدة 60 شيكل.')],
++  [chunk('foreign-fee','سعر الوحدة 220 شيكل للقطعة.'),chunk('fee','التركيب بنفس الزيارة إجمالي 60 شيكل.', 'other-owner')]
++ ])assert.equal(validateDerivedClaim({claim:answer,question,chunks,tenantId}).status,DERIVED_STATUS.NOT_PROVEN);
++});
++test('customer-stated business price is not accepted as evidence',()=>{
++ assert.equal(validateDerivedClaim({claim:'المجموع 500 شيكل.',question:'سعر الوحدة عندكم 220 شيكل صح؟ بدي وحدتين مع تركيب 60 شيكل.',chunks:[chunk('rule','التركيب بنفس الزيارة لا يتكرر.')],tenantId}).status,DERIVED_STATUS.NOT_PROVEN);
++});
++test('cross-relation numbers in the same chunk cannot prove a total',()=>{
++ const mixed=[chunk('mixed','# جهاز الخدمة\nسعر الوحدة 220 شيكل للقطعة.\nسياسة الإلغاء: قبل 60 ساعة يسترد العميل 50%.\nسياسة التأخير: أكثر من 4 ساعات عليه يوم كامل.')];
++ assert.equal(validateDerivedClaim({claim:'المجموع 500 شيكل.',question,chunks:mixed,tenantId}).status,DERIVED_STATUS.NOT_PROVEN);
++});
++test('cancellation and late-return boundaries stay relation-bound',()=>{
++ const chunks=[chunk('policies',['سياسة الإلغاء:','قبل أكثر من 48 ساعة: استرداد كامل.','قبل 24 ساعة أو أكثر وحتى 48 ساعة شاملة: استرداد 50%.','قبل أقل من 24 ساعة: المبلغ غير مسترد.','سياسة التأخير:','حتى 60 دقيقة شاملة: لا رسوم.','أكثر من 60 دقيقة وحتى 4 ساعات شاملة: 50% من السعر اليومي.','أكثر من 4 ساعات: يوم إضافي كامل.'].join('\n'))];
++ const check=(question,claim)=>evaluateConditionalPolicy({claim,question,chunks,tenantId,extractQuantities}).relation;
++ for(const [hours,outcome] of [[49,'استرداد كامل.'],[48,'استرداد 50%.'],[47,'استرداد 50%.'],[24,'استرداد 50%.'],[23,'المبلغ غير مسترد.']])assert.equal(check(`ألغيت قبل ${hours} ساعة`,outcome),'SUPPORTED',`${hours}h cancellation`);
++ for(const [duration,outcome] of [['60 دقيقة','لا رسوم.'],['61 دقيقة','50% من السعر اليومي.'],['4 ساعات بالضبط','50% من السعر اليومي.'],['4 ساعات ودقيقة','يوم إضافي كامل.']])assert.equal(check(`تأخرت ${duration}`,outcome),'SUPPORTED',duration);
++ assert.equal(check('ألغيت قبل 47 ساعة','يوم إضافي كامل.'),'BLOCK');
++ assert.equal(check('تأخرت 4 ساعات','استرداد 50%.'),'BLOCK');
++});
++test('catalog identity, explicit negative enumeration, and historical range remain bound',()=>{
++ const catalog=[chunk('catalog','# Package10\nالسعر: 129 شيكل.\n# Package20\nالسعر: 229 شيكل.')];
++ assert.equal(validateDetailed('سعر Package20 هو 229 شيكل.',catalog,{question:'قديش سعر Package20؟',tenantId}).overallStatus,STATUS.SUPPORTED);
++ assert.notEqual(validateDetailed('سعر Package20 هو 129 شيكل.',catalog,{question:'قديش سعر Package20؟',tenantId}).overallStatus,STATUS.SUPPORTED);
++ const list=[chunk('locations','لا يوجد حاليًا مركز خدمة في:\n* مدينة دال\n* مدينة هاء')];
++ assert.equal(validateDetailed('لا يوجد مركز خدمة في مدينة دال.',list,{question:'هل يوجد مركز خدمة في مدينة دال؟',tenantId}).overallStatus,STATUS.SUPPORTED);
++ assert.notEqual(validateDetailed('لا يوجد مركز خدمة في مدينة واو.',list,{question:'هل يوجد مركز خدمة في مدينة واو؟',tenantId}).overallStatus,STATUS.SUPPORTED);
++ const history=[chunk('history','حتى تاريخ: 2026-06-30 كان سعر Package20: 119 شيكل. ابتداءً من: 2026-07-01 أصبح السعر الحالي: 129 شيكل.')];
++ const h=validateDetailed('سعر Package20 في شهر 5 سنة 2026 كان 119 شيكل.',history,{question:'قديش كان سعر Package20 في شهر 5 سنة 2026؟',tenantId});
++ assert.equal(h.overallStatus,STATUS.SUPPORTED);assert.equal(h.claims[0].derivedProvenance.operation,'HISTORICAL_RANGE_LOOKUP');
++ assert.notEqual(validateDetailed('سعر Package20 في شهر 5 سنة 2026 كان 129 شيكل.',history,{question:'قديش كان سعر Package20 في شهر 5 سنة 2026؟',tenantId}).overallStatus,STATUS.SUPPORTED);
++});
+--- a/backend/evals/maintenance-2026-09-05/trace-false-fallback.js
++++ b/backend/evals/maintenance-2026-09-05/trace-false-fallback.js
+@@ -0,0 +1,16 @@
++'use strict';
++const fs=require('fs'),path=require('path'),crypto=require('crypto');
++const root=path.resolve(__dirname,'../../..'),out=process.env.FUBOT_FALSE_FALLBACK_TRACE;
++if(!out||!process.env.SQLITE_DB_PATH||!process.env.QDRANT_COLLECTION?.startsWith('fubot_audit_'))throw Error('isolated paths required');
++require(path.join(root,'backend/node_modules/dotenv')).config({path:path.join(root,'backend/.env'),quiet:true});
++const captures=[];const safe=v=>JSON.parse(JSON.stringify(v,(k,x)=>/key|token|secret|password|authorization/i.test(k)?undefined:x));
++function wrap(modulePath,name){const mod=require(modulePath),fn=mod[name];mod[name]=function(...args){let output=fn.apply(this,args);captures.push({stage:name,input:safe(args),output:safe(output)});return output;};}
++wrap(path.join(root,'backend/src/rag/intelligence/evidenceDecisionGate'),'decideEvidence');
++wrap(path.join(root,'backend/src/rag/intelligence/derivedClaimValidator'),'validateDerivedClaim');
++wrap(path.join(root,'backend/src/rag/intelligence/answerValidator'),'validateDetailed');
++wrap(path.join(root,'backend/src/rag/security/conditionalPolicyGuard'),'evaluateConditionalPolicy');
++wrap(path.join(root,'backend/src/rag/security/groundingSafetyBoundary'),'applyGroundingSafetyBoundary');
++const Provider=require(path.join(root,'backend/src/services/aiProviders')),get=Provider.getAIProviderForTask;
++Provider.getAIProviderForTask=function(...args){const p=get.apply(this,args),gen=p.generate;if(!p.__traceWrapped){p.__traceWrapped=true;p.generate=async function(messages,options){const result=await gen.call(this,messages,options);captures.push({stage:'generation',input:{provider:this.constructor.name,model:this.model,promptHash:crypto.createHash('sha256').update(JSON.stringify(messages)).digest('hex'),systemHash:crypto.createHash('sha256').update(String(messages?.[0]?.content||'')).digest('hex'),hasSystemPrompt:Boolean(messages?.[0]),hasEvidence:/220|60/u.test(JSON.stringify(messages)),messages:safe(messages)},output:safe(result)});return result;};}return p;};
++const {getAIResponse}=require(path.join(root,'backend/src/services/ai')),db=require(path.join(root,'backend/src/database/connection'));
++(async()=>{const q=process.env.FUBOT_FALSE_FALLBACK_QUESTION||'بدي وحدتين Mesh، قديش سعر الوحدتين مع التركيب بنفس الزيارة؟',id='false-fallback-'+Date.now(),telemetry={pipelineTelemetry:{},decisionTelemetry:{},retrievalTelemetry:{},validationTelemetry:{}};let answer,error;try{answer=await getAIResponse(id,q,'text',null,{tenantId:'default',channel:'isolated_no_delivery',conversationId:id,knowledgeBaseOnly:true,...telemetry});}catch(e){error={code:e.code,message:e.message}}const trace=db.prepare('select * from rag_request_traces where conversation_id=?').get(id);const result={question:q,answer,error,trace:safe(trace),telemetry:safe(telemetry),captures};fs.writeFileSync(out,JSON.stringify(result,null,2));console.log(JSON.stringify({answer,error,requestId:trace?.request_id,gate:trace?.evidence_gate_decision,boundary:trace?.boundary_decision,fallback:trace?.fallback_source,raw:trace?.raw_model_output,captureStages:captures.map(x=>x.stage)}));db.close()})().catch(e=>{console.error(e);process.exitCode=1});

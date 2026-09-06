@@ -85,6 +85,12 @@ test('atomic RAG document replacement lifecycle', async t => {
         assert.strictEqual(result.oldVersionCleanup, 'completed');
         assert.strictEqual(invalidations, 1);
         assert.ok(vectors.has(result.document_key));
+        // Active replacement points must pass the real retrieval model/size
+        // filters, not merely exist in the collection.
+        for (const point of vectors.get(result.document_key)) {
+            assert.strictEqual(point.payload.embeddingModel, result.embedding_model);
+            assert.strictEqual(point.payload.vectorDimension, point.vector.length);
+        }
         assert.ok(!vectors.has(old.document_key));
         assert.ok(!fs.existsSync(old.storage_path));
         assert.strictEqual(repo.listDocumentVersions('tenant-a', old.logical_document_id).filter(v => v.is_active).length, 1);

@@ -1,0 +1,1136 @@
+--- a/backend/src/services/knowledge.js
++++ b/backend/src/services/knowledge.js
+@@ -1,4 +1,5 @@
+ const fs = require('fs');
++const { prioritize } = require('../rag/intelligence/retrievalRelevance');
+ const path = require('path');
+ 
+ const promptPath = path.join(__dirname, '..', '..', 'system_prompt.txt');
+@@ -9,7 +10,7 @@
+ const { performance } = require('perf_hooks');
+ const { requireTenantId } = require('../rag/security/tenantContext');
+ const {
+-    filterRetrievedChunks
++    filterRetrievedChunks, parseSerializedChunks
+ } = require('../rag/security/promptInjectionGuard');
+ 
+ // Import new Phase 11 retrieval intelligence sub-modules
+@@ -66,27 +67,16 @@
+ function buildBudgetedEvidenceContext(evidenceIndex, budget) {
+     const limit = Math.max(500, Number(budget) || 3000);
+     const selected = [];
+-    for (const reference of evidenceIndex.getActive()) {
++    for (let reference of evidenceIndex.getActive()) {
++        // Lossless compaction of repeated identical statements, never truncate
++        // a rule or table just to fill the budget.
++        const sentences = reference.text.split(/(?<=[.!؟])\s+/u).map(s => s.trim()).filter(Boolean);
++        if (sentences.length > 1 && new Set(sentences).size === 1) {
++            reference = new (reference.constructor)(reference.metadata, sentences[0]);
++            evidenceIndex.registerActive(reference.metadata, reference.text);
++        }
+         const candidate = EvidenceBuilder.buildGroundingContext([...selected, reference]);
+         if (candidate.length <= limit) selected.push(reference);
+-    }
+-    if (!selected.length && evidenceIndex.getActive().length) {
+-        const source = evidenceIndex.getActive()[0];
+-        let low = 1;
+-        let high = source.text.length;
+-        let best = null;
+-        while (low <= high) {
+-            const length = Math.floor((low + high) / 2);
+-            const shortened = new (source.constructor)(source.metadata, source.text.slice(0, length));
+-            const candidate = EvidenceBuilder.buildGroundingContext([shortened]);
+-            if (candidate.length <= limit) {
+-                best = shortened;
+-                low = length + 1;
+-            } else {
+-                high = length - 1;
+-            }
+-        }
+-        if (best) selected.push(best);
+     }
+     evidenceIndex.retainActive(selected.map(ref => ref.metadata.chunkId));
+     return EvidenceBuilder.buildGroundingContext(selected);
+@@ -208,6 +198,7 @@
+ 
+             const listsOfResults = await Promise.all(retrievalPromises);
+             const listsOfCandidates = listsOfResults.map(r => r.candidates || []);
++            profiling.retrievalSources = listsOfResults.map(r => ({ lexicalMode: r.metadata?.lexicalMode || 'UNKNOWN', vectorCount: r.metadata?.vectorCount, lexicalCount: r.metadata?.lexicalCount }));
+             profiling.stages.retrieval = Date.now() - t0;
+ 
+             if (profiler) {
+@@ -253,7 +244,7 @@
+             const similarityThreshold = configuredThreshold;
+ 
+             // Filter below similarity threshold
+-            const filteredCandidates = reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold);
++            const filteredCandidates = prioritize(query, reranked.filter(c => (c.finalScore || c.score || c.semanticScore || 0) >= similarityThreshold || (c.lexicalMatch && c.keywordScore >= 0.25)));
+ 
+             // Take Top-K
+             const topChunks = filteredCandidates.slice(0, dynamicTopK);
+@@ -277,27 +268,15 @@
+ 
+                 if (adjacentIds.length > 0) {
+                     const neighbors = await getPointsByIds(tenantId, adjacentIds);
+-                    const neighborMap = new Map();
+-                    neighbors.forEach(n => {
+-                        if (n.payload && n.payload.chunkId) {
+-                            neighborMap.set(n.payload.chunkId, n.payload.text);
+-                        }
+-                    });
+-
+-                    expandedChunks = topChunks.map(item => {
+-                        let expandedText = item.text;
+-                        const prevId = item.payload?.previousChunkId;
+-                        const nextId = item.payload?.nextChunkId;
+-
+-                        if (prevId && neighborMap.has(prevId)) {
+-                            expandedText = neighborMap.get(prevId) + '\n' + expandedText;
+-                        }
+-                        if (nextId && neighborMap.has(nextId)) {
+-                            expandedText = expandedText + '\n' + neighborMap.get(nextId);
+-                        }
+-
+-                        return { ...item, text: expandedText };
+-                    });
++                    const selected = new Set(topChunks.map(c => c.chunkId || c.id));
++                    expandedChunks = [...topChunks];
++                    for (const neighbor of neighbors) {
++                        const payload = neighbor.payload || {};
++                        const id = payload.chunkId || neighbor.id;
++                        if (!id || selected.has(id) || payload.tenantId !== tenantId) continue;
++                        selected.add(id);
++                        expandedChunks.push({ ...neighbor, chunkId: id, text: payload.text || '', payload });
++                    }
+                 }
+             }
+ 
+@@ -334,7 +313,8 @@
+             profiling.selectedTopK = dynamicTopK;
+             profiling.similarityThreshold = similarityThreshold;
+             profiling.optimizedContext = optimizedContext;
+-            profiling.topChunks = expandedChunks;
++            profiling.preBudgetChunkIds = expandedChunks.map(c => c.chunkId || c.id);
++            profiling.topChunks = parseSerializedChunks(optimizedContext) || [];
+             profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                 .map(reference => reference.metadata.chunkId);
+             profiling.retrievedChunks = reranked.map(item => ({
+@@ -435,7 +415,8 @@
+             profiling.selectedTopK = dynamicTopK;
+             profiling.similarityThreshold = similarityThreshold;
+             profiling.optimizedContext = optimizedContext;
+-            profiling.topChunks = topChunks;
++            profiling.preBudgetChunkIds = topChunks.map(c => c.chunkId || c.id);
++            profiling.topChunks = parseSerializedChunks(optimizedContext) || [];
+             profiling.selectedContextChunkIds = evidenceIndex.getActive()
+                 .map(reference => reference.metadata.chunkId);
+             profiling.retrievedChunks = reranked.map(item => ({
+--- a/backend/src/services/ai.js
++++ b/backend/src/services/ai.js
+@@ -1,3 +1,5 @@
++const { createHash: reliabilityHash } = require('crypto');
++const { resolveReferent } = require('../rag/intelligence/conversationReferent');
+ const { addLog, reportError } = require('./logger');
+ const {
+     retrieveContextAsync,
+@@ -307,7 +309,16 @@
+     pipelineTelemetry.selectedRoute = routingDecision.mode;
+     pipelineTelemetry.generationMode = useCompanyKnowledge
+         ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
++    const referentHistory = isImage ? [] : getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });
++    const resolvedReference = resolveReferent(userText, referentHistory);
++    const effectiveQuestion = resolvedReference.query;
++    if (!isImage && useCompanyKnowledge && ['AMBIGUOUS', 'UNRESOLVED'].includes(resolvedReference.status)) {
++        pipelineTelemetry.gateDecision = DECISION.CLARIFY;
++        ragTraceRepo.updateTrace(requestId, { evidence_gate_decision: DECISION.CLARIFY, evidence_gate_reason: 'unresolved_or_ambiguous_referent', reliability_json: { version: 1, referentStatus: resolvedReference.status } });
++        return clarificationForQuery(userText);
++    }
+     let upstreamClarificationNeeded = !isImage
++        && resolvedReference.status !== 'RESOLVED'
+         && needsClarification(userText, conversationHistory);
+     if (!isImage && enabled('RAG_EVIDENCE_GATE_ENABLED', false)
+         && upstreamClarificationNeeded) {
+@@ -328,7 +339,7 @@
+ 
+     // 2. Retrieve Context (RAG)
+     // For Vision task, let's keep context lookup if there's text/caption, else retrieve general context
+-    const retrievalText = isImage ? (mediaObj.caption || '') : userText;
++    const retrievalText = isImage ? (mediaObj.caption || '') : effectiveQuestion;
+     const shouldRetrieveKnowledge = useCompanyKnowledge
+         && (!isImage || Boolean(String(retrievalText || '').trim()));
+     const retrievalTelemetry = routing.retrievalTelemetry
+@@ -342,8 +353,19 @@
+         })
+         : '';
+     const retrievedChunks = retrievalTelemetry.profiling?.topChunks || [];
++    ragTraceRepo.updateTrace(requestId, { retrieval_query: retrievalText, reliability_json: {
++        version: 1,
++        referentStatus: resolvedReference.status,
++        originalQueryHash: reliabilityHash('sha256').update(String(userText)).digest('hex'),
++        resolvedQueryHash: reliabilityHash('sha256').update(String(retrievalText)).digest('hex'),
++        preBudgetChunkIds: retrievalTelemetry.profiling?.preBudgetChunkIds || [],
++        stages: retrievalTelemetry.profiling?.retrievalSources || [],
++        selectedEvidence: retrievedChunks.map(chunk => ({ id: chunk.chunkId || chunk.id,
++            textHash: reliabilityHash('sha256').update(chunk.text || '').digest('hex'),
++            characters: (chunk.text || '').length }))
++    } });
+     upstreamClarificationNeeded = upstreamClarificationNeeded || (!isImage
+-        && needsClarification(userText, conversationHistory, retrievedChunks));
++        && resolvedReference.status !== 'RESOLVED' && needsClarification(userText, conversationHistory, retrievedChunks));
+     const tenantIntegrity = inspectEvidenceTenantIntegrity(retrievedChunks, tenantId);
+     Object.assign(pipelineTelemetry, {
+         ragInvoked: shouldRetrieveKnowledge,
+@@ -367,7 +389,7 @@
+         && typeof routing.decisionTelemetry === 'object' ? routing.decisionTelemetry : {};
+     if (!isImage && useCompanyKnowledge && enabled('RAG_EVIDENCE_GATE_ENABLED', false)) {
+         const gate = decideEvidence({
+-            query: userText,
++            query: effectiveQuestion,
+             chunks: retrievalTelemetry.profiling?.topChunks || [],
+             history: conversationHistory,
+             tenantId
+@@ -415,7 +437,7 @@
+         conversationHistory,
+         systemPrompt,
+         context,
+-        isImage ? (mediaObj.caption || 'صورة مرفقة') : userText,
++        isImage ? (mediaObj.caption || 'صورة مرفقة') : effectiveQuestion,
+         {
+             responseMode: routingDecision.mode,
+             tenantId,
+@@ -484,7 +506,7 @@
+             context,
+             validator: validateAnswer,
+             tenantId,
+-            validationOptions: { question: userText, tenantId }
++            validationOptions: { question: effectiveQuestion, tenantId }
+         });
+         if (routing.validationTelemetry && typeof routing.validationTelemetry === 'object') {
+             Object.assign(routing.validationTelemetry, getLastValidationMetadata() || {});
+@@ -506,7 +528,7 @@
+             const boundaryResult = applyGroundingSafetyBoundary({
+                 answer: validatedResponse,
+                 validatedAnswer: validatedResponse,
+-                question: userText,
++                question: effectiveQuestion,
+                 tenantId,
+                 route: routingDecision.mode,
+                 serverEvidence: retrievedChunks,
+--- a/backend/src/rag/security/conditionalPolicyGuard.js
++++ b/backend/src/rag/security/conditionalPolicyGuard.js
+@@ -17,6 +17,7 @@
+     return String(value || '').normalize('NFKC').toLowerCase()
+         .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+         .replace(/[إأآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه')
++        .replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+         .replace(/[^\p{L}\p{N}%]+/gu, ' ').replace(/\s+/g, ' ').trim();
+ }
+ 
+@@ -52,22 +53,60 @@
+         .map(value => value.trim()).filter(Boolean);
+ }
+ 
++// Relation scope is independent of units: cancellation and late return may
++// both use hours but may never prove each other's outcome.
++const POLICY_TOPICS = [
++    ['cancellation', /الغاء|الغيت|تلغي|cancel/iu],
++    ['late_return', /تاخير|تاخرت|متاخر|تتاخر|late|overdue/iu],
++    ['delivery', /توصيل|شحن|delivery|shipping/iu],
++    ['discount', /خصم|discount/iu],
++    ['capacity', /سعه|capacity/iu],
++    ['operator', /تشغيل|تشغل|اشغل|يشغل|مشغل|operat/iu],
++    ['renter', /مستاجر|استاجر|تستاجر|renter|renting/iu]
++];
++function policyTopics(text) {
++    const value = normalize(text);
++    return POLICY_TOPICS.filter(([, pattern]) => pattern.test(value)).map(([name]) => name);
++}
++function samePolicy(left, right) {
++    const a = policyTopics(left), b = policyTopics(right);
++    return !a.length || !b.length || a.some(topic => b.includes(topic));
++}
++function duration(quantity) {
++    const scale = { MINUTE: 1, HOUR: 60 }[quantity.unit];
++    return scale ? { ...quantity, value: quantity.value * scale, unit: 'DURATION' } : quantity;
++}
++function conditionQuantities(text, extractQuantities) {
++    const normalized = String(text).replace(/[٠-٩]/g, d => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
++        .replace(/بـ?(?=\d)/gu, 'ب ');
++    const range = normalized.match(/(?:من\s+|بين\s+)?(\d+(?:\.\d+)?)\s*(?:[-–—]|إلى|الى|و)\s*(\d+(?:\.\d+)?)\s*(ساعة|ساعات|دقيقة|دقائق|يوم|أيام|hours?|minutes?|days?)/iu);
++    if (range) {
++        const unit = extractQuantities(`${range[2]} ${range[3]}`)[0]?.unit;
++        if (unit) return [
++            { value: Number(range[1]), unit, operator: '>=' },
++            { value: Number(range[2]), unit, operator: '<=' }
++        ];
++    }
++    return extractQuantities(normalized).filter(item => item.operator !== '=');
++}
+ function extractBranches(chunks, { tenantId, extractQuantities }) {
+     const branches = [];
+     for (const chunk of chunks || []) {
+         if (tenantId && chunk.tenantId && String(chunk.tenantId) !== String(tenantId)) continue;
++        let heading = '';
+         for (const segment of policySegments(chunk.text)) {
+             const delimiter = segment.search(/[:：]/u);
+-            if (delimiter < 0) continue;
++            if (delimiter < 0) {
++                if (segment.length < 120 && !extractQuantities(segment).length) heading = segment;
++                continue;
++            }
+             const conditionText = segment.slice(0, delimiter);
+             const outcome = segment.slice(delimiter + 1).trim();
+-            // Arabic may attach the preposition "بـ" directly to a boundary.
+-            // Normalize it inside this guard only, leaving baseline quantity
+-            // extraction untouched for ordinary identifiers and claims.
+-            const guardConditionText = conditionText.replace(/بـ?(?=\d)/gu, 'ب ');
+-            const conditions = extractQuantities(guardConditionText).filter(item => item.operator !== '=');
++            const conditions = conditionQuantities(conditionText, extractQuantities);
++            if (!conditions.length && !outcome) heading = conditionText;
+             if (conditions.length && outcome) branches.push({
+-                conditions, outcome, evidenceId: chunk.id || chunk.chunkId || null,
++                conditions, outcome, conditionText, scope: `${heading} ${conditionText}`,
++                evidenceId: chunk.id || chunk.chunkId || null,
+                 tenantId: chunk.tenantId || null
+             });
+         }
+@@ -79,16 +118,23 @@
+     if (typeof extractQuantities !== 'function') throw new TypeError('extractQuantities is required');
+     const branches = extractBranches(chunks, { tenantId, extractQuantities });
+     if (branches.length < 2) return { relation: RELATION.NOT_APPLICABLE, branches };
+-    const userValues = extractQuantities(question || '').filter(item => item.operator === '=');
+-    const relevant = branches.filter(branch => branch.conditions.some(condition =>
+-        userValues.some(value => value.unit === condition.unit)));
++    let userValues = extractQuantities(question || '').filter(item => item.operator === '=');
++    // Compound durations are one input (four hours and one minute), not two
++    // alternative values. Only combine explicit conjunctions, never alternatives.
++    if (/\d+\s*(?:ساعات?|hours?)\s*(?:و|and)\s*(?:دقيقه|دقيقة|\d+\s*(?:دقائق|minutes?))/iu.test(question || '')) {
++        const durations = userValues.filter(item => ['HOUR', 'MINUTE'].includes(item.unit));
++        const implicitMinute = /(?:و|and)\s*(?:دقيقه|دقيقة)(?:\s|$)/u.test(question || '') ? 1 : 0;
++        userValues = [{ value: durations.reduce((sum, item) => sum + duration(item).value, implicitMinute), unit: 'MINUTE', operator: '=' }];
++    }
++    const relevant = branches.filter(branch => samePolicy(question, branch.scope) && branch.conditions.some(condition =>
++        userValues.some(value => duration(value).unit === duration(condition).unit)));
+     if (relevant.length < 2) return { relation: RELATION.NOT_APPLICABLE, branches };
+     if (relevant.some(branch => !branch.evidenceId)) {
+         return { relation: RELATION.BLOCK, reason: 'MISSING_EVIDENCE_ID', branches: relevant };
+     }
+     const applicable = relevant.filter(branch => branch.conditions.every(condition =>
+-        userValues.some(value => value.unit === condition.unit
+-            && satisfies(value.value, condition.operator, condition.value))));
++        userValues.some(value => duration(value).unit === duration(condition).unit
++            && satisfies(duration(value).value, condition.operator, duration(condition).value))));
+     if (applicable.length !== 1) return {
+         relation: RELATION.BLOCK,
+         reason: applicable.length > 1 ? 'AMBIGUOUS_BRANCHES' : 'UNRESOLVED_BRANCH',
+@@ -96,6 +142,27 @@
+         applicable
+     };
+     const active = applicable[0];
++    const claimTopics = policyTopics(claim);
++    if (claimTopics.length && !samePolicy(claim, active.scope)) return {
++        relation: RELATION.BLOCK, reason: 'WRONG_POLICY_RELATION', active
++    };
++    const echoedConditions = extractQuantities(claim).filter(item => ['HOUR', 'MINUTE', 'DAY'].includes(item.unit));
++    if (echoedConditions.some(actual => !userValues.some(input => actual.operator === '=' && duration(actual).unit === duration(input).unit && duration(actual).value === duration(input).value)
++        && !active.conditions.some(condition => actual.unit === condition.unit && actual.operator === condition.operator && actual.value === condition.value)
++        && !extractQuantities(active.outcome).some(value => actual.unit === value.unit && actual.value === value.value && actual.operator === value.operator))) return {
++        relation: RELATION.BLOCK, reason: 'CLAIM_CONDITION_DIFFERS_FROM_INPUT', active
++    };
++    const actualQuantities = extractQuantities(claim).filter(item => ['PERCENT', 'ILS', 'USD'].includes(item.unit));
++    const expectedQuantities = extractQuantities(active.outcome);
++    if (actualQuantities.some(actual => !expectedQuantities.some(expected =>
++        actual.unit === expected.unit && actual.value === expected.value && actual.operator === expected.operator))) return {
++        relation: RELATION.BLOCK, reason: 'WRONG_BRANCH_VALUE', active
++    };
++    const full = /كامل|بالكامل|full|entire/iu;
++    const expectedPartial = expectedQuantities.some(item => item.unit === 'PERCENT' && item.value < 100);
++    if (full.test(claim) && expectedPartial && !hasNegation(claim)) return {
++        relation: RELATION.BLOCK, reason: 'WRONG_BRANCH_OUTCOME', active
++    };
+     const activeScore = outcomeOverlap(claim, active.outcome);
+     const wrong = relevant.filter(branch => branch !== active)
+         .map(branch => ({ branch, score: outcomeOverlap(claim, branch.outcome) }))
+@@ -111,4 +178,4 @@
+     return { relation: RELATION.BLOCK, reason: 'OUTCOME_NOT_BOUND_TO_ACTIVE_BRANCH', active };
+ }
+ 
+-module.exports = { RELATION, extractBranches, evaluateConditionalPolicy };
++module.exports = { RELATION, extractBranches, evaluateConditionalPolicy, samePolicy, policyTopics };
+--- a/backend/src/rag/intelligence/evidenceDecisionGate.js
++++ b/backend/src/rag/intelligence/evidenceDecisionGate.js
+@@ -1,3 +1,4 @@
++const { missingAmountEvidence } = require('./retrievalRelevance');
+ const DECISION = Object.freeze({
+     ANSWER: 'ANSWER',
+     NO_ANSWER: 'NO_ANSWER',
+@@ -425,6 +426,9 @@
+     } else if (currentIntent && !temporalEvidenceChunks.length) {
+         decision = DECISION.NO_ANSWER;
+         reason = 'current_state_not_proven';
++    } else if (missingAmountEvidence(query, scopedChunks)) {
++        decision = DECISION.NO_ANSWER;
++        reason = 'requested_amount_not_in_selected_evidence';
+     } else if (unmetEvidenceRule) {
+         decision = DECISION.NO_ANSWER;
+         reason = 'required_business_fact_not_in_evidence';
+--- a/backend/src/rag/intelligence/answerValidator.js
++++ b/backend/src/rag/intelligence/answerValidator.js
+@@ -1,3 +1,5 @@
++const { tableFacts } = require('../processing/tableStructure');
++const { requestedFields, missingAmountEvidence } = require('./retrievalRelevance');
+ const { performance } = require('perf_hooks');
+ const {
+     RISK,
+@@ -6,7 +8,7 @@
+     redactSecrets
+ } = require('../security/promptInjectionGuard');
+ const { DERIVED_STATUS, validateDerivedClaim } = require('./derivedClaimValidator');
+-const { RELATION: POLICY_RELATION, evaluateConditionalPolicy } = require('../security/conditionalPolicyGuard');
++const { RELATION: POLICY_RELATION, evaluateConditionalPolicy, samePolicy } = require('../security/conditionalPolicyGuard');
+ 
+ const STATUS = Object.freeze({
+     SUPPORTED: 'SUPPORTED',
+@@ -176,7 +178,7 @@
+             const risk = scanText(segment).riskLevel;
+             return risk === RISK.SAFE;
+         })
+-        .join(' ')
++        .join('\n')
+         .trim();
+ }
+ 
+@@ -378,7 +380,9 @@
+         ['الثامنه', 8], ['التاسعه', 9], ['العاشره', 10],
+         ['الحاديه عشر', 11], ['الثانيه عشر', 12]
+     ]);
+-    let normalized = normalizeText(text);
++    let normalized = normalizeText(String(text || '').replace(/٫/g, '.'))
++        .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
++        .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)));
+     for (const [word, hour] of clockWords) {
+         const escaped = word.replace(/ /g, '\\s+');
+         normalized = normalized
+@@ -415,6 +419,7 @@
+ function comparatorBefore(text, numberIndex, unit) {
+     const prefix = text.slice(Math.max(0, numberIndex - 65), numberIndex);
+     if (/(?:بعد\s+(?:ال)?(?:خصم|زياده))\s*$/iu.test(prefix)) return '=';
++    if (unit !== 'CLOCK' && /(?:و?حتي|و?حتى|up to)\s*$/iu.test(prefix)) return '<=';
+     if (/(?:على الاقل|لا يقل|at least)\s*$/i.test(prefix)) return '>=';
+     if (/(?:اكثر من|اكبر من|فوق|تجاوز|يتجاوز|تتجاوز|greater than|more than|above|>)\s*[^\d]*$/i.test(prefix)) return '>';
+     if (['HOUR', 'DAY', 'CLOCK'].includes(unit) && /(?:بعد)\s*(?:الساعه\s*)?$/iu.test(prefix)) return '>';
+@@ -485,6 +490,9 @@
+ 
+ function numericEntailment(claim, evidence, options = {}) {
+     const claimQuantities = extractQuantities(claim);
++    if (!samePolicy(options.question || claim, evidence) || !samePolicy(claim, evidence)) {
++        return { relation: 'UNKNOWN', reason: 'policy_relation_mismatch', claimQuantities, evidenceQuantities: [] };
++    }
+     const evidenceQuantities = extractQuantities(evidence);
+     if (!claimQuantities.length) return { relation: 'NONE', claimQuantities, evidenceQuantities };
+     if (!evidenceQuantities.length) return { relation: 'UNKNOWN', claimQuantities, evidenceQuantities };
+@@ -663,8 +671,18 @@
+ function scoreEvidence(claim, chunk, options = {}) {
+     // Completeness is a document-level assertion whose members are commonly
+     // formatted as separate list lines. Segmenting first discards that scope.
+-    const segments = splitIntoSentences(chunk.text).flatMap(segment =>
++    const projectedText = tableFacts(chunk.text);
++    const tableProjected = projectedText !== chunk.text;
++    let segments = splitIntoSentences(projectedText).flatMap(segment =>
+         segment.split(/[،,]\s*(?=(?:و)?لا\s+)/u).map(part => part.trim()).filter(Boolean));
++    if (tableProjected) {
++        const codes = String(options.question || claim).toLowerCase().match(/\b[a-z]+[-_]?\d+\b/g) || [];
++        const requested = requestedFields(options.question || claim);
++        const scoped = segments.filter(segment => (!codes.length || codes.every(code => segment.toLowerCase().includes(code)))
++            && (!requested.length || requested.some(field => requestedFields(segment).includes(field))));
++        // No matching table cell is evidence; do not fall back to another row.
++        segments = scoped.length ? scoped : [''];
++    }
+     const candidates = completeListEntailment(claim, chunk.text, options)
+         ? [chunk.text]
+         : segments.length ? segments : [chunk.text];
+@@ -686,7 +704,7 @@
+     // documented in separate sentences of the same trusted chunk (for example
+     // an order-value threshold and a TV-size exception). Use the whole chunk
+     // only when it proves every quantity; never use it to rescue a mismatch.
+-    if (extractQuantities(claim).length > 1 && numericResult.relation !== 'ENTAILED') {
++    if (!tableProjected && extractQuantities(claim).length > 1 && numericResult.relation !== 'ENTAILED') {
+         const combinedNumericResult = numericEntailment(claim, chunk.text, options);
+         if (combinedNumericResult.relation === 'ENTAILED') {
+             numericResult = combinedNumericResult;
+@@ -819,8 +837,16 @@
+             ],
+             evidenceIds: [best.chunk.id]
+         } : null;
+-    const effectiveDerivedProvenance = derivedResult?.status === DERIVED_STATUS.SUPPORTED
+-        ? derivedResult.provenance : numericDerivedProvenance;
++    const policyProvenance = policyGuard.relation === POLICY_RELATION.SUPPORTED ? {
++        operation: 'CONDITIONAL_POLICY_APPLICATION',
++        inputs: [
++            ...extractQuantities(options.question || '').map(quantity => ({ ...quantity, source: 'USER_INPUT', evidenceId: null })),
++            ...policyGuard.active.conditions.map(quantity => ({ ...quantity, source: 'EVIDENCE', evidenceId: policyGuard.active.evidenceId }))
++        ],
++        evidenceIds: policyGuard.evidenceIds
++    } : null;
++    const effectiveDerivedProvenance = policyProvenance || (derivedResult?.status === DERIVED_STATUS.SUPPORTED
++        ? derivedResult.provenance : numericDerivedProvenance);
+ 
+     const supporting = matches
+         .filter(match => match.contradiction < 0.72
+@@ -852,7 +878,7 @@
+         matchedEvidenceId: evidenceChunkIds[0] || best.chunk.id,
+         matchedSentence: adjacentListSupport?.text || best.matchedEvidence,
+         semanticScore: Number(best.semantic.toFixed(4)),
+-        numericResult: derivedResult?.status === DERIVED_STATUS.SUPPORTED
++        numericResult: policyProvenance || derivedResult?.status === DERIVED_STATUS.SUPPORTED
+             ? { relation: 'ENTAILED', derived: true,
+                 claimQuantities: extractQuantities(claim.text), evidenceQuantities: [] }
+             : best.numericResult,
+@@ -961,6 +987,21 @@
+     const chunks = normalizeChunks(retrievedContext);
+     const extracted = extractClaims(answer);
+     const claims = extracted.map(claim => classifyClaim(claim, chunks, options));
++    const amountQuestion = /قديش|كم|how much|amount/iu.test(options.question || '')
++        && requestedFields(options.question || '').some(field => ['deposit', 'daily', 'weekly'].includes(field));
++    const nakedAmount = /^\s*[0-9٠-٩]+(?:[.,][0-9٠-٩]+)?\s*(?:شيكل|شيقل|دولار|ILS|USD)?[.!؟]?\s*$/iu.test(answer);
++    const nonresponsiveAmount = amountQuestion && !nakedAmount
++        && (requestedFields(answer).length > 0 || !extractQuantities(answer).some(q => ['ILS', 'USD', 'UNSPECIFIED'].includes(q.unit)))
++        && missingAmountEvidence(options.question, [{ text: answer }]);
++    if (nonresponsiveAmount) {
++        for (const claim of claims.filter(item => item.factual)) {
++            claim.classification = STATUS.UNSUPPORTED;
++            claim.finalClassification = STATUS.UNSUPPORTED;
++            claim.missingEvidence = true;
++            claim.evidenceChunkIds = [];
++            claim.responsivenessReason = 'requested_amount_missing_from_answer';
++        }
++    }
+     const status = overallStatus(claims, chunks.length > 0);
+     const confidenceScore = calculateConfidence(claims, chunks, status);
+     const factual = claims.filter(claim => claim.factual);
+--- /dev/null
++++ b/backend/src/rag/intelligence/conversationReferent.js
+@@ -0,0 +1,21 @@
++'use strict';
++const { normalizeArabic } = require('../processing/arabicNormalizer');
++const norm = text => normalizeArabic(String(text || '')).toLowerCase();
++const excluded = /اسبوع|تامين|ايجار|سعر|مبلغ|يوم|مده|وقت|حساب|خصم|تفاصيل|طلب|شروط|دوام|عنوان/u;
++function entities(text) {
++ const codes = String(text || '').match(/\b[A-Za-z]{1,12}[-_]?\d{1,8}\b/g) || [];
++ if (codes.length) return [...new Set(codes.map(code => code.toUpperCase()))];
++ const phrases = String(text || '').match(/(?:^|\s)(ال[\p{Script=Arabic}]{3,}(?:\s+ال[\p{Script=Arabic}]{3,})?)/gu) || [];
++ return [...new Set(phrases.map(value => value.trim()).filter(value => !excluded.test(norm(value))))];
++}
++function resolveReferent(query, history = []) {
++ const q = norm(query);
++ const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده)|^والاسبوع$/u.test(q);
++ if (!followup || entities(query).length) return { status: 'NOT_REQUIRED', query, entity: null };
++ const candidates = [...new Set(history.filter(message => message?.role === 'user')
++  .filter(message => norm(message.content) !== q)
++  .flatMap(message => entities(message.content)))];
++ if (candidates.length !== 1) return { status: candidates.length ? 'AMBIGUOUS' : 'UNRESOLVED', query, entity: null };
++ return { status: 'RESOLVED', query: `${query} ${candidates[0]}`, entity: candidates[0] };
++}
++module.exports = { resolveReferent, entities };
+--- /dev/null
++++ b/backend/src/rag/intelligence/retrievalRelevance.js
+@@ -0,0 +1,55 @@
++'use strict';
++const { normalizeArabic } = require('../processing/arabicNormalizer');
++const { tableRows } = require('../processing/tableStructure');
++const norm = value => normalizeArabic(String(value || '')).toLowerCase();
++const fields = {
++ daily: /يومي|لليوم|باليوم|daily|per day/u,
++ weekly: /اسبوع|weekly|per week/u,
++ deposit: /تامين|deposit/u,
++ credit: /اجل|ائتمان|credit/u,
++ minimum: /حد ادني|الحد الادني|اقل مده|minimum/u,
++ age: /عمر|سن |عاما|سنه|age/u
++};
++function requestedFields(query) {
++ const q = norm(query);
++ const result = Object.keys(fields).filter(key => fields[key].test(q));
++ if (/ليوم واحد|يوم واحد/u.test(q) && !result.includes('minimum')) result.push('minimum');
++ return result;
++}
++const fillers = new Set(['قديش','كم','شو','يعني','بقدر','انا','عليها','عليه','لليوم','بالاسبوع','والاسبوع','سعر','ايجار','تامين','price','cost','how','much','the']);
++function contentTokens(query) {
++ return norm(query).split(/[^\p{L}\p{N}]+/u).map(t => t.replace(/^(?:وال|بال|ال)(?=\p{L}{3})/u, ''))
++ .filter(t => t.length > 2 && !fillers.has(t));
++}
++function coverage(query, text) {
++ const wanted = requestedFields(query);
++ const lines = tableRows(text).split(/[\n؛.!؟]+/u).map(norm);
++ const amount = /قديش|كم|how much|amount/iu.test(query);
++ return wanted.filter(key => lines.some(line => {
++  if (!fields[key].test(line)) return false;
++  if (!amount || !['deposit','daily','weekly'].includes(key)) return true;
++  // Never use an exclusion statement as an amount, or a number from another column.
++  return line.split('|').some(cell => fields[key].test(cell) && /[0-9٠-٩]/u.test(cell)
++   && !/لا يشمل|غير شامل|مستثن|exclud/iu.test(cell));
++ }));
++}
++function relevance(query, chunk) {
++ const text = chunk.text || chunk.payload?.text || '';
++ const tokens = new Set(contentTokens(text));
++ const overlap = contentTokens(query).filter(token => tokens.has(token)).length;
++ const covered = coverage(query, text);
++ const codes = norm(query).match(/\b[a-z]+[-_]?\d+\b/gi) || [];
++ const entityMatch = !codes.length || codes.every(code => norm(text).includes(code));
++ return { covered, overlap, entityMatch, priority: entityMatch ? covered.length * 2 + Math.min(overlap, 3) : -10 };
++}
++function prioritize(query, chunks) {
++ return chunks.map((chunk, index) => ({ chunk, index, ...relevance(query, chunk) }))
++ .sort((a,b) => b.priority - a.priority || a.index - b.index).map(item => item.chunk);
++}
++function missingAmountEvidence(query, chunks) {
++ const q = norm(query);
++ if (!/قديش|كم|how much|amount/iu.test(q)) return false;
++ const wanted = requestedFields(query).filter(key => ['deposit','daily','weekly'].includes(key));
++ return wanted.some(key => !chunks.some(chunk => relevance(query,chunk).entityMatch && coverage(query,chunk.text || chunk.payload?.text || '').includes(key)));
++}
++module.exports = { requestedFields, contentTokens, coverage, relevance, prioritize, missingAmountEvidence };
+--- a/backend/src/rag/vector/qdrantVectorStore.js
++++ b/backend/src/rag/vector/qdrantVectorStore.js
+@@ -194,6 +194,20 @@
+     return { points: result.points || [], nextOffset: result.next_page_offset ?? null };
+ }
+ 
++async function searchLexicalPoints(tenantId, baseFilter, terms, options = {}) {
++    tenantId = requireTenantId(tenantId, 'qdrant-lexical-search');
++    const safeTerms = [...new Set((terms || []).filter(term => typeof term === 'string' && term.length >= 3))].slice(0, 16);
++    if (!safeTerms.length) return [];
++    // The original lifecycle/version/media filters remain mandatory, nested
++    // separately from the lexical OR so neither can satisfy the other.
++    const filter = { must: [
++        { key: 'tenantId', match: { value: tenantId } }, baseFilter,
++        { should: safeTerms.map(text => ({ key: 'text', match: { text } })) }
++    ] };
++    const result = await scrollPointsPage(filter, null, Math.min(100, options.limit || 100), options.signal, 'lexical retrieval');
++    return result.points.filter(point => point.payload?.tenantId === tenantId);
++}
++
+ async function scrollTenantPointsPage(tenantId, options = {}) {
+     tenantId = requireTenantId(tenantId, 'qdrant-reconcile-scroll');
+     const limit = Math.max(1, Math.min(500, Number(options.limit) || 100));
+@@ -738,5 +752,6 @@
+     scrollUnownedPointsPage,
+     deleteTenantPointsByIds,
+     searchPoints,
++    searchLexicalPoints,
+     countPoints
+ };
+--- /dev/null
++++ b/backend/src/rag/processing/tableStructure.js
+@@ -0,0 +1,58 @@
++'use strict';
++// Deterministic table projection: copy headers/cells only; never infer a unit,
++// currency, missing cell, entity, or business value.
++function cells(line) {
++    return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim());
++}
++function tableRows(text) {
++    const lines = String(text || '').split('\n');
++    const result = [];
++    for (let i = 0; i < lines.length; i++) {
++        if (lines[i].includes('|') && /^\s*\|?\s*:?-{3,}/u.test(lines[i + 1] || '')) {
++            const headers = cells(lines[i]);
++            i += 2;
++            for (; i < lines.length && lines[i].includes('|'); i++) {
++                const row = cells(lines[i]);
++                if (row.length !== headers.length) { result.push(lines[i]); continue; }
++                result.push(row.map((value, index) => `${headers[index]}: ${value}`).join(' | '));
++            }
++            i--;
++        } else result.push(lines[i]);
++    }
++    return result.join('\n');
++}
++function decodeHtml(text) {
++    return text.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
++        .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
++        .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
++        .replace(/&apos;|&#39;/g, "'").replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
++}
++function htmlToStructuredText(html) {
++    // Input is Mammoth's generated HTML, never served to a browser.
++    let value = String(html || '').replace(/<table\b[^>]*>([\s\S]*?)<\/table>/gi, (_, table) => {
++        const rows = [...table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map(match =>
++            [...match[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)]
++                .map(cell => cell[1].replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()));
++        if (!rows.length) return '';
++        // Keep an explicit grid; the first row is not assumed to be a header.
++        return '\n\n' + rows.map(row => row.join(' | ')).join('\n') + '\n\n';
++    });
++    value = value.replace(/<\/(?:p|h[1-6]|li|ul|ol)>/gi, '\n\n').replace(/<br\s*\/?\s*>/gi, '\n')
++        .replace(/<[^>]*>/g, '');
++    return decodeHtml(value);
++}
++function tableFacts(text) {
++    return tableRows(text).split('\n').flatMap(line => {
++        const parts = line.split('|').map(part => part.trim()).filter(Boolean);
++        if (parts.length < 2 || !parts.every(part => part.includes(':'))) return [line];
++        return parts.slice(1).map(part => {
++            const delimiter = part.indexOf(':');
++            const header = part.slice(0, delimiter);
++            const value = part.slice(delimiter + 1).trim();
++            const unit = header.match(/شيكل|شيقل|دولار|ILS|USD|%|ساعة|ساعات|يوم|أيام/iu)?.[0];
++            const explicitUnit = unit && /^[0-9٠-٩]+(?:[.,][0-9٠-٩]+)?$/.test(value) ? ` ${unit}` : '';
++            return `${parts[0]} | ${part}${explicitUnit}`;
++        });
++    }).join('\n');
++}
++module.exports = { tableRows, tableFacts, htmlToStructuredText };
+--- a/backend/src/rag/processing/documentChunker.js
++++ b/backend/src/rag/processing/documentChunker.js
+@@ -1,4 +1,5 @@
+ const crypto = require('crypto');
++const { tableRows } = require('./tableStructure');
+ const { normalizeArabic } = require('./arabicNormalizer');
+ 
+ /**
+@@ -24,7 +25,7 @@
+  */
+ function splitIntoStructuralUnits(text, maxUnitSize) {
+     // 1. Try splitting by paragraph (double newlines)
+-    const paragraphs = text.split('\n\n').map(p => p.trim()).filter(Boolean);
++    const paragraphs = tableRows(text).split(/\n\n|\n(?=[^\n]*\|)/u).map(p => p.trim()).filter(Boolean);
+     const units = [];
+ 
+     for (const paragraph of paragraphs) {
+@@ -107,6 +108,7 @@
+                 }
+             }
+ 
++            if (overlapText.length + 2 + unit.length > chunkSize) overlapText = '';
+             currentChunkText = overlapText ? (overlapText + '\n\n' + unit) : unit;
+             chunkHeading = currentHeading;
+         } else {
+--- a/backend/src/rag/services/hybridRetrievalService.js
++++ b/backend/src/rag/services/hybridRetrievalService.js
+@@ -5,10 +5,11 @@
+ const versionedCache = require('../cache/retrievalCache');
+ const db = require('../../database/connection');
+ const { requireTenantId } = require('../security/tenantContext');
+-const { searchPoints } = require('../vector/qdrantVectorStore');
++const { searchPoints, searchLexicalPoints } = require('../vector/qdrantVectorStore');
+ const { registerOperation } = require('../runtime/operationRegistry');
+ const { RETRIEVAL_MODE, createMetadata } = require('../runtime/fallbackPolicy');
+ const crypto = require('crypto');
++const { contentTokens } = require('../intelligence/retrievalRelevance');
+ 
+ // In-Memory caches to optimize latency and eliminate redundant HTTP requests (Task: Optimizations)
+ const embeddingsCache = new Map();
+@@ -217,7 +218,14 @@
+ 
+     // Sub-stage 2: HTTP Send
+     const tSendStart = performance.now();
+-    const searchResults = await searchPoints(qdrantBody, { signal: cacheContext.signal });
++    const lexicalTerms = [...contentTokens(query), ...String(query).split(/[^\p{L}\p{N}]+/u).filter(t => t.length > 3)];
++    const [vectorResults, lexicalResults] = await Promise.all([
++        searchPoints(qdrantBody, { signal: cacheContext.signal }),
++        searchLexicalPoints(tenantId, qdrantBody.filter, lexicalTerms, { signal: cacheContext.signal, limit: 100 })
++    ]);
++    const vectorIds = new Set(vectorResults.map(point => String(point.id)));
++    const lexicalIds = new Set(lexicalResults.map(point => String(point.id)));
++    const searchResults = [...vectorResults, ...lexicalResults.filter(point => !vectorIds.has(String(point.id)))];
+     const durationQdrantSearch = performance.now() - tSendStart;
+ 
+     // Sub-stage 3: Qdrant Search & Parse
+@@ -240,10 +248,11 @@
+             continue;
+         }
+ 
+-        const semanticScore = res.score;
++        const semanticScore = Number.isFinite(res.score) ? res.score : 0;
+         const keywordScore = computeKeywordScore(chunkText, queryTokens);
+ 
+-        const finalScore = (semanticScore * semanticWeight) + (keywordScore * keywordWeight);
++        const lexicalMatch = lexicalIds.has(String(res.id));
++        const finalScore = Math.max((semanticScore * semanticWeight) + (keywordScore * keywordWeight), lexicalMatch ? keywordScore : 0);
+ 
+         candidates.push({
+             text: chunkText,
+@@ -251,6 +260,7 @@
+             chunkId: res.payload?.chunkId || res.id,
+             semanticScore,
+             keywordScore,
++            lexicalMatch,
+             finalScore,
+             payload: res.payload
+         });
+@@ -264,6 +274,7 @@
+         profiler.recordSubDuration('Vector Search (Qdrant)', 'Result Parsing', durationResultParsing);
+     }
+ 
++    candidates.sort((a, b) => b.finalScore - a.finalScore || String(a.chunkId).localeCompare(String(b.chunkId)));
+     const result = {
+         candidates,
+         dynamicTopK,
+@@ -273,7 +284,7 @@
+             vectorSearch: durationQdrantSearch + durationBuild + durationResultParsing,
+             keywordSearch: performance.now() - tKeywordStart
+         },
+-        metadata: createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL })
++        metadata: { ...createMetadata({ retrievalMode: RETRIEVAL_MODE.NORMAL }), lexicalMode: 'INDEPENDENT_FILTERED_TEXT', vectorCount: vectorResults.length, lexicalCount: lexicalResults.length }
+     };
+ 
+     versionedCache.set(cacheKey, result, {
+--- a/backend/src/rag/services/rerankingService.js
++++ b/backend/src/rag/services/rerankingService.js
+@@ -45,7 +45,7 @@
+     });
+ 
+     // 2. Filter candidates by semantic similarity threshold
+-    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold);
++    let filtered = scored.filter(c => c.semanticScore >= similarityThreshold || (c.lexicalMatch && c.keywordScore >= 0.25));
+ 
+     // 3. Deterministic sort: descending by rerankScore, resolving ties by chunkId
+     filtered.sort((a, b) => {
+--- a/backend/src/rag/loaders/documentExtractionService.js
++++ b/backend/src/rag/loaders/documentExtractionService.js
+@@ -3,6 +3,7 @@
+ const crypto = require('crypto');
+ const pdfParse = require('pdf-parse');
+ const mammoth = require('mammoth');
++const { htmlToStructuredText } = require('../processing/tableStructure');
+ const { normalizeArabic } = require('../processing/arabicNormalizer');
+ const { cleanText } = require('../processing/textCleaner');
+ 
+@@ -180,15 +181,20 @@
+         extractedText = buffer.toString('utf8');
+     } else if (ext === 'pdf') {
+         try {
+-            const data = await pdfParse(buffer);
+-            extractedText = data.text || '';
++            const parser = new pdfParse.PDFParse({ data: new Uint8Array(buffer) });
++            try {
++                const data = await parser.getText();
++                extractedText = data.text || '';
++            } finally {
++                await parser.destroy();
++            }
+         } catch (err) {
+             throw new Error(`فشل استخراج النصوص من ملف PDF: ${err.message}`);
+         }
+     } else if (ext === 'docx') {
+         try {
+-            const result = await mammoth.extractRawText({ buffer });
+-            extractedText = result.value || '';
++            const result = await mammoth.convertToHtml({ buffer }, { includeEmbeddedStyleMap: false, externalFileAccess: false });
++            extractedText = htmlToStructuredText(result.value || '');
+         } catch (err) {
+             throw new Error(`فشل استخراج النصوص من ملف DOCX: ${err.message}`);
+         }
+--- a/backend/src/database/repositories/ragRequestTraceRepository.js
++++ b/backend/src/database/repositories/ragRequestTraceRepository.js
+@@ -2,7 +2,7 @@
+ 
+ const JSON_FIELDS = new Set([
+     'retrieved_chunks_json', 'selected_context_chunk_ids_json',
+-    'claims_json', 'boundary_reasons_json'
++    'claims_json', 'boundary_reasons_json', 'reliability_json'
+ ]);
+ 
+ const ALLOWED_FIELDS = new Set([
+--- a/backend/src/database/repositories/messageRepository.js
++++ b/backend/src/database/repositories/messageRepository.js
+@@ -270,16 +270,21 @@
+     return !!row;
+ }
+ 
+-function getChatHistoryForAI(userId, tenantId = 'default', channel = null) {
++function getChatHistoryForAI(userId, tenantId = 'default', channel = null, options = {}) {
+     const conversationId = getConversationIdByUserId(userId, tenantId, channel);
+     if (!conversationId) return [];
+ 
+-    const rows = db.prepare(`
+-        SELECT sender_type, role, content as text
+-        FROM messages
+-        WHERE conversation_id = ? AND is_internal_note = 0
+-        ORDER BY created_at ASC
+-    `).all(conversationId);
++    const rows = options.userOnly
++        ? db.prepare(`
++            SELECT sender_type, role, content as text FROM messages
++            WHERE conversation_id = ? AND is_internal_note = 0 AND role = 'user'
++            ORDER BY created_at DESC, id DESC LIMIT 24
++        `).all(conversationId).reverse()
++        : db.prepare(`
++            SELECT sender_type, role, content as text FROM messages
++            WHERE conversation_id = ? AND is_internal_note = 0
++            ORDER BY created_at ASC
++        `).all(conversationId);
+ 
+     const filtered = rows.filter(msg => {
+         // Exclude system responses
+@@ -290,7 +295,9 @@
+         return true;
+     });
+ 
+-    const recent = filtered.slice(-6);
++    const recent = options.userOnly
++        ? filtered.filter(msg => msg.role === 'user').slice(-24)
++        : filtered.slice(-6);
+ 
+     return recent.map(msg => ({
+         role: msg.role,
+--- /dev/null
++++ b/backend/src/database/migrations/033_rag_reliability_metadata.sql
+@@ -0,0 +1 @@
++ALTER TABLE rag_request_traces ADD COLUMN reliability_json TEXT NOT NULL DEFAULT '{}';
+--- a/backend/package.json
++++ b/backend/package.json
+@@ -7,7 +7,7 @@
+     "eval:rag": "node scripts/evaluate-rag.js",
+     "eval:generation": "node scripts/evaluate-generation.js",
+     "start": "node server.js",
+-    "pretest": "node --test test/session_cookie_configuration.test.js test/phase3_runtime_stability.test.js test/webhook_processing_stability.test.js test/phase4_rag_quality.test.js test/phase5_database_integrity.test.js test/phase6_tenant_auth.test.js test/phase7_production_operations.test.js && node test/profile_image_security.test.js && node test/rag_indexing_success_contract.test.js && node test/prompt_injection_guard.test.js",
++    "pretest": "npm run test:reliability && node --test test/session_cookie_configuration.test.js test/phase3_runtime_stability.test.js test/webhook_processing_stability.test.js test/phase4_rag_quality.test.js test/phase5_database_integrity.test.js test/phase6_tenant_auth.test.js test/phase7_production_operations.test.js && node test/profile_image_security.test.js && node test/rag_indexing_success_contract.test.js && node test/prompt_injection_guard.test.js",
+     "rag:tenant-report": "node scripts/ragTenantMigrationReport.js",
+     "rag:fault-proxy": "node scripts/rag-fault-proxy.js",
+     "db:audit": "node scripts/database-integrity.js",
+@@ -18,7 +18,8 @@
+     "test:rag:load-matrix": "node scripts/rag-load-matrix.js",
+     "test:rag:indexing-load": "node scripts/rag-load-runner.js --config test/rag-load/indexing-smoke.json",
+     "test:rag:endurance": "node scripts/rag-load-runner.js --config test/rag-load/endurance.json",
+-    "test": "node test/security_configuration.test.js && node test/database.test.js && node test/rag_integration_wiring.test.js && node test/rag_reconciliation.test.js && node test/rag_runtime_controls.test.js && node test/rag_distributed_locks.test.js && node test/rag_retrieval_cache.test.js && node test/rag_fallback_architecture.test.js && node test/rag_tenant_isolation.test.js && node test/rag_atomic_replacement.test.js && node test/rag_knowledge_atomic_reindex.test.js && node test/rag_image_delivery.test.js && node test/pipeline.test.js && node test/auth.test.js && node test/dashboard.test.js && node test/realtime.test.js && node test/phase10_separation.test.js && node test/origin_policy.test.js && node test/whatsapp_webhook_signature.test.js && node test/meta_webhook_signature.test.js && node test/media_access.test.js && node test/multi_channel_media_contract.test.js && node test/whatsapp_tenant_routing.test.js && node test/meta_outgoing_delivery.test.js && node --test test/meta_media_support.test.js && node test/settings.test.js && node test/rag.test.js && node test/rag_documents.test.js && node test/retrieval_intelligence.test.js && node test/ai_pipeline.test.js && node test/conversation_mode_routing.test.js && node test/intent_detector.test.js && node test/query_decomposer.test.js && node test/intent_retriever.test.js && node test/retrieval_planner.test.js && node test/citation_grounding.test.js && node test/answer_validator.test.js && node test/answer_validator_policy.test.js && node test/contradiction_policy.test.js && node test/ai_task_routing.test.js && node test/ai_model_health.test.js && node test/vision_pipeline.test.js && node test/stt_pipeline.test.js && node test/whatsapp_multi_provider.test.js && node test/analytics_rebuild.test.js && node test/budget_service.test.js && node --test test/fake_functionality_regression.test.js test/process_output_safety.test.js && npm test --prefix ../frontend"
++    "test": "node test/security_configuration.test.js && node test/database.test.js && node test/rag_integration_wiring.test.js && node test/rag_reconciliation.test.js && node test/rag_runtime_controls.test.js && node test/rag_distributed_locks.test.js && node test/rag_retrieval_cache.test.js && node test/rag_fallback_architecture.test.js && node test/rag_tenant_isolation.test.js && node test/rag_atomic_replacement.test.js && node test/rag_knowledge_atomic_reindex.test.js && node test/rag_image_delivery.test.js && node test/pipeline.test.js && node test/auth.test.js && node test/dashboard.test.js && node test/realtime.test.js && node test/phase10_separation.test.js && node test/origin_policy.test.js && node test/whatsapp_webhook_signature.test.js && node test/meta_webhook_signature.test.js && node test/media_access.test.js && node test/multi_channel_media_contract.test.js && node test/whatsapp_tenant_routing.test.js && node test/meta_outgoing_delivery.test.js && node --test test/meta_media_support.test.js && node test/settings.test.js && node test/rag.test.js && node test/rag_documents.test.js && node test/retrieval_intelligence.test.js && node test/ai_pipeline.test.js && node test/conversation_mode_routing.test.js && node test/intent_detector.test.js && node test/query_decomposer.test.js && node test/intent_retriever.test.js && node test/retrieval_planner.test.js && node test/citation_grounding.test.js && node test/answer_validator.test.js && node test/answer_validator_policy.test.js && node test/contradiction_policy.test.js && node test/ai_task_routing.test.js && node test/ai_model_health.test.js && node test/vision_pipeline.test.js && node test/stt_pipeline.test.js && node test/whatsapp_multi_provider.test.js && node test/analytics_rebuild.test.js && node test/budget_service.test.js && node --test test/fake_functionality_regression.test.js test/process_output_safety.test.js && npm test --prefix ../frontend",
++    "test:reliability": "node --test test/reliability_*.test.js test/conditional_policy_guard.test.js test/evidence_validation_reliability.test.js test/answer_validator_numeric_conditions.test.js test/derived_numeric_empty_claim_reliability.test.js"
+   },
+   "dependencies": {
+     "bcryptjs": "^3.0.3",
+--- /dev/null
++++ b/REPAIR_README_AR.md
+@@ -0,0 +1,52 @@
++# نسخة إصلاح FuBot — 2026-09-05
++
++تم تعديل الكود واختباره محليًا. هذه ليست شهادة جاهزية إنتاجية أو ضمان دقة 100%.
++
++## ما تغيّر
++
++- إصلاح استدعاء مكتبة PDF المثبتة، والحفاظ على صفوف وخلايا DOCX.
++- الحفاظ على أسطر الأدلة داخل المتحقق؛ كانت تُدمج وتفقد معها بنية الجداول والسياسات.
++- ربط التحقق بنوع السياسة وشروطها، ومنع استخدام تأخير الإرجاع لتبرير استرداد الإلغاء، أو عمر المستأجر لتبرير عمر المشغل.
++- دعم النطاقات العددية والحدود الشاملة، والأرقام العربية، وحفظ مصادر تطبيق الفرع الصحيح.
++- ربط أسعار جدول Markdown بأعمدتها، ورفض تبديل السعر اليومي بالأسبوعي.
++- إضافة استرجاع نصي مستقل من Qdrant مع شروط الشركة والإصدار ودورة حياة الوثيقة، بدل اقتصار البحث النصي على مرشحي المتجهات.
++- إعطاء الدليل المطابق للحقل المطلوب أولوية، وتمرير النص المختار فعليًا لبوابة الإجابة والتحقق النهائي.
++- نقل مرجع المتابعة من رسائل المستخدم إلى البحث والتوليد والتحقق؛ عند تعدد المراجع أو غيابها يطلب توضيحًا.
++- منع قبول جملة استثناء صحيحة كجواب عن مبلغ التأمين.
++- إضافة تتبع محدود للمراحل ومعرّفات الأدلة وبصمات النص، دون نسخ تاريخ المحادثة كاملًا.
++
++لا توجد أسعار أو أسماء شركات مخصصة داخل إصلاحات الإنتاج. الأمثلة التجارية في الاختبارات فقط.
++
++## نتائج التحقق
++
++- 92/92 في `npm run test:reliability`؛ هذه البوابة أصبحت ضمن `npm test`.
++- 273/273 في الاختبارات المركزّة الأوسع. المجموعتان متداخلتان، فلا تُجمع نتائجهما.
++- 11/11 في فحص ربط المسار والتتبّع الأخير.
++- 88 حالة سلامة محفوظة أُعيد فحصها: صفر تجاوزات غير آمنة حسب مقياس المجموعة، مع 3 حالات حجب زائد موجودة سابقًا. هذا ليس تشغيل توليد جديد.
++- اختبار قراءة PDF فعلي وDOCX فعلي، واختبارات حتمية لشركات تجريبية في أربعة قطاعات.
++- الاختبارات الكاملة توقفت عند اختبار قفل عملية واتساب `WhatsApp web process lease recovers from a stale or reused PID`. فشل الاختبار نفسه على نسخة المصدر الأصلية أيضًا في هذه البيئة. لم يتم تعطيله أو تخفيفه. الاختبارات التالية له واختبارات الواجهة (21/21) نُفذت منفصلة ونجحت.
++
++## التشغيل والتحقق عندك
++
++1. احتفظ بنسخة احتياطية من مشروعك وقاعدة البيانات. افحص هذه النسخة في مجلد وبيئة اختبار منفصلين أولًا.
++2. ثبت الحزم المقفلة بالإصدارات داخل الملف:
++
++```bash
++npm ci --prefix backend
++npm ci --prefix frontend
++npm run test:reliability --prefix backend
++npm test --prefix backend
++```
++
++3. استخدم إعدادات خدمات اختبار لـQdrant وOllama ومزوّد التوليد. لا توصل قنوات العملاء أثناء تقييم النسخة.
++4. عند بدء السيرفر تُطبق الهجرة `033_rag_reliability_metadata.sql` لإضافة عمود التتبع. احتفظ بكل ملفات الهجرات القديمة.
++5. أعد فهرسة ملفات المعرفة الأصلية من إدارة المعرفة، خصوصًا PDF وDOCX والجداول؛ تغييرات الاستخراج والتقسيم لا تعيد كتابة المتجهات القديمة تلقائيًا.
++6. اختبر أسئلة مدار الأصلية والمحادثات المتتابعة، وملفات جديدة من شركات أخرى، عدة مرات عبر مزوّدك الفعلي. لا تعتمد رقم 1/10 أو 3/10 السابق كقياس للنسخة الجديدة.
++
++يمكنك قراءة التفاصيل والأدلة والأوامر في `backend/evals/reliability-repair-2026-09-05/REPORT.md`.
++
++## الحدود التي ما زالت تحتاج قياسًا
++
++لم تتوفر قاعدة مدار الحية أو مفاتيح مزوّد التوليد أو خدمات Qdrant/Ollama الخاصة بك. لذلك لم يُقَس معدل الإجابات النهائي على الأسئلة الأصلية أو زمن الاستجابة الحي، ولم تُرسل رسائل عملاء أو يُنشر السيرفر.
++
++الملفات غير المدعومة أو PDF الممسوح الذي لا يحتوي نصًا مقروءًا لا تتحول تلقائيًا إلى معرفة صحيحة. لم تتم إضافة OCR أو دعم Excel/CSV جديد. تخطيط PDF المعقد والجداول ذات الخلايا المدمجة يحتاج فحصًا بعد الاستخراج. البحث النصي المستقل محدود بـ100 مرشح للاستعلام، وليس مؤشر BM25 جديدًا أو ضمان استرجاع شامل للمجموعات الكبيرة. حل المراجع محافظ ومحدود بآخر 24 رسالة مستخدم؛ لا يمثل فهمًا عامًا لكل ضمير بكل لغة.
+--- /dev/null
++++ b/backend/test/reliability_policy_scope.test.js
+@@ -0,0 +1,56 @@
++const test = require('node:test');
++const assert = require('node:assert/strict');
++const { validateDetailed, numericEntailment } = require('../src/rag/intelligence/answerValidator');
++const { evaluateConditionalPolicy } = require('../src/rag/security/conditionalPolicyGuard');
++const { extractQuantities } = require('../src/rag/intelligence/answerValidator');
++// Synthetic reconstruction of the documented failure, not a production replay.
++const chunks = [{ id: 'mixed-policy', tenantId: 'scope-test', retrievalScore: .9, text: [
++ 'سياسة الإلغاء:',
++ 'قبل أكثر من 48 ساعة: يرجع المبلغ كامل.',
++ 'قبل 24–48 ساعة: يرجع 50% من المبلغ.',
++ 'قبل أقل من 24 ساعة: لا يرجع أي مبلغ.',
++ 'سياسة التأخير:',
++ 'التأخير 60 دقيقة أو أقل: لا رسوم.',
++ 'التأخير أكثر من 60 دقيقة وحتى 4 ساعات: رسوم 50% من إيجار اليوم.',
++ 'التأخير أكثر من 4 ساعات: رسوم يوم كامل.'
++].join('\n') }];
++function guard(claim, question) { return evaluateConditionalPolicy({ claim, question, chunks, tenantId: 'scope-test', extractQuantities }); }
++test('47 hour cancellation cannot borrow a late-return threshold', () => {
++ const result = validateDetailed('إذا ألغيت قبل 47 ساعة، بيرجعلك المبلغ كامل.', chunks, { question: 'أنا ألغيت قبل 47 ساعة، برجعلي المبلغ كامل، صح؟', tenantId: 'scope-test' });
++ assert.notEqual(result.overallStatus, 'SUPPORTED');
++ assert.equal(guard('بيرجعلك المبلغ كامل.', 'ألغيت قبل 47 ساعة').relation, 'BLOCK');
++});
++for (const hours of [24, 25, 47, 48]) test(`inclusive cancellation ${hours}h selects half refund`, () => {
++ assert.equal(guard('يرجع 50% من المبلغ.', `ألغيت قبل ${hours} ساعة`).relation, 'SUPPORTED');
++ assert.equal(guard('يرجع 75% من المبلغ.', `ألغيت قبل ${hours} ساعة`).relation, 'BLOCK');
++});
++test('same-unit evidence from another policy is not entailment', () => {
++ assert.notEqual(numericEntailment('ألغيت قبل 47 ساعة ويرجع المبلغ كامل', 'التأخير أكثر من 4 ساعات: رسوم يوم كامل.', { question: 'ألغيت قبل 47 ساعة' }).relation, 'ENTAILED');
++});
++test('exact four hours cannot select the above-four branch', () => {
++ assert.equal(guard('رسوم يوم كامل.', 'تأخرت 4 ساعات').relation, 'BLOCK');
++ assert.equal(guard('رسوم 50% من إيجار اليوم.', 'تأخرت 4 ساعات').relation, 'SUPPORTED');
++});
++test('four hours plus one minute selects the above-four branch', () => {
++ assert.equal(guard('رسوم يوم كامل.', 'تأخرت 4 ساعات ودقيقة').relation, 'SUPPORTED');
++});
++test('renter minimum cannot prove the operator minimum', () => {
++ const text='الحد الأدنى لعمر المستأجر 21 سنة أو أكثر. الحد الأدنى لعمر المشغل 23 سنة أو أكثر.';
++ const result=validateDetailed('بقدر أشغل المعدة بعمر 22 سنة.',[{id:'ages',text}],{question:'عمري 22 سنة بقدر أستأجر وأشغل المعدة؟'});
++ assert.notEqual(result.overallStatus,'SUPPORTED');
++});
++test('correct active policy retains source IDs through the enforced boundary', () => {
++ const {applyGroundingSafetyBoundary}=require('../src/rag/security/groundingSafetyBoundary');
++ const question='ألغيت قبل 47 ساعة'; const answer='إذا ألغيت قبل 47 ساعة، بيرجع 50% من المبلغ.';
++ const validation=validateDetailed(answer,chunks,{question,tenantId:'scope-test'});
++ assert.equal(validation.overallStatus,'SUPPORTED');
++ assert.deepEqual(validation.claims[0].evidenceChunkIds,['mixed-policy']);
++ const result=applyGroundingSafetyBoundary({answer:validation.finalAnswer,validatedAnswer:validation.finalAnswer,question,tenantId:'scope-test',route:'COMPANY_KNOWLEDGE',validation,serverEvidence:chunks,shadowMode:false,enforcementActive:true});
++ assert.equal(result.decision,'ALLOW');
++ assert.equal(guard('ألغيت قبل 99 ساعة، يرجع 50% من المبلغ.',question).relation,'BLOCK');
++});
++test('Arabic digits retain numeric equality and reject a changed amount', () => {
++ const evidence=[{id:'arabic-price',text:'السعر ٤٢٠ شيكل.'}];
++ assert.equal(validateDetailed('السعر ٤٢٠ شيكل.',evidence).overallStatus,'SUPPORTED');
++ assert.notEqual(validateDetailed('السعر ٤٣٠ شيكل.',evidence).overallStatus,'SUPPORTED');
++});
+--- /dev/null
++++ b/backend/test/reliability_lexical_search.test.js
+@@ -0,0 +1,28 @@
++const test = require('node:test');
++const assert = require('node:assert/strict');
++process.env.SQLITE_DB_PATH = ':memory:';
++process.env.RAG_RETRY_MAX_ATTEMPTS = '1';
++const { searchLexicalPoints } = require('../src/rag/vector/qdrantVectorStore');
++const { rerankCandidates } = require('../src/rag/services/rerankingService');
++test('independent lexical request retains tenant, lifecycle, version and media restrictions', async () => {
++ const original = global.fetch;
++ const base = { must:[{key:'embeddingModel',match:{value:'model'}}], must_not:[{key:'lifecycle',match:{value:'staging'}}], should:[{key:'indexVersionId',match:{value:'v2'}}] };
++ try {
++  global.fetch=async(url,options)=>{
++   assert.match(url,/points\/scroll$/);
++   const body=JSON.parse(options.body);
++   assert.deepEqual(body.filter.must[0],{key:'tenantId',match:{value:'tenant-a'}});
++   assert.deepEqual(body.filter.must[1],base);
++   assert.equal(body.filter.must[2].should[0].match.text,'ZX55');
++   assert.equal(body.with_vector,false);
++   return {ok:true,status:200,json:async()=>({result:{points:[{id:'lexical-only',payload:{tenantId:'tenant-a'}},{id:'foreign',payload:{tenantId:'tenant-b'}}]}})};
++  };
++  const result=await searchLexicalPoints('tenant-a',base,['ZX55']);
++  assert.deepEqual(result.map(p=>p.id),['lexical-only']);
++ } finally {global.fetch=original;}
++});
++test('a lexical candidate survives semantic filtering without a fabricated vector score',()=>{
++ const candidates=[{chunkId:'lexical',text:'ZX55 weekly price 1800',semanticScore:0,keywordScore:.8,finalScore:.8,lexicalMatch:true}];
++ const ranked=rerankCandidates(candidates,'ZX55 weekly price',5,.4);
++ assert.equal(ranked.length,1);assert.equal(ranked[0].semanticScore,0);
++});
+--- /dev/null
++++ b/backend/test/reliability_cross_sector.test.js
+@@ -0,0 +1,20 @@
++const test=require('node:test');
++const assert=require('node:assert/strict');
++const {validateDetailed}=require('../src/rag/intelligence/answerValidator');
++const {applyGroundingSafetyBoundary}=require('../src/rag/security/groundingSafetyBoundary');
++// Held-out synthetic companies: deterministic cell/tenant checks, no claim of
++// measured model accuracy, live retrieval, or production replay.
++for(const [sector,code,price] of [['clinic','C17',275],['bakery','B32',95],['electronics','E91',860],['ceramics','P74',185]]){
++ test(`${sector}: correct cell passes; changed value and foreign tenant fail`,()=>{
++  const tenantId=`heldout-${sector}`;
++  const evidence=[{id:`${sector}-table`,tenantId,text:`| المنتج | السعر شيكل |\n|---|---|\n| ${code} | ${price} |`,retrievalScore:.9}];
++  const question=`كم سعر ${code}؟`;
++  const answer=`سعر ${code} ${price} شيكل.`;
++  const validation=validateDetailed(answer,evidence,{question,tenantId});
++  assert.equal(validation.overallStatus,'SUPPORTED');
++  assert.notEqual(validateDetailed(`سعر ${code} ${price+10} شيكل.`,evidence,{question,tenantId}).overallStatus,'SUPPORTED');
++  const input={answer,question,validation,serverEvidence:evidence,route:'COMPANY_KNOWLEDGE',tenantId,shadowMode:false,enforcementActive:true};
++  assert.equal(applyGroundingSafetyBoundary(input).decision,'ALLOW');
++  assert.equal(applyGroundingSafetyBoundary({...input,tenantId:'foreign-tenant'}).decision,'BLOCK');
++ });
++}
+--- /dev/null
++++ b/backend/test/reliability_retrieval_contract.test.js
+@@ -0,0 +1,43 @@
++const test = require('node:test');
++const assert = require('node:assert/strict');
++const { resolveReferent } = require('../src/rag/intelligence/conversationReferent');
++const { prioritize, missingAmountEvidence } = require('../src/rag/intelligence/retrievalRelevance');
++const { chunkDocument } = require('../src/rag/processing/documentChunker');
++const { validateDetailed } = require('../src/rag/intelligence/answerValidator');
++const { tableRows } = require('../src/rag/processing/tableStructure');
++const table = '| المنتج | سعر يومي شيكل | سعر أسبوعي شيكل | تأمين شيكل |\n|---|---|---|---|\n| MX20 | 420 | 2450 | 1500 |\n| G8 | 140 | 800 | 500 |';
++const chunk = { id:'prices',text:table,tenantId:'synthetic',retrievalScore:.9 };
++test('reference transports entity only, across six-message prompt limit', () => {
++ const history = [{role:'user',content:'قديش إيجار الحفارة الصغيرة لليوم؟'}, ...Array.from({length:8},()=>({role:'assistant',content:'قيمة مختلقة 999'}))];
++ const result = resolveReferent('والأسبوع؟',history);
++ assert.equal(result.status,'RESOLVED'); assert.equal(result.entity,'الحفارة الصغيرة');
++ assert.doesNotMatch(result.query,/999/);
++});
++test('multiple user entities clarify and assistant entities never resolve', () => {
++ assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20'},{role:'user',content:'G8'}]).status,'AMBIGUOUS');
++ assert.equal(resolveReferent('والأسبوع؟',[{role:'assistant',content:'MX20'}]).status,'UNRESOLVED');
++});
++test('amount exclusion is not amount evidence', () => {
++ assert.equal(missingAmountEvidence('التأمين قديش؟',[{text:'السعر اليومي 420 لا يشمل التأمين.'}]),true);
++ assert.equal(missingAmountEvidence('تأمين MX20 قديش؟',[chunk]),false);
++ assert.equal(missingAmountEvidence('تأمين K99 قديش؟',[chunk]),true);
++});
++test('required table outranks high-score irrelevant material', () => {
++ assert.equal(prioritize('قديش MX20 بالأسبوع؟',[{id:'wrong',text:'عنوان الفرع',finalScore:.99},chunk])[0].id,'prices');
++});
++test('table rows retain their headers and stay bounded during chunking', () => {
++ const text = table + '\n' + Array.from({length:20},(_,i)=>`| X${i} | ${100+i} | ${700+i} | 900 |`).join('\n');
++ const chunks = chunkDocument({documentId:'grid',source:'grid.md',originalText:text},200,60);
++ assert.ok(chunks.length>2);
++ for (const item of chunks) assert.ok(item.text.length<=200);
++ assert.match(tableRows(table),/سعر أسبوعي شيكل: 2450/);
++});
++test('table cell price is supported, swapped daily/weekly values are rejected', () => {
++ const opts={tenantId:'synthetic',question:'قديش MX20 بالأسبوع؟'};
++ assert.equal(validateDetailed('سعر MX20 الأسبوعي 2450 شيكل.',[chunk],opts).overallStatus,'SUPPORTED');
++ assert.notEqual(validateDetailed('سعر MX20 الأسبوعي 420 شيكل.',[chunk],opts).overallStatus,'SUPPORTED');
++});
++test('a true exclusion cannot answer a requested deposit amount', () => {
++ const evidence=[{id:'deposit',text:'التأمين 1500 شيكل. السعر اليومي لا يشمل التأمين.',tenantId:'synthetic'}];
++ assert.notEqual(validateDetailed('السعر اليومي لا يشمل التأمين.',evidence,{tenantId:'synthetic',question:'قديش التأمين؟'}).overallStatus,'SUPPORTED');
++});
+--- /dev/null
++++ b/backend/test/reliability_extraction.test.js
+@@ -0,0 +1,17 @@
++const test = require('node:test');
++const assert = require('node:assert/strict');
++const fs = require('node:fs');
++const path = require('node:path');
++const {extractTextFromBuffer} = require('../src/rag/loaders/documentExtractionService');
++const fixture = name => fs.readFileSync(path.join(__dirname,'fixtures/reliability',name));
++test('installed PDF v2 extracts real PDF text', async () => {
++ assert.match(await extractTextFromBuffer('pdf',fixture('readable.pdf')),/ZX55 daily price 315 ILS/);
++});
++test('DOCX extraction retains cells and row boundaries', async () => {
++ const text=await extractTextFromBuffer('docx',fixture('table.docx'));
++ assert.match(text,/Product \| Daily ILS \| Weekly ILS\nZX55 \| 315 \| 1800/);
++});
++test('empty and corrupt documents fail visibly', async () => {
++ await assert.rejects(extractTextFromBuffer('txt',Buffer.from('   ')));
++ await assert.rejects(extractTextFromBuffer('pdf',Buffer.from('%PDF broken')));
++});

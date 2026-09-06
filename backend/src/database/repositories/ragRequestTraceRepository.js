@@ -2,7 +2,7 @@ const db = require('../connection');
 
 const JSON_FIELDS = new Set([
     'retrieved_chunks_json', 'selected_context_chunk_ids_json',
-    'claims_json', 'boundary_reasons_json'
+    'claims_json', 'boundary_reasons_json', 'reliability_json'
 ]);
 
 const ALLOWED_FIELDS = new Set([

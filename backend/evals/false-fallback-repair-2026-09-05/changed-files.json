@@ -1,0 +1,27 @@
+[
+  {
+    "file": "backend/src/rag/intelligence/derivedClaimValidator.js",
+    "before": "7e6231121946d61c8b81f98babceffa496bf2eadf4ca11fada99b3342f214fae",
+    "after": "f36a1aaec2526779bf008e6f489a5b2874558e9506cbceb70b3e0b4f4710619b"
+  },
+  {
+    "file": "backend/src/rag/intelligence/answerValidator.js",
+    "before": "7187bb578d2ac6b9e27cf9152baf11092f80f0668464df273b39cce0b81f8a11",
+    "after": "d4d94860dfb7ea860ac49dcb98ec5fd1f7ebc54c795a12fcca924c96005ed4b6"
+  },
+  {
+    "file": "backend/src/rag/intelligence/numericIdentity.js",
+    "before": "ff67838d2ca62b2fa3d264d3c7983cabe009392c0c9c59d2dda1cd0c387952e0",
+    "after": "305e6c2ef7f469f59dfe39ea9e696475b62cc848daf956e0a41af1c9827cf73d"
+  },
+  {
+    "file": "backend/test/false_fallback_derived_total.test.js",
+    "before": null,
+    "after": "f67125d569c1098bc662e6799874683a34c04a8f77ce64d42d8fe5724326e66f"
+  },
+  {
+    "file": "backend/evals/maintenance-2026-09-05/trace-false-fallback.js",
+    "before": null,
+    "after": "d0ecb3e6c5acec5efd1a21ce0b40288ab8abb1ad82de51a53b43f7abf08763ce"
+  }
+]

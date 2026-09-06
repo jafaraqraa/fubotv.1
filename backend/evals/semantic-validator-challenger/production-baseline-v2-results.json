@@ -1,0 +1,4390 @@
+{
+  "generatedAt": "2026-09-04T18:49:52.536Z",
+  "corpusFileSha256": "3aa1fbe23ae66d52676795a17e2790b2c766840e0854924b110d3e8d777c6ae2",
+  "perClass": {
+    "SUPPORTED": {
+      "tp": 6,
+      "fp": 5,
+      "fn": 31,
+      "precision": 0.5454545454545454,
+      "recall": 0.16216216216216217,
+      "f1": 0.25
+    },
+    "CONTRADICTED": {
+      "tp": 20,
+      "fp": 15,
+      "fn": 8,
+      "precision": 0.5714285714285714,
+      "recall": 0.7142857142857143,
+      "f1": 0.634920634920635
+    },
+    "NOT_PROVEN": {
+      "tp": 16,
+      "fp": 30,
+      "fn": 11,
+      "precision": 0.34782608695652173,
+      "recall": 0.5925925925925926,
+      "f1": 0.4383561643835616
+    }
+  },
+  "unsafeAccepts": 5,
+  "falseRejects": 31,
+  "falseRejectRate": 0.8378378378378378,
+  "latency": {
+    "meanMs": 1.6922748804347836,
+    "p95Ms": 2.553520050000004
+  },
+  "errorCount": 0,
+  "rows": [
+    {
+      "id": "sv2_frozen_artifact_derived_00c9c5108faeda51",
+      "legacyIds": [
+        "sp-21",
+        "sp-22",
+        "sp-24"
+      ],
+      "tenantId": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-21",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-21"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative",
+        "negative-membership",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "00c9c5108faeda51c60247bd63a061be293612ebd63a4a7950082ca490cdfb06",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-22",
+        "sp-24"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 51.119661
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_08b5922bb30db0d2",
+      "legacyIds": [
+        "sp-49",
+        "sp-50",
+        "sp-52"
+      ],
+      "tenantId": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-49",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-49"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "conditional-policy",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "08b5922bb30db0d2e3735c08278dd9d519ed02ee3f713c18d8c566de5d14a3b4",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-50",
+        "sp-52"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 3.2409310000000033
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_3ff120de3ee0cef3",
+      "legacyIds": [
+        "sp-41",
+        "sp-44"
+      ],
+      "tenantId": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "الشحن مجاني للطلبات التي قيمتها 350 شيكلاً أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-41",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-41"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "3ff120de3ee0cef3ea22945c2fed11194056a818f654b7edd47377a9a78eb7b5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-44"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 7.678412999999992
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_43c06a3d840bcf68",
+      "legacyIds": [
+        "sp-17",
+        "sp-18"
+      ],
+      "tenantId": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "الدفع المتاح نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-17",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-17"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "43c06a3d840bcf6892acd933708ebb4de7ba5f90071f21932877b92c077beeb3",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-18"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "PARTIALLY_SUPPORTED",
+        "latencyMs": 1.3093119999999914
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_510c319c197f1400",
+      "legacyIds": [
+        "sp-13",
+        "sp-16"
+      ],
+      "tenantId": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "إنجاز باقة النمو يحتاج خمسة وعشرين يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-13",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-13"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "510c319c197f14002b03d48b1fa20302639c72d4885549c949f006d2ff003748",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-16"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "PARTIALLY_SUPPORTED",
+        "latencyMs": 1.4348310000000026
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_66099cc00d660cec",
+      "legacyIds": [
+        "sp-10",
+        "sp-12",
+        "sp-9"
+      ],
+      "tenantId": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-9",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-9"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "66099cc00d660cec81360553d9bf2d7c3ae2f37f73f9ef787c04e961572212c1",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-10",
+        "sp-12"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.3027170000000012
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_77552ddfc6da9548",
+      "legacyIds": [
+        "sp-53",
+        "sp-54",
+        "sp-56"
+      ],
+      "tenantId": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-53",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-53"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "77552ddfc6da9548453916c53969602cc546d08f58bcbd24b1983332076b67c8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-54",
+        "sp-56"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.9245820000000009
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_7f1fb512a7d4f557",
+      "legacyIds": [
+        "sp-37",
+        "sp-38"
+      ],
+      "tenantId": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "العدسات المتاحة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-37",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-37"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "7f1fb512a7d4f557bbb4914b2e31a9607994e3a2825ee1719bb4be6862bb7cf5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-38"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 3.1374270000000024
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_812c6350b35fa311",
+      "legacyIds": [
+        "sp-25",
+        "sp-26",
+        "sp-28"
+      ],
+      "tenantId": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-25",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-25"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "812c6350b35fa311e09731856c4cb0c37145799af7daaa9e0689f4f16506f8d0",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-26",
+        "sp-28"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 2.0757779999999997
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_99abc523b570d02a",
+      "legacyIds": [
+        "sp-29"
+      ],
+      "tenantId": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "مدة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-29",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-29"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "99abc523b570d02aa03bea247dd1923c54de83fb31401563f0bbe819d9b05b81",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.1243529999999993
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_b23f61df68b023d0",
+      "legacyIds": [
+        "sp-33",
+        "sp-34",
+        "sp-36"
+      ],
+      "tenantId": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-33",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-33"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "b23f61df68b023d0fe23a1444280ebb4dc4298a5303a957836691608c3f950d0",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-34",
+        "sp-36"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.6831990000000019
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_c90ff2ab728fc736",
+      "legacyIds": [
+        "sp-1",
+        "sp-4"
+      ],
+      "tenantId": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "سعر الفحص الشامل مئة وعشرون شيكلاً.",
+      "evidence": [
+        {
+          "id": "clinic-e-1",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "c90ff2ab728fc73630bcb31467d62ceb0e89d30607a6acbd73fa3121fd17ba22",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-4"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.0140559999999965
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_d22730e5d8abc8ec",
+      "legacyIds": [
+        "sp-57",
+        "sp-58",
+        "sp-60"
+      ],
+      "tenantId": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-57",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-57"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "history-resolved-referent",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "d22730e5d8abc8ec242ae963ba955e6120ed0750a1fb6e7b53d2be824918a433",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-58",
+        "sp-60"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 1.6269549999999953
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_d93a6c0c4bc9897c",
+      "legacyIds": [
+        "sp-45",
+        "sp-46",
+        "sp-48"
+      ],
+      "tenantId": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-45",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-45"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "d93a6c0c4bc9897cf401de90723ff80cf8e756822a362838cd7a6cb8f73ec3e7",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-46",
+        "sp-48"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5766939999999892
+      }
+    },
+    {
+      "id": "sv2_frozen_artifact_derived_e028380a4998d47c",
+      "legacyIds": [
+        "sp-5",
+        "sp-6",
+        "sp-8"
+      ],
+      "tenantId": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-5",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "frozen-artifact-derived",
+      "contentFingerprint": "e028380a4998d47cc841b6f5f5d0fcf95c44c4e5643d2f121acecabad78f39c6",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "sp-6",
+        "sp-8"
+      ],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.7510079999999988
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_01c1b3cb799aafd6",
+      "legacyIds": [
+        "hn-5-negative"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-negative",
+          "tenantId": "other-tenant",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-negative"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "01c1b3cb799aafd6ef027fe37bb39386538b574ca9eb7284de3ff6865dd6143f",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.7376409999999964
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_034213b9c8f71537",
+      "legacyIds": [
+        "hn-3-threshold"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-3-threshold",
+          "tenantId": "control-3",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "034213b9c8f715371dbcab729b2799cd746c127d49e3e04f9fc3e9c4e7bf5fd8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 6.969571000000002
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_0513730ac767292a",
+      "legacyIds": [
+        "hn-5-temporal"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-5-temporal",
+          "tenantId": "other-tenant",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "0513730ac767292af35bc56934f2c89fbca8a2925d30e9f09ab24abe38d51ab5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.0246659999999963
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_1451b98302c72c88",
+      "legacyIds": [
+        "hn-1-conditional-policy"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-1-conditional-policy",
+          "tenantId": "control-1",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "conditional-policy",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "1451b98302c72c8828850250534bd63037404909565ec213cd90be3a88a68f5b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 1.1694710000000015
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_14f6a5ce8cab2008",
+      "legacyIds": [
+        "hn-4-threshold"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-4-threshold",
+          "tenantId": "control-4",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "14f6a5ce8cab200869827ad12f60b30fc5f783875c7770a81ffefe538a04dc37",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.4209490000000073
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_152d4d5dfd69f85a",
+      "legacyIds": [
+        "hn-2-numeric"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-numeric",
+          "tenantId": "control-2",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "152d4d5dfd69f85ac2f7bceccfebbd435ce1c35a562fa59f8f821d6b57ebb8b0",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.0058330000000097
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_16e5024a79d9ff16",
+      "legacyIds": [
+        "hn-2-not-proven"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-2-not-proven",
+          "tenantId": "control-2",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "16e5024a79d9ff162a214a2016b393e1fe319cfba45d646b5428943fa1995ddd",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.6397150000000096
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_17aa482fd6779feb",
+      "legacyIds": [
+        "hn-3-negative"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-negative",
+          "tenantId": "control-3",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "17aa482fd6779feb62bacc962f489249f8fa5c9337de8c2970370aea7b95aada",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.7179159999999882
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_2675cf705dffa4d1",
+      "legacyIds": [
+        "hn-4-numeric"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-numeric",
+          "tenantId": "control-4",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "2675cf705dffa4d18eca7ba188d995fdd99c7e80ced44ba30be25d350e5cd63d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.0449239999999946
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_34fac9a2024f3444",
+      "legacyIds": [
+        "hn-5-temporal"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-5-temporal",
+          "tenantId": "other-tenant",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "34fac9a2024f3444179415fc631449accdddcf1dfa8c1aa3eb624bd577dc6cac",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5401940000000138
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_3627ef49cf5d297f",
+      "legacyIds": [
+        "hn-2-conditional-policy"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-2-conditional-policy",
+          "tenantId": "control-2",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "conditional-policy",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "3627ef49cf5d297fed43312a6d1e5d3757f7cdd967f27f0ff9452762f12301e5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.7113670000000241
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_3f29f88c0c4febee",
+      "legacyIds": [
+        "hn-3-temporal"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-3-temporal",
+          "tenantId": "control-3",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "3f29f88c0c4febeeda44c60f08b3a182e3d19a7aa65a3814bae5d9bdc37d1734",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.545014000000009
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_484c6f7dec642b6c",
+      "legacyIds": [
+        "hn-4-threshold"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-threshold",
+          "tenantId": "control-4",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "484c6f7dec642b6c20194ef52d8d42c321cd8004027419d6f74cbad1138803e1",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6349670000000174
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_499c030f578ff73f",
+      "legacyIds": [
+        "hn-2-numeric"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-2-numeric",
+          "tenantId": "control-2",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "499c030f578ff73f2d75de65f14fa7c5a164cdb091927ddbebeab8f3c3e5234e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.8963640000000055
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_52a8ba4fa5f9b7ff",
+      "legacyIds": [
+        "hn-3-numeric"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-numeric",
+          "tenantId": "control-3",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "52a8ba4fa5f9b7ff6132468b5261e53054e136b8c63cd382cf4b64d232957b35",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9711719999999957
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_54f722c39df15a65",
+      "legacyIds": [
+        "hn-5-threshold"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-threshold",
+          "tenantId": "other-tenant",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-threshold"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "54f722c39df15a65d0e595b0c1049827dade3a094e63c30c35d50449b209098e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6613509999999962
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_573a14449a38a286",
+      "legacyIds": [
+        "hn-3-temporal"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-3-temporal",
+          "tenantId": "control-3",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "573a14449a38a286f0c4893ab8000942a2e07a9b41e9a6f17b34a77efe97db34",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.7537880000000143
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_5b44d51517fee9b2",
+      "legacyIds": [
+        "hn-4-temporal"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-4-temporal",
+          "tenantId": "control-4",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "5b44d51517fee9b297a8a5d24dec006580b1d0f85a379d7d86cf29383a1ad87a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.7432389999999884
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_5e88630135aa6a74",
+      "legacyIds": [
+        "hn-3-threshold"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-threshold",
+          "tenantId": "control-3",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "5e88630135aa6a74dacf38cf54252de73e08e633596df5b3166c78d211ba93d5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6414620000000184
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_5fd7614094180d3e",
+      "legacyIds": [
+        "hn-2-negative"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-negative",
+          "tenantId": "control-2",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "5fd7614094180d3ee122a6f421b404aae00bb6b2f6bb487c3ac89cff46f7aa4b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6020930000000249
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_62b7ff1d97312f13",
+      "legacyIds": [
+        "hn-1-temporal"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-1-temporal",
+          "tenantId": "control-1",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "62b7ff1d97312f13332d9f89fee9297def9fec5db7b972d5830dbe45e1aa0721",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.8375560000000064
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_63e57a9469687084",
+      "legacyIds": [
+        "hn-3-not-proven"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-not-proven",
+          "tenantId": "control-3",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "63e57a94696870846efabbaf36b997c1bf93f36db158ac97659c94f643909a8a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.7036229999999932
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_644ad6eb4d5c924c",
+      "legacyIds": [
+        "hn-1-not-proven"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-1-not-proven",
+          "tenantId": "control-1",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "644ad6eb4d5c924c3b0b0209c158ea1c4ff59294f44fb80f8685a27be0b0ccf3",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.7030100000000061
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_6cc03bff1fb86319",
+      "legacyIds": [
+        "hn-4-complete-list"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-complete-list",
+          "tenantId": "control-4",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "complete-list",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "6cc03bff1fb8631917e38a6f3a348443d10fb4503270077e4b5f35f86c535706",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.1089740000000177
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_6d916074d1d150cb",
+      "legacyIds": [
+        "hn-1-threshold"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-1-threshold",
+          "tenantId": "control-1",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "6d916074d1d150cb9f4d232fded659a42e359634d03f8b277190c4536736fb92",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.262597999999997
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_7bff4911942e7eb0",
+      "legacyIds": [
+        "hn-5-complete-list"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-complete-list",
+          "tenantId": "other-tenant",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-complete-list"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "complete-list",
+        "cross-tenant-controls",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "7bff4911942e7eb026c69dcba7279e5b03ef1438cea40c531c4b6c657cf8741b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.8826660000000004
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_825194cd345b60b4",
+      "legacyIds": [
+        "hn-2-complete-list"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-complete-list",
+          "tenantId": "control-2",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "complete-list",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "825194cd345b60b4cef3dd19f032f5f01739c25a71bd8598a29e5f9a789ead00",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.055166999999983
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_8b9e9d6e2e17618a",
+      "legacyIds": [
+        "hn-1-temporal"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-1-temporal",
+          "tenantId": "control-1",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "8b9e9d6e2e17618a2b416b672280e3bfcc7b4e6cd803ddf817fae0237a6e5113",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5638100000000179
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_8d0029d753bd4a7e",
+      "legacyIds": [
+        "hn-4-conditional-policy"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-4-conditional-policy",
+          "tenantId": "control-4",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "conditional-policy",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "8d0029d753bd4a7ebfb1a33c1ae8c63b56495e2e359e0d3dbb895f126d57035e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.8642939999999726
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_8db8d5a1dc87cf25",
+      "legacyIds": [
+        "hn-3-conditional-policy"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-3-conditional-policy",
+          "tenantId": "control-3",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-conditional-policy"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "conditional-policy",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "8db8d5a1dc87cf25ec523a0a239e7d7c33c4785eb59807684f6977915492da90",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.7747740000000078
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_8f78659bb9d2f733",
+      "legacyIds": [
+        "hn-3-numeric"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-3-numeric",
+          "tenantId": "control-3",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "8f78659bb9d2f733bd71ba306902c71b28df1c0f6b8a326f616acf24bf76e1fb",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6009630000000072
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_9603cf2fcca00330",
+      "legacyIds": [
+        "hn-1-negative"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-negative",
+          "tenantId": "control-1",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "9603cf2fcca00330323f9b89a810f554a352bc28c69b94c1e0573fac95b776bc",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6033700000000124
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_98913fae4a6c91de",
+      "legacyIds": [
+        "hn-5-conditional-policy"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الإلغاء قبل الموعد بـ12 ساعة مجاني.",
+      "evidence": [
+        {
+          "id": "hn-e-5-conditional-policy",
+          "tenantId": "other-tenant",
+          "text": "الإلغاء مجاني بشرط أن يكون قبل الموعد بـ24 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-conditional-policy"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "98913fae4a6c91de7ee28deb405653ee1a203575d1a1a1b42fddd90a255355b5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 1.150496000000004
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_98df288e72b64e55",
+      "legacyIds": [
+        "hn-4-negative"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الخدمة تشمل التوصيل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-negative",
+          "tenantId": "control-4",
+          "text": "الخدمة لا تشمل التوصيل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-negative"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "98df288e72b64e5562abaa0e2d7a9a03e61e11a2f713d9278b85b5a32ee08c6e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.1586039999999969
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_9df8a7f86c77aed8",
+      "legacyIds": [
+        "hn-5-not-proven"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-5-not-proven",
+          "tenantId": "other-tenant",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "9df8a7f86c77aed8c3e34798949ce93bdc4f86a90cfb7965e3d5e96294ff63e8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.0915520000000072
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_a1d7c9fd78321af8",
+      "legacyIds": [
+        "hn-4-numeric"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-4-numeric",
+          "tenantId": "control-4",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "a1d7c9fd78321af8cd41cfed2a46b6402dcad1f2f5f945dc79c2bd708a6f636d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9514939999999967
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_a3516d4db8fdaf0c",
+      "legacyIds": [
+        "hn-4-not-proven"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-4-not-proven",
+          "tenantId": "control-4",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "a3516d4db8fdaf0cbac7cbfcdf249c39d316db4a09ad33e92c26785e0ec9ae91",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.0108330000000194
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_a3a588d563b66ca3",
+      "legacyIds": [
+        "hn-2-temporal"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الموعد يوم الخميس 10 سبتمبر.",
+      "evidence": [
+        {
+          "id": "hn-e-2-temporal",
+          "tenantId": "control-2",
+          "text": "الموعد يوم الأربعاء 9 سبتمبر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-temporal"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "a3a588d563b66ca38b1ce45eac47218692c559558c97e5129d87b7d4c04b4496",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.245898000000011
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_a3b9a9a36b5bc2d7",
+      "legacyIds": [
+        "hn-5-numeric"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-numeric",
+          "tenantId": "other-tenant",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "a3b9a9a36b5bc2d76d8802c268c6da672847cb0526062c2ce11a5c3b9a11c0d0",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.670406000000014
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_aab5ecfda3815ec9",
+      "legacyIds": [
+        "hn-3-complete-list"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-3-complete-list",
+          "tenantId": "control-3",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "complete-list",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "aab5ecfda3815ec9edfa4da21c8cb78414f523429a7b86bf6f548c86b78c6a96",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.6068420000000003
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_ab51f9b3a4785f1e",
+      "legacyIds": [
+        "hn-1-numeric"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "السعر هو 120 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-numeric",
+          "tenantId": "control-1",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-numeric"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "ab51f9b3a4785f1e1f4ab9edaedc52f09cf95688b9380f9dd4a8cfbd8250f4df",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.6711139999999887
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_b3a5a74adfba2d95",
+      "legacyIds": [
+        "hn-2-temporal"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-2-temporal",
+          "tenantId": "control-2",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "b3a5a74adfba2d95d371b2dc22b4c18d479a4d3a99e9838045fec1e9a849da52",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.6855989999999963
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_b83133302c03b3e4",
+      "legacyIds": [
+        "hn-4-not-proven"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-4-not-proven",
+          "tenantId": "control-4",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "b83133302c03b3e4ae8673d8388a3db802e7181892b475b88065e2b45f9996f8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.9855249999999955
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_bcb81d40358b9e8d",
+      "legacyIds": [
+        "hn-5-threshold"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-5-threshold",
+          "tenantId": "other-tenant",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-threshold"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "bcb81d40358b9e8d619bd38350a6dac126490d82a5a318b072753882cf9452cc",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.573455999999993
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_c54aec1f0343c90b",
+      "legacyIds": [
+        "hn-1-complete-list"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد فرع في الخليل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-complete-list",
+          "tenantId": "control-1",
+          "text": "القائمة الكاملة للفروع: رام الله، جنين."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-complete-list"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "complete-list",
+        "hard-negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "c54aec1f0343c90bba95dacff6299a31783e47399b60f93ae89478fe3c2809c8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.502681999999993
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_c99e2147adb92dc6",
+      "legacyIds": [
+        "hn-5-not-proven"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-5-not-proven",
+          "tenantId": "other-tenant",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "c99e2147adb92dc613503d9ebf90ce9e63efb300ecb54fdb659329e4582fa663",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.1766860000000179
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_cd3a7c5dd5ecd69b",
+      "legacyIds": [
+        "hn-1-threshold"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-threshold",
+          "tenantId": "control-1",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "cd3a7c5dd5ecd69bc4f6cde4931d7d1ceeb25a2b79964fd0f289de2909555745",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9226559999999893
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_ce477cf501d65b72",
+      "legacyIds": [
+        "hn-5-numeric"
+      ],
+      "tenantId": "control-5",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-5-numeric",
+          "tenantId": "other-tenant",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-5-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "cross-tenant-controls",
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "ce477cf501d65b72d9b56c341be21f1f74e57f6c99ec18abf07db17d05658de7",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: evidence belongs to a different tenant and is inadmissible.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.6984510000000057
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_d48f82c161daa08e",
+      "legacyIds": [
+        "hn-2-threshold"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "طلب بقيمة 349 شيكل يحصل على الخصم.",
+      "evidence": [
+        {
+          "id": "hn-e-2-threshold",
+          "tenantId": "control-2",
+          "text": "الخصم متاح للطلبات بقيمة 350 شيكل أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "d48f82c161daa08e9c644af63d5009d6f69d4e2a0da4ab56004cd15560bbb88d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.2161210000000153
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_e0dd35ead63c4436",
+      "legacyIds": [
+        "hn-1-numeric"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "مدة الخدمة 100 دقيقة.",
+      "evidence": [
+        {
+          "id": "hn-e-1-numeric",
+          "tenantId": "control-1",
+          "text": "السعر هو 100 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-numeric"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "e0dd35ead63c4436dafe9dd8dbacc650e71557d4b617a48fdb222ad114a4965c",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.5954470000000072
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_e69234950607363a",
+      "legacyIds": [
+        "hn-1-not-proven"
+      ],
+      "tenantId": "control-1",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-1-not-proven",
+          "tenantId": "control-1",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-1-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "e69234950607363a8ef2cfedc0b9c3004bfdb24d1e0d29e0ebbba81e35d2f351",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.6621020000000044
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_f170b4b2d0f93c99",
+      "legacyIds": [
+        "hn-4-temporal"
+      ],
+      "tenantId": "control-4",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "المنتج متاح الآن.",
+      "evidence": [
+        {
+          "id": "hn-e-4-temporal",
+          "tenantId": "control-4",
+          "text": "كان المنتج متاحاً في يناير 2025."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-4-temporal"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "f170b4b2d0f93c99cf774c0389a9d6f384a45a8e0fc56160d756023fc7d5a879",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5601570000000038
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_f5261e48be0c96f6",
+      "legacyIds": [
+        "hn-2-threshold"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "الطلب المكوّن من 15 قطعة مؤهل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-threshold",
+          "tenantId": "control-2",
+          "text": "الخدمة متاحة للطلبات الأكبر من 15 قطعة."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-threshold"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "f5261e48be0c96f61d0891505e2190d3fd1f025b9f92146c897969e30058932a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9213220000000035
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_fd0d32bbbb3b4aec",
+      "legacyIds": [
+        "hn-3-not-proven"
+      ],
+      "tenantId": "control-3",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "يوجد موعد شاغر يوم الأربعاء.",
+      "evidence": [
+        {
+          "id": "hn-e-3-not-proven",
+          "tenantId": "control-3",
+          "text": "يعمل المركز يوم الأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-3-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "fd0d32bbbb3b4aec7962b28629867c427835bcdc3918035ebb644388d9a46a06",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.9155269999999973
+      }
+    },
+    {
+      "id": "sv2_hard_negative_v1_ffe02464d20a4ae8",
+      "legacyIds": [
+        "hn-2-not-proven"
+      ],
+      "tenantId": "control-2",
+      "question": "هل الادعاء صحيح؟",
+      "claim": "سعر الباقة الأساسية 500 شيكل.",
+      "evidence": [
+        {
+          "id": "hn-e-2-not-proven",
+          "tenantId": "control-2",
+          "text": "تتوفر الباقة الأساسية."
+        }
+      ],
+      "evidenceIds": [
+        "hn-e-2-not-proven"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "hard-negative-v1",
+      "contentFingerprint": "ffe02464d20a4ae8298947578f0fd9329f7b361a38040453a6773df27d153dfc",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: related wording does not establish the exact proposition.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.7348070000000178
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_01847400098b31bc",
+      "legacyIds": [
+        "sp-40"
+      ],
+      "tenantId": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "العدسات المتوفرة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-40",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-40"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "01847400098b31bccc698d1128d714fda3138291a3bc5857453642acbc10819c",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.8648849999999868
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_08a215e626cc4828",
+      "legacyIds": [
+        "sp-42"
+      ],
+      "tenantId": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "الشحن مجاني للطلبات التي قيمتها 350 شيكل أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-42",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-42"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "08a215e626cc4828ae0ee5c1a9930540c3f0ee85d0ce368f654a1666c137cf0b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9838680000000011
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_0d0827226413b8d7",
+      "legacyIds": [
+        "sp-11"
+      ],
+      "tenantId": "clinic",
+      "question": "متى تفتح العيادة؟",
+      "claim": "حسب المعلومات المتاحة، تفتح العيادة من التاسعة صباحاً حتى الخامسة مساءً.",
+      "evidence": [
+        {
+          "id": "clinic-e-11",
+          "tenantId": "clinic",
+          "text": "ساعات عمل العيادة من 9 صباحاً إلى 5 مساءً."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-11"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "0d0827226413b8d7d7e126b47eae6211a1d0cf9c4914d5e24b8e9fdc887fb1c2",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.9638850000000048
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_0d92dd1ecb73d749",
+      "legacyIds": [
+        "sp-19"
+      ],
+      "tenantId": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "حسب المعلومات المتاحة، الدفع المتاح نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-19",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-19"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "0d92dd1ecb73d7490a862fdae5fe1450e824582a5c8f4387a6ef36b61b21e8e1",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.8016770000000122
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_1a9577b2a3f8024b",
+      "legacyIds": [
+        "sp-14"
+      ],
+      "tenantId": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "إنجاز باقة النمو يحتاج 25 يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-14",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-14"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "1a9577b2a3f8024b523d04f6d742925c3284de8b17a180d4144409fbeeffa55d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.8304399999999816
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_27d7cf25cd3fb5cb",
+      "legacyIds": [
+        "sp-15"
+      ],
+      "tenantId": "barq",
+      "question": "كم مدة تنفيذ باقة النمو؟",
+      "claim": "حسب المعلومات المتاحة، إنجاز باقة النمو يحتاج خمسة وعشرين يوم عمل.",
+      "evidence": [
+        {
+          "id": "barq-e-15",
+          "tenantId": "barq",
+          "text": "تنفيذ باقة النمو يستغرق 25 يوم عمل."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-15"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "27d7cf25cd3fb5cb183e7290050eac8ba30a79201221f73d86b55182cd5300cc",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.0652729999999906
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_44466ed64da27079",
+      "legacyIds": [
+        "sp-39"
+      ],
+      "tenantId": "astronomy",
+      "question": "ما العدسات المتاحة؟",
+      "claim": "حسب المعلومات المتاحة، العدسات المتاحة هي الشمسية والقمرية.",
+      "evidence": [
+        {
+          "id": "astronomy-e-39",
+          "tenantId": "astronomy",
+          "text": "القائمة الكاملة للعدسات: شمسية، قمرية."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-39"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "44466ed64da270798364d94b7a7b309b257ab959c346649163f48f1ecd07fae8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.6683889999999906
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_6497c2969e53610f",
+      "legacyIds": [
+        "sp-3"
+      ],
+      "tenantId": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "حسب المعلومات المتاحة، سعر الفحص الشامل مئة وعشرون شيكلاً.",
+      "evidence": [
+        {
+          "id": "clinic-e-3",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "6497c2969e53610f18d133c10dd2f111973116afee0ac78d7236d4cf61b9ae5f",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.9744329999999763
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_6b37b6dadcbe4b23",
+      "legacyIds": [
+        "sp-27"
+      ],
+      "tenantId": "ceramics",
+      "question": "ما ألوان مجموعة الزيتون؟",
+      "claim": "حسب المعلومات المتاحة، تأتي مجموعة الزيتون بالأسود والأخضر والرمادي.",
+      "evidence": [
+        {
+          "id": "ceramics-e-27",
+          "tenantId": "ceramics",
+          "text": "القائمة الكاملة لألوان مجموعة الزيتون: الأسود، الأخضر، الرمادي."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-27"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "6b37b6dadcbe4b236f2ceb0c3ce25f8724aad10a15d50e2947a0f9a97ead3c84",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 1.1828769999999906
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_7427b7f4615c2032",
+      "legacyIds": [
+        "sp-55"
+      ],
+      "tenantId": "delivery",
+      "question": "متى يصل الطلب؟",
+      "claim": "حسب المعلومات المتاحة، يصل الطلب يومي الاثنين والأربعاء.",
+      "evidence": [
+        {
+          "id": "delivery-e-55",
+          "tenantId": "delivery",
+          "text": "أيام التوصيل هي الاثنين والأربعاء."
+        }
+      ],
+      "evidenceIds": [
+        "delivery-e-55"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "7427b7f4615c2032cc766b3a659d80930a850e1e8f6ea86d8371bec0534bfb3f",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.7280599999999993
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_77be0e67e054980a",
+      "legacyIds": [
+        "sp-51"
+      ],
+      "tenantId": "services",
+      "question": "هل تشمل الباقة الطباعة؟",
+      "claim": "حسب المعلومات المتاحة، الطباعة مشمولة فقط إذا اختار العميل فرع الشركات.",
+      "evidence": [
+        {
+          "id": "services-e-51",
+          "tenantId": "services",
+          "text": "تشمل الباقة الطباعة بشرط اختيار فرع الشركات."
+        }
+      ],
+      "evidenceIds": [
+        "services-e-51"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "conditional-policy",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "77be0e67e054980ab2d5f29deb61e56e316a993a9551320085afdf6e87b8841d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.739104999999995
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_7850ccd241176af2",
+      "legacyIds": [
+        "sp-2"
+      ],
+      "tenantId": "clinic",
+      "question": "كم سعر الفحص الشامل؟",
+      "claim": "سعر الفحص الشامل مئة وعشرون شيكل.",
+      "evidence": [
+        {
+          "id": "clinic-e-2",
+          "tenantId": "clinic",
+          "text": "تكلفة الفحص الشامل هي 120 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "7850ccd241176af21006d6697e58d69a6ce2bbac015865109bb9be5cbb40e7a2",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "PARTIALLY_SUPPORTED",
+        "latencyMs": 0.6822870000000023
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_78781d15e6dd3434",
+      "legacyIds": [
+        "sp-20"
+      ],
+      "tenantId": "barq",
+      "question": "ما طرق الدفع؟",
+      "claim": "الدفع المتوفر نقداً أو بتحويل بنكي.",
+      "evidence": [
+        {
+          "id": "barq-e-20",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-20"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "78781d15e6dd343484bd8688307463df6288f730ac2ee28e93cd3c224d78a73f",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "PARTIALLY_SUPPORTED",
+        "latencyMs": 0.6801379999999995
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_827e4ba016d4acd7",
+      "legacyIds": [
+        "sp-23"
+      ],
+      "tenantId": "barq",
+      "question": "هل تقبلون الشيكات؟",
+      "claim": "حسب المعلومات المتاحة، الشيكات ليست ضمن طرق الدفع المقبولة.",
+      "evidence": [
+        {
+          "id": "barq-e-23",
+          "tenantId": "barq",
+          "text": "طرق الدفع الكاملة هي: نقداً، وتحويل بنكي."
+        }
+      ],
+      "evidenceIds": [
+        "barq-e-23"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative",
+        "negative-membership",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "827e4ba016d4acd77ee83201596c727630b7c2c97f6d998fd3a86f7e8f892a72",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.6439129999999977
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_880f9baec80580d9",
+      "legacyIds": [
+        "sp-30"
+      ],
+      "tenantId": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "مدة الحصة 120 دقيقة.",
+      "evidence": [
+        {
+          "id": "ceramics-e-30",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-30"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "880f9baec80580d91e9951e774b114109b8b913273b42b1095140ce058a445e8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.9983040000000187
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_93e49b2624454424",
+      "legacyIds": [
+        "sp-43"
+      ],
+      "tenantId": "retail",
+      "question": "متى يصبح الشحن مجانياً؟",
+      "claim": "حسب المعلومات المتاحة، الشحن مجاني للطلبات التي قيمتها 350 شيكلاً أو أكثر.",
+      "evidence": [
+        {
+          "id": "retail-e-43",
+          "tenantId": "retail",
+          "text": "الشحن مجاني عندما تكون قيمة السلة أكبر من أو تساوي 350 شيكل."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-43"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "supported-paraphrase",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "93e49b26244544241b63eab71086e50799930153236928128c575082d9754621",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 0.9368220000000065
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_9cd3dfd807cd6d6b",
+      "legacyIds": [
+        "sp-47"
+      ],
+      "tenantId": "retail",
+      "question": "كم ضمان الملحقات؟",
+      "claim": "حسب المعلومات المتاحة، كفالة الملحقات نصف سنة.",
+      "evidence": [
+        {
+          "id": "retail-e-47",
+          "tenantId": "retail",
+          "text": "ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "retail-e-47"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "9cd3dfd807cd6d6b0141c72c74de1a922d542bbc1937a9890c98e4eb0562bef5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5595659999999896
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_a0d51d7de205cc19",
+      "legacyIds": [
+        "sp-35"
+      ],
+      "tenantId": "astronomy",
+      "question": "متى يبدأ رصد زحل؟",
+      "claim": "حسب المعلومات المتاحة، يبدأ رصد زحل عند الساعة التاسعة مساءً.",
+      "evidence": [
+        {
+          "id": "astronomy-e-35",
+          "tenantId": "astronomy",
+          "text": "موعد رصد زحل الساعة 21:00."
+        }
+      ],
+      "evidenceIds": [
+        "astronomy-e-35"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "a0d51d7de205cc19d3440c81d066d1d3999a87c7c7f1d09c269053caaf146e31",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "CONTRADICTED",
+        "rawStatus": "CONTRADICTED",
+        "latencyMs": 1.0208349999999768
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_b45d5b460368236b",
+      "legacyIds": [
+        "sp-59"
+      ],
+      "tenantId": "history",
+      "question": "وماذا عن ضمانها؟",
+      "claim": "حسب المعلومات المتاحة، ضمان الملحقات ستة أشهر.",
+      "evidence": [
+        {
+          "id": "history-e-59",
+          "tenantId": "history",
+          "text": "سأل العميل عن الملحقات. ضمان الملحقات 6 أشهر."
+        }
+      ],
+      "evidenceIds": [
+        "history-e-59"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "history-resolved-referent",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "b45d5b460368236b2c7b42cd7033ee3961828efd3d5c9e000290035184f1a99b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 1.2162959999999998
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_b9ad89105d29e30b",
+      "legacyIds": [
+        "sp-7"
+      ],
+      "tenantId": "clinic",
+      "question": "هل التأمين يشمل تنظيف البشرة؟",
+      "claim": "حسب المعلومات المتاحة، تأمين أمان لا يغطي تنظيف البشرة.",
+      "evidence": [
+        {
+          "id": "clinic-e-7",
+          "tenantId": "clinic",
+          "text": "تأمين أمان لا يشمل جلسات تنظيف البشرة."
+        }
+      ],
+      "evidenceIds": [
+        "clinic-e-7"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative",
+        "supported-paraphrase"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "b9ad89105d29e30b2fbc910df7437f4c9e4328169efb764f6fa33b098761024a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "SUPPORTED",
+        "rawStatus": "SUPPORTED",
+        "latencyMs": 0.9444400000000144
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_d4d05bb8333d948a",
+      "legacyIds": [
+        "sp-31"
+      ],
+      "tenantId": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "حسب المعلومات المتاحة، مدة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-31",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-31"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "d4d05bb8333d948a9f24c1bd112515f04fbc09a346431761dfe4db42e4efa431",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5312119999999823
+      }
+    },
+    {
+      "id": "sv2_supported_paraphrase_v1_df36af9e1f15888c",
+      "legacyIds": [
+        "sp-32"
+      ],
+      "tenantId": "ceramics",
+      "question": "كم تستغرق الحصة؟",
+      "claim": "فترة الحصة ساعتان.",
+      "evidence": [
+        {
+          "id": "ceramics-e-32",
+          "tenantId": "ceramics",
+          "text": "تستمر الحصة 120 دقيقة."
+        }
+      ],
+      "evidenceIds": [
+        "ceramics-e-32"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "supported-paraphrase",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": true
+      },
+      "sourceDataset": "supported-paraphrase-v1",
+      "contentFingerprint": "df36af9e1f15888c16fdaedc142f5e5e7870e09b65d154808f9d0f3b98ba4691",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual: the claim is a meaning-preserving Arabic paraphrase of the cited evidence.",
+      "production": {
+        "verdict": "NOT_PROVEN",
+        "rawStatus": "UNSUPPORTED",
+        "latencyMs": 0.5723879999999895
+      }
+    }
+  ]
+}

@@ -1,0 +1,1696 @@
+{
+  "version": "v2",
+  "createdAt": "2026-09-04T21:50:00+03:00",
+  "historicalInput": {
+    "file": "gold-corpus-v1.json",
+    "sha256": "9e3b2694f1d2a87ce564471b642a7948361a94b10b9b77027648de48ddcb999b"
+  },
+  "split": "UNSEEN",
+  "rows": [
+    {
+      "id": "sv2_unseen_sourdough_frozen__0330dd3a81f849e7",
+      "legacyIds": [
+        "unseen-46"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متوفر الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "0330dd3a81f849e7ab2dcbfae12a22cfbc3c3a2146292dd9d1730fc9be91a702",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__0d00c3a42a094385",
+      "legacyIds": [
+        "unseen-26"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، السكر من مكونات الوصفة.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative",
+        "negative-membership"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "0d00c3a42a0943855de865499799a0f055ef581924f3db97c07fd5b58a678c4c",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__1b09b89aac6dc59c",
+      "legacyIds": [
+        "unseen-45",
+        "unseen-9"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مصدر الدقيق محلي.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "1b09b89aac6dc59cbb9a8b119b04565ea4c15fdd3c7693b262a4be332f3e0c6b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-45"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__256dc3a68402fcfb",
+      "legacyIds": [
+        "unseen-24"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، تستغرق عملية الخبز 230 دقيقة.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "256dc3a68402fcfbf19d47a770781f19d870a0e1810b1bf4f34a2f3650e1b452",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__28a4c455698605f0",
+      "legacyIds": [
+        "unseen-4",
+        "unseen-40"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 درجة مئوية.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "28a4c455698605f0f78fa977b1d87c11a54fde1d541527fd95984e56d77c3e5a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-40"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__3077b13a6cec7373",
+      "legacyIds": [
+        "unseen-42",
+        "unseen-6"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "تستغرق عملية الخبز 230 دقيقة.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "3077b13a6cec7373013fb794af76daed90d1ff0accd352800bab6d3ce4580909",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-42"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__36f51a5a938d0529",
+      "legacyIds": [
+        "unseen-32"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، المنتجات مضمونة الخلو من المكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "36f51a5a938d052955d71dbc153cccd2617b49902cd07859f1c6d660c5d8b86e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__4188a98cc15764b0",
+      "legacyIds": [
+        "unseen-23"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، حرارة الخبز 230 فهرنهايت.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "4188a98cc15764b0e8a6ceac22dab2b33741c7c96c617af04e402495e54cd9b5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__42154b35c7c1e9d1",
+      "legacyIds": [
+        "unseen-14",
+        "unseen-50"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المنتجات مضمونة الخلو من المكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "42154b35c7c1e9d11cef2caeb14b8fec1c569f0cd73cc655246b85d0aacf365e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-50"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__424aae22abcd2216",
+      "legacyIds": [
+        "unseen-44",
+        "unseen-8"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "السكر من مكونات الوصفة.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "negative",
+        "negative-membership"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "424aae22abcd221619a9b7c5e74e8a3bb8ece2bbb4002e621b90af9f658c27c6",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-44"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__42d064f3955ebdfc",
+      "legacyIds": [
+        "unseen-36"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 20 رغيفاً يحصل على خصم.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "42d064f3955ebdfca5ae2d5251db4952f69b5340211537d2f95c380767cdc82e",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__493c537fd9f43aeb",
+      "legacyIds": [
+        "unseen-11"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متاح يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "493c537fd9f43aeb5dbf1e343327c1e73a8e5954249a4f61e973d5c0a1f2b31a",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__5416fc823d97d69a",
+      "legacyIds": [
+        "unseen-17",
+        "unseen-53"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 19 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "5416fc823d97d69ac4abe56fcd58d3ba1ef18be75eb5196e9cf111bb82dae5ec",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-53"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__5b3580d39f04e2ea",
+      "legacyIds": [
+        "unseen-15",
+        "unseen-51"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "كل المنتجات تحتوي مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "5b3580d39f04e2ea2e0bd61cd2f2edc676146bca15b69d810c499d4bc2c70de4",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-51"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__5d8b098782b1ccd2",
+      "legacyIds": [
+        "unseen-16",
+        "unseen-52"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "5d8b098782b1ccd23124d82d0292658186b671918a3d816b98b967ce46a7c61f",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-52"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__5daed8a80b46835c",
+      "legacyIds": [
+        "unseen-10"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متاح الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "5daed8a80b46835ce686d784cde54708a4eaaf4ca4b119e92d68fbc84f4f8767",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__8035d0eeec415003",
+      "legacyIds": [
+        "unseen-35"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 19 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "8035d0eeec415003396ffc2d0ece3bfafdd1f28aef636b6fe6e09271ac008303",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__8124aa33bb807ad4",
+      "legacyIds": [
+        "unseen-43",
+        "unseen-7"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "المكونات هي الدقيق والماء والملح.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "8124aa33bb807ad4037cc8afedad55a9798ea6403f18eecb0f4b3dfbdf9aa118",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-43"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__840653b9ec5fafb7",
+      "legacyIds": [
+        "unseen-38"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "فترة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "840653b9ec5fafb7625073b5fca206a5d0bfb1d69f58ac95ebd2c3cfaea15bd4",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__908ac20905e13438",
+      "legacyIds": [
+        "unseen-28"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل متاح الثلاثاء والسبت.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list",
+        "multi-value"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "908ac20905e1343872ed154b1f576ce43901f66c3f81a75d8ad521e0765a36aa",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__92b8c2aeb1c36766",
+      "legacyIds": [
+        "unseen-29"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل متاح يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "92b8c2aeb1c367669ba83099adf245a6b1eba4f82abaae8e9d6783345afe6d05",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__9951ea31d60e61af",
+      "legacyIds": [
+        "unseen-34"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، طلب 20 رغيفاً مؤهل للمناسبات.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric",
+        "threshold"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "9951ea31d60e61af2c0b8a14a52ba57b2e1473517f0a4e5fc94e39df58bc060b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__997958ddb8fe8513",
+      "legacyIds": [
+        "unseen-47"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل متوفر يوم الأحد.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "997958ddb8fe851330aa99db0c635774a5228b5cf4588e2d9aa704521115dc46",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__9d7baa201bfd220b",
+      "legacyIds": [
+        "unseen-33"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، كل المنتجات تحتوي مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "9d7baa201bfd220bcac793f64cf5398a3f1c95aa3e8954b102bc68d8dcbedba5",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__a2e656464c8365c4",
+      "legacyIds": [
+        "unseen-30"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، التوصيل مجاني يوم الثلاثاء.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "a2e656464c8365c45b96525cf360e8aa427e535f4cd0c7574f90116d6570ddfc",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__b74357a7124b65e1",
+      "legacyIds": [
+        "unseen-18",
+        "unseen-54"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "طلب 20 رغيفاً يحصل على خصم.",
+      "evidence": [
+        {
+          "id": "u-food-6",
+          "tenantId": "unseen-sourdough",
+          "text": "يُقبل طلب المناسبات إذا كان العدد 20 رغيفاً أو أكثر."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-6"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "b74357a7124b65e129b2ad8cddcc1df44df1cac884efaab20a332384dfd4df9d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-54"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__b760af8ee3080005",
+      "legacyIds": [
+        "unseen-2"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مدة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "b760af8ee30800058425f424100a6ca297a9c4d9daf6f909806f15566f0dee3b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__bc4dec7472c74352",
+      "legacyIds": [
+        "unseen-3",
+        "unseen-39"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "سعر الرغيف 12 شيكل.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "bc4dec7472c74352e463362c8251a6a3d966da550bdfa5f1314db88b1c80d7d1",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-39"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__be3ebd9ca26331e0",
+      "legacyIds": [
+        "unseen-22"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، حرارة الخبز 230 درجة مئوية.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "be3ebd9ca26331e0cfa96029d8f0a31849af050f0653cd06d84206ed23230bd0",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__c2edefafd64799eb",
+      "legacyIds": [
+        "unseen-41",
+        "unseen-5"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "حرارة الخبز 230 فهرنهايت.",
+      "evidence": [
+        {
+          "id": "u-food-2",
+          "tenantId": "unseen-sourdough",
+          "text": "تُخبز الأرغفة عند 230 درجة مئوية."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-2"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "c2edefafd64799eb93e325baadd85aa0455a64a1ee181a051b912a1bd7d71f69",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-41"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__c7464fe4b6abefd3",
+      "legacyIds": [
+        "unseen-37"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "فترة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "c7464fe4b6abefd36ec9dc5e1b3e2a427435a96116312cfa65d0f9ac4ed57101",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__d6d38497492b656c",
+      "legacyIds": [
+        "unseen-12",
+        "unseen-48"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "التوصيل مجاني يوم الثلاثاء.",
+      "evidence": [
+        {
+          "id": "u-food-4",
+          "tenantId": "unseen-sourdough",
+          "text": "التوصيل متاح يومي الثلاثاء والسبت فقط."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-4"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "d6d38497492b656cf978616404d21de74145f642a2aff931bc37d3997cc7da07",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-48"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__d8de158115c6daad",
+      "legacyIds": [
+        "unseen-31"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، قد تحتوي المنتجات على آثار مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "d8de158115c6daad87dda8dc4be2300ac8bfe04ef6751bf70ababe79dc83f919",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__e292c356ca842c2e",
+      "legacyIds": [
+        "unseen-19"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مدة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "e292c356ca842c2e7f34787cf048c9e37139b719a76e45ae1e5d56b978b58164",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__e541234fd712a8c9",
+      "legacyIds": [
+        "unseen-13",
+        "unseen-49"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "قد تحتوي المنتجات على آثار مكسرات.",
+      "evidence": [
+        {
+          "id": "u-food-5",
+          "tenantId": "unseen-sourdough",
+          "text": "المخبز لا يضمن خلو المنتجات من آثار المكسرات."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-5"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "negative"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": true,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "e541234fd712a8c943c6edcbf9ecd5147bacdaa935a01c7c1a03745c7e66a8d8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [
+        "unseen-49"
+      ],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__ec54c51425e80dd5",
+      "legacyIds": [
+        "unseen-27"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مصدر الدقيق محلي.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "not-proven"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "ec54c51425e80dd5807bcc516f3119e1fdac2a2b3e8dadcea0944e534e06206b",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__eedf0c3ceaf3beed",
+      "legacyIds": [
+        "unseen-21"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، سعر الرغيف 12 شيكل.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "NOT_PROVEN",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "eedf0c3ceaf3beedfaedd5ea92be30dde15ff571c71d97f526c1b3507ffb715d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__f4dc847f10f9a88e",
+      "legacyIds": [
+        "unseen-1"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "مدة التخمير اثنتا عشرة ساعة.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "duration",
+        "numeric",
+        "temporal"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": true,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": false,
+        "disagreementProne": false,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "f4dc847f10f9a88e1bff11a22ed3f68b87b2d24d3b9dc9f0823e0d2894cfc9a8",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__f83cfa8c118f70c5",
+      "legacyIds": [
+        "unseen-20"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، مدة التخمير 10 ساعات.",
+      "evidence": [
+        {
+          "id": "u-food-1",
+          "tenantId": "unseen-sourdough",
+          "text": "يستغرق تخمير عجينة الساوردو 12 ساعة."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-1"
+      ],
+      "expectedVerdict": "CONTRADICTED",
+      "categories": [
+        "hard-negative",
+        "numeric"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": true,
+        "temporal": false,
+        "negative": false,
+        "completeList": false,
+        "hardNegative": true,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "f83cfa8c118f70c54b48c36a855565ff61e12d6b4409e2589b070f15c1446b91",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    },
+    {
+      "id": "sv2_unseen_sourdough_frozen__fc9972e6858ed0ca",
+      "legacyIds": [
+        "unseen-25"
+      ],
+      "tenantId": "unseen-sourdough",
+      "question": "ما المعلومة الصحيحة؟",
+      "claim": "بحسب الدليل، المكونات هي الدقيق والماء والملح.",
+      "evidence": [
+        {
+          "id": "u-food-3",
+          "tenantId": "unseen-sourdough",
+          "text": "القائمة الكاملة للمكونات: دقيق، ماء، ملح."
+        }
+      ],
+      "evidenceIds": [
+        "u-food-3"
+      ],
+      "expectedVerdict": "SUPPORTED",
+      "categories": [
+        "complete-list"
+      ],
+      "flags": {
+        "directOrDerived": "direct",
+        "numeric": false,
+        "temporal": false,
+        "negative": false,
+        "completeList": true,
+        "hardNegative": false,
+        "disagreementProne": true,
+        "supportedParaphrase": false
+      },
+      "sourceDataset": "unseen-sourdough-frozen-v1",
+      "contentFingerprint": "fc9972e6858ed0ca851e6cd72bdba6efab1463973ea47e9b38e204ff6e3d5f0d",
+      "duplicateGroupId": null,
+      "duplicateType": null,
+      "duplicateReason": null,
+      "deduplicatedFromIds": [],
+      "adjudicationNote": "Manual frozen unseen-tenant adjudication; no post-result tuning permitted."
+    }
+  ]
+}
