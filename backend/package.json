@@ -16,6 +16,8 @@
     "test:rag:v2": "node --test test/rag_v2_core.test.js test/rag_v2_adapters.test.js test/rag_v2_pipeline.test.js test/rag_v2_providers.test.js test/rag_v2_evaluation_shadow.test.js",
     "test:rag:v2:integration": "node scripts/validate-rag-v2-integration.js",
     "eval:rag:v2:synthetic": "node scripts/evaluate-rag-v2-synthetic.js",
+    "eval:conversation:v2": "node scripts/evaluate-conversation-resolver.js",
+    "eval:conversation:v2:matrix": "node scripts/evaluate-conversation-resolver-v2.js",
     "rag:v2:promote": "node scripts/promote-rag-v2-production.js",
     "rag:v2:rebuild-derived": "node scripts/rebuild-rag-v2-derived-index.js",
     "test:rag:load-smoke": "node scripts/rag-load-runner.js --config test/rag-load/smoke.json",

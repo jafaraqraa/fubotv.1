@@ -11,6 +11,7 @@ const { validateDocumentQuality } = require('../src/rag_v2/ingestion/qualityGate
 const { encodeSparse } = require('../src/rag_v2/embeddings/sparseEncoder');
 const { routeQuery } = require('../src/rag_v2/query_understanding/queryRouter');
 const { AnswerPipeline, formatCustomerAnswer } = require('../src/rag_v2/generation/answerPipeline');
+const { deriveConversationStyle } = require('../src/rag_v2/generation/conversationStyle');
 
 function database() { const db = new Database(':memory:'); db.pragma('foreign_keys=ON'); db.exec(fs.readFileSync(path.join(__dirname, '../src/database/migrations/034_rag_v2_foundation.sql'), 'utf8')); return db; }
 const config = { childChunkTokens: 450, overlapTokens: 60, contextTokenBudget: 1000, maximumContextChunks: 8, minimumRerankerScore: 0.35 };
@@ -73,6 +74,16 @@ test('query router retains the latest substantive topic through several dependen
 
 test('query router asks for clarification when a dependent question has no usable topic', () => {
     assert.equal(routeQuery('بكم؟', [{ role: 'user', content: 'مرحبا' }]).decision, 'clarify');
+});
+
+test('conversation style mirrors register, brevity, and avoids repeated openings', () => {
+    const style = deriveConversationStyle('قديش سعره؟', [
+        { role: 'user', content: 'بدي جهاز ميش' },
+        { role: 'assistant', content: 'أكيد، سعره 220 شيكل.' }
+    ]);
+    assert.equal(style.dialect, 'palestinian');
+    assert.equal(style.verbosity, 'very_short');
+    assert.deepEqual(style.recentOpenings, ['أكيد']);
 });
 
 test('customer answer formatting removes internal and live-stock implications', () => {

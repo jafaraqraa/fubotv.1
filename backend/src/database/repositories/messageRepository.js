@@ -305,6 +305,17 @@ function getChatHistoryForAI(userId, tenantId = 'default', channel = null, optio
     }));
 }
 
+function getConversationHistoryForResolver(conversationId, tenantId, channel, contactId, limit = 40) {
+    if (!conversationId || !tenantId || !channel || !contactId) return [];
+    return db.prepare(`SELECT id, role, content, created_at FROM (
+        SELECT m.id, m.role, m.content, m.created_at
+        FROM messages m JOIN conversations c ON c.id=m.conversation_id AND c.tenant_id=m.tenant_id
+        JOIN channel_accounts ca ON ca.id=c.channel_account_id
+        WHERE m.conversation_id=? AND m.tenant_id=? AND m.channel=? AND ca.external_user_id=? AND m.is_internal_note=0
+        ORDER BY m.created_at DESC, m.rowid DESC LIMIT ?
+    ) ORDER BY created_at ASC`).all(String(conversationId),String(tenantId),String(channel),String(contactId),Math.min(100,Math.max(1,Number(limit)||40)));
+}
+
 function getMessagesCount(tenantId) {
     if (!tenantId) throw new Error('tenantId is required');
     const row = db.prepare('SELECT COUNT(*) as count FROM messages WHERE tenant_id = ?').get(tenantId);
@@ -369,6 +380,7 @@ module.exports = {
     deleteInternalNote,
     existsByExternalId,
     getChatHistoryForAI,
+    getConversationHistoryForResolver,
     getMessagesCount,
     getMessageForRetry,
     updateDeliveryByExternalId,

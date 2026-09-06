@@ -2,6 +2,7 @@
 
 const CASUAL = /^(?:مرحبا|اهلا|السلام عليكم|hello|hi)[!. ؟?]*$/iu;
 const CONTEXT_DEPENDENT = /^(?:(?:و|طيب|طب|and|what about)|(?:قديش|بكم|كم|متى|وين|اين|كيف|ليش|هل)|(?:الخيارات|التفاصيل|احكي(?:لي)?\s+الخيارات|شو\s+الخيارات))[؟?!. ]*$|^و?(?:قديش|بكم|كم)\s+(?:سعر|حق)(?:ها|ه)[؟?!. ]*$|(?:هذا|هذه|هاد|هاي|اياه|اياها|الثاني|الاول|منه|منها|الها|اله)(?:[؟?!. ]|$)/iu;
+const ATTRIBUTE_FOLLOWUP = /^(?:و؟?\s*)?(?:قديش|بكم|كم|شو)\s+(?:ال)?(?:سعر|حق|تركيب|رسوم|مدة|كفالة|ضمان|مقاس|لون)(?:ها|ه)?[؟?!. ]*$/iu;
 
 function isContextDependent(value) { return CONTEXT_DEPENDENT.test(String(value || '').trim()); }
 
@@ -24,7 +25,7 @@ function routeQuery(question, history = []) {
     const topic = priorTopic(history, value);
     if (ambiguous && !topic) return { decision: 'clarify', confidence: .9, standaloneQuestion: value };
     if (isContextDependent(value) && !topic) return { decision: 'clarify', confidence: .9, standaloneQuestion: value };
-    const followUp = isContextDependent(value) && topic;
+    const followUp = (isContextDependent(value) || ATTRIBUTE_FOLLOWUP.test(value)) && topic;
     return { decision: 'knowledge', confidence: followUp ? .75 : .85, isFollowUp: Boolean(followUp),
         contextTopic: followUp ? topic : null,
         standaloneQuestion: followUp ? `${topic} — ${value}` : value, originalQuestion: value };

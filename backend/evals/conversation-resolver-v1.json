@@ -1,0 +1,5 @@
+{"version":1,"cases":[
+ {"id":"en-recall","language":"en","messages":["Tell me about Aurora Link","Hello","What did I ask about?"],"expected":{"intent":"CONVERSATION_RECALL","entity":"Aurora Link","rag":false}},
+ {"id":"ar-followup","language":"ar-palestinian","messages":["احكيلي عن صمام سيدر","بدي منه ثنتين"],"expected":{"intent":"PURCHASE_INTENT","entity":"Cedar Valve","rag":false}},
+ {"id":"mixed-booking","language":"mixed","messages":["Harbor Physiotherapy شو وضعه؟","Book it"],"expected":{"intent":"BOOKING_INTENT","entity":"Harbor Physiotherapy","rag":false}}
+]}

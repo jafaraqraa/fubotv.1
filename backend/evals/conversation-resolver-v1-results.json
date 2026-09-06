@@ -1,0 +1,17 @@
+{
+  "dataset_version": 1,
+  "total": 3,
+  "passed": 3,
+  "accuracy": 1,
+  "conversation_recall_accuracy": 1,
+  "active_entity_accuracy": 1,
+  "intent_accuracy": 1,
+  "reference_resolution_accuracy": 1,
+  "rag_routing_accuracy": 1,
+  "cross_tenant_leakage": 0,
+  "tokens_used_for_resolution": 0,
+  "provider_cost_usd": 0,
+  "p50_latency_ms": 0.766607999999998,
+  "p95_latency_ms": 4.789458000000003,
+  "failure_ledger": []
+}

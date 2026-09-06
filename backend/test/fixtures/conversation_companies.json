@@ -1,0 +1,5 @@
+[
+  {"tenant":"telco-synthetic","entities":[{"canonical_name":"Aurora Link","display_name":"Aurora Link","entity_type":"product","aliases":["اورورا لينك"]}],"capabilities":[{"capability":"purchase_request","supported_entity_types":["product"],"required_slots":["entity_id","quantity","contact_method"],"confirmation_required":true,"execution_mode":"human_handoff"}]},
+  {"tenant":"clinic-synthetic","entities":[{"canonical_name":"Harbor Physiotherapy","display_name":"Harbor Physiotherapy","entity_type":"service","aliases":["علاج هاربر"]}],"capabilities":[{"capability":"booking_request","supported_entity_types":["service"],"required_slots":["entity_id","appointment_date","customer_name"],"confirmation_required":true,"execution_mode":"api"}]},
+  {"tenant":"distribution-synthetic","entities":[{"canonical_name":"Cedar Valve","display_name":"Cedar Valve","entity_type":"product","aliases":["صمام سيدر"]}],"capabilities":[{"capability":"purchase_request","supported_entity_types":["product"],"required_slots":["entity_id","quantity"],"confirmation_required":true,"execution_mode":"ticket"}]}
+]

@@ -5,12 +5,13 @@ const { encodeSparse } = require('../embeddings/sparseEncoder');
 const { buildContext } = require('../context/contextBuilder');
 const { decideEvidence, CLASSIFICATION } = require('../evidence/evidenceGate');
 const { verifyClaims } = require('../verification/claimVerifier');
+const { deriveConversationStyle } = require('./conversationStyle');
 
 function formatCustomerAnswer(value) {
     return String(value || '').trim()
-        .replace(/\bمتوفر(ة)?\s+كوحدة/gu, (_match, feminine) => `معروض${feminine || ''} كوحدة`)
+        .replace(/متوفر(ة)?\s+كوحدة/gu, (_match, feminine) => `معروض${feminine || ''} كوحدة`)
         .replace(/(?:غير متوفرة?|مش متوفرة?) في (?:قاعدة المعرفة|البيانات(?: المتوفرة)?)/gu, 'مش محدّث بشكل مباشر عنا')
-        .replace(/لا يمكنني? تأكيد/gu, 'ما بنقدر نأكد')
+        .replace(/لا يمكن(?:ني)? تأكيد/gu, 'ما بنقدر نأكد')
         .replace(/\s+([,.!؟])/gu, '$1');
 }
 
@@ -50,14 +51,15 @@ class AnswerPipeline {
             return { decision: 'abstain', answer: 'ما عندي معلومة مؤكدة عن هاد الموضوع حالياً.', route, gate, retrieval, context };
         }
         const groundedQuestion = route.isFollowUp ? route.standaloneQuestion : question;
-        let generation = await this.runGeneration({ question: groundedQuestion, context: context.text, sourceIds: context.selected.map(x => x.sourceId), signal });
+        const style = deriveConversationStyle(question, history);
+        let generation = await this.runGeneration({ question: groundedQuestion, context: context.text, sourceIds: context.selected.map(x => x.sourceId), style, signal });
         let response = generation.response;
         if (['abstain', 'clarify'].includes(response.decision)) {
             response = { ...response, claims: [], citations: [] };
         }
         let verification = await this.runVerification(response, context.selected);
         if (!verification.valid) {
-            generation = await this.runGeneration({ question: groundedQuestion, context: context.text, sourceIds: context.selected.map(x => x.sourceId), signal,
+            generation = await this.runGeneration({ question: groundedQuestion, context: context.text, sourceIds: context.selected.map(x => x.sourceId), style, signal,
                 verifierFeedback: verification.errors.join('; ') });
             response = generation.response;
             if (['abstain', 'clarify'].includes(response.decision)) response = { ...response, claims: [], citations: [] };

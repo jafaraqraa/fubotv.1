@@ -1,0 +1,72 @@
+{
+  "dataset_version": 2,
+  "synthetic": true,
+  "human_reviewed": false,
+  "total_cases": 100,
+  "passed": 100,
+  "metrics": {
+    "intent_accuracy": 1,
+    "active_topic_accuracy": 1,
+    "active_entity_accuracy": 1,
+    "reference_resolution_accuracy": 1,
+    "conversation_recall_accuracy": 1,
+    "correction_repair_accuracy": 1,
+    "cross_tenant_leakage": 0,
+    "cross_conversation_leakage": 0,
+    "duplicate_action_rate": 0,
+    "resolver_p50_ms": 0.06234600000000512,
+    "resolver_p95_ms": 0.22191399999999817,
+    "provider_tokens": 0,
+    "provider_cost_usd": 0
+  },
+  "per_tenant": {
+    "tenant-orbit": {
+      "cases": 20,
+      "passed": 20,
+      "accuracy": 1
+    },
+    "tenant-wellness": {
+      "cases": 20,
+      "passed": 20,
+      "accuracy": 1
+    },
+    "tenant-supply": {
+      "cases": 20,
+      "passed": 20,
+      "accuracy": 1
+    },
+    "tenant-market": {
+      "cases": 20,
+      "passed": 20,
+      "accuracy": 1
+    },
+    "tenant-civic": {
+      "cases": 20,
+      "passed": 20,
+      "accuracy": 1
+    }
+  },
+  "per_language": {
+    "arabic": {
+      "cases": 25,
+      "passed": 25,
+      "accuracy": 1
+    },
+    "palestinian": {
+      "cases": 25,
+      "passed": 25,
+      "accuracy": 1
+    },
+    "english": {
+      "cases": 25,
+      "passed": 25,
+      "accuracy": 1
+    },
+    "mixed": {
+      "cases": 25,
+      "passed": 25,
+      "accuracy": 1
+    }
+  },
+  "failure_ledger": []
+}

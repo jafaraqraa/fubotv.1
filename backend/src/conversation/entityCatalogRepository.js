@@ -1,0 +1,16 @@
+'use strict';
+const crypto=require('crypto'); const defaultDb=require('../database/connection'); const {norm}=require('./entityTracker');
+const J=x=>JSON.stringify(x??null), P=(x,d)=>{try{return x==null?d:JSON.parse(x)}catch{return d}};
+function catalogEntity(row){return {entity_id:row.entity_id,canonical_name:row.canonical_name,display_name:row.display_name,entity_type:row.entity_type,
+ aliases:P(row.aliases_json,[]),parent_entity_id:row.parent_entity_id,related_entity_ids:P(row.related_entity_ids_json,[]),status:row.status,valid_from:row.valid_from,valid_to:row.valid_to,
+ attributes:P(row.attributes_json,{}),source_type:row.source_type,source_id:row.source_id,source_version_id:row.source_version_id,authority:row.authority,
+ allowed_actions:P(row.allowed_actions_json,[]),knowledge_source_ids:P(row.supporting_chunk_ids_json,[]),exact_source_wording:row.exact_source_wording};}
+class EntityCatalogRepository{constructor(db=defaultDb){this.db=db}
+ getActive(tenantId,{at=new Date().toISOString(),allowedSourceIds=null}={}){const catalog=this.db.prepare("SELECT catalog_version FROM tenant_entity_catalogs WHERE tenant_id=? AND status='active'").get(String(tenantId));if(!catalog)return {tenant_id:String(tenantId),catalog_version:null,entities:[]};
+  let rows=this.db.prepare(`SELECT * FROM tenant_catalog_entities WHERE tenant_id=? AND catalog_version=? AND status='active' AND (valid_from IS NULL OR valid_from<=?) AND (valid_to IS NULL OR valid_to>?)`).all(String(tenantId),catalog.catalog_version,at,at);
+  if(Array.isArray(allowedSourceIds))rows=rows.filter(r=>allowedSourceIds.includes(r.source_id));return {tenant_id:String(tenantId),catalog_version:catalog.catalog_version,entities:rows.map(catalogEntity)};}
+ replace(tenantId,version,entities){return this.db.transaction(()=>{this.db.prepare("UPDATE tenant_entity_catalogs SET status='retired' WHERE tenant_id=? AND status='active'").run(tenantId);this.db.prepare("INSERT OR REPLACE INTO tenant_entity_catalogs(tenant_id,catalog_version,status) VALUES(?,?,'building')").run(tenantId,version);
+  const seen=new Map();for(const raw of entities){const eid=raw.entity_id||crypto.createHash('sha256').update(`${tenantId}\0${raw.source_type}\0${raw.source_id}\0${norm(raw.canonical_name)}`).digest('hex').slice(0,24);const collision=seen.get(`${raw.entity_type}:${norm(raw.canonical_name)}`);const status=collision&&collision.source_version_id!==raw.source_version_id?'conflicted':(raw.status||'active');seen.set(`${raw.entity_type}:${norm(raw.canonical_name)}`,raw);
+   this.db.prepare(`INSERT OR REPLACE INTO tenant_catalog_entities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(tenantId,version,eid,raw.canonical_name,raw.display_name||raw.canonical_name,norm(raw.canonical_name),raw.entity_type,J(raw.aliases||[]),raw.parent_entity_id||null,J(raw.related_entity_ids||[]),status,raw.valid_from||null,raw.valid_to||null,J(raw.attributes||{}),raw.source_type,raw.source_id,raw.source_version_id||null,raw.authority||'informational',J(raw.allowed_actions||[]),J(raw.supporting_chunk_ids||[]),raw.exact_source_wording||null);}
+  this.db.prepare("UPDATE tenant_entity_catalogs SET status='active' WHERE tenant_id=? AND catalog_version=?").run(tenantId,version);return this.getActive(tenantId);})();}}
+module.exports={EntityCatalogRepository};

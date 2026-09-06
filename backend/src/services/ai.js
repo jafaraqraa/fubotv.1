@@ -7,7 +7,7 @@ const {
     getSystemPrompt,
     getLastRetrievalMetadata
 } = require('./knowledge');
-const { getChatHistoryForAI } = require('../database/repositories/messageRepository');
+const { getChatHistoryForAI, getConversationHistoryForResolver } = require('../database/repositories/messageRepository');
 const {
     validateAnswer: runValidation,
     getLastValidationMetadata
@@ -299,6 +299,28 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     // 1. Fetch system prompt personality, rules, safety
     const systemPrompt = getSystemPrompt();
     const conversationHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null);
+    const resolverMode = String(process.env.CONVERSATION_RESOLVER_IMPLEMENTATION || 'legacy').toLowerCase();
+    let conversationResolution = null;
+    if (!isImage && resolverMode !== 'legacy') {
+        const conversationId = routing.conversationId || `${routing.channel || 'unknown'}:${userId}`;
+        const { dispatch } = require('../conversation/runtime');
+        const dispatched = dispatch({
+            tenant_id:tenantId, conversation_id:conversationId, contact_id:String(routing.contactId || userId),
+            channel:String(routing.channel || 'unknown'), message_id:String(routing.messageId || requestId),
+            current_message:userText,
+            recent_messages:getConversationHistoryForResolver(conversationId,tenantId,String(routing.channel || 'unknown'),String(routing.contactId || userId)),
+            known_entities:routing.knownEntities, available_business_capabilities:routing.businessCapabilities,
+            authorized_knowledge_bases:routing.authorizedKnowledgeBases || []
+        });
+        conversationResolution = dispatched.result?.resolution || null;
+        if (resolverMode === 'v2' && conversationResolution?.direct_response && !conversationResolution.requires_rag) return conversationResolution.direct_response;
+        if (resolverMode === 'v2' && conversationResolution?.requires_clarification) return conversationResolution.clarification_question;
+        if (resolverMode === 'v2' && conversationResolution?.message_type === 'transactional') {
+            if (!conversationResolution.active_topic) return conversationResolution.clarification_question || 'شو المنتج أو الخدمة اللي بتقصدها؟';
+            if (conversationResolution.required_slots.length) return `تمام. لنكمّل طلب ${conversationResolution.active_topic.display_name}، بحتاج منك: ${conversationResolution.required_slots[0]}.`;
+            if (!conversationResolution.requires_business_action) return 'تمام، ممثل من الفريق بكمّل معك الطلب.';
+        }
+    }
     const routingDecision = isImage
         ? { mode: MODE.COMPANY_KNOWLEDGE, intent: 'Vision', reason: 'media_requires_grounding' }
         : classifyConversationMode(userText, {
@@ -315,7 +337,9 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
         ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
     if (!isImage && useCompanyKnowledge && process.env.RAG_IMPLEMENTATION === 'v2') {
         const { answerWithRagV2 } = require('../rag_v2/runtime/productionRuntime');
-        const v2 = await answerWithRagV2({ question: userText, history: conversationHistory, tenantId });
+        const v2Question = conversationResolution?.requires_rag
+            ? conversationResolution.standalone_message : userText;
+        const v2 = await answerWithRagV2({ question: v2Question, history: conversationHistory, tenantId });
         Object.assign(pipelineTelemetry, {
             ragInvoked: true,
             retrievalTenantId: tenantId,
@@ -338,7 +362,8 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     }
     const referentHistory = isImage ? [] : getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });
     const resolvedReference = resolveReferent(userText, referentHistory);
-    const effectiveQuestion = resolvedReference.query;
+    const effectiveQuestion = resolverMode === 'v2' && conversationResolution?.requires_rag
+        ? conversationResolution.standalone_message : resolvedReference.query;
     if (!isImage && useCompanyKnowledge && ['AMBIGUOUS', 'UNRESOLVED'].includes(resolvedReference.status)) {
         pipelineTelemetry.gateDecision = DECISION.CLARIFY;
         ragTraceRepo.updateTrace(requestId, { evidence_gate_decision: DECISION.CLARIFY, evidence_gate_reason: 'unresolved_or_ambiguous_referent', reliability_json: { version: 1, referentStatus: resolvedReference.status } });

@@ -1,0 +1,1 @@
+{"version":2,"kind":"synthetic","reviewed":false,"tenants":["tenant-orbit","tenant-wellness","tenant-supply","tenant-market","tenant-civic"],"languages":["arabic","palestinian","english","mixed"],"scenarios":["greeting_before","greeting_between","thanks_between","recall","correction"],"expansion":"cartesian_product","expected_case_count":100}
