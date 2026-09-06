@@ -55,7 +55,9 @@ function loadSettingsOnStartup() {
 
         for (const [key, sqliteValue] of Object.entries(dbSettings)) {
             const fileVal = envFile[key];
-            if (isOverriddenAtRuntime(key, fileVal)) {
+            if (key === 'RAG_IMPLEMENTATION') {
+                process.env[key] = sqliteValue;
+            } else if (isOverriddenAtRuntime(key, fileVal)) {
                 console.log(`⚠️ Setting [${key}] is explicitly overridden at runtime. Preserving environment value.`);
             } else {
                 process.env[key] = sqliteValue;

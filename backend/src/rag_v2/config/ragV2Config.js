@@ -59,7 +59,14 @@ const NUMERIC = new Set([...Object.keys(DEFAULTS).filter(key => typeof DEFAULTS[
 function loadRagV2Config(env = process.env) {
     const config = {};
     for (const [key, fallback] of Object.entries(DEFAULTS)) {
-        const raw = env[ENV[key]];
+        let raw = env[ENV[key]];
+        if (env === process.env && key === 'implementation') {
+            try {
+                const { getSetting } = require('../../database/repositories/settingsRepository');
+                const dbVal = getSetting('RAG_IMPLEMENTATION');
+                if (dbVal) raw = dbVal;
+            } catch (_) {}
+        }
         config[key] = raw === undefined || raw === '' ? fallback : (NUMERIC.has(key) ? Number(raw) : raw);
     }
     validateRagV2Config(config);

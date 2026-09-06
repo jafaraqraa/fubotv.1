@@ -22,14 +22,14 @@ app.set('trust proxy', 1);
 // 1. Basic HTTP Security Headers (Task 20)
 app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
     res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), payment=()');
     res.setHeader('Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
+        "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.socket.io; "
         + "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         + "font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; "
-        + "connect-src 'self' ws: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'");
+        + "connect-src 'self' ws: wss:; object-src 'none'; base-uri 'self'; "
+        + "frame-ancestors 'self' https://ai.studio https://*.google.com https://*.run.app https://*.googleusercontent.com http://localhost:* http://127.0.0.1:*");
     if (process.env.NODE_ENV === 'production') {
         res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     }

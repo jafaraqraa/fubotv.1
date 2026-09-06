@@ -23,7 +23,18 @@ ${style ? styleInstruction(style) : ''}
 ACCURACY: Distinguish a product listed in the catalog from live inventory: say "موجود ضمن منتجاتنا/معروض عنا" but never "متوفر حالياً/بالمخزون" unless evidence explicitly confirms current stock. A reference to inventory under unavailable live data means inventory is unknown. For "options", list only documented variants/options for the referenced product; if no variants exist, state the single documented offer and do not add unrelated services. If only live availability is missing, give the documented product details first, then briefly say current stock needs confirmation. If unsupported, abstain briefly in the user's language.${verifierFeedback ? ` Correct these verifier errors: ${verifierFeedback}` : ''}`;
         const content = await provider.generate([{ role: 'system', content: policy }, { role: 'user', content: `QUESTION:\n${question}\nEVIDENCE:\n${context}` }],
             { temperature: 0, maxTokens: 1024, jsonSchema: RESPONSE_SCHEMA });
-        let response; try { response = JSON.parse(content); } catch (_) { const e = new Error('grounded generator returned invalid JSON'); e.code = 'RAG_V2_INVALID_GENERATION'; throw e; }
+        let response;
+        try {
+            let cleaned = String(content || '').trim();
+            if (cleaned.startsWith('```')) {
+                cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+            }
+            response = JSON.parse(cleaned);
+        } catch (_) {
+            const e = new Error('grounded generator returned invalid JSON');
+            e.code = 'RAG_V2_INVALID_GENERATION';
+            throw e;
+        }
         return { response, metadata: getLastResponseMetadata(), provider: providerDescriptor(provider, 'grounded-generation') };
     }
 }

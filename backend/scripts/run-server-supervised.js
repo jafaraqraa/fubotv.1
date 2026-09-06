@@ -1,11 +1,44 @@
 #!/usr/bin/env node
 const path = require('node:path');
-const { spawn } = require('node:child_process');
+const { spawn, execSync } = require('node:child_process');
 
 let child;
 let stopping = false;
 
+function freePortIfBusy(port = 3000) {
+    try {
+        const out = execSync(`ss -lptn sport = :${port}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+        const matches = [...out.matchAll(/pid=(\d+)/g)];
+        const pids = new Set();
+        for (const m of matches) {
+            const pid = parseInt(m[1], 10);
+            if (pid && pid !== process.pid) {
+                pids.add(pid);
+            }
+        }
+        for (const pid of pids) {
+            console.log(`[Supervisor] Found stale process ${pid} on port ${port}, terminating...`);
+            try { process.kill(pid, 'SIGTERM'); } catch (_) {}
+        }
+        if (pids.size > 0) {
+            const startTime = Date.now();
+            while (Date.now() - startTime < 3000) {
+                try {
+                    const check = execSync(`ss -lptn sport = :${port}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+                    if (!check.includes(`:${port}`)) break;
+                } catch (_) { break; }
+                const buf = new Int32Array(new SharedArrayBuffer(4));
+                Atomics.wait(buf, 0, 0, 100);
+            }
+            for (const pid of pids) {
+                try { process.kill(pid, 'SIGKILL'); } catch (_) {}
+            }
+        }
+    } catch (_) {}
+}
+
 function start() {
+    freePortIfBusy(3000);
     child = spawn(process.execPath, [path.join(__dirname, '..', 'server.js')], {
         stdio: 'inherit',
         env: { ...process.env, FUBOT_SUPERVISED: 'true' }
@@ -23,8 +56,16 @@ function start() {
 for (const signal of ['SIGINT', 'SIGTERM']) {
     process.on(signal, () => {
         stopping = true;
-        if (child && !child.killed) child.kill(signal);
+        if (child && !child.killed) {
+            child.kill(signal);
+            setTimeout(() => {
+                if (child && !child.killed) {
+                    try { child.kill('SIGKILL'); } catch (_) {}
+                }
+            }, 4000).unref();
+        }
     });
 }
 
 start();
+

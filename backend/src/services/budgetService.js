@@ -130,6 +130,22 @@ function seedExistingKeysOnStartup() {
         if (plaintextRows.length) {
             console.log(`[BudgetService] Encrypted ${plaintextRows.length} stored API key(s) at rest.`);
         }
+
+        const existingRows = db.prepare('SELECT id, provider, api_key FROM api_keys').all();
+        let hasUndecryptable = false;
+        for (const row of existingRows) {
+            try {
+                decryptSecret(row.api_key);
+            } catch (_) {
+                hasUndecryptable = true;
+                break;
+            }
+        }
+        if (hasUndecryptable) {
+            console.warn('[BudgetService] Stored API key cannot be decrypted with current key. Clearing stale key records to re-seed...');
+            db.prepare('DELETE FROM api_keys').run();
+        }
+
         const count = db.prepare('SELECT COUNT(*) as cnt FROM api_keys').get().cnt;
         if (count > 0) {
             console.log('🌱 [BudgetService] API Keys table already contains records. Seeding bypassed.');

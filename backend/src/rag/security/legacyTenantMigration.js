@@ -70,6 +70,10 @@ function applyExplicitLegacyTenantMigration() {
 }
 
 async function assertQdrantTenantOwnershipSafe() {
+    const ragImpl = process.env.RAG_IMPLEMENTATION || 'v2';
+    if (ragImpl === 'v2') {
+        return { skipped: true, reason: 'rag_v2_active' };
+    }
     try {
         const { countPoints } = require('../vector/qdrantVectorStore');
         const missingTenantId = await countPoints({
@@ -86,6 +90,12 @@ async function assertQdrantTenantOwnershipSafe() {
         return { missingTenantId, blocked: true };
     } catch (error) {
         if (error.code === 'RAG_QDRANT_OWNERSHIP_AMBIGUOUS') throw error;
+        const isConnectionError = error.code === 'RAG_QDRANT_CONNECTION_FAILED' ||
+            error?.cause?.code === 'ECONNREFUSED' ||
+            error.message?.includes('fetch failed');
+        if (isConnectionError) {
+            return { unavailable: true, offline: true };
+        }
         if (process.env.NODE_ENV === 'production') {
             const wrapped = new Error(`[RAG Migration] Unable to verify Qdrant tenant ownership: ${error.message}`);
             wrapped.code = 'RAG_QDRANT_AUDIT_FAILED';

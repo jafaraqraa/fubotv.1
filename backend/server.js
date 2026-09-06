@@ -9,6 +9,14 @@ const {
 // A closed terminal/pipe must not be reported as an application failure.
 installProcessOutputGuards();
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+
+if (!process.env.SESSION_SECRET) {
+    const crypto = require('crypto');
+    process.env.SESSION_SECRET = crypto.randomBytes(32).toString('hex');
+    console.log(JSON.stringify({ level: 'info', event: 'session_secret_auto_generated', message: 'Auto-generated session secret for environment' }));
+}
+
 const { validateProductionSecurityConfig } = require('./src/config/securityConfig');
 const { initializeDatabase } = require('./src/database/initialize');
 const { loadSettingsOnStartup } = require('./src/services/settingsService');
@@ -56,7 +64,7 @@ const whatsappManager = require('./src/channels/whatsapp-providers/WhatsAppProvi
 const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
 const db = require('./src/database/connection');
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 async function startBackgroundServices() {
     // Never initialize external providers until the HTTP port is successfully bound.
@@ -251,10 +259,45 @@ process.on('SIGINT', () => void gracefulShutdown('SIGINT', 0));
 process.on('SIGTERM', () => void gracefulShutdown('SIGTERM', 0));
 process.on('fubot:restore-ready', () => void gracefulShutdown('RESTORE_REQUESTED', 75));
 
-function listenHttpServer() {
+function freeStalePortHolders(port = PORT) {
+    try {
+        const { execSync } = require('child_process');
+        const out = execSync(`ss -lptn sport = :${port}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+        const matches = [...out.matchAll(/pid=(\d+)/g)];
+        let found = false;
+        for (const m of matches) {
+            const stalePid = parseInt(m[1], 10);
+            if (stalePid && stalePid !== process.pid && stalePid !== process.ppid) {
+                console.warn(`[Startup] Freeing port ${port} from stale PID ${stalePid}...`);
+                try {
+                    process.kill(stalePid, 'SIGTERM');
+                    found = true;
+                } catch (_) {}
+            }
+        }
+        return found;
+    } catch (_) {
+        return false;
+    }
+}
+
+function listenHttpServer(retryCount = 0) {
     return new Promise((resolve, reject) => {
-        const onError = error => {
+        const onError = async error => {
             httpServer.off('listening', onListening);
+            if (error.code === 'EADDRINUSE' && retryCount === 0) {
+                console.warn(`[Startup] Port ${PORT} busy (EADDRINUSE). Attempting to recover port...`);
+                const freed = freeStalePortHolders(PORT);
+                if (freed) {
+                    await new Promise(r => setTimeout(r, 1200));
+                    try {
+                        await listenHttpServer(retryCount + 1);
+                        return resolve();
+                    } catch (retryErr) {
+                        return reject(retryErr);
+                    }
+                }
+            }
             reject(error);
         };
         const onListening = () => {
@@ -263,7 +306,7 @@ function listenHttpServer() {
         };
         httpServer.once('error', onError);
         httpServer.once('listening', onListening);
-        httpServer.listen(PORT);
+        httpServer.listen(PORT, '0.0.0.0');
     });
 }
 

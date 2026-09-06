@@ -7,9 +7,13 @@ const roots = [
     path.join(projectRoot, 'backend', 'src'),
     path.join(projectRoot, 'frontend', 'public', 'js')
 ];
+const dompurifyAsset = fs.existsSync(path.join(projectRoot, 'frontend', 'node_modules', 'dompurify', 'dist', 'purify.min.js'))
+    ? path.join(projectRoot, 'frontend', 'node_modules', 'dompurify', 'dist', 'purify.min.js')
+    : path.join(projectRoot, 'node_modules', 'dompurify', 'dist', 'purify.min.js');
+
 const requiredAssets = [
     path.join(projectRoot, 'backend', 'server.js'),
-    path.join(projectRoot, 'frontend', 'node_modules', 'dompurify', 'dist', 'purify.min.js'),
+    dompurifyAsset,
     path.join(projectRoot, 'frontend', 'public', 'dashboard.html'),
     path.join(projectRoot, 'frontend', 'public', 'login.html')
 ];

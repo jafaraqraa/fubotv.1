@@ -356,7 +356,7 @@ class GeminiProvider extends AIProvider {
     async generate(messages, options = {}) {
         lastResponseMetadata = null;
         try {
-            const model = this.model || "gemini-2.5-flash";
+            const model = this.model || "gemini-3.1-flash-lite";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
 
             // Logging and assertion before every request

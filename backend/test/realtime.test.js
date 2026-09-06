@@ -10,6 +10,8 @@ process.env.SQLITE_DB_PATH = testDbPath;
 process.env.SESSION_SECRET = 'realtime_test_session_secret_32_characters';
 process.env.ADMIN_BOOTSTRAP_USERNAME = 'realtime-admin';
 process.env.ADMIN_BOOTSTRAP_PASSWORD = 'Realtime!Bootstrap8Password';
+delete process.env.COOKIE_SECURE;
+delete process.env.COOKIE_SAME_SITE;
 
 // Clean up any stale test database before booting
 try {

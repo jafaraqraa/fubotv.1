@@ -21,8 +21,13 @@ class TaskRerankerProvider extends RerankerProvider {
             const content = await provider.generate([{ role: 'system', content: 'Rank evidence relevance. Return JSON only.' },
                 { role: 'user', content: JSON.stringify({ originalQuestion, standaloneQuestion, documents }) }],
             { temperature: 0, maxTokens: Math.min(2048, 64 + documents.length * 24), jsonSchema: schema });
-            let parsed; try { parsed = JSON.parse(content); } catch (_) { const e = new Error('reranker provider returned invalid JSON'); e.code = 'RAG_V2_INVALID_RERANK'; throw e; }
-            rankings = parsed.rankings || [];
+            if (!content) { const e = new Error('reranker provider returned empty content'); e.code = 'RAG_V2_EMPTY_RERANK'; throw e; }
+            let parsed; try {
+                let cleaned = String(content || '').trim();
+                if (cleaned.startsWith('```')) cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+                parsed = JSON.parse(cleaned);
+            } catch (_) { const e = new Error('reranker provider returned invalid JSON'); e.code = 'RAG_V2_INVALID_RERANK'; throw e; }
+            rankings = parsed?.rankings || [];
         }
         const seen = new Set();
         const ranked = rankings.filter(item => Number.isInteger(item.index) && candidates[item.index] && Number.isFinite(item.score) && !seen.has(item.index))
