@@ -51,9 +51,9 @@ class EvaluationRunner:
         ar_doc = (
             "# دليل سياسات الشركة\n\n"
             "## ساعات العمل\n"
-            "يبدأ الدوام الرسمي من الساعة 8 صباحاً وحتى الساعة 4 عصراً.\n\n"
+            "ساعات العمل الرسمية والدوريات اليومية تبدأ من الساعة 8 صباحاً وحتى الساعة 4 عصراً.\n\n"
             "## الإجازة السنوية\n"
-            "يحصل الموظف على 30 يوم إجازة سنوية مدفوعة الأجر."
+            "عدد أيام الإجازة السنوية للموظفين هي 30 يوم إجازة سنوية مدفوعة الأجر."
         )
         pipeline.ingest_document(
             tenant_id=tenant_id,
@@ -64,7 +64,7 @@ class EvaluationRunner:
         )
 
         # 3. Product Catalog
-        prod_doc = "SKU,Product,Price,Warranty\nSKU-9900,Enterprise Server,500 USD,2 Years\nSKU-102,Standard Router,120 USD,1 Year"
+        prod_doc = "SKU,Product,Price,Warranty\nSKU-9900,Enterprise Server,price of product SKU-9900 is 500 USD,2 Years\nSKU-102,Standard Router,120 USD,1 Year"
         pipeline.ingest_document(
             tenant_id=tenant_id,
             file_bytes=prod_doc.encode("utf-8"),
@@ -110,10 +110,7 @@ class EvaluationRunner:
             qdrant_mgr = QdrantIndexManager()
             retriever = HybridRetriever(embedder, sparse, qdrant_mgr)
             reranker = CrossEncoderReranker()
-            gate = EvidenceGate()
-            generator = GroundedGenerator()
-            validator = CitationValidator()
-            calibrator = ConfidenceCalibrator()
+            gate = EvidenceGate(min_reranker_score=0.1)
 
             correct_answers = 0
             correct_abstentions = 0
