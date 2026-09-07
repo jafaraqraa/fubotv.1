@@ -1,0 +1,48 @@
+{
+  "app_name": "Standalone RAG Platform",
+  "environment": "development",
+  "database": {
+    "engine": "sqlite",
+    "journal_mode": "WAL",
+    "foreign_keys": true,
+    "busy_timeout_ms": 5000
+  },
+  "qdrant": {
+    "collection_prefix": "rag",
+    "dense_vector_name": "dense",
+    "sparse_vector_name": "sparse",
+    "distance": "Cosine"
+  },
+  "models": {
+    "embedding_provider": "ollama",
+    "embedding_model": "nomic-embed-text",
+    "embedding_dimension": 768,
+    "sparse_provider": "bm25",
+    "sparse_model": "bm25_standard",
+    "reranker_provider": "cross_encoder",
+    "reranker_model": "bge-reranker-base",
+    "generator_provider": "ollama",
+    "generator_model": "llama3.2:1b"
+  },
+  "retrieval": {
+    "dense_prefetch_k": 30,
+    "sparse_prefetch_k": 30,
+    "rrf_k": 60,
+    "rerank_candidate_k": 20,
+    "final_evidence_k": 6
+  },
+  "gating_and_confidence": {
+    "min_reranker_score": 0.35,
+    "min_relevance_margin": 0.05,
+    "evidence_gate_enabled": true
+  },
+  "chunking": {
+    "target_chunk_tokens": 500,
+    "overlap_tokens": 50,
+    "min_chunk_tokens": 50
+  },
+  "context": {
+    "max_context_tokens": 3000,
+    "reserved_answer_tokens": 1000
+  }
+}

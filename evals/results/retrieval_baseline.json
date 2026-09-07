@@ -1,0 +1,7 @@
+{
+  "total_answerable_queries": 10,
+  "hybrid_rrf_hit_rate_5": 1.0,
+  "hybrid_rrf_reranked_hit_rate_5": 1.0,
+  "mrr": 1.0,
+  "ndcg_5": 1.0
+}
