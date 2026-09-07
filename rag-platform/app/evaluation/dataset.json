@@ -1,0 +1,65 @@
+[
+  {
+    "id": "eval_01",
+    "tenant_id": "rag_test_company",
+    "query": "How many annual leave days do employees receive?",
+    "language": "en",
+    "expected_answerable": true,
+    "expected_facts": ["30 paid days"],
+    "category": "hr"
+  },
+  {
+    "id": "eval_02",
+    "tenant_id": "rag_test_company",
+    "query": "كم عدد أيام الإجازة السنوية؟",
+    "language": "ar",
+    "expected_answerable": true,
+    "expected_facts": ["30 يوم"],
+    "category": "hr"
+  },
+  {
+    "id": "eval_03",
+    "tenant_id": "rag_test_company",
+    "query": "What are the company working hours?",
+    "language": "en",
+    "expected_answerable": true,
+    "expected_facts": ["8 AM to 4 PM"],
+    "category": "hr"
+  },
+  {
+    "id": "eval_04",
+    "tenant_id": "rag_test_company",
+    "query": "من كم الساعة يبدأ الدوام الرسمي؟",
+    "language": "ar",
+    "expected_answerable": true,
+    "expected_facts": ["الساعة 8 صباحاً"],
+    "category": "hr"
+  },
+  {
+    "id": "eval_05",
+    "tenant_id": "rag_test_company",
+    "query": "What is the price of product SKU-9900?",
+    "language": "en",
+    "expected_answerable": true,
+    "expected_facts": ["500 USD"],
+    "category": "products"
+  },
+  {
+    "id": "eval_06",
+    "tenant_id": "rag_test_company",
+    "query": "Who is the CEO of the company?",
+    "language": "en",
+    "expected_answerable": false,
+    "expected_facts": [],
+    "category": "missing_fact"
+  },
+  {
+    "id": "eval_07",
+    "tenant_id": "rag_test_company",
+    "query": "ما هي كلمة مرور الواي فاي؟",
+    "language": "ar",
+    "expected_answerable": false,
+    "expected_facts": [],
+    "category": "missing_fact"
+  }
+]
