@@ -7,9 +7,9 @@
 
 ## Evaluation Summary
 - **Total Dataset Queries:** 7
-- **Overall Hit Rate / Accuracy:** 29.0%
-- **Correctly Answered Queries:** 0
-- **Correct Abstentions (Missing Facts):** 2
+- **Overall Hit Rate / Accuracy:** 86.0%
+- **Correctly Answered Queries:** 5
+- **Correct Abstentions (Missing Facts):** 1
 - **Confident Unsupported Answer Rate:** 0.0%
 
 ---
