@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form, status, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, Header, status, HTTPException
 from typing import Optional, List
 from sqlalchemy.orm import Session
 
@@ -15,11 +15,14 @@ async def upload_document(
     department: Optional[str] = Form(None),
     category: Optional[str] = Form(None),
     security_level: str = Form("internal"),
+    embedding_provider: Optional[str] = Form(None),
+    embedding_model: Optional[str] = Form(None),
+    x_embedding_api_key: Optional[str] = Header(None, alias="X-Embedding-API-Key"),
     principal: PrincipalContext = Depends(get_principal_context),
     db: Session = Depends(get_db)
 ):
     file_bytes = await file.read()
-    pipeline = IngestionPipeline(db)
+    pipeline = IngestionPipeline(db, embedding_provider, embedding_model, x_embedding_api_key)
     res = pipeline.ingest_document(
         tenant_id=principal.tenant_id,
         file_bytes=file_bytes,

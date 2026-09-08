@@ -1,4 +1,5 @@
 from typing import List
+import httpx
 from app.retrieval.hybrid_retriever import RetrievalCandidate
 from app.core.normalization import search_tokens
 
@@ -26,3 +27,32 @@ class CrossEncoderReranker:
 
         ranked = sorted(candidates, key=lambda x: x.rerank_score, reverse=True)
         return ranked[:top_k]
+
+class OpenRouterReranker:
+    def __init__(self, api_key: str, model_name: str, base_url: str = "https://openrouter.ai/api/v1"):
+        if not api_key:
+            raise ValueError("OpenRouter API key is required for reranking")
+        self.api_key = api_key
+        self.model_name = model_name
+        self.base_url = base_url.rstrip("/")
+
+    async def rerank(self, query: str, candidates: List[RetrievalCandidate], top_k: int = 20) -> List[RetrievalCandidate]:
+        if not candidates:
+            return []
+        documents = [f"{c.title}\n{c.section_title}\n{c.content}" for c in candidates]
+        async with httpx.AsyncClient(timeout=45.0) as client:
+            response = await client.post(
+                f"{self.base_url}/rerank",
+                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                json={"model": self.model_name, "query": query, "documents": documents, "top_n": min(top_k, len(documents))}
+            )
+            response.raise_for_status()
+            results = response.json().get("results", [])
+        ranked = []
+        for item in results:
+            index = int(item["index"])
+            if 0 <= index < len(candidates):
+                candidate = candidates[index]
+                candidate.rerank_score = round(float(item.get("relevance_score", 0.0)), 4)
+                ranked.append(candidate)
+        return ranked

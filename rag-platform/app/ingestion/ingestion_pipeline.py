@@ -5,15 +5,17 @@ from sqlalchemy.orm import Session
 from app.db.models import Tenant, Document, DocumentVersion, Chunk, AuditEvent
 from app.parsers.factory import get_parser_for_file
 from app.chunking.smart_chunker import SmartChunker
-from app.embeddings.ollama_provider import OllamaEmbeddingProvider
+from app.embeddings.factory import create_embedding_provider, embedding_collection_name
 from app.sparse.bm25_encoder import BM25SparseEncoder
 from app.retrieval.qdrant_manager import QdrantIndexManager
 
 class IngestionPipeline:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, embedding_provider: str = None, embedding_model: str = None, embedding_api_key: str = None):
         self.db = db
         self.chunker = SmartChunker()
-        self.embedder = OllamaEmbeddingProvider()
+        self.embedder = create_embedding_provider(embedding_provider, embedding_model, embedding_api_key)
+        self.embedding_provider = (embedding_provider or "ollama").strip().lower()
+        self.embedding_model = (embedding_model or self.embedder.model).strip()
         self.sparse_encoder = BM25SparseEncoder()
         self.qdrant_mgr = QdrantIndexManager()
 
@@ -28,7 +30,7 @@ class IngestionPipeline:
         category: str = None,
         security_level: str = "internal",
         tags: List[str] = None,
-        collection_name: str = "rag_v1"
+        collection_name: str = None
     ) -> Dict[str, Any]:
         # 0. Ensure tenant exists
         tenant = self.db.query(Tenant).filter_by(id=tenant_id).first()
@@ -38,7 +40,9 @@ class IngestionPipeline:
             self.db.commit()
 
         # 1. Compute checksum for duplicate detection
-        checksum = hashlib.sha256(file_bytes).hexdigest()
+        collection_name = collection_name or embedding_collection_name(self.embedding_provider, self.embedding_model)
+        checksum_material = f"{self.embedding_provider}:{self.embedding_model}\0".encode() + file_bytes
+        checksum = hashlib.sha256(checksum_material).hexdigest()
 
         existing_doc = self.db.query(Document).filter_by(
             tenant_id=tenant_id,
@@ -107,7 +111,8 @@ class IngestionPipeline:
         db_chunks = []
         qdrant_points = []
 
-        for cd in chunk_dicts:
+        dense_vectors = self.embedder.embed_documents_sync([cd["embedding_text"] for cd in chunk_dicts])
+        for cd, dense_vec in zip(chunk_dicts, dense_vectors):
             db_chunk = Chunk(
                 id=cd["id"],
                 tenant_id=tenant_id,
@@ -134,7 +139,6 @@ class IngestionPipeline:
             db_chunks.append(db_chunk)
 
             # Compute vectors for Qdrant vector store
-            dense_vec = [0.01] * self.embedder.dimension
             sparse_vec = self.sparse_encoder.encode_text(cd["embedding_text"])
 
             qdrant_points.append({

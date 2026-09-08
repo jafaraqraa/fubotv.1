@@ -6,10 +6,11 @@ from app.core.config import settings
 from app.context.context_builder import ContextPayload
 
 class GroundedGenerator:
-    def __init__(self, provider: str = None, model: str = None, base_url: str = None):
+    def __init__(self, provider: str = None, model: str = None, base_url: str = None, api_key: str = None):
         self.provider = provider or settings.GENERATOR_PROVIDER
         self.model = model or settings.GENERATOR_MODEL
-        self.base_url = base_url or settings.GENERATOR_BASE_URL
+        self.base_url = base_url or ("https://openrouter.ai/api/v1" if self.provider == "openrouter" else settings.GENERATOR_BASE_URL)
+        self.api_key = api_key or settings.OPENROUTER_API_KEY
 
     def _structured_answer(self, query: str, context: ContextPayload) -> str | None:
         if not context.evidence_items:
@@ -49,11 +50,14 @@ class GroundedGenerator:
             return f"بتقدر ترحّل حتى {carried.group(1)} أيام إجازة غير مستخدمة للسنة التالية. [EVIDENCE_01]"
         return None
 
-    async def generate_answer(self, query: str, context: ContextPayload) -> Dict[str, Any]:
+    async def generate_answer(self, query: str, context: ContextPayload, system_prompt_override: str = None) -> Dict[str, Any]:
         structured = self._structured_answer(query, context)
-        if structured:
+        # Keep deterministic extraction only for local/offline generation. Remote
+        # text generation must always receive the administrator's live system
+        # prompt, including questions for which an exact fact can be extracted.
+        if structured and self.provider != "openrouter":
             return {"answer": structured, "citations": ["EVIDENCE_01"]}
-        system_prompt = (
+        grounding_prompt = (
             "You are a strict company knowledge assistant. "
             "Rules:\n"
             "1. Answer user questions using ONLY the provided evidence blocks.\n"
@@ -63,6 +67,7 @@ class GroundedGenerator:
             "5. If evidence is insufficient, state clearly that information is not available.\n"
             "Return JSON format: {\"answer\": \"string\", \"citations\": [\"EVIDENCE_01\"]}"
         )
+        system_prompt = f"{system_prompt_override.strip()}\n\n{grounding_prompt}" if system_prompt_override and system_prompt_override.strip() else grounding_prompt
 
         user_prompt = (
             f"EVIDENCE:\n{context.formatted_context}\n\n"
@@ -92,6 +97,22 @@ class GroundedGenerator:
                         }
                 except Exception:
                     pass
+
+        if self.provider == "openrouter":
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                response = await client.post(
+                    f"{self.base_url.rstrip('/')}/chat/completions",
+                    headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                    json={
+                        "model": self.model,
+                        "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
+                        "response_format": {"type": "json_object"}
+                    }
+                )
+                response.raise_for_status()
+                raw_out = response.json()["choices"][0]["message"]["content"]
+                parsed = json.loads(raw_out)
+                return {"answer": parsed.get("answer", raw_out), "citations": parsed.get("citations", [])}
 
         evidence_ids = [e.evidence_id for e in context.evidence_items]
         first_evidence = context.evidence_items[0] if context.evidence_items else None

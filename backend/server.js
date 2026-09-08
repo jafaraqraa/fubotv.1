@@ -12,9 +12,18 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 if (!process.env.SESSION_SECRET) {
+    const fs = require('fs');
     const crypto = require('crypto');
-    process.env.SESSION_SECRET = crypto.randomBytes(32).toString('hex');
-    console.log(JSON.stringify({ level: 'info', event: 'session_secret_auto_generated', message: 'Auto-generated session secret for environment' }));
+    const localSecretPath = path.join(__dirname, 'data', '.local-session-secret');
+    if (process.env.NODE_ENV === 'production') {
+        throw new Error('SESSION_SECRET must be configured in production.');
+    }
+    fs.mkdirSync(path.dirname(localSecretPath), { recursive: true });
+    if (!fs.existsSync(localSecretPath)) {
+        fs.writeFileSync(localSecretPath, crypto.randomBytes(32).toString('hex'), { mode: 0o600 });
+    }
+    process.env.SESSION_SECRET = fs.readFileSync(localSecretPath, 'utf8').trim();
+    console.log(JSON.stringify({ level: 'info', event: 'local_session_secret_loaded', message: 'Loaded stable local session secret' }));
 }
 
 const { validateProductionSecurityConfig } = require('./src/config/securityConfig');

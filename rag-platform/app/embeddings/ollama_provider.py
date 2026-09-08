@@ -36,3 +36,16 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
                 except Exception:
                     embeddings.append([0.01] * self._expected_dim)
         return embeddings
+
+    def embed_documents_sync(self, texts: List[str]) -> List[List[float]]:
+        embeddings = []
+        with httpx.Client(timeout=30.0) as client:
+            for text in texts:
+                response = client.post(f"{self.base_url}/api/embeddings", json={"model": self.model, "prompt": text})
+                response.raise_for_status()
+                vector = response.json().get("embedding", [])
+                if not vector:
+                    raise RuntimeError("Ollama returned an empty embedding")
+                self._expected_dim = len(vector)
+                embeddings.append(vector)
+        return embeddings

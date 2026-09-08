@@ -1,5 +1,5 @@
 import time
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Header, status
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
@@ -9,11 +9,11 @@ from app.auth.tenant import get_principal_context, PrincipalContext
 from app.core.normalization import normalize_text
 from app.core.errors import raise_invalid_query
 from app.observability.tracer import RequestTracer
-from app.embeddings.ollama_provider import OllamaEmbeddingProvider
+from app.embeddings.factory import create_embedding_provider, embedding_collection_name
 from app.sparse.bm25_encoder import BM25SparseEncoder
 from app.retrieval.qdrant_manager import QdrantIndexManager
 from app.retrieval.hybrid_retriever import HybridRetriever
-from app.reranking.reranker import CrossEncoderReranker
+from app.reranking.reranker import CrossEncoderReranker, OpenRouterReranker
 from app.gating.evidence_gate import EvidenceGate
 from app.context.context_builder import ContextBuilder
 from app.generation.grounded_generator import GroundedGenerator
@@ -31,10 +31,20 @@ class QueryRequest(BaseModel):
     roles: List[str] = ["employee"]
     department: Optional[str] = None
     filters: Optional[Dict[str, Any]] = None
+    embedding_provider: Optional[str] = None
+    embedding_model: Optional[str] = None
+    reranker_provider: Optional[str] = None
+    reranker_model: Optional[str] = None
+    generator_provider: Optional[str] = None
+    generator_model: Optional[str] = None
+    system_prompt: Optional[str] = None
 
 @router.post("/query", response_model=QueryResponse)
 async def query_rag_engine(
     req: QueryRequest,
+    x_embedding_api_key: Optional[str] = Header(None, alias="X-Embedding-API-Key"),
+    x_reranker_api_key: Optional[str] = Header(None, alias="X-Reranker-API-Key"),
+    x_generator_api_key: Optional[str] = Header(None, alias="X-Generator-API-Key"),
     principal: PrincipalContext = Depends(get_principal_context),
     db: Session = Depends(get_db)
 ):
@@ -71,13 +81,13 @@ async def query_rag_engine(
         for c in db_chunks
     ]
 
-    embedder = OllamaEmbeddingProvider()
+    embedder = create_embedding_provider(req.embedding_provider, req.embedding_model, x_embedding_api_key)
     sparse = BM25SparseEncoder()
     qdrant_mgr = QdrantIndexManager()
     retriever = HybridRetriever(embedder, sparse, qdrant_mgr)
 
     candidates = await retriever.retrieve_candidates(
-        collection_name="rag_v1",
+        collection_name=embedding_collection_name(req.embedding_provider or "ollama", req.embedding_model or embedder.model),
         query=norm_query,
         tenant_id=principal.tenant_id,
         roles=principal.roles,
@@ -88,8 +98,12 @@ async def query_rag_engine(
 
     # 4. Reranking
     t_rerank = time.time()
-    reranker = CrossEncoderReranker()
-    reranked = reranker.rerank(norm_query, candidates)
+    if (req.reranker_provider or "local").lower() == "openrouter":
+        reranker = OpenRouterReranker(x_reranker_api_key, req.reranker_model or "")
+        reranked = await reranker.rerank(norm_query, candidates)
+    else:
+        reranker = CrossEncoderReranker(req.reranker_model or "bge-reranker-base")
+        reranked = reranker.rerank(norm_query, candidates)
     tracer.mark_step("rerank_ms", (time.time() - t_rerank) * 1000)
 
     # 5. Evidence Sufficiency Gate
@@ -126,8 +140,12 @@ async def query_rag_engine(
 
     # 7. Grounded Generation
     t_gen = time.time()
-    generator = GroundedGenerator()
-    gen_out = await generator.generate_answer(norm_query, context)
+    generator = GroundedGenerator(
+        provider=req.generator_provider,
+        model=req.generator_model,
+        api_key=x_generator_api_key
+    )
+    gen_out = await generator.generate_answer(norm_query, context, req.system_prompt)
     tracer.mark_step("generation_ms", (time.time() - t_gen) * 1000)
 
     # 8. Citation Validation
