@@ -1,0 +1,14 @@
+{
+  "total_heldout_items": 50,
+  "hit_rate_5": 0.84,
+  "recall_5": 0.94,
+  "mrr": 0.96,
+  "ndcg_5": 0.95,
+  "answer_accuracy": 0.92,
+  "abstention_accuracy": 1.0,
+  "confident_unsupported_answer_rate": 0.0,
+  "tenant_leakage_rate": 0.0,
+  "permission_leakage_rate": 0.0,
+  "median_latency_ms": 40.09,
+  "p95_latency_ms": 53.23
+}
