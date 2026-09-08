@@ -21,6 +21,18 @@ test('warranty follow-up resolves to the product from user history', () => {
  assert.equal(result.status,'RESOLVED');
  assert.match(result.query,/HOME 5K/i);
 });
+test('warranty follow-up ignores stale products outside the active conversation window', () => {
+ const stale = Array.from({length:7},(_,index)=>({role:'user',content:`قديش سعر OLD-${index}؟`}));
+ const result = resolveReferent('كم كفالتها طيب؟', [
+  ...stale,
+  {role:'user',content:'مرحبا'},
+  {role:'user',content:'قديش سعر بطارية Atlas Home 5K؟'},
+  {role:'user',content:'كم كفالتها طيب؟'}
+ ]);
+ assert.equal(result.status,'RESOLVED');
+ assert.equal(result.entity,'HOME 5K');
+ assert.match(result.query,/كفالتها طيب HOME 5K/u);
+});
 test('multiple user entities clarify and assistant entities never resolve', () => {
  assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20'},{role:'user',content:'G8'}]).status,'AMBIGUOUS');
  assert.equal(resolveReferent('والأسبوع؟',[{role:'assistant',content:'MX20'}]).status,'UNRESOLVED');

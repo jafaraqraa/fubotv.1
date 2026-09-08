@@ -33,9 +33,23 @@ function resolveReferent(query, history = []) {
  }
  const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|كفالتها|كفالته|ضمانها|ضمانه|سعتها|سعته|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده|كفاله|ضمان|سعه)|^والاسبوع$/u.test(q);
  if (!followup || entities(query).length) return { status: 'NOT_REQUIRED', query, entity: null };
- const candidates = [...new Set(history.filter(message => message?.role === 'user')
-  .filter(message => norm(message.content) !== q)
-  .flatMap(message => entities(message.content)))];
+ // A pronoun refers to the active conversational turn, not every entity ever
+ // mentioned in the retained history. Old products otherwise make a simple
+ // follow-up such as "كم كفالتها؟" incorrectly ambiguous.
+ const recentUserTurns = history.filter(message => message?.role === 'user')
+  .filter(message => norm(message.content) !== q).slice(-8);
+ const activeEntities = [];
+ let foundActiveTopic = false;
+ for (const message of [...recentUserTurns].reverse()) {
+  const turnEntities = entities(message.content);
+  if (!turnEntities.length) {
+   if (foundActiveTopic) break;
+   continue;
+  }
+  foundActiveTopic = true;
+  activeEntities.push(...turnEntities);
+ }
+ const candidates = [...new Set(activeEntities)];
  if (candidates.length !== 1) return { status: candidates.length ? 'AMBIGUOUS' : 'UNRESOLVED', query, entity: null };
  // Keep the referent in the same clause; punctuation otherwise splits it off
  // before intent-aware retrieval and leaves an entity-free follow-up.
