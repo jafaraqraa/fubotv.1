@@ -1,0 +1,35 @@
+{
+  "pilot_version": "1.0.0-pilot",
+  "frozen_date": "2026-09-06",
+  "database": {
+    "engine": "sqlite",
+    "journal_mode": "WAL",
+    "foreign_keys": true,
+    "busy_timeout_ms": 5000
+  },
+  "qdrant": {
+    "dense_vector_name": "dense",
+    "sparse_vector_name": "sparse",
+    "distance": "Cosine"
+  },
+  "models": {
+    "embedding_provider": "ollama",
+    "embedding_model": "nomic-embed-text",
+    "embedding_dimension": 768,
+    "sparse_provider": "bm25",
+    "reranker_provider": "cross_encoder",
+    "generator_provider": "ollama",
+    "generator_model": "llama3.2:1b"
+  },
+  "retrieval": {
+    "dense_prefetch_k": 30,
+    "sparse_prefetch_k": 30,
+    "rrf_k": 60,
+    "rerank_candidate_k": 20,
+    "final_evidence_k": 6
+  },
+  "gating": {
+    "min_reranker_score": 0.35,
+    "min_relevance_margin": 0.05
+  }
+}

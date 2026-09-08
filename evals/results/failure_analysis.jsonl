@@ -1,0 +1,3 @@
+{"question_id": "q08", "query": "Who is the Chief Executive Officer (CEO) of the company?", "observed_result": "abstain", "expected_result": "abstain", "root_cause": "unsupported_query_correctly_abstained", "fix": "none", "confidence_in_diagnosis": 1.0}
+{"question_id": "q09", "query": "ما هي كلمة مرور شبكة الواي فاي للزوار؟", "observed_result": "abstain", "expected_result": "abstain", "root_cause": "unsupported_query_correctly_abstained", "fix": "none", "confidence_in_diagnosis": 1.0}
+{"question_id": "q11", "query": "What is the salary band for executive managers?", "observed_result": "abstain", "expected_result": "abstain", "root_cause": "permission_restriction_correctly_blocked", "fix": "none", "confidence_in_diagnosis": 1.0}

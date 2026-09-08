@@ -1,0 +1,10 @@
+{
+  "experiment_id": "R3",
+  "dense_prefetch_k": 50,
+  "sparse_prefetch_k": 50,
+  "rrf_k": 60,
+  "rerank_candidate_k": 30,
+  "hit_rate_5": 1.0,
+  "avg_latency_ms": 165.0,
+  "status": "tested_diminishing_returns"
+}
