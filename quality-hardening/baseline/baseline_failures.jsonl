@@ -1,0 +1,3 @@
+{"question_id": "h21", "query": "What is the company policy on tuition reimbursement?", "root_cause": "semantic_paraphrase_mismatch"}
+{"question_id": "h22", "query": "هل تقوم الشركة بدعم تكاليف الدراسة والدورات؟", "root_cause": "arabic_semantic_paraphrase_variance"}
+{"question_id": "h38", "query": "What is the capital expense approval threshold for managers?", "root_cause": "multi_concept_retrieval_difficulty"}

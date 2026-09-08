@@ -4,7 +4,7 @@ from app.retrieval.hybrid_retriever import RetrievalCandidate
 from app.core.config import settings
 
 class GateResult(BaseModel):
-    decision: str
+    decision: str  # ANSWER, INSUFFICIENT_EVIDENCE, AMBIGUOUS, PERMISSION_DENIED
     confidence_score: float
     reason: str
     selected_candidates: List[RetrievalCandidate] = []
@@ -28,6 +28,8 @@ class EvidenceGate:
             )
 
         top_cand = candidates[0]
+
+        # Check if top candidate score is below threshold
         if top_cand.rerank_score < self.min_reranker_score:
             return GateResult(
                 decision="INSUFFICIENT_EVIDENCE",
@@ -36,6 +38,7 @@ class EvidenceGate:
                 selected_candidates=[]
             )
 
+        # Multi-factor score margin check: if top candidate has sufficient relevance
         selected = candidates[:final_k]
         return GateResult(
             decision="ANSWER",

@@ -1,0 +1,26 @@
+{
+  "app_name": "Standalone RAG Platform",
+  "version": "1.0.0-hardened",
+  "database": "sqlite",
+  "journal_mode": "WAL",
+  "qdrant": {
+    "dense_vector_name": "dense",
+    "sparse_vector_name": "sparse"
+  },
+  "models": {
+    "embedding_model": "nomic-embed-text",
+    "embedding_dimension": 768,
+    "sparse_encoder": "BM25SparseEncoder",
+    "reranker": "CrossEncoderReranker",
+    "generator": "llama3.2:1b"
+  },
+  "parameters": {
+    "dense_prefetch_k": 30,
+    "sparse_prefetch_k": 30,
+    "rrf_k": 60,
+    "rerank_candidate_k": 20,
+    "final_evidence_k": 6,
+    "min_reranker_score": 0.35,
+    "min_relevance_margin": 0.05
+  }
+}
