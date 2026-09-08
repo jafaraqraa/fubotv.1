@@ -12,6 +12,9 @@ services:
       PORT: "3001"
       SQLITE_DB_PATH: /app/backend/data/app.db
       QDRANT_URL: http://qdrant:6333
+      RAG_IMPLEMENTATION: platform
+      RAG_IMPLEMENTATION_FORCE: platform
+      RAG_PLATFORM_URL: http://rag-platform:8000
     ports:
       - "127.0.0.1:3001:3001"
     volumes:
@@ -21,12 +24,41 @@ services:
     depends_on:
       qdrant:
         condition: service_healthy
+      rag-platform:
+        condition: service_healthy
     stop_grace_period: 45s
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
     shm_size: 1gb
+
+  rag-platform:
+    build:
+      context: ./rag-platform
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      DATABASE_URL: sqlite:////data/rag_platform.db
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_API_KEY: ${QDRANT_API_KEY:?QDRANT_API_KEY is required}
+      EMBEDDING_BASE_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      GENERATOR_BASE_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+    volumes:
+      - rag-platform-data:/data
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
 
   qdrant:
     image: qdrant/qdrant:v1.12.5
@@ -48,3 +80,4 @@ volumes:
   app-uploads:
   whatsapp-sessions:
   qdrant-data:
+  rag-platform-data:

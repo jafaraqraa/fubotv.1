@@ -1,5 +1,17 @@
 import re
 
+ARABIC_SEARCH_ALIASES = {
+    "اسم": "name", "شركتك": "company", "الشركة": "company",
+    "شغل": "services provides", "الشغل": "services provides", "عندكم": "company",
+    "سعر": "price list", "السعر": "price list", "قديش": "how much",
+    "سعة": "capacity", "سعتها": "capacity", "كفالة": "warranty",
+    "كفالتها": "warranty", "كفالته": "warranty", "ضمان": "warranty",
+    "اشتراك": "subscription monthly fee", "الاشتراك": "subscription monthly fee",
+    "الشهري": "monthly", "إجازة": "annual leave", "اجازة": "annual leave",
+    "الإجازة": "annual leave", "الاجازة": "annual leave", "أرحل": "carried",
+    "ارحل": "carried", "ترحيل": "carried", "السنة": "year", "الجاية": "next",
+}
+
 def normalize_text(text: str) -> str:
     if not text:
         return ""
@@ -35,3 +47,12 @@ def normalize_text(text: str) -> str:
             filtered_lines.append(line)
 
     return "\n".join(filtered_lines).strip()
+
+def search_tokens(text: str) -> set[str]:
+    normalized = normalize_text(text).lower()
+    raw_tokens = re.findall(r'[\w.-]+', normalized, flags=re.UNICODE)
+    expanded = []
+    for token in raw_tokens:
+        alias = ARABIC_SEARCH_ALIASES.get(token)
+        expanded.extend(alias.split() if alias else [token])
+    return {token for token in expanded if len(token) > 1}

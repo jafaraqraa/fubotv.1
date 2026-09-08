@@ -13,11 +13,15 @@ window.Dashboard.navigation = {
 
     restoreLastSection: function() {
         let sectionId = 'chat-section';
-        try { sectionId = localStorage.getItem(this.storageKey) || sectionId; } catch (_) { /* storage is optional */ }
+        if (window.location.pathname === '/rag' || window.location.pathname === '/rag/') {
+            sectionId = 'rag-section';
+        } else {
+            try { sectionId = localStorage.getItem(this.storageKey) || sectionId; } catch (_) { /* storage is optional */ }
+        }
         if (!this.sectionIds.includes(sectionId) || !document.getElementById(sectionId)) {
             sectionId = 'chat-section';
         }
-        this.showSection(sectionId, { skipUnsavedCheck: true });
+        this.showSection(sectionId, { skipUnsavedCheck: true, syncUrl: false });
     },
 
     showSection: async function(sectionId, options = {}) {
@@ -122,6 +126,10 @@ window.Dashboard.navigation = {
         if (sectionId !== 'chat-section' && subtitleElement) subtitleElement.classList.add('hidden');
         if (titleElement) document.title = `${titleElement.innerText} — FuBot`;
         window.Dashboard.navigation.rememberSection(sectionId);
+        if (options.syncUrl !== false) {
+            const nextPath = sectionId === 'rag-section' ? '/rag' : '/dashboard';
+            if (window.location.pathname !== nextPath) window.history.pushState({ sectionId }, '', nextPath);
+        }
         window.Dashboard.navigation.closeMobileMenu();
     },
 
@@ -215,5 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) window.Dashboard.navigation.closeMobileMenu();
+    });
+    window.addEventListener('popstate', () => {
+        const sectionId = window.location.pathname === '/rag' || window.location.pathname === '/rag/'
+            ? 'rag-section'
+            : 'chat-section';
+        window.Dashboard.navigation.showSection(sectionId, { skipUnsavedCheck: true, syncUrl: false });
     });
 });

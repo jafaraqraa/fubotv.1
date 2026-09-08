@@ -64,7 +64,7 @@ const whatsappManager = require('./src/channels/whatsapp-providers/WhatsAppProvi
 const { seedExistingKeysOnStartup, syncAllConfiguredApiKeys } = require('./src/services/budgetService');
 const db = require('./src/database/connection');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 async function startBackgroundServices() {
     // Never initialize external providers until the HTTP port is successfully bound.

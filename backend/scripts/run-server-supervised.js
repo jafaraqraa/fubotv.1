@@ -5,7 +5,12 @@ const { spawn, execSync } = require('node:child_process');
 let child;
 let stopping = false;
 
-function freePortIfBusy(port = 3000) {
+function resolvePort(port = process.env.PORT) {
+    const value = Number(port ?? 3000);
+    return Number.isInteger(value) && value > 0 && value <= 65535 ? value : 3000;
+}
+
+function freePortIfBusy(port = resolvePort()) {
     try {
         const out = execSync(`ss -lptn sport = :${port}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
         const matches = [...out.matchAll(/pid=(\d+)/g)];
@@ -38,10 +43,11 @@ function freePortIfBusy(port = 3000) {
 }
 
 function start() {
-    freePortIfBusy(3000);
+    const port = resolvePort();
+    freePortIfBusy(port);
     child = spawn(process.execPath, [path.join(__dirname, '..', 'server.js')], {
         stdio: 'inherit',
-        env: { ...process.env, FUBOT_SUPERVISED: 'true' }
+        env: { ...process.env, FUBOT_SUPERVISED: 'true', PORT: String(port) }
     });
     child.once('exit', (code, signal) => {
         if (!stopping && code === 75) {
@@ -53,19 +59,23 @@ function start() {
     });
 }
 
-for (const signal of ['SIGINT', 'SIGTERM']) {
-    process.on(signal, () => {
-        stopping = true;
-        if (child && !child.killed) {
-            child.kill(signal);
-            setTimeout(() => {
-                if (child && !child.killed) {
-                    try { child.kill('SIGKILL'); } catch (_) {}
-                }
-            }, 4000).unref();
-        }
-    });
+if (require.main === module) {
+    for (const signal of ['SIGINT', 'SIGTERM']) {
+        process.on(signal, () => {
+            stopping = true;
+            if (child && !child.killed) {
+                child.kill(signal);
+                setTimeout(() => {
+                    if (child && !child.killed) {
+                        try { child.kill('SIGKILL'); } catch (_) {}
+                    }
+                }, 4000).unref();
+            }
+        });
+    }
+
+    start();
 }
 
-start();
+module.exports = { resolvePort, freePortIfBusy, start };
 

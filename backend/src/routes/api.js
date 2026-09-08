@@ -1503,6 +1503,15 @@ router.post('/rag/reindex', rateLimitReindex, async (req, res) => {
                 signal: cancellation.signal
             });
         }
+        if (process.env.RAG_IMPLEMENTATION === 'platform') {
+            const manualPath = getManualKnowledgePath(req.ragTenantId);
+            await require('../rag_platform/client').syncText({
+                tenantId: req.ragTenantId,
+                text: fs.readFileSync(manualPath, 'utf8'),
+                fileName: 'knowledge.txt',
+                signal: cancellation.signal
+            });
+        }
         res.status(200).json({
             success: true,
             source: result.source || 'knowledge.txt',

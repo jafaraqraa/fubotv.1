@@ -31,7 +31,7 @@ function resolveReferent(query, history = []) {
    }
   }
  }
- const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده)|^والاسبوع$/u.test(q);
+ const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|كفالتها|كفالته|ضمانها|ضمانه|سعتها|سعته|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده|كفاله|ضمان|سعه)|^والاسبوع$/u.test(q);
  if (!followup || entities(query).length) return { status: 'NOT_REQUIRED', query, entity: null };
  const candidates = [...new Set(history.filter(message => message?.role === 'user')
   .filter(message => norm(message.content) !== q)

@@ -63,6 +63,9 @@ function loadSettingsOnStartup() {
                 process.env[key] = sqliteValue;
             }
         }
+        if (process.env.RAG_IMPLEMENTATION_FORCE) {
+            process.env.RAG_IMPLEMENTATION = process.env.RAG_IMPLEMENTATION_FORCE;
+        }
     } catch (e) {
         console.error('Failed to load settings on startup:', e.message);
     }

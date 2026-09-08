@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.embeddings.base import BaseEmbeddingProvider
 from app.sparse.bm25_encoder import BM25SparseEncoder
 from app.retrieval.qdrant_manager import QdrantIndexManager
+from app.core.normalization import search_tokens
 
 class RetrievalCandidate(BaseModel):
     chunk_id: str
@@ -125,8 +126,9 @@ class HybridRetriever:
                 content = chk["content"]
                 title = chk.get("title", "")
 
-                query_tokens = query.lower().split()
-                matched_tokens = sum(1 for t in query_tokens if t in content.lower() or t in title.lower())
+                query_tokens = search_tokens(query)
+                candidate_tokens = search_tokens(f"{title} {chk.get('section_title', '')} {content}")
+                matched_tokens = len(query_tokens.intersection(candidate_tokens))
                 lexical_score = matched_tokens / max(1, len(query_tokens))
 
                 candidates[c_id] = RetrievalCandidate(

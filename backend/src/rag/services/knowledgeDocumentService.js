@@ -851,6 +851,11 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
                 signal
             });
         }
+        if (process.env.RAG_IMPLEMENTATION === 'platform') {
+            await require('../../rag_platform/client').syncText({
+                tenantId, text, fileName: activeDoc.original_name || activeDoc.document_key, signal
+            });
+        }
         console.log('[Index] Response ready', {
             tenantId, documentId: doc.document_key, versionId,
             stage: 'active', durationMs: 0

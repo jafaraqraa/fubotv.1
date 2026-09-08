@@ -137,6 +137,12 @@ test('Dashboard Structure and Static Assets Suite', async (t) => {
         assert.strictEqual(bodyApi.success, false, 'API response success flag must be false');
     });
 
+    await t.test('7b. Verify the RAG platform has a dedicated route', async () => {
+        const response = await fetch(`${baseUrl}/rag`);
+        assert.strictEqual(response.status, 200, 'The /rag route should serve the dashboard shell');
+        assert.match(await response.text(), /id="rag-section"/, 'The /rag route should include the RAG platform');
+    });
+
     await t.test('8. Verify public Meta webhooks remain accessible and unaffected by session auth', async () => {
         // Querying the Meta webhook verification route with invalid credentials
         const resWebhook = await fetch(`${baseUrl}/webhook?hub.mode=subscribe&hub.verify_token=invalid_token`);

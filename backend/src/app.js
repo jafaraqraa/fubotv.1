@@ -253,6 +253,10 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(frontendPublicDir, 'dashboard.html'));
 });
 
+app.get('/rag', (req, res) => {
+    res.sendFile(path.join(frontendPublicDir, 'dashboard.html'));
+});
+
 app.get('/dashboard.html', (req, res) => {
     res.redirect('/dashboard');
 });

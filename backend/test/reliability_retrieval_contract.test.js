@@ -13,6 +13,14 @@ test('reference transports entity only, across six-message prompt limit', () => 
  assert.equal(result.status,'RESOLVED'); assert.equal(result.entity,'الحفارة الصغيرة');
  assert.doesNotMatch(result.query,/999/);
 });
+test('warranty follow-up resolves to the product from user history', () => {
+ const result = resolveReferent('وقديش كفالتها؟', [
+  {role:'user',content:'قديش سعر بطارية Atlas Home 5K؟'},
+  {role:'assistant',content:'سعرها 18,700 شيكل.'}
+ ]);
+ assert.equal(result.status,'RESOLVED');
+ assert.match(result.query,/HOME 5K/i);
+});
 test('multiple user entities clarify and assistant entities never resolve', () => {
  assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20'},{role:'user',content:'G8'}]).status,'AMBIGUOUS');
  assert.equal(resolveReferent('والأسبوع؟',[{role:'assistant',content:'MX20'}]).status,'UNRESOLVED');

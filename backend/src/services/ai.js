@@ -341,10 +341,49 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             const dbVal = getSetting('RAG_IMPLEMENTATION');
             if (dbVal) return dbVal;
         } catch (_) {}
-        return process.env.RAG_IMPLEMENTATION || 'legacy';
+        return process.env.RAG_IMPLEMENTATION || 'platform';
     })();
     if (activeRagImpl === 'v2') {
         process.env.RAG_IMPLEMENTATION = 'v2';
+    }
+    if (!isImage && useCompanyKnowledge && activeRagImpl === 'platform') {
+        try {
+            if (/^(?:كم|قديش)\s+(?:هو\s+)?(?:ال)?سعر[؟?\s]*$/u.test(String(userText || '').trim())) {
+                return 'سعر أي منتج أو خدمة تقصد؟';
+            }
+            const { answerWithRagPlatform } = require('../rag_platform/client');
+            const platformHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });
+            const platformReference = resolveReferent(userText, platformHistory);
+            if (['AMBIGUOUS', 'UNRESOLVED'].includes(platformReference.status)) {
+                return clarificationForQuery(userText);
+            }
+            const platformQuestion = platformReference.status === 'RESOLVED'
+                ? platformReference.query
+                : (conversationResolution?.requires_rag ? conversationResolution.standalone_message : userText);
+            const platform = await answerWithRagPlatform({
+                question: platformQuestion, tenantId, userId
+            });
+            Object.assign(pipelineTelemetry, {
+                ragInvoked: true,
+                retrievalTenantId: tenantId,
+                retrievedEvidenceCount: platform.citations?.length || 0,
+                gateDecision: platform.status === 'answered' ? 'ANSWER' : 'INSUFFICIENT_EVIDENCE',
+                generationMode: 'RAG_PLATFORM_EVIDENCE_EXCLUSIVE'
+            });
+            ragTraceRepo.updateTrace(requestId, {
+                evidence_gate_decision: pipelineTelemetry.gateDecision,
+                evidence_gate_reason: platform.confidence?.reason_codes?.join(',') || platform.status,
+                selected_context_chunk_ids_json: (platform.citations || []).map(item => item.evidence_id),
+                retrieved_chunks_json: (platform.citations || []).map(item => ({
+                    id: item.evidence_id, source: item.title || 'rag-platform'
+                })),
+                final_response_type: platform.status === 'answered' ? 'ANSWER' : 'ABSTAIN'
+            });
+            return platform.answer;
+        } catch (platformError) {
+            console.warn('[RAG Platform] Execution error, falling back to legacy RAG:', platformError.message);
+            pipelineTelemetry.ragPlatformFallback = true;
+        }
     }
     if (!isImage && useCompanyKnowledge && activeRagImpl === 'v2') {
         try {

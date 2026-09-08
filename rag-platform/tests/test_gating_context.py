@@ -54,6 +54,16 @@ def test_evidence_gating_abstention_on_weak_score():
     assert gate_res.decision == "INSUFFICIENT_EVIDENCE"
     assert len(gate_res.selected_candidates) == 0
 
+def test_arabic_product_query_reranks_english_catalog_row():
+    candidate = RetrievalCandidate(
+        chunk_id="product", tenant_id="tenant_a", document_id="d1",
+        document_version_id="v1", title="Product Catalog", section_title="Energy Systems",
+        content="INV-SMART-10 SmartGrid 10 Inverter 10 kW 12,400 ILS 5 years warranty",
+        embedding_text="...", content_hash="product-hash", rrf_score=0.03
+    )
+    ranked = CrossEncoderReranker().rerank("قديش سعر SmartGrid 10؟", [candidate])
+    assert ranked[0].rerank_score >= 0.35
+
 def test_context_builder_stable_ids():
     candidates = [
         RetrievalCandidate(

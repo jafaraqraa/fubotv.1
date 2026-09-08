@@ -4,8 +4,9 @@ const path = require('path');
 const app = express();
 
 const PORT = process.env.FRONTEND_PORT || 5173;
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001/api/v1';
-const SOCKET_URL = process.env.SOCKET_URL || 'http://localhost:3001';
+const BACKEND_PORT = process.env.PORT || '3002';
+const API_BASE_URL = process.env.API_BASE_URL || `http://localhost:${BACKEND_PORT}/api/v1`;
+const SOCKET_URL = process.env.SOCKET_URL || `http://localhost:${BACKEND_PORT}`;
 
 // Same-origin authenticated media proxy. Native media elements cannot attach
 // the dashboard's custom authentication headers, so forward the HttpOnly
@@ -36,6 +37,18 @@ app.get('/vendor/dompurify.min.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'node_modules', 'dompurify', 'dist', 'purify.min.js'));
 });
 
+// The dashboard expects its client-side runtime assets to be served from the
+// same origin for local development. Provide both Chart.js and Socket.IO here.
+app.get('/vendor/chart.umd.min.js', (req, res) => {
+    const chartPath = path.join(__dirname, 'node_modules', 'chart.js', 'dist', 'chart.umd.min.js');
+    res.sendFile(chartPath);
+});
+
+app.get('/socket.io/socket.io.js', (req, res) => {
+    const socketPath = path.join(__dirname, '..', 'backend', 'node_modules', 'socket.io', 'client-dist', 'socket.io.js');
+    res.sendFile(socketPath);
+});
+
 // Serve config.js dynamically
 app.get('/config.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
@@ -58,6 +71,10 @@ app.get('/login.html', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/rag', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
