@@ -20,6 +20,7 @@ test('RAG Platform client preserves tenant isolation and maps an answered respon
     const { answerWithRagPlatform } = require('../src/rag_platform/client');
     const result = await answerWithRagPlatform({ question: 'وقديش كفالتها؟', tenantId: 'tenant-a' });
     assert.equal(result.answer, '10 سنوات');
+    assert.ok(calls.some(call => call.url.endsWith('/v1/documents')), 'default knowledge should be synchronized');
     assert.equal(calls.at(-1).options.headers['X-Tenant-ID'], 'tenant-a');
     assert.equal(JSON.parse(calls.at(-1).options.body).tenant_id, 'tenant-a');
 });

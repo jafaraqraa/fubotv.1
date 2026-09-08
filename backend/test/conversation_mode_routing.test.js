@@ -9,7 +9,7 @@ const { blockOpenDomain } = require('../src/rag/runtime/fallbackPolicy');
 
 test('intent-aware AI conversation routing', async t => {
     await t.test('Arabic greetings and casual chat skip RAG', () => {
-        for (const message of ['مرحبا', 'شو الأخبار', 'كيفك', 'صباح الخير', 'شكراً', 'مع السلامة']) {
+        for (const message of ['مرحبا', 'شو الأخبار', 'شو الوضع', 'كيفك', 'صباح الخير', 'شكراً', 'مع السلامة']) {
             const decision = classifyConversationMode(message);
             assert.strictEqual(decision.mode, MODE.GENERAL_CONVERSATION, message);
 

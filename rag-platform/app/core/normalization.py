@@ -1,7 +1,7 @@
 import re
 
 ARABIC_SEARCH_ALIASES = {
-    "اسم": "name", "شركتك": "company", "الشركة": "company",
+    "اسم": "name", "شركتك": "company", "شركتكم": "company", "الشركة": "company",
     "شغل": "services provides", "الشغل": "services provides", "عندكم": "company",
     "سعر": "price list", "السعر": "price list", "قديش": "how much",
     "سعة": "capacity", "سعتها": "capacity", "كفالة": "warranty",
@@ -9,8 +9,11 @@ ARABIC_SEARCH_ALIASES = {
     "اشتراك": "subscription monthly fee", "الاشتراك": "subscription monthly fee",
     "الشهري": "monthly", "إجازة": "annual leave", "اجازة": "annual leave",
     "الإجازة": "annual leave", "الاجازة": "annual leave", "أرحل": "carried",
-    "ارحل": "carried", "ترحيل": "carried", "السنة": "year", "الجاية": "next",
+    "ارحل": "carried", "ترحيل": "carried", "ايام": "days", "أيام": "days",
+    "السنة": "year", "للسنة": "year", "الجاية": "next",
 }
+
+SEARCH_STOP_WORDS = {"شو", "كم", "من", "بقدر", "لـ", "هو", "هي", "the", "a", "an"}
 
 def normalize_text(text: str) -> str:
     if not text:
@@ -25,6 +28,7 @@ def normalize_text(text: str) -> str:
 
     # 3. Handle Arabic Tatweel (ـ)
     text = re.sub(r'\u0640', '', text)
+    text = re.sub(r'[\u064b-\u065f\u0670]', '', text)
 
     # 4. Standardize Arabic Alef variants (أ أ إ آ -> ا) for semantic search while leaving exact codes intact
     text = re.sub(r'[\u0622\u0623\u0625]', '\u0627', text)
@@ -55,4 +59,4 @@ def search_tokens(text: str) -> set[str]:
     for token in raw_tokens:
         alias = ARABIC_SEARCH_ALIASES.get(token)
         expanded.extend(alias.split() if alias else [token])
-    return {token for token in expanded if len(token) > 1}
+    return {token for token in expanded if len(token) > 1 and token not in SEARCH_STOP_WORDS}

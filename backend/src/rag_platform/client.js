@@ -49,7 +49,7 @@ async function syncText({ tenantId, text, fileName = 'knowledge.txt', signal }) 
 }
 
 async function ensureDefaultKnowledge(tenantId, signal) {
-    const knowledgePath = path.join(__dirname, '..', '..', '..', 'knowledge.txt');
+    const knowledgePath = path.join(__dirname, '..', '..', 'knowledge.txt');
     if (!fs.existsSync(knowledgePath)) return;
     await syncText({ tenantId, text: fs.readFileSync(knowledgePath, 'utf8'), fileName: 'knowledge.txt', signal });
 }
@@ -66,7 +66,7 @@ async function answerWithRagPlatform({ question, tenantId, userId, signal }) {
     return {
         ...result,
         answer: result.status === 'answered'
-            ? String(result.answer || '').trim()
+            ? String(result.answer || '').replace(/\s*\[EVIDENCE_\d+\]/gi, '').trim()
             : 'المعلومة مش متوفرة عندي حاليًا.'
     };
 }
