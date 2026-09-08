@@ -6,6 +6,9 @@ ARABIC_SEARCH_ALIASES = {
     "سعر": "price list", "السعر": "price list", "قديش": "how much",
     "سعة": "capacity", "سعتها": "capacity", "كفالة": "warranty",
     "كفالتها": "warranty", "كفالته": "warranty", "ضمان": "warranty",
+    "مواصفات": "specifications capacity warranty", "مواصفاتها": "specifications capacity warranty",
+    "مواصفاته": "specifications capacity warranty", "تفاصيلها": "specifications details",
+    "الشاشة": "monitor display", "شاشة": "monitor display",
     "اشتراك": "subscription monthly fee", "الاشتراك": "subscription monthly fee",
     "الشهري": "monthly", "إجازة": "annual leave", "اجازة": "annual leave",
     "الإجازة": "annual leave", "الاجازة": "annual leave", "أرحل": "carried",
@@ -18,6 +21,11 @@ SEARCH_STOP_WORDS = {"شو", "كم", "من", "بقدر", "لـ", "هو", "هي",
 def normalize_text(text: str) -> str:
     if not text:
         return ""
+
+    # Correct a small set of high-confidence colloquial keyboard slips before
+    # retrieval. These do not alter product identifiers or numeric values.
+    text = re.sub(r'(?<!\w)الشاش[كه](?!\w)', 'الشاشة', text, flags=re.IGNORECASE)
+    text = re.sub(r'(?<!\w)هنها(?!\w)', 'عنها', text, flags=re.IGNORECASE)
 
     # Preserve original exact identifiers (SKUs, codes like HR-17, numbers)
     # 1. Normalize line endings
@@ -51,6 +59,16 @@ def normalize_text(text: str) -> str:
             filtered_lines.append(line)
 
     return "\n".join(filtered_lines).strip()
+
+def expand_query_aliases(text: str) -> str:
+    """Append language-neutral retrieval hints without replacing user meaning."""
+    normalized = normalize_text(text)
+    hints = []
+    if re.search(r'(?<!\w)(?:الشاشة|شاشة)(?!\w)', normalized):
+        hints.extend(["monitor", "display"])
+    if re.search(r'(?<!\w)(?:مواصفات|مواصفاتها|مواصفاته)(?!\w)', normalized):
+        hints.extend(["specifications", "capacity", "warranty"])
+    return f"{normalized} {' '.join(dict.fromkeys(hints))}".strip()
 
 def search_tokens(text: str) -> set[str]:
     normalized = normalize_text(text).lower()

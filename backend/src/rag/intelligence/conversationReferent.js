@@ -2,7 +2,7 @@
 const { normalizeArabic } = require('../processing/arabicNormalizer');
 const { productCodes } = require('./numericIdentity');
 const norm = text => normalizeArabic(String(text || '')).toLowerCase();
-const excluded = /اسبوع|تامين|ايجار|سعر|مبلغ|يوم|مده|وقت|حساب|خصم|تفاصيل|طلب|شروط|دوام|عنوان/u;
+const excluded = /اسبوع|تامين|ايجار|سعر|مبلغ|يوم|مده|وقت|حساب|خصم|تفاصيل|طلب|شروط|دوام|عنوان|كفاله|ضمان|مواصفات|مواضفات|سعه/u;
 function entities(text) {
  const codes = productCodes(text);
  if (codes.length) return [...new Set(codes.map(code => code.toUpperCase()))];
@@ -10,6 +10,7 @@ function entities(text) {
  return [...new Set(phrases.map(value => value.trim()).filter(value => !excluded.test(norm(value))))];
 }
 function resolveReferent(query, history = []) {
+ query = String(query || '').replace(/مواضفات|مواضفت/gu, 'مواصفات');
  const q = norm(query);
  if (/^(?:طيب|و).*(?:هسا|الان|حاليا|عالواحده|عالثلثه|عالثلاثه)/u.test(q) && q.split(' ').length<=10) {
   const prior=[...history].reverse().filter(m=>m?.role==='user').map(m=>String(m.content||'').match(/(?:مكتب|فرع)\s+(.+?)\s+(?:بفتح|بيفتح|يفتح|يسكر|بسكر|يغلق|السبت|الأحد|الاحد|الجمعة|الجمعه)/u)).find(Boolean);
@@ -31,23 +32,28 @@ function resolveReferent(query, history = []) {
    }
   }
  }
- const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|كفالتها|كفالته|ضمانها|ضمانه|سعتها|سعته|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده|كفاله|ضمان|سعه)|^والاسبوع$/u.test(q);
- if (!followup || entities(query).length) return { status: 'NOT_REQUIRED', query, entity: null };
+ const followup = q.split(' ').length <= 8 && /عليها|عليه|سعرها|سعره|كفالتها|كفالته|ضمانها|ضمانه|سعتها|سعته|مواصفاتها|مواصفاته|تفاصيلها|تفاصيله|تبعها|تبعه|^(?:و|طيب).*(?:اسبوع|تامين|سعر|مده|كفاله|ضمان|سعه|مواصفات|تفاصيل)|^والاسبوع$/u.test(q);
+ const attributeQuestion = /كفاله|ضمان|مواصفات|سعه/u.test(q);
+ let category = q.match(/(?:^|\s)(البطاريه|الشاشه)(?=\s|[؟?،,]|$)/u)?.[1];
+ if ((!followup && !attributeQuestion) || (entities(query).length && !category)) return { status: 'NOT_REQUIRED', query, entity: null };
  // A pronoun refers to the active conversational turn, not every entity ever
  // mentioned in the retained history. Old products otherwise make a simple
  // follow-up such as "كم كفالتها؟" incorrectly ambiguous.
  const recentUserTurns = history.filter(message => message?.role === 'user')
   .filter(message => norm(message.content) !== q).slice(-8);
  const activeEntities = [];
- let foundActiveTopic = false;
  for (const message of [...recentUserTurns].reverse()) {
   const turnEntities = entities(message.content);
-  if (!turnEntities.length) {
-   if (foundActiveTopic) break;
+  if (!turnEntities.length) continue;
+  // The latest explicit turn establishes the topic. A comparison containing
+  // multiple products remains ambiguous; older independent turns do not.
+  if (turnEntities.every(e => /^(البطارية|الشاشة)$/u.test(e))) {
+   category = category || norm(turnEntities[0]);
    continue;
   }
-  foundActiveTopic = true;
+  if (category && !norm(message.content).includes(category.replace(/^ال/u, ''))) break;
   activeEntities.push(...turnEntities);
+  break;
  }
  const candidates = [...new Set(activeEntities)];
  if (candidates.length !== 1) return { status: candidates.length ? 'AMBIGUOUS' : 'UNRESOLVED', query, entity: null };

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.auth.tenant import get_principal_context, PrincipalContext
-from app.core.normalization import normalize_text
+from app.core.normalization import normalize_text, expand_query_aliases
 from app.core.errors import raise_invalid_query
 from app.observability.tracer import RequestTracer
 from app.embeddings.factory import create_embedding_provider, embedding_collection_name
@@ -57,7 +57,7 @@ async def query_rag_engine(
 
     t0 = time.time()
     # 2. Query Normalization & Language Detection
-    norm_query = normalize_text(req.query)
+    norm_query = expand_query_aliases(req.query)
     lang = "ar" if any('\u0600' <= c <= '\u06FF' for c in norm_query) else "en"
     tracer.mark_step("normalization_ms", (time.time() - t0) * 1000)
 

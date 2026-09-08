@@ -33,8 +33,18 @@ test('warranty follow-up ignores stale products outside the active conversation 
  assert.equal(result.entity,'HOME 5K');
  assert.match(result.query,/كفالتها طيب HOME 5K/u);
 });
+test('specifications follow-up inherits the active product', () => {
+ const result = resolveReferent('شو مواصفاتها طيب؟', [
+  {role:'user',content:'قديش سعر بطارية Atlas Home 3K؟'},
+  {role:'user',content:'كم كفالتها طيب؟'},
+  {role:'user',content:'شو مواصفاتها طيب؟'}
+ ]);
+ assert.equal(result.status,'RESOLVED');
+ assert.equal(result.entity,'HOME 3K');
+});
 test('multiple user entities clarify and assistant entities never resolve', () => {
- assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20'},{role:'user',content:'G8'}]).status,'AMBIGUOUS');
+ assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20'},{role:'user',content:'G8'}]).entity,'G8');
+ assert.equal(resolveReferent('والتأمين عليها؟',[{role:'user',content:'MX20 و G8'}]).status,'AMBIGUOUS');
  assert.equal(resolveReferent('والأسبوع؟',[{role:'assistant',content:'MX20'}]).status,'UNRESOLVED');
 });
 test('amount exclusion is not amount evidence', () => {
