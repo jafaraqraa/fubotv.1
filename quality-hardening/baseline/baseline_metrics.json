@@ -1,0 +1,12 @@
+{
+  "dataset": "evals/heldout/heldout_gold.jsonl",
+  "total_questions": 50,
+  "answerable_questions": 38,
+  "correctly_answered": 35,
+  "accuracy": 0.921,
+  "correctly_abstained": 12,
+  "abstention_accuracy": 1.0,
+  "confident_unsupported_answer_rate": 0.0,
+  "tenant_leakage_rate": 0.0,
+  "permission_leakage_rate": 0.0
+}

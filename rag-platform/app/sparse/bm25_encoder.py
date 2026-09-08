@@ -11,8 +11,16 @@ class BM25SparseEncoder:
         self.avg_doc_len: float = 0.0
 
     def _tokenize(self, text: str) -> List[str]:
-        # Support Arabic and English tokens, numbers, SKUs (e.g., HR-17, SKU-101)
-        return [t.lower() for t in re.findall(r'[\u0600-\u06FFa-zA-Z0-9_\-]+', text) if len(t) > 1]
+        raw_tokens = [t.lower() for t in re.findall(r'[\u0600-\u06FFa-zA-Z0-9_\-]+', text) if len(t) > 1]
+        tokens = []
+        for t in raw_tokens:
+            tokens.append(t)
+            if "-" in t:
+                parts = t.split("-")
+                for p in parts:
+                    if len(p) > 1:
+                        tokens.append(p)
+        return tokens
 
     def encode_text(self, text: str) -> Dict[str, Any]:
         tokens = self._tokenize(text)
@@ -27,7 +35,6 @@ class BM25SparseEncoder:
             if token not in self.vocab:
                 self.vocab[token] = len(self.vocab) + 1
             indices.append(self.vocab[token])
-            # Weight term by log(1 + TF)
             values.append(float(math.log(1 + count)))
 
         return {"indices": indices, "values": values}

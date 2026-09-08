@@ -14,10 +14,15 @@ def normalize_text(text: str) -> str:
     # 3. Handle Arabic Tatweel (ـ)
     text = re.sub(r'\u0640', '', text)
 
-    # 4. Collapse multiple spaces into single space while retaining newlines
+    # 4. Standardize Arabic Alef variants (أ أ إ آ -> ا) for semantic search while leaving exact codes intact
+    text = re.sub(r'[\u0622\u0623\u0625]', '\u0627', text)
+    # Standardize Alef Maqsura (ى -> ي)
+    text = re.sub(r'\u0649', '\u064A', text)
+
+    # 5. Collapse multiple spaces into single space while retaining newlines
     lines = [re.sub(r'[ \t]+', ' ', line).strip() for line in text.split('\n')]
 
-    # 5. Remove excessive blank lines
+    # 6. Remove excessive blank lines
     filtered_lines = []
     blank_count = 0
     for line in lines:
