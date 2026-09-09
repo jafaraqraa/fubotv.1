@@ -31,13 +31,47 @@ test('RAG Platform client preserves tenant isolation and maps an answered respon
     const { answerWithRagPlatform } = require('../src/rag_platform/client');
     const result = await answerWithRagPlatform({ question: 'وقديش كفالتها؟', tenantId: 'tenant-a' });
     assert.equal(result.answer, '10 سنوات');
-    assert.ok(calls.some(call => call.url.endsWith('/v1/documents')), 'default knowledge should be synchronized');
+    if (require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'knowledge.txt'), 'utf8').trim()) {
+        assert.ok(calls.some(call => call.url.endsWith('/v1/documents')), 'non-empty default knowledge should be synchronized');
+    }
     assert.equal(calls.at(-1).options.headers['X-Tenant-ID'], 'tenant-a');
     assert.equal(JSON.parse(calls.at(-1).options.body).tenant_id, 'tenant-a');
     const body = JSON.parse(calls.at(-1).options.body);
     assert.equal(body.reranker_model, 'voyageai/rerank-2.5');
     assert.equal(body.generator_model, 'openai/gpt-5');
     assert.ok(body.system_prompt.length > 0);
+});
+
+test('RAG Platform client uploads and deletes a linked document', async t => {
+    process.env.RAG_PLATFORM_URL = 'http://rag-platform:8000';
+    const aiTaskRepo = require('../src/database/repositories/aiTaskRepository');
+    const budgetService = require('../src/services/budgetService');
+    const originalTask = aiTaskRepo.getTaskConfig;
+    const originalKeyLookup = budgetService.getApiKeyForProvider;
+    const originalFetch = global.fetch;
+    aiTaskRepo.getTaskConfig = () => ({ provider: 'openrouter', model: 'google/gemini-embedding-2', enabled: 1 });
+    budgetService.getApiKeyForProvider = () => 'test-key';
+    const calls = [];
+    global.fetch = async (url, options) => {
+        calls.push({ url, options });
+        return new Response(JSON.stringify(url.endsWith('/v1/documents')
+            ? { status: 'ready', document_id: 'doc-1', chunks_count: 2 }
+            : { status: 'deleted', document_id: 'doc-1' }), { status: url.endsWith('/v1/documents') ? 201 : 200 });
+    };
+    t.after(() => {
+        global.fetch = originalFetch;
+        aiTaskRepo.getTaskConfig = originalTask;
+        budgetService.getApiKeyForProvider = originalKeyLookup;
+    });
+    delete require.cache[require.resolve('../src/rag_platform/client')];
+    const { syncFile, deletePlatformDocument } = require('../src/rag_platform/client');
+    const uploaded = await syncFile({ tenantId: 'municipality', buffer: Buffer.from('Arabic municipal content'), fileName: 'دليل البلدية.txt', mimeType: 'text/plain' });
+    assert.equal(uploaded.document_id, 'doc-1');
+    assert.equal(calls[0].options.headers['X-Tenant-ID'], 'municipality');
+    assert.equal(calls[0].options.headers['X-Embedding-API-Key'], 'test-key');
+    await deletePlatformDocument({ tenantId: 'municipality', documentId: uploaded.document_id });
+    assert.ok(calls[1].url.endsWith('/v1/documents/doc-1'));
+    assert.equal(calls[1].options.method, 'DELETE');
 });
 
 test('RAG Platform client reads changed task models on every request without restart', async t => {

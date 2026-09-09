@@ -71,6 +71,15 @@ class QdrantIndexManager:
         except Exception:
             pass
 
+    def delete_document(self, tenant_id: str, document_id: str):
+        selector = models.FilterSelector(filter=models.Filter(must=[
+            models.FieldCondition(key="tenant_id", match=models.MatchValue(value=tenant_id)),
+            models.FieldCondition(key="document_id", match=models.MatchValue(value=document_id))
+        ]))
+        for collection in self.client.get_collections().collections:
+            if collection.name.startswith("rag_v1"):
+                self.client.delete(collection_name=collection.name, points_selector=selector, wait=True)
+
     def build_auth_filter(
         self,
         tenant_id: str,

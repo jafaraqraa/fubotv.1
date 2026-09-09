@@ -1494,15 +1494,6 @@ router.post('/rag/reindex', rateLimitReindex, async (req, res) => {
             error.stage = 'activation';
             throw error;
         }
-        if (process.env.RAG_IMPLEMENTATION === 'v2') {
-            const manualPath = getManualKnowledgePath(req.ragTenantId);
-            await require('../rag_v2/ingestion/productionSync').syncManualKnowledgeToV2({
-                tenantId: req.ragTenantId,
-                originalText: fs.readFileSync(manualPath, 'utf8'),
-                sourceUri: manualPath,
-                signal: cancellation.signal
-            });
-        }
         if (process.env.RAG_IMPLEMENTATION === 'platform') {
             const manualPath = getManualKnowledgePath(req.ragTenantId);
             await require('../rag_platform/client').syncText({
@@ -2140,8 +2131,11 @@ router.post('/rag/documents/upload', upload.single('file'), async (req, res) => 
     const cancellation = require('../rag/runtime/requestCancellation').createRequestCancellation(req, res);
     try {
         const overwriteAction = req.body.overwriteAction || req.query.overwriteAction;
+        const rawName = req.file.originalname;
+        const decodedName = /[ÃØÙ]/u.test(rawName)
+            ? Buffer.from(rawName, 'latin1').toString('utf8') : rawName;
         const doc = await kbDocService.uploadAndRegisterDocument(
-            req.file.originalname,
+            decodedName,
             req.file.mimetype,
             req.file.buffer,
             {

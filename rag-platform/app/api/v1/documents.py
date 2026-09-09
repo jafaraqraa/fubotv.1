@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.auth.tenant import get_principal_context, PrincipalContext
 from app.ingestion.ingestion_pipeline import IngestionPipeline
-from app.db.models import Document
+from app.db.models import Document, Chunk, DocumentVersion
+from app.retrieval.qdrant_manager import QdrantIndexManager
 
 router = APIRouter(prefix="/v1", tags=["Documents"])
 
@@ -74,6 +75,9 @@ async def delete_document(
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    doc.status = "deleted"
+    QdrantIndexManager().delete_document(principal.tenant_id, doc.id)
+    db.query(Chunk).filter_by(tenant_id=principal.tenant_id, document_id=doc.id).delete(synchronize_session=False)
+    db.query(DocumentVersion).filter_by(tenant_id=principal.tenant_id, document_id=doc.id).delete(synchronize_session=False)
+    db.delete(doc)
     db.commit()
     return {"status": "deleted", "document_id": document_id}

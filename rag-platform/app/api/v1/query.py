@@ -153,6 +153,14 @@ async def query_rag_engine(
     validator = CitationValidator()
     val_res = validator.validate(gen_out["answer"], gen_out["citations"], context.evidence_items)
     tracer.mark_step("citation_ms", (time.time() - t_cite) * 1000)
+    if not val_res.is_valid:
+        tracer.finish_trace(db=db, normalized_query=norm_query, language=lang,
+            gate_decision="ABSTAIN", confidence_label="low", confidence_score=0.0,
+            citation_status="invalid")
+        return QueryResponse(status="insufficient_evidence",
+            answer="لا تتوفر مصادر موثوقة كافية لتأكيد الإجابة.", citations=[],
+            confidence=ConfidenceDetail(score=0.0, label="low", reason_codes=["invalid_generation_citations"]),
+            trace_id=tracer.trace_id, latency_breakdown_ms=tracer.timings)
 
     # 9. Confidence Calibration
     calibrator = ConfidenceCalibrator()

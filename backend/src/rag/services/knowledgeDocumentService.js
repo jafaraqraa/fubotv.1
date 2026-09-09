@@ -632,6 +632,37 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
         throw error;
     }
 
+    let activeImplementation = process.env.RAG_IMPLEMENTATION || 'platform';
+    try { activeImplementation = require('../../database/repositories/settingsRepository').getSetting('RAG_IMPLEMENTATION') || activeImplementation; } catch (_) {}
+    if (activeImplementation === 'platform') {
+        let platformError = null;
+        let platformResult = null;
+        try {
+            const result = await require('../../rag_platform/client').syncFile({
+                tenantId, buffer: fileBuffer, fileName: doc.original_name,
+                mimeType: doc.mime_type, signal
+            });
+            docRepo.updateDocument(tenantId, doc.id, {
+                status: 'active', indexing_status: 'indexed', indexing_error: null,
+                is_active: 1, chunk_count: result.chunks_count || 0,
+                vector_count: result.chunks_count || 0,
+                platform_document_id: result.document_id,
+                embedding_model: require('../../database/repositories/aiTaskRepository').getTaskConfig('embedding')?.model || null,
+                indexed_at: new Date().toISOString()
+            });
+            emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'active' });
+            platformResult = docRepo.getDocumentByKey(tenantId, doc.document_key);
+            return platformResult;
+        } catch (error) {
+            platformError = error;
+            docRepo.updateDocument(tenantId, doc.id, { status: 'failed', indexing_status: 'failed', indexing_error: error.message });
+            throw error;
+        } finally {
+            await lease.release({ error: platformError, result: platformResult });
+            operation.done();
+        }
+    }
+
     const versionId = doc.version_id || `${doc.document_key}:v${doc.version || 1}`;
     const lifecycle = createLifecycle({
         tenantId, documentId: doc.document_key, versionId,
@@ -844,13 +875,6 @@ async function parseAndIndexDocumentPipeline(docKey, options = {}) {
         });
         lifecycle.transition('active');
         const activeDoc = assertActiveDocument(docRepo.getDocumentByKey(tenantId, doc.document_key));
-        if (!dependencies.skipRagV2Sync && process.env.RAG_IMPLEMENTATION === 'v2') {
-            await require('../../rag_v2/ingestion/productionSync').syncExtractedDocumentToV2({
-                document: activeDoc,
-                originalText: text,
-                signal
-            });
-        }
         if (process.env.RAG_IMPLEMENTATION === 'platform') {
             await require('../../rag_platform/client').syncText({
                 tenantId, text, fileName: activeDoc.original_name || activeDoc.document_key, signal
@@ -1004,8 +1028,13 @@ async function deleteDocument(docKey, options = {}) {
         docRepo.updateDocument(tenantId, doc.id, { status: 'deleting' });
         emitDocumentEvent('rag:document-status-updated', { documentId: doc.document_key, status: 'deleting' });
 
-        // 2. Delete from Qdrant
+        // 2. Delete from the active platform and legacy Qdrant, when linked.
         lease.assertOwnership();
+        if (doc.platform_document_id) {
+            await require('../../rag_platform/client').deletePlatformDocument({
+                tenantId, documentId: doc.platform_document_id, signal: options.signal
+            });
+        }
         await deleteVectorsByDocument(tenantId, doc.document_key);
 
         // 3. Delete from private filesystem

@@ -76,6 +76,29 @@ async function syncText({ tenantId, text, fileName = 'knowledge.txt', signal }) 
     return result;
 }
 
+async function syncFile({ tenantId, buffer, fileName, mimeType, signal }) {
+    const embedding = embeddingConfig();
+    const form = new FormData();
+    form.append('file', new Blob([buffer], { type: mimeType || 'application/octet-stream' }), fileName);
+    form.append('security_level', 'internal');
+    form.append('embedding_provider', embedding.provider);
+    form.append('embedding_model', embedding.model);
+    const response = await platformFetch('/v1/documents', {
+        method: 'POST', headers: {
+            'X-Tenant-ID': String(tenantId),
+            ...(embedding.apiKey ? { 'X-Embedding-API-Key': embedding.apiKey } : {})
+        }, body: form, signal
+    });
+    return response.json();
+}
+
+async function deletePlatformDocument({ tenantId, documentId, signal }) {
+    const response = await platformFetch(`/v1/documents/${encodeURIComponent(documentId)}`, {
+        method: 'DELETE', headers: { 'X-Tenant-ID': String(tenantId) }, signal
+    });
+    return response.json();
+}
+
 async function ensureDefaultKnowledge(tenantId, signal) {
     const knowledgePath = path.join(__dirname, '..', '..', 'knowledge.txt');
     if (!fs.existsSync(knowledgePath)) return;
@@ -114,4 +137,4 @@ async function answerWithRagPlatform({ question, tenantId, userId, signal }) {
     };
 }
 
-module.exports = { answerWithRagPlatform, syncText, ensureDefaultKnowledge };
+module.exports = { answerWithRagPlatform, syncText, syncFile, deletePlatformDocument, ensureDefaultKnowledge };

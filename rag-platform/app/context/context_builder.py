@@ -41,7 +41,6 @@ class ContextBuilder:
                 page_number=cand.page_number,
                 content=cand.content
             )
-            evidence_items.append(item)
 
             block = (
                 f"[{evidence_id}]\n"
@@ -55,6 +54,7 @@ class ContextBuilder:
                 break
 
             context_blocks.append(block)
+            evidence_items.append(item)
             token_count += est_tokens
 
         formatted_context = "\n---\n".join(context_blocks)

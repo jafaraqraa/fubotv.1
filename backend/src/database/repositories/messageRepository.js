@@ -274,6 +274,22 @@ function getChatHistoryForAI(userId, tenantId = 'default', channel = null, optio
     const conversationId = getConversationIdByUserId(userId, tenantId, channel);
     if (!conversationId) return [];
 
+    if (options.semanticContext) {
+        const rows = db.prepare(`SELECT role, content FROM messages
+            WHERE conversation_id = ? AND tenant_id = ? AND is_internal_note = 0
+              AND role IN ('user', 'assistant')
+            ORDER BY created_at DESC, rowid DESC LIMIT 160`).all(conversationId, tenantId);
+        const selected = [];
+        let characters = 0;
+        for (const row of rows) {
+            const content = String(row.content || '').slice(0, 6000);
+            if (characters + content.length > 50000) break;
+            selected.push({ role: row.role, content });
+            characters += content.length;
+        }
+        return selected.reverse();
+    }
+
     const rows = options.userOnly
         ? db.prepare(`
             SELECT sender_type, role, content as text FROM messages

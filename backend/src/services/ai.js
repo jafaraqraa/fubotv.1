@@ -335,31 +335,30 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
     pipelineTelemetry.selectedRoute = routingDecision.mode;
     pipelineTelemetry.generationMode = useCompanyKnowledge
         ? 'EVIDENCE_EXCLUSIVE' : 'GENERAL_CONVERSATION';
-    const activeRagImpl = (() => {
+    if (!isImage && useCompanyKnowledge) {
         try {
-            const { getSetting } = require('../database/repositories/settingsRepository');
-            const dbVal = getSetting('RAG_IMPLEMENTATION');
-            if (dbVal) return dbVal;
-        } catch (_) {}
-        return process.env.RAG_IMPLEMENTATION || 'platform';
-    })();
-    if (activeRagImpl === 'v2') {
-        process.env.RAG_IMPLEMENTATION = 'v2';
-    }
-    if (!isImage && useCompanyKnowledge && activeRagImpl === 'platform') {
-        try {
-            if (/^(?:كم|قديش)\s+(?:هو\s+)?(?:ال)?سعر[؟?\s]*$/u.test(String(userText || '').trim())) {
-                return 'سعر أي منتج أو خدمة تقصد؟';
-            }
             const { answerWithRagPlatform } = require('../rag_platform/client');
+            const { resolveSemanticContext } = require('../conversation/semanticContext');
+            const contextHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null, { semanticContext: true });
+            // The inbound message is already persisted before generation.
+            if (contextHistory.at(-1)?.role === 'user' && contextHistory.at(-1).content === userText) contextHistory.pop();
+            let semanticContext = null;
+            try {
+                const provider = require('./aiProviders').getAIProviderForTask('text_generation');
+                semanticContext = await resolveSemanticContext(userText, contextHistory, provider);
+            } catch (error) {
+                console.warn('[Conversation context] Resolution unavailable:', error.message);
+            }
+            if (semanticContext?.clarification) return semanticContext.clarification;
             const platformHistory = getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });
             const platformReference = resolveReferent(userText, platformHistory);
-            if (['AMBIGUOUS', 'UNRESOLVED'].includes(platformReference.status)) {
+            if (!semanticContext && ['AMBIGUOUS', 'UNRESOLVED'].includes(platformReference.status)) {
                 return clarificationForQuery(userText);
             }
-            const platformQuestion = platformReference.status === 'RESOLVED'
+            const platformQuestion = semanticContext?.question || (platformReference.status === 'RESOLVED'
                 ? platformReference.query
-                : (conversationResolution?.requires_rag ? conversationResolution.standalone_message : userText);
+                : (conversationResolution?.requires_rag ? conversationResolution.standalone_message : userText));
+            ragTraceRepo.updateTrace(requestId, { retrieval_query: platformQuestion });
             const platform = await answerWithRagPlatform({
                 question: platformQuestion, tenantId, userId
             });
@@ -381,55 +380,9 @@ async function getAIResponse(userId, userText, messageType = 'text', mediaObj = 
             });
             return platform.answer;
         } catch (platformError) {
-            console.warn('[RAG Platform] Execution error, falling back to legacy RAG:', platformError.message);
-            pipelineTelemetry.ragPlatformFallback = true;
-        }
-    }
-    if (!isImage && useCompanyKnowledge && activeRagImpl === 'v2') {
-        try {
-            const { answerWithRagV2 } = require('../rag_v2/runtime/productionRuntime');
-            const v2Question = conversationResolution?.requires_rag
-                ? conversationResolution.standalone_message : userText;
-            const v2 = await answerWithRagV2({ question: v2Question, history: conversationHistory, tenantId });
-            Object.assign(pipelineTelemetry, {
-                ragInvoked: true,
-                retrievalTenantId: tenantId,
-                retrievedEvidenceCount: v2.context?.selected?.length || 0,
-                evidenceTenantIds: [...new Set((v2.context?.selected || []).map(item => item.tenantId).filter(Boolean))],
-                gateDecision: v2.decision,
-                generationMode: 'RAG_V2_EVIDENCE_EXCLUSIVE'
-            });
-            ragTraceRepo.updateTrace(requestId, {
-                evidence_gate_decision: v2.decision,
-                evidence_gate_reason: v2.gate?.reason || v2.route?.decision || null,
-                selected_context_chunk_ids_json: (v2.context?.selected || []).map(item => item.chunkId),
-                retrieved_chunks_json: (v2.retrieval?.reranked || []).map(item => ({
-                    id: item.chunkId, score: item.rerankerScore, source: 'rag_v2'
-                })),
-                claims_json: v2.claims || [],
-                final_response_type: String(v2.decision || 'answer').toUpperCase()
-            });
-            if (routing.retrievalTelemetry && typeof routing.retrievalTelemetry === 'object') {
-                routing.retrievalTelemetry.mode = 'rag_v2';
-                routing.retrievalTelemetry.profiling = {
-                    selectedTopK: v2.context?.selected?.length || 0,
-                    similarityThreshold: 0.35,
-                    optimizedContext: (v2.context?.selected || []).map(s => s.originalText).join('\n\n'),
-                    topChunks: (v2.context?.selected || []).map((c, idx) => ({
-                        text: c.originalText,
-                        semanticScore: c.score || (1 / (idx + 1)),
-                        keywordScore: 1,
-                        rerankScore: c.score || (1 / (idx + 1)),
-                        documentName: c.title || 'Knowledge v2',
-                        chunkId: c.chunkId,
-                        source: c.title || 'Knowledge v2'
-                    }))
-                };
-            }
-            return String(v2.answer || '').trim();
-        } catch (v2Error) {
-            console.warn('[RAG v2] Execution error, falling back to legacy RAG:', v2Error.message);
-            pipelineTelemetry.ragV2Fallback = true;
+            console.warn('[RAG Platform] Execution error:', platformError.message);
+            pipelineTelemetry.ragPlatformError = true;
+            return 'المعلومة مش متوفرة عندي حاليًا.';
         }
     }
     const referentHistory = isImage ? [] : getChatHistoryForAI(userId, tenantId, routing.channel || null, { userOnly: true });

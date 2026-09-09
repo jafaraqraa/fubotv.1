@@ -85,7 +85,7 @@ function updateDocument(tenantId, id, updates) {
         'reconciliation_status', 'reconciliation_error', 'fencing_token', 'operation_id',
         'storage_name', 'storage_path', 'file_size', 'content_hash', 'original_name',
         'source_type', 'mime_type', 'media_description', 'ai_send_enabled',
-        'media_transcript', 'media_analysis_model'
+        'media_transcript', 'media_analysis_model', 'platform_document_id'
     ]);
     const invalidKey = keys.find(key => !allowedColumns.has(key));
     if (invalidKey) {

@@ -70,9 +70,9 @@ function applyExplicitLegacyTenantMigration() {
 }
 
 async function assertQdrantTenantOwnershipSafe() {
-    const ragImpl = process.env.RAG_IMPLEMENTATION || 'v2';
-    if (ragImpl === 'v2') {
-        return { skipped: true, reason: 'rag_v2_active' };
+    const ragImpl = process.env.RAG_IMPLEMENTATION || 'platform';
+    if (ragImpl === 'platform') {
+        return { skipped: true, reason: 'rag_platform_active' };
     }
     try {
         const { countPoints } = require('../vector/qdrantVectorStore');
